@@ -57,7 +57,7 @@ git -C lens.core pull
 After pulling, validate the workspace state:
 
 ```bash
-./lens.core/_bmad/lens-work/scripts/preflight.sh
+uv run ./lens.core/_bmad/lens-work/scripts/preflight.py
 ```
 
 ## Hard Rules
