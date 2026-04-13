@@ -325,6 +325,16 @@ def main():
     else:
         print(f"{YELLOW}No repo-inventory.yaml found in governance repo — skipping inventory clone.{RESET}")
 
+    # --- Preflight ---
+    preflight_script = os.path.join(root, "lens.core", "_bmad", "lens-work", "scripts", "preflight.py")
+    if os.path.exists(preflight_script):
+        print(f"\n{CYAN}Running preflight...{RESET}")
+        result = run(["uv", "run", preflight_script], cwd=root)
+        if result.returncode != 0:
+            print(f"{YELLOW}Warning: preflight exited with code {result.returncode}{RESET}")
+    else:
+        print(f"{YELLOW}preflight.py not found — skipping.{RESET}")
+
 
 if __name__ == "__main__":
     main()
