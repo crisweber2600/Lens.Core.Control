@@ -287,6 +287,44 @@ def main():
 
     print(f"{GREEN}Cloned governance repo into {gov_dest}{RESET}")
 
+    # --- Clone repos from governance repo-inventory.yaml ---
+    inventory_path = os.path.join(gov_dest, "repo-inventory.yaml")
+    if yaml and os.path.exists(inventory_path):
+        print(f"\n{CYAN}Reading repo-inventory.yaml from governance...{RESET}")
+        with open(inventory_path, "r", encoding="utf-8") as f:
+            inv = yaml.safe_load(f) or {}
+        repos = inv.get("repositories", inv.get("repos", []))
+        cloned = skipped = failed = 0
+        for entry in repos:
+            name = entry.get("name", "")
+            remote_url = entry.get("remote_url", "")
+            local_path = entry.get("local_path", "")
+            if not name or not remote_url:
+                print(f"  {YELLOW}[skip] Incomplete entry (missing name or remote_url): {entry}{RESET}")
+                skipped += 1
+                continue
+            # local_path is project-root-relative (e.g. "TargetProjects/…")
+            if local_path:
+                dest = os.path.normpath(os.path.join(root, local_path))
+            else:
+                dest = os.path.join(root, "TargetProjects", name)
+            if os.path.exists(os.path.join(dest, ".git")):
+                print(f"  [ok] Already on disk, skipping: {name}")
+                skipped += 1
+                continue
+            os.makedirs(dest, exist_ok=True)
+            print(f"  Cloning {name} → {dest}")
+            r = run(["git", "clone", remote_url, dest])
+            if r.returncode == 0:
+                print(f"  {GREEN}[ok] Cloned {name}{RESET}")
+                cloned += 1
+            else:
+                print(f"  {RED}[fail] Clone failed: {name}{RESET}")
+                failed += 1
+        print(f"\n{GREEN}Repo inventory sync: {cloned} cloned | {skipped} skipped | {failed} failed{RESET}")
+    else:
+        print(f"{YELLOW}No repo-inventory.yaml found in governance repo — skipping inventory clone.{RESET}")
+
 
 if __name__ == "__main__":
     main()
