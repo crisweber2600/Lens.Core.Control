@@ -107,6 +107,120 @@ GREEN = "\033[92m"
 RED = "\033[91m"
 RESET = "\033[0m"
 
+# ---------------------------------------------------------------------------
+# Prompt catalog metadata — (experience, role)
+# experience: "full" | "both" | "any"
+# role: "any" | "plan" | "dev" | "admin" | None
+# Only Keep=Y prompts are listed. Unknown stems are always included.
+# ---------------------------------------------------------------------------
+PROMPT_METADATA: dict[str, tuple[str, str | None]] = {
+    "lens-adversarial-review":          ("full",  "any"),
+    "lens-batch":                        ("both",  "any"),
+    "lens-bmad-brainstorming":           ("full",  "plan"),
+    "lens-bmad-code-review":             ("full",  "dev"),
+    "lens-bmad-create-architecture":     ("full",  "plan"),
+    "lens-bmad-create-epics-and-stories":("full",  "plan"),
+    "lens-bmad-create-prd":              ("full",  "plan"),
+    "lens-bmad-create-story":            ("full",  "plan"),
+    "lens-bmad-create-ux-design":        ("full",  "plan"),
+    "lens-bmad-domain-research":         ("full",  "plan"),
+    "lens-bmad-market-research":         ("full",  "plan"),
+    "lens-bmad-product-brief":           ("full",  "plan"),
+    "lens-bmad-quick-dev":               ("full",  "dev"),
+    "lens-bmad-sprint-planning":         ("full",  "plan"),
+    "lens-bmad-technical-research":      ("full",  "plan"),
+    "lens-businessplan":                 ("both",  "plan"),
+    "lens-complete":                     ("both",  "any"),
+    "lens-constitution":                 ("full",  "admin"),
+    "lens-dev":                          ("both",  "dev"),
+    "lens-discover":                     ("both",  "any"),
+    "lens-expressplan":                  ("both",  "any"),
+    "lens-finalizeplan":                 ("both",  "plan"),
+    "lens-help":                         ("both",  "any"),
+    "lens-log-problem":                  ("full",  None),
+    "lens-move-feature":                 ("full",  "plan"),
+    "lens-new-domain":                   ("any",   "plan"),
+    "lens-new-feature":                  ("both",  "any"),
+    "lens-new-service":                  ("both",  "any"),
+    "lens-next":                         ("both",  "any"),
+    "lens-preflight":                    ("both",  "any"),
+    "lens-preplan":                      ("both",  "plan"),
+    "lens-split-feature":                ("both",  "plan"),
+    "lens-switch":                       ("both",  "any"),
+    "lens-techplan":                     ("both",  "plan"),
+    "lens-theme":                        ("both",  "any"),
+    "lens-upgrade":                      ("full",  "admin"),
+}
+
+
+def should_include_prompt(stem: str, experience: str, role: str) -> bool:
+    """Return True if a prompt should be installed for the given profile."""
+    meta = PROMPT_METADATA.get(stem)
+    if meta is None:
+        return True  # unknown stem — always include (forward-compatible)
+
+    exp, prole = meta
+
+    # Experience filter: "lite" excludes prompts whose experience is "full"
+    if experience == "lite" and exp == "full":
+        return False
+
+    # Admin role sees everything
+    if role == "admin":
+        return True
+
+    # Admin-only prompts are excluded for non-admin roles
+    if prole == "admin":
+        return False
+
+    # Role filter
+    if role == "planner":
+        return prole in ("plan", "any", None)
+    if role == "dev":
+        return prole in ("dev", "any", None)
+    # "both" — include everything non-admin
+    return True
+
+
+def prompt_experience_mode() -> str:
+    """Ask user to select Experience Mode and return 'lite' or 'full'."""
+    print(f"\n{CYAN}Experience Mode{RESET}")
+    print(f"  [1] lite  — essential prompts only")
+    print(f"  [2] full  — complete prompt set (default)")
+    print()
+    sel = input("Select experience mode (1-2) [default: full]: ").strip().lower()
+    if sel in ("1", "lite"):
+        return "lite"
+    return "full"  # default
+
+
+def prompt_primary_role() -> str:
+    """Ask user to select Primary Role and return 'planner', 'dev', 'both', or 'admin'."""
+    print(f"\n{CYAN}Primary Role{RESET}")
+    print(f"  [1] planner — planning, design, and strategy prompts")
+    print(f"  [2] dev     — development and implementation prompts")
+    print(f"  [3] both    — full prompt set (default)")
+    print()
+    sel = input("Select primary role (1-3) [default: both]: ").strip().lower()
+    if sel in ("1", "planner"):
+        return "planner"
+    if sel in ("2", "dev"):
+        return "dev"
+    if sel == "admin":
+        return "admin"
+    return "both"  # default
+
+
+def save_user_profile(project_root: str, experience: str, role: str) -> None:
+    """Persist experience_mode and primary_role to .github/lens/personal/profile.yaml."""
+    profile_dir = os.path.join(project_root, ".github", "lens", "personal")
+    os.makedirs(profile_dir, exist_ok=True)
+    profile_path = os.path.join(profile_dir, "profile.yaml")
+    with open(profile_path, "w", encoding="utf-8") as f:
+        f.write(f"experience_mode: {experience}\n")
+        f.write(f"primary_role: {role}\n")
+    print(f"{GREEN}Profile saved: experience={experience}, role={role}{RESET}")
+
 
 def force_remove(path: str):
     """Remove a directory tree, clearing read-only flags on Windows if needed."""
@@ -212,6 +326,10 @@ def main():
     branch = prompt_branch(branches, args.branch)
     print(f"\n{GREEN}Using branch: {branch}{RESET}\n")
 
+    experience = prompt_experience_mode()
+    role = prompt_primary_role()
+    print(f"\n{GREEN}Profile: experience={experience}, role={role}{RESET}\n")
+
     if os.path.exists(target):
         force_remove(target)
 
@@ -248,6 +366,22 @@ def main():
         print(f"Copied lens.core/.github contents to {github_dest}")
     else:
         print(f"{YELLOW}Warning: .github folder not found in lens.core, skipping copy.{RESET}")
+
+    # Filter prompts based on selected experience mode and role
+    prompts_dest = os.path.join(github_dest, "prompts")
+    if os.path.isdir(prompts_dest):
+        removed = 0
+        for fname in list(os.listdir(prompts_dest)):
+            if not fname.endswith(".prompt.md"):
+                continue
+            stem = fname[: -len(".prompt.md")]
+            if not should_include_prompt(stem, experience, role):
+                os.remove(os.path.join(prompts_dest, fname))
+                removed += 1
+        if removed:
+            print(f"Removed {removed} prompt(s) excluded by your experience/role profile.")
+
+    save_user_profile(root, experience, role)
 
     for folder in ["docs", "TargetProjects"]:
         folder_path = os.path.join(root, folder)
