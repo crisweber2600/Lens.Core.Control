@@ -12,7 +12,7 @@ description: "Use when implementing changes, editing code, modifying files, writ
 All implementation work — new features, fixes, configuration changes — happens exclusively in:
 
 ```
-TargetProjects/lens/src/Lens.Core.Src/
+TargetProjects/lens.core/src/Lens.Core.Src/
 ```
 
 ## Change Workflow
@@ -21,16 +21,26 @@ Follow this sequence for every change, no exceptions:
 
 ### 1. Implement in Lens.Core.Src
 
-Make all edits inside `TargetProjects/lens/src/Lens.Core.Src/`.
+Make all edits inside `TargetProjects/lens.core/src/Lens.Core.Src/`.
 
 ### 2. Commit and Push
 
 ```bash
-cd TargetProjects/lens/src/Lens.Core.Src
+cd TargetProjects/lens.core/src/Lens.Core.Src
 git add .
 git commit -m "<conventional commit message>"
 git push
 ```
+
+## Artifact Authority
+
+Planning documents, workflow changes, prompt changes, and module changes must be authored in the control repo first.
+
+For Lens lifecycle work, stage feature artifacts under the feature's control-repo docs path before any governance publication step runs.
+
+Governance mirrors are populated only by explicit handoff tooling such as `publish-to-governance` or by governance-authority workflows that are designed to update governance state.
+
+Never patch governance docs as a substitute for missing control-repo staged artifacts.
 
 ### 3. Monitor the GitHub Actions Job
 
@@ -66,3 +76,4 @@ uv run ./lens.core/_bmad/lens-work/scripts/preflight.py
 - **NEVER** skip the GitHub Actions monitoring step before pulling `lens.core`
 - **NEVER** run preflight before confirming the workflow `conclusion` is `success`
 - **NEVER** propose edits to `lens.core` as the resolution — always trace back to `Lens.Core.Src`
+- **NEVER** write planning artifacts straight into governance docs when the lifecycle expects them to be staged in the control repo first
