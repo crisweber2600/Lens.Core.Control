@@ -252,8 +252,8 @@ def save_user_profile(
     auth_method: str,
     target_projects_path: str,
 ) -> None:
-    """Persist onboarding profile fields to .github/lens/personal/profile.yaml."""
-    profile_dir = os.path.join(project_root, ".github", "lens", "personal")
+    """Persist onboarding profile fields to .lens/personal/profile.yaml."""
+    profile_dir = os.path.join(project_root, ".lens", "personal")
     os.makedirs(profile_dir, exist_ok=True)
     profile_path = os.path.join(profile_dir, "profile.yaml")
     created = datetime.now(tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -445,7 +445,7 @@ def ensure_workspace_structure(project_root: str, lens_root: str, governance_pat
     config_path = os.path.join(lens_root, "_bmad", "lens-work", "bmadconfig.yaml")
     resolved_paths: dict[str, str] = {}
     for key, config_key, fallback_parts in (
-        ("personal_output", "personal_output_folder", (".github", "lens", "personal")),
+        ("personal_output", "personal_output_folder", (".lens", "personal")),
         ("target_projects", "target_projects_path", ("TargetProjects",)),
     ):
         raw = _read_simple_yaml_scalar(config_path, config_key)
@@ -460,7 +460,7 @@ def ensure_workspace_structure(project_root: str, lens_root: str, governance_pat
 def ensure_gitignore_entries(project_root: str) -> None:
     gitignore_path = os.path.join(project_root, ".gitignore")
     required_entries = [
-        ".github/lens/personal/",
+        ".lens/",
         ".github/",
         "lens.core/",
         "TargetProjects/",
