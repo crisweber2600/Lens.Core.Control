@@ -79,13 +79,15 @@ Root/
 │   └── GitHub Copilot adapter (copied from lens.core)
 ├── docs/
 │   └── Planning and initiative artifacts
+├── .lens/
+│   └── Local workspace state (profile, context, LENS_VERSION)
 ├── TargetProjects/
 │   ├── Domain1/
 │   │   ├── Repo1/
 │   │   └── Repo2/
 │   ├── Domain2/
 │   │   └── Repo3/
-└── LENS_VERSION
+└── lens.core/
 
 ===========================================================
 """
@@ -493,7 +495,9 @@ def write_lens_version(project_root: str, lens_root: str) -> str:
     if not schema_version:
         return ""
     version = schema_version if "." in schema_version else f"{schema_version}.0.0"
-    with open(os.path.join(project_root, "LENS_VERSION"), "w", encoding="utf-8") as handle:
+    lens_dir = os.path.join(project_root, ".lens")
+    os.makedirs(lens_dir, exist_ok=True)
+    with open(os.path.join(lens_dir, "LENS_VERSION"), "w", encoding="utf-8") as handle:
         handle.write(version)
     return version
 
@@ -838,7 +842,7 @@ def main():
         {"name": "Repo inventory", "status": "ok" if os.path.exists(inventory_path) else "warn", "detail": inventory_path},
         {"name": "TargetProjects bootstrap", "status": "warn" if int(bootstrap_summary.get("failed", 0)) else "ok", "detail": f"{bootstrap_summary.get('cloned', 0)} cloned, {bootstrap_summary.get('present', 0)} already present, {bootstrap_summary.get('failed', 0)} failed, {bootstrap_summary.get('skipped', 0)} skipped"},
         {"name": "Release module version", "status": "ok" if module_version else "fail", "detail": module_version or "version missing"},
-        {"name": "LENS_VERSION", "status": "ok" if lens_version else "warn", "detail": lens_version or "not written"},
+        {"name": ".lens/LENS_VERSION", "status": "ok" if lens_version else "warn", "detail": lens_version or "not written"},
         {"name": "Workspace structure", "status": "ok", "detail": f"personal={workspace_paths['personal_output']}, target_projects={workspace_paths['target_projects']}"},
         {"name": "Preflight", "status": "ok" if final_preflight in (None, 0) else "warn", "detail": f"early={early_preflight} final={final_preflight}"},
     ]
