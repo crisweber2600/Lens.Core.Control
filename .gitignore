@@ -1,4 +1,5 @@
-.lens/
 .github/
 lens.core/
 TargetProjects/
+__pycache__/
+.lens/personal/

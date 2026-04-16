@@ -248,6 +248,7 @@ def _resolve_project_path(project_root: str, raw_path: str, fallback_parts: tupl
 
 def save_user_profile(
     project_root: str,
+    git_username: str,
     experience: str,
     role: str,
     provider: str,
@@ -260,8 +261,7 @@ def save_user_profile(
     profile_path = os.path.join(profile_dir, "profile.yaml")
     created = datetime.now(tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     with open(profile_path, "w", encoding="utf-8") as f:
-        f.write(f"name: {_yaml_quote(os.path.basename(project_root) or 'unknown')}\n")
-        f.write(f"git_provider: {_yaml_quote(provider)}\n")
+        f.write(f"name: {_yaml_quote(git_username)}\n")
         f.write("default_remote: origin\n")
         f.write(f"auth_method: {_yaml_quote(auth_method)}\n")
         f.write(f"experience_mode: {_yaml_quote(experience)}\n")
@@ -288,6 +288,17 @@ def detect_git_origin(project_root: str) -> str:
     if result.returncode != 0:
         return ""
     return result.stdout.strip()
+
+
+def detect_git_username(project_root: str) -> str:
+    result = run(
+        ["git", "-C", project_root, "config", "user.name"],
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0:
+        return "unknown"
+    return result.stdout.strip() or "unknown"
 
 
 def detect_provider(remote_url: str) -> dict[str, str | None]:
@@ -809,8 +820,10 @@ def main():
     workspace_paths = ensure_workspace_structure(root, target, gov_dest)
     ensure_gitignore_entries(root)
     write_governance_setup(root, target, gov_dest, governance_url)
+    git_username = detect_git_username(root)
     save_user_profile(
         root,
+        git_username,
         experience,
         role,
         str(provider_info.get("provider") or "unknown"),
