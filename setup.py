@@ -462,7 +462,8 @@ def ensure_workspace_structure(project_root: str, lens_root: str, governance_pat
 def ensure_gitignore_entries(project_root: str) -> None:
     gitignore_path = os.path.join(project_root, ".gitignore")
     required_entries = [
-        ".lens/",
+        
+        ".lens/personal/",
         ".github/",
         "lens.core/",
         "TargetProjects/",
