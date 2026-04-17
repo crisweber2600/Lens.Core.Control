@@ -2,7 +2,7 @@ epic_number: 6
 feature_id: mvp
 feature_path: docs/coffee/store-service/mvp
 started_at: '2026-05-07T00:00:00Z'
-last_checkpoint: '2026-05-07T04:00:00Z'
+last_checkpoint: '2026-05-07T05:00:00Z'
 special_instructions: >
   Sprint 0 is docs-only SPIKEs (SB1-SB4). No target repo provisioned yet.
   All story artifacts write to docs/coffee/store-service/mvp/ on the mvp branch
@@ -29,8 +29,9 @@ stories_completed:
   - S3.4
   - S3.1
   - S1.2
+  - S1.3
 stories_failed: []
-current_story_index: 10
+current_story_index: 11
 story_sequence:
   - story_id: SB1
     epic: E6
@@ -108,7 +109,7 @@ story_sequence:
     priority: HIGH
     points: 3
     summary: Versioned snapshot event schema (StoreOrderSnapshotted)
-    status: not-started
+    status: done
     blocked_by: [S5.3]
   - story_id: S3.1
     epic: E3
@@ -126,7 +127,8 @@ story_sequence:
     priority: HIGH
     points: 3
     summary: Persist lifecycle state snapshot to database on every transition
-    status: not-started
+    status: done
+    tests_passed: 107
     blocked_by: [S5.3]
   - story_id: S1.3
     epic: E1
@@ -135,7 +137,8 @@ story_sequence:
     priority: HIGH
     points: 3
     summary: Append lifecycle transition log entry on every state change
-    status: not-started
+    status: done
+    tests_passed: 113
     blocked_by: [S1.2]
   - story_id: S1.4
     epic: E1
