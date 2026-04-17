@@ -1,0 +1,402 @@
+feature: coffee-store-service-mvp
+doc_type: sprint-status
+status: draft
+goal: "4-sprint plan for StoreOperationsService MVP — Sprint 0 closes constitution gates, Sprints 1-3 deliver the service"
+updated_at: "2025-01-15T00:00:00Z"
+
+sprints:
+
+  - id: sprint-0
+    name: "Constitution Compliance and Design Resolution"
+    goal: "Close all hard-gate blockers (C1, C2) and open design questions before any production code begins"
+    status: not-started
+    capacity_points: 16
+    notes: >
+      Sprint 0 is BLOCKING. dev-ready promotion cannot occur until SB1 and SB2 are DONE.
+      SB3 and SB4 unblock Sprint 3 (E2) but are not required for Sprints 1-2 to start.
+      Assign a dedicated owner to SB1 and SB2 at sprint kick-off.
+    stories:
+      - id: SB1
+        title: "Author business-plan.md (C1 hard gate)"
+        epic: E6
+        type: spike
+        priority: blocker
+        points: 5
+        status: not-started
+        owner: TBD
+        depends_on: []
+        blocks:
+          - "dev-ready promotion"
+        notes: "coffee constitution hard gate. Must be DONE before milestone advances."
+
+      - id: SB2
+        title: "Author aspire-plan.md (C2 Aspire Mandate hard gate)"
+        epic: E6
+        type: spike
+        priority: blocker
+        points: 5
+        status: not-started
+        owner: TBD
+        depends_on: []
+        blocks:
+          - "dev-ready promotion"
+          - "S5.2"
+        notes: "Aspire Mandate hard gate. Must be DONE before S5.2 and dev-ready. Determines AppHost registration pattern."
+
+      - id: SB3
+        title: "Resolve rush-authority matrix and queue ordering rules (M2 + M3)"
+        epic: E6
+        type: spike
+        priority: high
+        points: 3
+        status: not-started
+        owner: TBD
+        depends_on: []
+        blocks:
+          - "S2.1"
+          - "S2.2"
+          - "S2.3"
+        notes: "Outputs: written ordering algorithm + authority matrix appended to architecture.md or queue-ordering-adr.md"
+
+      - id: SB4
+        title: "Close 6 open design questions from PRD (M1)"
+        epic: E6
+        type: spike
+        priority: high
+        points: 3
+        status: not-started
+        owner: TBD
+        depends_on: []
+        blocks:
+          - "S1.5 (Q2 — completion event)"
+          - "S1.6 (Q3 — post-prep cancellation, Q5 — reason codes)"
+          - "S2.3 (Q4 — SLA threshold)"
+          - "S3.4 (Q2 — StoreOrderCompleted event schema)"
+        notes: "Output: prd.md open_questions section closed with named decision owners"
+
+  - id: sprint-1
+    name: "Service Foundation + Core Aggregate"
+    goal: "Working .NET project scaffold with EF Core migrations, and a fully unit-tested StoreOrder aggregate with lifecycle state machine"
+    status: not-started
+    capacity_points: 31
+    notes: >
+      Sprint 1 can start in parallel with Sprint 0 for unblocked stories.
+      S5.2 (Aspire registration) is blocked until SB2 is DONE — it starts mid-sprint or Sprint 2 if SB2 slips.
+      S3.4 event schema can proceed with placeholder for StoreOrderCompleted (SB4 Q2).
+    stories:
+      - id: S5.1
+        title: "Scaffold StoreOperationsService .NET project"
+        epic: E5
+        type: story
+        priority: high
+        points: 3
+        status: not-started
+        owner: TBD
+        depends_on: []
+        blocks:
+          - "S5.3"
+          - "S1.2"
+          - "S3.1"
+
+      - id: S5.3
+        title: "EF Core DbContext and initial migration"
+        epic: E5
+        type: story
+        priority: high
+        points: 3
+        status: not-started
+        owner: TBD
+        depends_on:
+          - "S5.1"
+        blocks:
+          - "S1.2"
+          - "S1.3"
+          - "S3.1"
+
+      - id: S5.2
+        title: "Register StoreOperationsService in Aspire AppHost"
+        epic: E5
+        type: story
+        priority: high
+        points: 3
+        status: blocked
+        owner: TBD
+        depends_on:
+          - "S5.1"
+          - "SB2"
+        blocks:
+          - "S2.4 (auth wiring)"
+        blocker_note: "🔴 BLOCKED by SB2 (aspire-plan.md)"
+
+      - id: S1.1
+        title: "Define StoreOrder aggregate and value objects"
+        epic: E1
+        type: story
+        priority: high
+        points: 5
+        status: not-started
+        owner: TBD
+        depends_on: []
+        blocks:
+          - "S1.2"
+          - "S1.3"
+          - "S1.4"
+          - "S1.5"
+          - "S1.6"
+          - "S4.1"
+          - "S4.2"
+
+      - id: S1.2
+        title: "Persist lifecycle state snapshot"
+        epic: E1
+        type: story
+        priority: high
+        points: 3
+        status: not-started
+        owner: TBD
+        depends_on:
+          - "S5.3"
+          - "S1.1"
+        blocks:
+          - "S1.3"
+
+      - id: S1.3
+        title: "Append lifecycle transitions to append-only log"
+        epic: E1
+        type: story
+        priority: high
+        points: 3
+        status: not-started
+        owner: TBD
+        depends_on:
+          - "S5.3"
+          - "S1.2"
+        blocks:
+          - "S1.5"
+          - "S1.6"
+
+      - id: S1.4
+        title: "Enforce invalid transition guard"
+        epic: E1
+        type: story
+        priority: medium
+        points: 2
+        status: not-started
+        owner: TBD
+        depends_on:
+          - "S1.1"
+        blocks: []
+
+      - id: S3.3
+        title: "Implement Event Bus Adapter"
+        epic: E3
+        type: story
+        priority: high
+        points: 3
+        status: not-started
+        owner: TBD
+        depends_on: []
+        blocks:
+          - "S3.2"
+          - "S4.1"
+
+      - id: S3.4
+        title: "Define versioned snapshot event schema"
+        epic: E3
+        type: story
+        priority: high
+        points: 3
+        status: not-started
+        owner: TBD
+        depends_on: []
+        blocks:
+          - "S4.2"
+          - "S4.3"
+        notes: "SB4 Q2 conditional — include StoreOrderCompleted placeholder if unresolved"
+
+      - id: S3.1
+        title: "Create Outbox table and persistence contract"
+        epic: E3
+        type: story
+        priority: high
+        points: 2
+        status: not-started
+        owner: TBD
+        depends_on:
+          - "S5.3"
+        blocks:
+          - "S3.2"
+
+  - id: sprint-2
+    name: "Lifecycle Completion + Outbox Publisher + Integration"
+    goal: "Complete lifecycle paths (ready/completed/cancelled), working Outbox Publisher, and CustomerService integration"
+    status: not-started
+    capacity_points: 29
+    notes: >
+      S1.5 has a conditional on SB4 Q2 (StoreOrderCompleted event) — can be implemented with placeholder but cannot close until SB4 done.
+      S1.6 has a conditional on SB4 Q3 (post-prep cancellation) and Q5 (reason codes).
+      S3.2 requires S3.1 and S3.3 from Sprint 1.
+    stories:
+      - id: S1.5
+        title: "Implement Ready → Completed (handoff confirmation) path"
+        epic: E1
+        type: story
+        priority: high
+        points: 3
+        status: not-started
+        owner: TBD
+        depends_on:
+          - "S1.1"
+          - "S1.3"
+        blocks: []
+        notes: "⚠️ Conditional: event schema (SB4 Q2) must resolve before PR merge"
+
+      - id: S1.6
+        title: "Implement cancellation path"
+        epic: E1
+        type: story
+        priority: high
+        points: 5
+        status: not-started
+        owner: TBD
+        depends_on:
+          - "S1.1"
+          - "S1.3"
+        blocks: []
+        notes: "⚠️ Conditional: cancellation taxonomy (SB4 Q3, Q5) must resolve before PR merge"
+
+      - id: S3.2
+        title: "Implement Outbox Publisher"
+        epic: E3
+        type: story
+        priority: high
+        points: 5
+        status: not-started
+        owner: TBD
+        depends_on:
+          - "S3.1"
+          - "S3.3"
+        blocks:
+          - "S4.3"
+
+      - id: S4.1
+        title: "Inbound order intake from CustomerService"
+        epic: E4
+        type: story
+        priority: high
+        points: 5
+        status: not-started
+        owner: TBD
+        depends_on:
+          - "S3.3"
+          - "S1.1"
+        blocks: []
+
+      - id: S4.2
+        title: "Outbound ready notification to CustomerService"
+        epic: E4
+        type: story
+        priority: high
+        points: 3
+        status: not-started
+        owner: TBD
+        depends_on:
+          - "S3.4"
+          - "S1.1"
+        blocks: []
+
+  - id: sprint-3
+    name: "Queue Engine + Reporting Fan-out"
+    goal: "Implement queue and priority engine (E2) and CorporateReportingService event fan-out — requires SB3/SB4 to be DONE"
+    status: not-started
+    capacity_points: 25
+    notes: >
+      Sprint 3 is entirely dependent on SB3 and SB4 closing in Sprint 0.
+      If SB3 slips, S2.1/S2.2/S2.3 slip too. S2.4 can proceed independently of SB3 for read model structure.
+      S4.3 can start as soon as S3.2 is DONE.
+    stories:
+      - id: S2.1
+        title: "Queue ingestion and ordering algorithm"
+        epic: E2
+        type: story
+        priority: medium
+        points: 5
+        status: blocked
+        owner: TBD
+        depends_on:
+          - "SB3"
+          - "S1.1"
+        blocks:
+          - "S2.2"
+          - "S2.3"
+          - "S2.4"
+        blocker_note: "🔴 BLOCKED by SB3 (queue ordering rules)"
+
+      - id: S2.2
+        title: "Rush designation"
+        epic: E2
+        type: story
+        priority: medium
+        points: 3
+        status: blocked
+        owner: TBD
+        depends_on:
+          - "SB3"
+          - "S2.1"
+        blocks: []
+        blocker_note: "🔴 BLOCKED by SB3 (rush-authority matrix)"
+
+      - id: S2.3
+        title: "At-risk escalation"
+        epic: E2
+        type: story
+        priority: medium
+        points: 3
+        status: blocked
+        owner: TBD
+        depends_on:
+          - "SB3"
+          - "S2.1"
+        blocks: []
+        blocker_note: "🔴 BLOCKED by SB3 (SLA threshold values)"
+
+      - id: S2.4
+        title: "Queue-state read model API"
+        epic: E2
+        type: story
+        priority: medium
+        points: 3
+        status: not-started
+        owner: TBD
+        depends_on:
+          - "S2.1"
+        blocks: []
+        notes: "Auth wiring dependent on S5.2 (aspire-plan.md)"
+
+      - id: S4.3
+        title: "Outbound event fan-out to CorporateReportingService"
+        epic: E4
+        type: story
+        priority: medium
+        points: 3
+        status: not-started
+        owner: TBD
+        depends_on:
+          - "S3.2"
+          - "S3.4"
+        blocks: []
+
+metrics:
+  total_stories: 23
+  total_points: 84
+  sprint_0_points: 16
+  sprint_1_points: 31
+  sprint_2_points: 21
+  sprint_3_points: 25
+  blocker_stories: 4
+  blocker_points: 16
+  unblocked_sprint_1_points: 17
+  blocked_by_c1: 0
+  blocked_by_c2: 1
+  blocked_by_sb3: 3
+  blocked_by_sb4: 2
