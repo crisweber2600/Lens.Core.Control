@@ -2,7 +2,7 @@ epic_number: 6
 feature_id: mvp
 feature_path: docs/coffee/store-service/mvp
 started_at: '2026-05-07T00:00:00Z'
-last_checkpoint: '2026-05-07T06:00:00Z'
+last_checkpoint: '2026-05-07T07:00:00Z'
 special_instructions: >
   Sprint 0 is docs-only SPIKEs (SB1-SB4). No target repo provisioned yet.
   All story artifacts write to docs/coffee/store-service/mvp/ on the mvp branch
@@ -31,8 +31,9 @@ stories_completed:
   - S1.2
   - S1.3
   - S1.4
+  - S3.3
 stories_failed: []
-current_story_index: 12
+current_story_index: 13
 story_sequence:
   - story_id: SB1
     epic: E6
@@ -158,7 +159,8 @@ story_sequence:
     priority: HIGH
     points: 5
     summary: Event Bus Adapter (RabbitMQ publisher interface + in-memory stub)
-    status: not-started
+    status: done
+    tests_passed: 128
     blocked_by: []
   - story_id: S1.5
     epic: E1
