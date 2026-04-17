@@ -2,7 +2,7 @@ epic_number: 6
 feature_id: mvp
 feature_path: docs/coffee/store-service/mvp
 started_at: '2026-05-07T00:00:00Z'
-last_checkpoint: '2026-04-17T01:00:00Z'
+last_checkpoint: '2026-05-07T02:00:00Z'
 special_instructions: >
   Sprint 0 is docs-only SPIKEs (SB1-SB4). No target repo provisioned yet.
   All story artifacts write to docs/coffee/store-service/mvp/ on the mvp branch
@@ -10,9 +10,9 @@ special_instructions: >
   Constitution: coffee hard gate mode. Aspire mandate enforced. TDD+BDD required
   before dev PROMOTION (not before dev start). Sprint 0 SPIKE outputs are pure
   documentation — tdd-red-evidence and reqnroll-feature-files apply to Sprint 1+.
-target_repo_name: null
-target_repo_path: null
-dev_branch_mode: docs-only
+target_repo_name: coffee3
+target_repo_path: TargetProjects/coffee/store-service/coffee3
+dev_branch_mode: hybrid
 working_branch: mvp
 base_branch: main
 requires_final_pr: true
@@ -23,8 +23,9 @@ stories_completed:
   - SB2
   - SB3
   - SB4
+  - S1.1
 stories_failed: []
-current_story_index: 4
+current_story_index: 5
 story_sequence:
   - story_id: SB1
     epic: E6
@@ -68,10 +69,11 @@ story_sequence:
     type: story
     priority: HIGH
     points: 5
-    summary: StoreOrder aggregate — blocked until SB1+SB2 gate checks pass
-    output: TargetProjects/coffee/store-service/<repo>/src/...
-    status: blocked
-    blocked_by: [SB1, SB2, target-repo-creation]
+    summary: StoreOrder aggregate — domain model, value objects, lifecycle transitions, unit tests
+    output: TargetProjects/coffee/store-service/coffee3/src/StoreOperationsService.Domain
+    status: done
+    tests_passed: 29
+    blocked_by: []
 sprint0_gate_check:
   required: [SB1, SB2]
   status: passed
