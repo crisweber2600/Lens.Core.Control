@@ -2,6 +2,7 @@
   <Folder Name="/src/">
     <Project Path="src/StoreOperationsService.Domain/StoreOperationsService.Domain.csproj" />
     <Project Path="src/StoreOperationsService.Api/StoreOperationsService.Api.csproj" />
+    <Project Path="src/StoreOperationsService.Infrastructure/StoreOperationsService.Infrastructure.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/StoreOperationsService.Tests/StoreOperationsService.Tests.csproj" />
