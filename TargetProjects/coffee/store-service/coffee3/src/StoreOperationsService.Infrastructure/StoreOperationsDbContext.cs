@@ -9,6 +9,7 @@ public sealed class StoreOperationsDbContext(DbContextOptions<StoreOperationsDbC
     public DbSet<StoreOrderSnapshot> StoreOrderSnapshots => Set<StoreOrderSnapshot>();
     public DbSet<OrderTransitionLog> OrderTransitionLogs => Set<OrderTransitionLog>();
     public DbSet<OutboxMessage> OutboxMessages => Set<OutboxMessage>();
+    public DbSet<QueueEntryEntity> QueueEntries => Set<QueueEntryEntity>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -39,6 +40,14 @@ public sealed class StoreOperationsDbContext(DbContextOptions<StoreOperationsDbC
             e.Property(x => x.Payload).IsRequired();
             e.Property(x => x.CorrelationId).HasMaxLength(200);
             e.HasIndex(x => x.SentAt);
+        });
+
+        modelBuilder.Entity<QueueEntryEntity>(e =>
+        {
+            e.HasKey(x => x.StoreOrderId);
+            e.Property(x => x.StoreId).HasMaxLength(200).IsRequired();
+            e.Property(x => x.Band).IsRequired();
+            e.HasIndex(x => new { x.StoreId, x.Band, x.ReceivedAt });
         });
     }
 }

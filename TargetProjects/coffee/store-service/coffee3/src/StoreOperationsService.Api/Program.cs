@@ -1,8 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using StoreOperationsService.Domain.Messaging;
+using StoreOperationsService.Domain.Queue;
 using StoreOperationsService.Domain.Repositories;
 using StoreOperationsService.Infrastructure;
 using StoreOperationsService.Infrastructure.Messaging;
+using StoreOperationsService.Infrastructure.Queue;
 using StoreOperationsService.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +21,7 @@ builder.Services.AddSingleton<IEventBusAdapter, InMemoryEventBusAdapter>();
 builder.Services.AddSingleton<IRabbitMqConsumerAdapter, InMemoryConsumerAdapter>();
 builder.Services.AddScoped<IStoreOrderRepository, StoreOrderRepository>();
 builder.Services.AddScoped<IOutboxRepository, OutboxRepository>();
+builder.Services.AddQueueReadModel();
 builder.Services.AddScoped<IOrderIntakeConsumer, OrderIntakeConsumer>();
 builder.Services.AddHostedService<OutboxPublisherService>();
 builder.Services.AddHostedService<OrderIntakeSubscriber>();
