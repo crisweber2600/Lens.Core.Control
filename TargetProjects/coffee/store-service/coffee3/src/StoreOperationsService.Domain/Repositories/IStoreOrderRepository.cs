@@ -39,5 +39,18 @@ public interface IStoreOrderRepository
     /// Appends a transition log entry for the given order.
     /// </summary>
     Task AppendTransitionLogAsync(Guid orderId, string fromState, string toState, DateTimeOffset occurredAt, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Atomically updates the snapshot, appends a transition log entry, and enqueues an outbox
+    /// message — all committed in a single <c>SaveChangesAsync</c> call.
+    /// Use this for state transitions that must publish a domain event reliably.
+    /// </summary>
+    Task CompleteOrderAsync(
+        StoreOrderSnapshotData snapshot,
+        string outboxType,
+        string outboxPayload,
+        DateTimeOffset occurredAt,
+        string? correlationId = null,
+        CancellationToken cancellationToken = default);
 }
 

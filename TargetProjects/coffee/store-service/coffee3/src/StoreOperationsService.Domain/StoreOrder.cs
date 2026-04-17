@@ -22,6 +22,7 @@ public sealed class StoreOrder
 
     public DateTimeOffset CreatedAt { get; }
     public DateTimeOffset UpdatedAt { get; private set; }
+    public DateTimeOffset? CompletedAt { get; private set; }
 
     // ── Allowed transitions (AD-1, AD-4) ──────────────────────────────────
     //
@@ -80,5 +81,20 @@ public sealed class StoreOrder
     {
         OperationalModifiers = modifiers ?? throw new ArgumentNullException(nameof(modifiers));
         UpdatedAt = DateTimeOffset.UtcNow;
+    }
+
+    // ── Handoff confirmation ───────────────────────────────────────────────
+
+    /// <summary>
+    /// Confirms handoff of a ready order, transitioning it to
+    /// <see cref="OrderLifecycleState.Completed"/> and recording <see cref="CompletedAt"/>.
+    /// </summary>
+    /// <exception cref="Exceptions.InvalidTransitionException">
+    /// Thrown when the order is not in the <c>Ready</c> state.
+    /// </exception>
+    public void ConfirmHandoff()
+    {
+        Transition(OrderLifecycleState.Completed);
+        CompletedAt = UpdatedAt; // same instant set by Transition()
     }
 }

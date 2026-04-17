@@ -72,4 +72,66 @@ public sealed class StoreOrderRepository(StoreOperationsDbContext dbContext) : I
 
     private static StoreOrderSnapshotData ToDto(StoreOrderSnapshot e) =>
         new(e.OrderId, e.CurrentState, e.PriorityBand, e.IsRush, e.IsAtRisk, e.CreatedAt, e.UpdatedAt, e.RowVersion);
+
+    public async Task CompleteOrderAsync(
+        StoreOrderSnapshotData snapshot,
+        string outboxType,
+        string outboxPayload,
+        DateTimeOffset occurredAt,
+        string? correlationId = null,
+        CancellationToken cancellationToken = default)
+    {
+        // ── Snapshot upsert (tracked — no SaveChanges yet) ────────────────
+        var existing = await dbContext.StoreOrderSnapshots
+            .FindAsync([snapshot.OrderId], cancellationToken);
+
+        if (existing is null)
+        {
+            dbContext.StoreOrderSnapshots.Add(new StoreOrderSnapshot
+            {
+                OrderId      = snapshot.OrderId,
+                CurrentState = snapshot.CurrentState,
+                PriorityBand = snapshot.PriorityBand,
+                IsRush       = snapshot.IsRush,
+                IsAtRisk     = snapshot.IsAtRisk,
+                CreatedAt    = snapshot.CreatedAt,
+                UpdatedAt    = snapshot.UpdatedAt,
+            });
+        }
+        else
+        {
+            if (existing.RowVersion != snapshot.RowVersion)
+                throw new DbUpdateConcurrencyException(
+                    $"Concurrency conflict on order {snapshot.OrderId}: " +
+                    $"expected RowVersion {snapshot.RowVersion} but current is {existing.RowVersion}.");
+
+            existing.CurrentState = snapshot.CurrentState;
+            existing.PriorityBand = snapshot.PriorityBand;
+            existing.IsRush       = snapshot.IsRush;
+            existing.IsAtRisk     = snapshot.IsAtRisk;
+            existing.UpdatedAt    = snapshot.UpdatedAt;
+            existing.RowVersion++;
+        }
+
+        // ── Transition log (tracked) ─────────────────────────────────────
+        dbContext.OrderTransitionLogs.Add(new OrderTransitionLog
+        {
+            OrderId    = snapshot.OrderId,
+            FromState  = "Ready",
+            ToState    = "Completed",
+            OccurredAt = occurredAt,
+        });
+
+        // ── Outbox message (tracked) ─────────────────────────────────────
+        dbContext.OutboxMessages.Add(new OutboxMessage
+        {
+            Type          = outboxType,
+            Payload       = outboxPayload,
+            OccurredAt    = occurredAt,
+            CorrelationId = correlationId,
+        });
+
+        // ── Single atomic save ───────────────────────────────────────────
+        await dbContext.SaveChangesAsync(cancellationToken);
+    }
 }
