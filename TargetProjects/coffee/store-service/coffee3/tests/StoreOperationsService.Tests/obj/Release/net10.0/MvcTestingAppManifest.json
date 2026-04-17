@@ -1,0 +1,5 @@
+{
+  "StoreOperationsService.Api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "D:\\coffeelens - Copy\\TargetProjects\\coffee\\store-service\\coffee3\\src\\StoreOperationsService.Api",
+  "StoreOperationsService.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "D:\\coffeelens - Copy\\TargetProjects\\coffee\\store-service\\coffee3\\src\\StoreOperationsService.Domain",
+  "StoreOperationsService.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "D:\\coffeelens - Copy\\TargetProjects\\coffee\\store-service\\coffee3\\src\\StoreOperationsService.Infrastructure"
+}

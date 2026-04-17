@@ -24,6 +24,13 @@ public sealed class StoreOrder
     public DateTimeOffset UpdatedAt { get; private set; }
     public DateTimeOffset? CompletedAt { get; private set; }
 
+    // ── Cancellation audit ─────────────────────────────────────────────────
+
+    public DateTimeOffset? CancelledAt { get; private set; }
+    public string? CancellationReason { get; private set; }
+    public string? CancelledBy { get; private set; }
+    public string? CancelledStage { get; private set; }
+
     // ── Allowed transitions (AD-1, AD-4) ──────────────────────────────────
     //
     //  Received  → Queued | Cancelled
@@ -96,5 +103,34 @@ public sealed class StoreOrder
     {
         Transition(OrderLifecycleState.Completed);
         CompletedAt = UpdatedAt; // same instant set by Transition()
+    }
+
+    // ── Cancellation ───────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Cancels the order from any non-terminal state, recording the reason, actor, and stage.
+    /// Throws <see cref="Exceptions.InvalidTransitionException"/> when called on
+    /// <c>Completed</c> or already <c>Cancelled</c> orders.
+    /// </summary>
+    /// <param name="reasonCode">Structured reason for the cancellation.</param>
+    /// <param name="cancelledBy">Identity of the actor (user, service) performing the cancellation.</param>
+    public void Cancel(CancellationReasonCode reasonCode, string cancelledBy)
+    {
+        // Compute the stage from current state BEFORE the transition guard fires.
+        // Terminal states (Completed, Cancelled) fall through to the Transition() throw.
+        var stage = LifecycleState switch
+        {
+            OrderLifecycleState.Received or OrderLifecycleState.Queued => "pre-start",
+            OrderLifecycleState.InProgress                             => "in-progress",
+            OrderLifecycleState.Ready                                  => "post-ready",
+            _                                                          => null,
+        };
+
+        Transition(OrderLifecycleState.Cancelled); // throws for terminal states
+
+        CancelledAt        = UpdatedAt;            // same instant set by Transition()
+        CancellationReason = reasonCode.ToString();
+        CancelledBy        = cancelledBy;
+        CancelledStage     = stage!;
     }
 }

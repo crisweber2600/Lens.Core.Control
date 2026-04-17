@@ -52,5 +52,19 @@ public interface IStoreOrderRepository
         DateTimeOffset occurredAt,
         string? correlationId = null,
         CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Atomically updates the snapshot to <c>Cancelled</c>, appends a transition log entry
+    /// recording <paramref name="fromState"/> → <c>Cancelled</c>, and enqueues an outbox
+    /// message — all committed in a single <c>SaveChangesAsync</c> call.
+    /// </summary>
+    Task CancelOrderAsync(
+        StoreOrderSnapshotData snapshot,
+        string fromState,
+        string outboxType,
+        string outboxPayload,
+        DateTimeOffset occurredAt,
+        string? correlationId = null,
+        CancellationToken cancellationToken = default);
 }
 
