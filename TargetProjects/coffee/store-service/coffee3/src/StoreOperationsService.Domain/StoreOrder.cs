@@ -31,6 +31,14 @@ public sealed class StoreOrder
     public string? CancelledBy { get; private set; }
     public string? CancelledStage { get; private set; }
 
+    // ── Rush designation ───────────────────────────────────────────────────
+
+    /// <summary>
+    /// The priority band in effect before rush was applied.
+    /// Restored when rush is removed.
+    /// </summary>
+    public PriorityBand OriginalBand { get; private set; } = PriorityBand.Standard;
+
     // ── Allowed transitions (AD-1, AD-4) ──────────────────────────────────
     //
     //  Received  → Queued | Cancelled
@@ -62,6 +70,38 @@ public sealed class StoreOrder
         CreatedAt = createdAt;
         UpdatedAt = createdAt;
     }
+
+    private StoreOrder(
+        Guid orderId,
+        Guid customerId,
+        OrderLifecycleState lifecycleState,
+        OperationalModifiers operationalModifiers,
+        PriorityBand originalBand,
+        DateTimeOffset createdAt,
+        DateTimeOffset updatedAt)
+    {
+        OrderId = orderId;
+        CustomerId = customerId;
+        LifecycleState = lifecycleState;
+        OperationalModifiers = operationalModifiers;
+        OriginalBand = originalBand;
+        CreatedAt = createdAt;
+        UpdatedAt = updatedAt;
+    }
+
+    /// <summary>
+    /// Reconstitutes a <see cref="StoreOrder"/> from persisted snapshot data.
+    /// </summary>
+    public static StoreOrder Reconstitute(
+        Guid orderId,
+        Guid customerId,
+        OrderLifecycleState lifecycleState,
+        OperationalModifiers operationalModifiers,
+        DateTimeOffset createdAt,
+        DateTimeOffset updatedAt) =>
+        new(orderId, customerId, lifecycleState, operationalModifiers,
+            operationalModifiers.IsRush ? PriorityBand.Standard : operationalModifiers.PriorityBand,
+            createdAt, updatedAt);
 
     // ── Lifecycle transition ───────────────────────────────────────────────
 
@@ -132,5 +172,41 @@ public sealed class StoreOrder
         CancellationReason = reasonCode.ToString();
         CancelledBy        = cancelledBy;
         CancelledStage     = stage!;
+    }
+
+    // ── Rush designation ───────────────────────────────────────────────────
+
+    /// <summary>
+    /// Marks the order as rush priority, elevating its band to
+    /// <see cref="PriorityBand.Rush"/>. Idempotent when the order is already rush.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when the order is in a terminal state (Completed or Cancelled).
+    /// </exception>
+    public void DesignateRush(string designatedBy)
+    {
+        if (LifecycleState is OrderLifecycleState.Completed or OrderLifecycleState.Cancelled)
+            throw new InvalidOperationException(
+                $"Order {OrderId}: rush designation is not permitted in terminal state {LifecycleState}.");
+
+        if (OperationalModifiers.IsRush)
+            return; // idempotent
+
+        OriginalBand = OperationalModifiers.PriorityBand;
+        OperationalModifiers = OperationalModifiers with { IsRush = true, PriorityBand = PriorityBand.Rush };
+        UpdatedAt = DateTimeOffset.UtcNow;
+    }
+
+    /// <summary>
+    /// Removes rush designation and restores the order to <see cref="OriginalBand"/>.
+    /// Idempotent when the order is not currently rush.
+    /// </summary>
+    public void RemoveRushDesignation(string removedBy)
+    {
+        if (!OperationalModifiers.IsRush)
+            return; // idempotent
+
+        OperationalModifiers = OperationalModifiers with { IsRush = false, PriorityBand = OriginalBand };
+        UpdatedAt = DateTimeOffset.UtcNow;
     }
 }
