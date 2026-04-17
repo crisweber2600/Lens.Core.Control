@@ -27,8 +27,9 @@ stories_completed:
   - S5.1
   - S5.3
   - S3.4
+  - S3.1
 stories_failed: []
-current_story_index: 8
+current_story_index: 9
 story_sequence:
   - story_id: SB1
     epic: E6
