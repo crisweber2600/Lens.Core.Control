@@ -1,0 +1,39 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {
+      "StoreOperationsService.Api/1.0.0": {
+        "dependencies": {
+          "StoreOperationsService.Domain": "1.0.0"
+        },
+        "runtime": {
+          "StoreOperationsService.Api.dll": {}
+        }
+      },
+      "StoreOperationsService.Domain/1.0.0": {
+        "runtime": {
+          "StoreOperationsService.Domain.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "StoreOperationsService.Api/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "StoreOperationsService.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

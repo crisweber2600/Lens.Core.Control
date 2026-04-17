@@ -1,0 +1,12 @@
+D:\coffeelens - Copy\TargetProjects\coffee\store-service\coffee3\src\StoreOperationsService.Domain\bin\Debug\net10.0\StoreOperationsService.Domain.deps.json
+D:\coffeelens - Copy\TargetProjects\coffee\store-service\coffee3\src\StoreOperationsService.Domain\bin\Debug\net10.0\StoreOperationsService.Domain.dll
+D:\coffeelens - Copy\TargetProjects\coffee\store-service\coffee3\src\StoreOperationsService.Domain\bin\Debug\net10.0\StoreOperationsService.Domain.pdb
+D:\coffeelens - Copy\TargetProjects\coffee\store-service\coffee3\src\StoreOperationsService.Domain\obj\Debug\net10.0\StoreOperationsService.Domain.GeneratedMSBuildEditorConfig.editorconfig
+D:\coffeelens - Copy\TargetProjects\coffee\store-service\coffee3\src\StoreOperationsService.Domain\obj\Debug\net10.0\StoreOperationsService.Domain.AssemblyInfoInputs.cache
+D:\coffeelens - Copy\TargetProjects\coffee\store-service\coffee3\src\StoreOperationsService.Domain\obj\Debug\net10.0\StoreOperationsService.Domain.AssemblyInfo.cs
+D:\coffeelens - Copy\TargetProjects\coffee\store-service\coffee3\src\StoreOperationsService.Domain\obj\Debug\net10.0\StoreOperationsService.Domain.csproj.CoreCompileInputs.cache
+D:\coffeelens - Copy\TargetProjects\coffee\store-service\coffee3\src\StoreOperationsService.Domain\obj\Debug\net10.0\StoreOperationsService.Domain.sourcelink.json
+D:\coffeelens - Copy\TargetProjects\coffee\store-service\coffee3\src\StoreOperationsService.Domain\obj\Debug\net10.0\StoreOperationsService.Domain.dll
+D:\coffeelens - Copy\TargetProjects\coffee\store-service\coffee3\src\StoreOperationsService.Domain\obj\Debug\net10.0\refint\StoreOperationsService.Domain.dll
+D:\coffeelens - Copy\TargetProjects\coffee\store-service\coffee3\src\StoreOperationsService.Domain\obj\Debug\net10.0\StoreOperationsService.Domain.pdb
+D:\coffeelens - Copy\TargetProjects\coffee\store-service\coffee3\src\StoreOperationsService.Domain\obj\Debug\net10.0\ref\StoreOperationsService.Domain.dll
