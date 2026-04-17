@@ -8,6 +8,7 @@ public sealed class StoreOperationsDbContext(DbContextOptions<StoreOperationsDbC
 {
     public DbSet<StoreOrderSnapshot> StoreOrderSnapshots => Set<StoreOrderSnapshot>();
     public DbSet<OrderTransitionLog> OrderTransitionLogs => Set<OrderTransitionLog>();
+    public DbSet<OutboxMessage> OutboxMessages => Set<OutboxMessage>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -28,6 +29,16 @@ public sealed class StoreOperationsDbContext(DbContextOptions<StoreOperationsDbC
             e.Property(x => x.ToState).HasMaxLength(50).IsRequired();
             e.HasIndex(x => x.OrderId);
             e.HasIndex(x => x.OccurredAt);
+        });
+
+        modelBuilder.Entity<OutboxMessage>(e =>
+        {
+            e.HasKey(x => x.Id);
+            e.Property(x => x.Id).UseIdentityColumn();
+            e.Property(x => x.Type).HasMaxLength(500).IsRequired();
+            e.Property(x => x.Payload).IsRequired();
+            e.Property(x => x.CorrelationId).HasMaxLength(200);
+            e.HasIndex(x => x.SentAt);
         });
     }
 }
