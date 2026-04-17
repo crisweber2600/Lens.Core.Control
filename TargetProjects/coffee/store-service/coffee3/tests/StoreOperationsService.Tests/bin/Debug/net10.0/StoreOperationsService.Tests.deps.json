@@ -1194,6 +1194,7 @@
       "StoreOperationsService.Infrastructure/1.0.0": {
         "dependencies": {
           "Microsoft.EntityFrameworkCore.SqlServer": "10.0.0",
+          "Microsoft.Extensions.Hosting.Abstractions": "10.0.0",
           "StoreOperationsService.Domain": "1.0.0"
         },
         "runtime": {

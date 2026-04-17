@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "2nQTrEg3blE=",
+  "dgSpecHash": "A04gJWZxpys=",
   "success": true,
   "projectFilePath": "D:\\coffeelens - Copy\\TargetProjects\\coffee\\store-service\\coffee3\\src\\StoreOperationsService.Infrastructure\\StoreOperationsService.Infrastructure.csproj",
   "expectedPackageFiles": [
@@ -33,6 +33,9 @@
     "C:\\Users\\CrisWeber\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\10.0.0\\microsoft.extensions.dependencyinjection.10.0.0.nupkg.sha512",
     "C:\\Users\\CrisWeber\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\10.0.0\\microsoft.extensions.dependencyinjection.abstractions.10.0.0.nupkg.sha512",
     "C:\\Users\\CrisWeber\\.nuget\\packages\\microsoft.extensions.dependencymodel\\10.0.0\\microsoft.extensions.dependencymodel.10.0.0.nupkg.sha512",
+    "C:\\Users\\CrisWeber\\.nuget\\packages\\microsoft.extensions.diagnostics.abstractions\\10.0.0\\microsoft.extensions.diagnostics.abstractions.10.0.0.nupkg.sha512",
+    "C:\\Users\\CrisWeber\\.nuget\\packages\\microsoft.extensions.fileproviders.abstractions\\10.0.0\\microsoft.extensions.fileproviders.abstractions.10.0.0.nupkg.sha512",
+    "C:\\Users\\CrisWeber\\.nuget\\packages\\microsoft.extensions.hosting.abstractions\\10.0.0\\microsoft.extensions.hosting.abstractions.10.0.0.nupkg.sha512",
     "C:\\Users\\CrisWeber\\.nuget\\packages\\microsoft.extensions.logging\\10.0.0\\microsoft.extensions.logging.10.0.0.nupkg.sha512",
     "C:\\Users\\CrisWeber\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\10.0.0\\microsoft.extensions.logging.abstractions.10.0.0.nupkg.sha512",
     "C:\\Users\\CrisWeber\\.nuget\\packages\\microsoft.extensions.options\\10.0.0\\microsoft.extensions.options.10.0.0.nupkg.sha512",

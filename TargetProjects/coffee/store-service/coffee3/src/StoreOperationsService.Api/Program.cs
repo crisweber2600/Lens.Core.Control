@@ -18,6 +18,7 @@ builder.Services.AddDbContext<StoreOperationsDbContext>(options =>
 builder.Services.AddSingleton<IEventBusAdapter, InMemoryEventBusAdapter>();
 builder.Services.AddScoped<IStoreOrderRepository, StoreOrderRepository>();
 builder.Services.AddScoped<IOutboxRepository, OutboxRepository>();
+builder.Services.AddHostedService<OutboxPublisherService>();
 
 var app = builder.Build();
 
