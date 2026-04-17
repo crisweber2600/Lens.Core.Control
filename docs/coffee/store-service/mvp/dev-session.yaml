@@ -182,7 +182,7 @@ story_sequence:
     priority: HIGH
     points: 3
     summary: Cancellation path — cancel from any non-terminal state
-    status: not-started
+    status: done
     blocked_by: [S1.3]
   - story_id: S3.2
     epic: E3
@@ -191,7 +191,7 @@ story_sequence:
     priority: HIGH
     points: 5
     summary: Outbox Publisher background service (poll + publish + mark-sent)
-    status: not-started
+    status: done
     blocked_by: [S3.1, S3.3]
   - story_id: S4.1
     epic: E4

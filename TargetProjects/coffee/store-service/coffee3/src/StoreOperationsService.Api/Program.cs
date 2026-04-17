@@ -16,9 +16,12 @@ builder.Services.AddDbContext<StoreOperationsDbContext>(options =>
         sql => sql.MigrationsAssembly(typeof(StoreOperationsDbContext).Assembly.FullName)));
 
 builder.Services.AddSingleton<IEventBusAdapter, InMemoryEventBusAdapter>();
+builder.Services.AddSingleton<IRabbitMqConsumerAdapter, InMemoryConsumerAdapter>();
 builder.Services.AddScoped<IStoreOrderRepository, StoreOrderRepository>();
 builder.Services.AddScoped<IOutboxRepository, OutboxRepository>();
+builder.Services.AddScoped<IOrderIntakeConsumer, OrderIntakeConsumer>();
 builder.Services.AddHostedService<OutboxPublisherService>();
+builder.Services.AddHostedService<OrderIntakeSubscriber>();
 
 var app = builder.Build();
 
