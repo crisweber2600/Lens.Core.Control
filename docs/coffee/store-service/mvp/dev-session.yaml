@@ -2,7 +2,7 @@ epic_number: 6
 feature_id: mvp
 feature_path: docs/coffee/store-service/mvp
 started_at: '2026-05-07T00:00:00Z'
-last_checkpoint: '2026-05-07T07:00:00Z'
+last_checkpoint: '2026-05-07T08:00:00Z'
 special_instructions: >
   Sprint 0 is docs-only SPIKEs (SB1-SB4). No target repo provisioned yet.
   All story artifacts write to docs/coffee/store-service/mvp/ on the mvp branch
@@ -32,8 +32,9 @@ stories_completed:
   - S1.3
   - S1.4
   - S3.3
+  - S1.5
 stories_failed: []
-current_story_index: 13
+current_story_index: 15
 story_sequence:
   - story_id: SB1
     epic: E6
@@ -169,7 +170,8 @@ story_sequence:
     priority: HIGH
     points: 3
     summary: Ready -> Completed handoff confirmation flow
-    status: not-started
+    status: done
+    tests_passed: 143
     blocked_by: [S1.3]
   - story_id: S1.6
     epic: E1
