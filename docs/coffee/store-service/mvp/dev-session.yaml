@@ -2,7 +2,7 @@ epic_number: 6
 feature_id: mvp
 feature_path: docs/coffee/store-service/mvp
 started_at: '2026-05-07T00:00:00Z'
-last_checkpoint: '2026-05-07T03:00:00Z'
+last_checkpoint: '2026-05-07T04:00:00Z'
 special_instructions: >
   Sprint 0 is docs-only SPIKEs (SB1-SB4). No target repo provisioned yet.
   All story artifacts write to docs/coffee/store-service/mvp/ on the mvp branch
@@ -25,8 +25,9 @@ stories_completed:
   - SB4
   - S1.1
   - S5.1
+  - S5.3
 stories_failed: []
-current_story_index: 6
+current_story_index: 7
 story_sequence:
   - story_id: SB1
     epic: E6
@@ -94,7 +95,8 @@ story_sequence:
     points: 5
     summary: EF Core DbContext + StoreOperationsDb + initial migration
     output: TargetProjects/coffee/store-service/coffee3/src/StoreOperationsService.Infrastructure
-    status: not-started
+    status: done
+    tests_passed: 39
     blocked_by: [S5.1]
   - story_id: S3.4
     epic: E3
