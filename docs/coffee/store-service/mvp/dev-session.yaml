@@ -2,7 +2,7 @@ epic_number: 6
 feature_id: mvp
 feature_path: docs/coffee/store-service/mvp
 started_at: '2026-05-07T00:00:00Z'
-last_checkpoint: '2026-05-07T02:00:00Z'
+last_checkpoint: '2026-05-07T03:00:00Z'
 special_instructions: >
   Sprint 0 is docs-only SPIKEs (SB1-SB4). No target repo provisioned yet.
   All story artifacts write to docs/coffee/store-service/mvp/ on the mvp branch
@@ -17,15 +17,16 @@ working_branch: mvp
 base_branch: main
 requires_final_pr: true
 final_pr_url: 'https://github.com/crisweber2600/Lens.Core.Control/pull/2'
-total_stories: 5
+total_stories: 24
 stories_completed:
   - SB1
   - SB2
   - SB3
   - SB4
   - S1.1
+  - S5.1
 stories_failed: []
-current_story_index: 5
+current_story_index: 6
 story_sequence:
   - story_id: SB1
     epic: E6
@@ -74,6 +75,180 @@ story_sequence:
     status: done
     tests_passed: 29
     blocked_by: []
+  - story_id: S5.1
+    epic: E5
+    sprint: 1
+    type: story
+    priority: BLOCKER
+    points: 3
+    summary: Scaffold StoreOperationsService.Api web project with /health endpoint
+    output: TargetProjects/coffee/store-service/coffee3/src/StoreOperationsService.Api
+    status: done
+    tests_passed: 30
+    blocked_by: []
+  - story_id: S5.3
+    epic: E5
+    sprint: 1
+    type: story
+    priority: BLOCKER
+    points: 5
+    summary: EF Core DbContext + StoreOperationsDb + initial migration
+    output: TargetProjects/coffee/store-service/coffee3/src/StoreOperationsService.Infrastructure
+    status: not-started
+    blocked_by: [S5.1]
+  - story_id: S3.4
+    epic: E3
+    sprint: 1
+    type: story
+    priority: HIGH
+    points: 3
+    summary: Versioned snapshot event schema (StoreOrderSnapshotted)
+    status: not-started
+    blocked_by: [S5.3]
+  - story_id: S3.1
+    epic: E3
+    sprint: 1
+    type: story
+    priority: HIGH
+    points: 5
+    summary: Outbox table + persistence contract
+    status: not-started
+    blocked_by: [S5.3]
+  - story_id: S1.2
+    epic: E1
+    sprint: 1
+    type: story
+    priority: HIGH
+    points: 3
+    summary: Persist lifecycle state snapshot to database on every transition
+    status: not-started
+    blocked_by: [S5.3]
+  - story_id: S1.3
+    epic: E1
+    sprint: 1
+    type: story
+    priority: HIGH
+    points: 3
+    summary: Append lifecycle transition log entry on every state change
+    status: not-started
+    blocked_by: [S1.2]
+  - story_id: S1.4
+    epic: E1
+    sprint: 1
+    type: story
+    priority: HIGH
+    points: 2
+    summary: Enforce invalid transition guard at persistence layer (no dirty writes)
+    status: not-started
+    blocked_by: [S1.2]
+  - story_id: S3.3
+    epic: E3
+    sprint: 1
+    type: story
+    priority: HIGH
+    points: 5
+    summary: Event Bus Adapter (RabbitMQ publisher interface + in-memory stub)
+    status: not-started
+    blocked_by: []
+  - story_id: S1.5
+    epic: E1
+    sprint: 1
+    type: story
+    priority: HIGH
+    points: 3
+    summary: Ready -> Completed handoff confirmation flow
+    status: not-started
+    blocked_by: [S1.3]
+  - story_id: S1.6
+    epic: E1
+    sprint: 1
+    type: story
+    priority: HIGH
+    points: 3
+    summary: Cancellation path — cancel from any non-terminal state
+    status: not-started
+    blocked_by: [S1.3]
+  - story_id: S3.2
+    epic: E3
+    sprint: 2
+    type: story
+    priority: HIGH
+    points: 5
+    summary: Outbox Publisher background service (poll + publish + mark-sent)
+    status: not-started
+    blocked_by: [S3.1, S3.3]
+  - story_id: S4.1
+    epic: E4
+    sprint: 2
+    type: story
+    priority: HIGH
+    points: 5
+    summary: Inbound order intake from CustomerService (RabbitMQ consumer)
+    status: not-started
+    blocked_by: [S3.3]
+  - story_id: S4.2
+    epic: E4
+    sprint: 2
+    type: story
+    priority: HIGH
+    points: 3
+    summary: Outbound ready notification to CustomerService (order-ready event)
+    status: not-started
+    blocked_by: [S3.4, S1.5]
+  - story_id: S2.1
+    epic: E2
+    sprint: 2
+    type: story
+    priority: HIGH
+    points: 5
+    summary: Queue ingestion + ordering algorithm (priority bands + FIFO within band)
+    status: not-started
+    blocked_by: [S1.1]
+  - story_id: S2.2
+    epic: E2
+    sprint: 2
+    type: story
+    priority: HIGH
+    points: 3
+    summary: Rush designation — operator can promote order to Rush band
+    status: not-started
+    blocked_by: [S2.1]
+  - story_id: S2.3
+    epic: E2
+    sprint: 2
+    type: story
+    priority: HIGH
+    points: 3
+    summary: At-risk escalation — age-based auto-promote to Rush band
+    status: not-started
+    blocked_by: [S2.1]
+  - story_id: S2.4
+    epic: E2
+    sprint: 3
+    type: story
+    priority: MEDIUM
+    points: 3
+    summary: Queue-state read model API (GET /queue endpoint)
+    status: not-started
+    blocked_by: [S2.1, S5.1]
+  - story_id: S4.3
+    epic: E4
+    sprint: 3
+    type: story
+    priority: MEDIUM
+    points: 3
+    summary: Outbound event fan-out to CorporateReporting service
+    status: not-started
+    blocked_by: [S3.2, S3.4]
+  - story_id: S5.2
+    epic: E5
+    sprint: 3
+    type: story
+    priority: HIGH
+    points: 5
+    summary: Register StoreOperationsService in Aspire AppHost (Coffee.AppHost)
+    status: not-started
+    blocked_by: [S5.1]
 sprint0_gate_check:
   required: [SB1, SB2]
   status: passed
