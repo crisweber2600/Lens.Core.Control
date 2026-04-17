@@ -14,4 +14,10 @@ public sealed class StoreOrderSnapshot
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
     public uint RowVersion { get; set; }
+
+    /// <summary>Persisted <see cref="Domain.ValueObjects.OrderType"/> name (e.g. "Drink").</summary>
+    public string OrderType { get; set; } = "Unknown";
+
+    /// <summary>The instant the order entered the Queued state. Null until queued.</summary>
+    public DateTimeOffset? QueuedAt { get; set; }
 }

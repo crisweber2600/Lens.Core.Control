@@ -1,4 +1,5 @@
 using StoreOperationsService.Domain.Exceptions;
+using StoreOperationsService.Domain.ValueObjects;
 
 namespace StoreOperationsService.Domain;
 
@@ -39,6 +40,22 @@ public sealed class StoreOrder
     /// </summary>
     public PriorityBand OriginalBand { get; private set; } = PriorityBand.Standard;
 
+    // ── Order type ─────────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Classifies the kind of item in this order (Drink, Food, Addon, Unknown).
+    /// Drives the at-risk threshold selection.
+    /// </summary>
+    public OrderType OrderType { get; private set; } = OrderType.Unknown;
+
+    // ── At-risk timing ─────────────────────────────────────────────────────
+
+    /// <summary>
+    /// The instant the order entered the <see cref="OrderLifecycleState.Queued"/> state.
+    /// <c>null</c> until the order is queued.
+    /// </summary>
+    public DateTimeOffset? QueuedAt { get; private set; }
+
     // ── Allowed transitions (AD-1, AD-4) ──────────────────────────────────
     //
     //  Received  → Queued | Cancelled
@@ -78,7 +95,9 @@ public sealed class StoreOrder
         OperationalModifiers operationalModifiers,
         PriorityBand originalBand,
         DateTimeOffset createdAt,
-        DateTimeOffset updatedAt)
+        DateTimeOffset updatedAt,
+        OrderType orderType,
+        DateTimeOffset? queuedAt)
     {
         OrderId = orderId;
         CustomerId = customerId;
@@ -87,6 +106,8 @@ public sealed class StoreOrder
         OriginalBand = originalBand;
         CreatedAt = createdAt;
         UpdatedAt = updatedAt;
+        OrderType = orderType;
+        QueuedAt = queuedAt;
     }
 
     /// <summary>
@@ -98,10 +119,12 @@ public sealed class StoreOrder
         OrderLifecycleState lifecycleState,
         OperationalModifiers operationalModifiers,
         DateTimeOffset createdAt,
-        DateTimeOffset updatedAt) =>
+        DateTimeOffset updatedAt,
+        OrderType orderType = OrderType.Unknown,
+        DateTimeOffset? queuedAt = null) =>
         new(orderId, customerId, lifecycleState, operationalModifiers,
             operationalModifiers.IsRush ? PriorityBand.Standard : operationalModifiers.PriorityBand,
-            createdAt, updatedAt);
+            createdAt, updatedAt, orderType, queuedAt);
 
     // ── Lifecycle transition ───────────────────────────────────────────────
 
@@ -120,6 +143,43 @@ public sealed class StoreOrder
 
         LifecycleState = newState;
         UpdatedAt = DateTimeOffset.UtcNow;
+
+        if (newState == OrderLifecycleState.Queued)
+            QueuedAt = UpdatedAt;
+
+        if (newState == OrderLifecycleState.InProgress)
+            ClearAtRisk();
+    }
+
+    // ── At-risk flag ───────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Marks the order as at-risk.  No-op when already flagged.
+    /// </summary>
+    public void SetAtRisk()
+    {
+        if (OperationalModifiers.IsAtRisk) return;
+        OperationalModifiers = OperationalModifiers.WithAtRisk(true);
+        UpdatedAt = DateTimeOffset.UtcNow;
+    }
+
+    /// <summary>
+    /// Clears the at-risk flag.  No-op when not flagged.
+    /// Called automatically when the order transitions to InProgress.
+    /// </summary>
+    public void ClearAtRisk()
+    {
+        if (!OperationalModifiers.IsAtRisk) return;
+        OperationalModifiers = OperationalModifiers.WithAtRisk(false);
+        UpdatedAt = DateTimeOffset.UtcNow;
+    }
+
+    /// <summary>
+    /// Sets the order type.
+    /// </summary>
+    public void SetOrderType(OrderType orderType)
+    {
+        OrderType = orderType;
     }
 
     // ── Operational modifiers (mutable per queue evaluation) ──────────────

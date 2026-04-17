@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using StoreOperationsService.Domain;
+using StoreOperationsService.Domain.Config;
 using StoreOperationsService.Domain.Exceptions;
 using StoreOperationsService.Domain.Messaging;
 using StoreOperationsService.Domain.Queue;
@@ -9,6 +10,7 @@ using StoreOperationsService.Infrastructure;
 using StoreOperationsService.Infrastructure.Messaging;
 using StoreOperationsService.Infrastructure.Queue;
 using StoreOperationsService.Infrastructure.Repositories;
+using StoreOperationsService.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,8 +29,11 @@ builder.Services.AddScoped<IOutboxRepository, OutboxRepository>();
 builder.Services.AddQueueReadModel();
 builder.Services.AddScoped<IOrderIntakeConsumer, OrderIntakeConsumer>();
 builder.Services.AddSingleton<RushDesignationService>();
+builder.Services.Configure<AtRiskOptions>(
+    builder.Configuration.GetSection(AtRiskOptions.Section));
 builder.Services.AddHostedService<OutboxPublisherService>();
 builder.Services.AddHostedService<OrderIntakeSubscriber>();
+builder.Services.AddHostedService<AtRiskBackgroundService>();
 
 var app = builder.Build();
 

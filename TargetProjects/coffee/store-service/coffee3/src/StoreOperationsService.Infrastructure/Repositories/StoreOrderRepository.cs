@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using StoreOperationsService.Domain.Repositories;
+using StoreOperationsService.Domain.ValueObjects;
 using StoreOperationsService.Infrastructure.Entities;
 
 namespace StoreOperationsService.Infrastructure.Repositories;
@@ -26,6 +27,8 @@ public sealed class StoreOrderRepository(StoreOperationsDbContext dbContext) : I
                 IsAtRisk     = snapshot.IsAtRisk,
                 CreatedAt    = snapshot.CreatedAt,
                 UpdatedAt    = snapshot.UpdatedAt,
+                OrderType    = snapshot.OrderType.ToString(),
+                QueuedAt     = snapshot.QueuedAt,
             });
         }
         else
@@ -43,6 +46,8 @@ public sealed class StoreOrderRepository(StoreOperationsDbContext dbContext) : I
             existing.IsRush       = snapshot.IsRush;
             existing.IsAtRisk     = snapshot.IsAtRisk;
             existing.UpdatedAt    = snapshot.UpdatedAt;
+            existing.OrderType    = snapshot.OrderType.ToString();
+            existing.QueuedAt     = snapshot.QueuedAt;
             existing.RowVersion++;  // advance token so the next caller must re-read
         }
 
@@ -71,7 +76,9 @@ public sealed class StoreOrderRepository(StoreOperationsDbContext dbContext) : I
     }
 
     private static StoreOrderSnapshotData ToDto(StoreOrderSnapshot e) =>
-        new(e.OrderId, e.CurrentState, e.PriorityBand, e.IsRush, e.IsAtRisk, e.CreatedAt, e.UpdatedAt, e.RowVersion);
+        new(e.OrderId, e.CurrentState, e.PriorityBand, e.IsRush, e.IsAtRisk, e.CreatedAt, e.UpdatedAt, e.RowVersion,
+            Enum.TryParse<OrderType>(e.OrderType, ignoreCase: true, out var ot) ? ot : OrderType.Unknown,
+            e.QueuedAt);
 
     public async Task CompleteOrderAsync(
         StoreOrderSnapshotData snapshot,
@@ -96,6 +103,8 @@ public sealed class StoreOrderRepository(StoreOperationsDbContext dbContext) : I
                 IsAtRisk     = snapshot.IsAtRisk,
                 CreatedAt    = snapshot.CreatedAt,
                 UpdatedAt    = snapshot.UpdatedAt,
+                OrderType    = snapshot.OrderType.ToString(),
+                QueuedAt     = snapshot.QueuedAt,
             });
         }
         else
@@ -110,6 +119,8 @@ public sealed class StoreOrderRepository(StoreOperationsDbContext dbContext) : I
             existing.IsRush       = snapshot.IsRush;
             existing.IsAtRisk     = snapshot.IsAtRisk;
             existing.UpdatedAt    = snapshot.UpdatedAt;
+            existing.OrderType    = snapshot.OrderType.ToString();
+            existing.QueuedAt     = snapshot.QueuedAt;
             existing.RowVersion++;
         }
 
@@ -134,7 +145,17 @@ public sealed class StoreOrderRepository(StoreOperationsDbContext dbContext) : I
         // ── Single atomic save ───────────────────────────────────────────
         await dbContext.SaveChangesAsync(cancellationToken);
     }
+    public async Task<IReadOnlyList<StoreOrderSnapshotData>> GetSnapshotsByStateAsync(
+        string state,
+        CancellationToken cancellationToken = default)
+    {
+        var entities = await dbContext.StoreOrderSnapshots
+            .AsNoTracking()
+            .Where(s => s.CurrentState == state)
+            .ToListAsync(cancellationToken);
 
+        return entities.Select(ToDto).ToList();
+    }
     public async Task CancelOrderAsync(
         StoreOrderSnapshotData snapshot,
         string fromState,
@@ -159,6 +180,8 @@ public sealed class StoreOrderRepository(StoreOperationsDbContext dbContext) : I
                 IsAtRisk     = snapshot.IsAtRisk,
                 CreatedAt    = snapshot.CreatedAt,
                 UpdatedAt    = snapshot.UpdatedAt,
+                OrderType    = snapshot.OrderType.ToString(),
+                QueuedAt     = snapshot.QueuedAt,
             });
         }
         else
@@ -173,6 +196,8 @@ public sealed class StoreOrderRepository(StoreOperationsDbContext dbContext) : I
             existing.IsRush       = snapshot.IsRush;
             existing.IsAtRisk     = snapshot.IsAtRisk;
             existing.UpdatedAt    = snapshot.UpdatedAt;
+            existing.OrderType    = snapshot.OrderType.ToString();
+            existing.QueuedAt     = snapshot.QueuedAt;
             existing.RowVersion++;
         }
 
@@ -221,6 +246,8 @@ public sealed class StoreOrderRepository(StoreOperationsDbContext dbContext) : I
                 IsAtRisk     = snapshot.IsAtRisk,
                 CreatedAt    = snapshot.CreatedAt,
                 UpdatedAt    = snapshot.UpdatedAt,
+                OrderType    = snapshot.OrderType.ToString(),
+                QueuedAt     = snapshot.QueuedAt,
             });
         }
         else
@@ -235,6 +262,8 @@ public sealed class StoreOrderRepository(StoreOperationsDbContext dbContext) : I
             existing.IsRush       = snapshot.IsRush;
             existing.IsAtRisk     = snapshot.IsAtRisk;
             existing.UpdatedAt    = snapshot.UpdatedAt;
+            existing.OrderType    = snapshot.OrderType.ToString();
+            existing.QueuedAt     = snapshot.QueuedAt;
             existing.RowVersion++;
         }
 

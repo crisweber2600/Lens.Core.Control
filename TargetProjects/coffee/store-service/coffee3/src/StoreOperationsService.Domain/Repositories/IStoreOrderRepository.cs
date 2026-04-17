@@ -1,5 +1,7 @@
 namespace StoreOperationsService.Domain.Repositories;
 
+using StoreOperationsService.Domain.ValueObjects;
+
 /// <summary>
 /// Snapshot data transferred between the domain and the persistence layer.
 /// <para>
@@ -17,7 +19,9 @@ public sealed record StoreOrderSnapshotData(
     bool IsAtRisk,
     DateTimeOffset CreatedAt,
     DateTimeOffset UpdatedAt,
-    uint RowVersion = 0);
+    uint RowVersion = 0,
+    OrderType OrderType = OrderType.Unknown,
+    DateTimeOffset? QueuedAt = null);
 
 /// <summary>
 /// Persistence contract for the StoreOrder aggregate snapshot and transition log.
@@ -80,6 +84,16 @@ public interface IStoreOrderRepository
         string outboxPayload,
         DateTimeOffset occurredAt,
         string? correlationId = null,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Returns all snapshot rows whose <c>CurrentState</c> matches the given
+    /// <paramref name="state"/> string (e.g. <c>"Queued"</c>).
+    /// Used by background services such as <c>AtRiskBackgroundService</c> to
+    /// bulk-evaluate all orders in a particular lifecycle state.
+    /// </summary>
+    Task<IReadOnlyList<StoreOrderSnapshotData>> GetSnapshotsByStateAsync(
+        string state,
         CancellationToken cancellationToken = default);
 }
 

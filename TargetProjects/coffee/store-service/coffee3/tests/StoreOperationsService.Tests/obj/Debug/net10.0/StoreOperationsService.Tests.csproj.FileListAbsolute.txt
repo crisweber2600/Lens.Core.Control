@@ -507,3 +507,4 @@ D:\coffeelens - Copy\TargetProjects\coffee\store-service\coffee3\tests\StoreOper
 D:\coffeelens - Copy\TargetProjects\coffee\store-service\coffee3\tests\StoreOperationsService.Tests\obj\Debug\net10.0\StoreOperationsService.Tests.pdb
 D:\coffeelens - Copy\TargetProjects\coffee\store-service\coffee3\tests\StoreOperationsService.Tests\obj\Debug\net10.0\StoreOperationsService.Tests.genruntimeconfig.cache
 D:\coffeelens - Copy\TargetProjects\coffee\store-service\coffee3\tests\StoreOperationsService.Tests\obj\Debug\net10.0\ref\StoreOperationsService.Tests.dll
+D:\coffeelens - Copy\TargetProjects\coffee\store-service\coffee3\tests\StoreOperationsService.Tests\bin\Debug\net10.0\appsettings.json
