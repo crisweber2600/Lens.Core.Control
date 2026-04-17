@@ -2,6 +2,12 @@ namespace StoreOperationsService.Domain.Repositories;
 
 /// <summary>
 /// Snapshot data transferred between the domain and the persistence layer.
+/// <para>
+/// <see cref="RowVersion"/> is the optimistic-concurrency token read from the last successful
+/// <see cref="IStoreOrderRepository.GetSnapshotAsync"/> call.  Pass the same value back through
+/// <see cref="IStoreOrderRepository.UpsertSnapshotAsync"/> to guard against dirty writes.
+/// New snapshots (inserts) should leave <see cref="RowVersion"/> at its default value of 0.
+/// </para>
 /// </summary>
 public sealed record StoreOrderSnapshotData(
     Guid OrderId,
@@ -10,7 +16,8 @@ public sealed record StoreOrderSnapshotData(
     bool IsRush,
     bool IsAtRisk,
     DateTimeOffset CreatedAt,
-    DateTimeOffset UpdatedAt);
+    DateTimeOffset UpdatedAt,
+    uint RowVersion = 0);
 
 /// <summary>
 /// Persistence contract for the StoreOrder aggregate snapshot and transition log.

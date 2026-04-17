@@ -30,11 +30,20 @@ public sealed class StoreOrderRepository(StoreOperationsDbContext dbContext) : I
         }
         else
         {
+            // Optimistic-concurrency guard: reject stale writes.
+            // The caller must supply the RowVersion obtained from the last GetSnapshotAsync call.
+            // A mismatch means another writer has committed since the snapshot was read.
+            if (existing.RowVersion != snapshot.RowVersion)
+                throw new DbUpdateConcurrencyException(
+                    $"Concurrency conflict on order {snapshot.OrderId}: " +
+                    $"expected RowVersion {snapshot.RowVersion} but current is {existing.RowVersion}.");
+
             existing.CurrentState = snapshot.CurrentState;
             existing.PriorityBand = snapshot.PriorityBand;
             existing.IsRush       = snapshot.IsRush;
             existing.IsAtRisk     = snapshot.IsAtRisk;
             existing.UpdatedAt    = snapshot.UpdatedAt;
+            existing.RowVersion++;  // advance token so the next caller must re-read
         }
 
         await dbContext.SaveChangesAsync(cancellationToken);
@@ -62,5 +71,5 @@ public sealed class StoreOrderRepository(StoreOperationsDbContext dbContext) : I
     }
 
     private static StoreOrderSnapshotData ToDto(StoreOrderSnapshot e) =>
-        new(e.OrderId, e.CurrentState, e.PriorityBand, e.IsRush, e.IsAtRisk, e.CreatedAt, e.UpdatedAt);
+        new(e.OrderId, e.CurrentState, e.PriorityBand, e.IsRush, e.IsAtRisk, e.CreatedAt, e.UpdatedAt, e.RowVersion);
 }
