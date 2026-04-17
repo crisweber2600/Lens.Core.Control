@@ -74,7 +74,12 @@ story_sequence:
     blocked_by: [SB1, SB2, target-repo-creation]
 sprint0_gate_check:
   required: [SB1, SB2]
-  status: pending
+  status: passed
+  checked_at: '2026-04-17T01:00:00Z'
+  c1_business_plan: committed
+  c2_aspire_plan: committed
+  sb3_queue_adr: committed
+  sb4_decisions: committed
 final_review_status: null
 final_party_mode_status: null
 status: in-progress
