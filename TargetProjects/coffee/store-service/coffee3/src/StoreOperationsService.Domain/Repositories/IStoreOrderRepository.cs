@@ -13,7 +13,7 @@ public sealed record StoreOrderSnapshotData(
     DateTimeOffset UpdatedAt);
 
 /// <summary>
-/// Persistence contract for the StoreOrder aggregate snapshot.
+/// Persistence contract for the StoreOrder aggregate snapshot and transition log.
 /// </summary>
 public interface IStoreOrderRepository
 {
@@ -27,4 +27,10 @@ public interface IStoreOrderRepository
     /// Returns the current snapshot for an order, or null if not found.
     /// </summary>
     Task<StoreOrderSnapshotData?> GetSnapshotAsync(Guid orderId, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Appends a transition log entry for the given order.
+    /// </summary>
+    Task AppendTransitionLogAsync(Guid orderId, string fromState, string toState, DateTimeOffset occurredAt, CancellationToken cancellationToken = default);
 }
+

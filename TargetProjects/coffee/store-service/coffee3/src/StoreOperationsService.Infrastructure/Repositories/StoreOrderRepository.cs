@@ -49,6 +49,18 @@ public sealed class StoreOrderRepository(StoreOperationsDbContext dbContext) : I
         return entity is null ? null : ToDto(entity);
     }
 
+    public async Task AppendTransitionLogAsync(Guid orderId, string fromState, string toState, DateTimeOffset occurredAt, CancellationToken cancellationToken = default)
+    {
+        dbContext.OrderTransitionLogs.Add(new OrderTransitionLog
+        {
+            OrderId    = orderId,
+            FromState  = fromState,
+            ToState    = toState,
+            OccurredAt = occurredAt,
+        });
+        await dbContext.SaveChangesAsync(cancellationToken);
+    }
+
     private static StoreOrderSnapshotData ToDto(StoreOrderSnapshot e) =>
         new(e.OrderId, e.CurrentState, e.PriorityBand, e.IsRush, e.IsAtRisk, e.CreatedAt, e.UpdatedAt);
 }
