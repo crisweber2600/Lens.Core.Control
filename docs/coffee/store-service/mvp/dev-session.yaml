@@ -2,7 +2,7 @@ epic_number: 6
 feature_id: mvp
 feature_path: docs/coffee/store-service/mvp
 started_at: '2026-05-07T00:00:00Z'
-last_checkpoint: '2026-04-17T00:00:00Z'
+last_checkpoint: '2026-04-17T01:00:00Z'
 special_instructions: >
   Sprint 0 is docs-only SPIKEs (SB1-SB4). No target repo provisioned yet.
   All story artifacts write to docs/coffee/store-service/mvp/ on the mvp branch
@@ -21,8 +21,10 @@ total_stories: 5
 stories_completed:
   - SB1
   - SB2
+  - SB3
+  - SB4
 stories_failed: []
-current_story_index: 2
+current_story_index: 4
 story_sequence:
   - story_id: SB1
     epic: E6
@@ -49,8 +51,8 @@ story_sequence:
     priority: HIGH
     points: 3
     summary: Design SPIKE — rush-authority flow and queue-ordering algorithm
-    output: docs/coffee/store-service/mvp/design/rush-authority-design.md
-    status: not-started
+    output: docs/coffee/store-service/mvp/queue-ordering-adr.md
+    status: done
   - story_id: SB4
     epic: E6
     sprint: 0
@@ -58,8 +60,8 @@ story_sequence:
     priority: HIGH
     points: 3
     summary: Design SPIKE — resolve 6 open PRD questions, rewrite ACs in GWT format
-    output: docs/coffee/store-service/mvp/design/prd-resolution.md
-    status: not-started
+    output: docs/coffee/store-service/mvp/decisions.md
+    status: done
   - story_id: S1.1
     epic: E1
     sprint: 1

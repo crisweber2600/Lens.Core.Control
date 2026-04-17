@@ -8,16 +8,37 @@ key_decisions:
   - "Order priority is an operational attribute, not a substitute for lifecycle state."
   - "Ready and completed are distinct states: ready means prepared for handoff; completed means the store-defined terminal completion event has been confirmed."
   - "Cancellation is terminal and must preserve reason and stage-of-work context for downstream consumers."
-open_questions:
-  - "What business rule qualifies an order as rush, and which actors may apply or remove rush treatment?"
-  - "What store event should count as completed: handoff-ready, handoff-confirmed, or customer-collected?"
-  - "Should blocked or remake conditions be externally visible to CustomerService, or only to reporting and store operations?"
-  - "How should partial fulfillment or remake scenarios be represented without weakening operational truth?"
+open_questions: []
+closed_questions:
+  - id: Q1
+    question: "What business rule qualifies an order as rush, and which actors may apply or remove rush treatment?"
+    resolution: "Human-initiated only. Shift Lead role required. No automated rush. See decisions.md Q1."
+    closed_at: '2026-04-17T00:00:00Z'
+  - id: Q2
+    question: "What store event should count as completed: handoff-ready, handoff-confirmed, or customer-collected?"
+    resolution: "handoff-confirmed. StoreOrderCompleted event published via outbox. CustomerService subscribes. See decisions.md Q2."
+    closed_at: '2026-04-17T00:00:00Z'
+  - id: Q3
+    question: "Should blocked or remake conditions be externally visible to CustomerService, or only to reporting and store operations?"
+    resolution: "Not visible to CustomerService for MVP. Store operations and reporting only. See decisions.md Q3."
+    closed_at: '2026-04-17T00:00:00Z'
+  - id: Q4
+    question: "How should partial fulfillment or remake scenarios be represented without weakening operational truth?"
+    resolution: "Same operational order record. Remake flag on aggregate. No separate record. See decisions.md Q3."
+    closed_at: '2026-04-17T00:00:00Z'
+  - id: Q5
+    question: "Are cancellation reason codes a fixed enum or open-ended string?"
+    resolution: "Fixed enum (5 values). See decisions.md Q5."
+    closed_at: '2026-04-17T00:00:00Z'
+  - id: Q6
+    question: "Is multi-store routing in scope for MVP?"
+    resolution: "Yes. store_id required on all aggregates and queue queries. See decisions.md Q6."
+    closed_at: '2026-04-17T00:00:00Z'
 depends_on:
   - "CustomerService"
   - "CorporateReportingService"
 blocks: []
-updated_at: 2026-04-17T00:00:00Z
+updated_at: '2026-04-17T00:00:00Z'
 ---
 
 # StoreOperationsService Requirements Specification
