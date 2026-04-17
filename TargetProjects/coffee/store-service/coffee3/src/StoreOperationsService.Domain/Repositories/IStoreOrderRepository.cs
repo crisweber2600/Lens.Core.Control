@@ -66,5 +66,20 @@ public interface IStoreOrderRepository
         DateTimeOffset occurredAt,
         string? correlationId = null,
         CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Atomically updates the snapshot to <c>Ready</c>, appends a transition log entry
+    /// recording <c>InProgress</c> → <c>Ready</c>, and enqueues an outbox message —
+    /// all committed in a single <c>SaveChangesAsync</c> call.
+    /// Use this for the <c>InProgress</c> → <c>Ready</c> transition that must publish
+    /// a <c>StoreOrderReadyEvent</c> reliably via the outbox.
+    /// </summary>
+    Task MarkReadyAsync(
+        StoreOrderSnapshotData snapshot,
+        string outboxType,
+        string outboxPayload,
+        DateTimeOffset occurredAt,
+        string? correlationId = null,
+        CancellationToken cancellationToken = default);
 }
 
