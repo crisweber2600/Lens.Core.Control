@@ -1,17 +1,17 @@
 ---
-description: "Use when implementing changes, editing code, modifying files, writing features, or making any development updates in this workspace. Enforces the control-repo pattern: all changes go to TargetProjects/lens/src/Lens.Core.Src, never lens.core. Covers commit, push, GitHub Actions monitoring, git pull lens.core, and preflight checks."
+description: "Use when implementing changes, editing code, modifying files, writing features, or making any development updates in this workspace. Enforces the control-repo pattern: all changes go to TargetProjects/lens.core/src/Lens.Core.Src, never lens.core. Covers commit, push, GitHub Actions monitoring, git pull lens.core, and preflight checks."
 ---
 
-# Lens.Core.Control — Change Management Rules
+# Lens.Core.Control - Change Management Rules
 
 ## This Is a Control Repo
 
 `lens.core/` is the **read-only distribution payload** pulled from the release pipeline.
 **Never edit files inside `lens.core/` directly.**
 
-All implementation work — new features, fixes, configuration changes — happens exclusively in:
+All implementation work - new features, fixes, configuration changes - happens exclusively in:
 
-```
+```text
 TargetProjects/lens.core/src/Lens.Core.Src/
 ```
 
@@ -72,8 +72,8 @@ uv run ./lens.core/_bmad/lens-work/scripts/preflight.py
 
 ## Hard Rules
 
-- **NEVER** edit files in `lens.core/` — it is a pulled artifact, not a source
+- **NEVER** edit files in `lens.core/` - it is a pulled artifact, not a source
 - **NEVER** skip the GitHub Actions monitoring step before pulling `lens.core`
 - **NEVER** run preflight before confirming the workflow `conclusion` is `success`
-- **NEVER** propose edits to `lens.core` as the resolution — always trace back to `Lens.Core.Src`
+- **NEVER** propose edits to `lens.core` as the resolution - always trace back to `Lens.Core.Src`
 - **NEVER** write planning artifacts straight into governance docs when the lifecycle expects them to be staged in the control repo first
