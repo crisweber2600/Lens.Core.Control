@@ -1,0 +1,110 @@
+{
+  "workflow_version": "1.2.0",
+  "timestamps": {
+    "started": "2026-04-21T00:00:00Z",
+    "last_updated": "2026-04-21T00:00:00Z"
+  },
+  "mode": "initial_scan",
+  "scan_level": "deep",
+  "project_root": "TargetProjects/lens-dev/old-codebase/lens.core.src",
+  "project_knowledge": "docs/lens-dev/old-codebase/lens-dev-old-codebase-discovery/docs",
+  "feature_context": {
+    "featureId": "lens-dev-old-codebase-discovery",
+    "domain": "lens-dev",
+    "service": "old-codebase",
+    "featureSlug": "discovery"
+  },
+  "project_classification": {
+    "repository_type": "monolith",
+    "project_type_id": "library",
+    "display_name": "Lens Workbench core module (lens.core.src)",
+    "description": "BMAD/Lens meta-framework toolkit — lifecycle orchestration assets, skills, prompts, scripts, and embedded documentation for AI agent workflows"
+  },
+  "project_types": [
+    {
+      "part_id": "lens-core-src",
+      "project_type_id": "library",
+      "display_name": "Lens.Core.Src module toolkit"
+    }
+  ],
+  "completed_steps": [
+    {
+      "step": "step_1",
+      "status": "completed",
+      "timestamp": "2026-04-21T00:00:00Z",
+      "summary": "Classified as monolith toolkit module (library type). Module version 4.0.0. Root contains _bmad/lens-work/ module core and docs/. No .github/ adapter layer present in this clone."
+    },
+    {
+      "step": "step_2",
+      "status": "completed",
+      "timestamp": "2026-04-21T00:00:00Z",
+      "summary": "Discovered comprehensive existing docs in docs/ from April 15 full rescan. Used as baseline for deep scan refresh."
+    },
+    {
+      "step": "step_3",
+      "status": "completed",
+      "timestamp": "2026-04-21T00:00:00Z",
+      "summary": "Tech stack confirmed: YAML (contracts/config), Markdown (prompts/skills/docs), Python (scripts/tests), Node.js (installer), GitHub Actions (CI). Version 4.0.0."
+    },
+    {
+      "step": "step_4",
+      "status": "completed",
+      "timestamp": "2026-04-21T00:00:00Z",
+      "summary": "Deep scan: 41 skills, 57 prompts, 19 scripts, 10 tests + README, 8 contracts, 11 templates, 24 embedded docs. No API, data models, or UI components."
+    },
+    {
+      "step": "step_5",
+      "status": "completed",
+      "timestamp": "2026-04-21T00:00:00Z",
+      "summary": "Source tree documented with annotated directory structure."
+    },
+    {
+      "step": "step_6",
+      "status": "completed",
+      "timestamp": "2026-04-21T00:00:00Z",
+      "summary": "Dev and deployment guidance written. Script-driven workflow, no long-running server."
+    },
+    {
+      "step": "step_8",
+      "status": "completed",
+      "timestamp": "2026-04-21T00:00:00Z",
+      "summary": "Architecture doc generated for monolith module with source-authoritative pattern."
+    },
+    {
+      "step": "step_9",
+      "status": "completed",
+      "timestamp": "2026-04-21T00:00:00Z",
+      "summary": "Supporting docs generated: project-overview, source-tree-analysis, component-inventory, development-guide, deployment-guide, contribution-guide."
+    },
+    {
+      "step": "step_10",
+      "status": "completed",
+      "timestamp": "2026-04-21T00:00:00Z",
+      "summary": "Master index generated."
+    }
+  ],
+  "current_step": "complete",
+  "findings": {
+    "project_classification": "Monolith library/toolkit — Lens Workbench core module v4.0.0",
+    "technology_stack": "YAML, Markdown, Python, Node.js, GitHub Actions, Git",
+    "skills": "41 skill directories",
+    "prompts": "57 prompt files",
+    "scripts": "19 operational scripts",
+    "tests": "10 Python test modules",
+    "contracts": "8 contract reference files",
+    "templates": "11 authored templates",
+    "embedded_docs": "24 embedded reference docs"
+  },
+  "outputs_generated": [
+    "project-scan-report.json",
+    "project-overview.md",
+    "architecture.md",
+    "source-tree-analysis.md",
+    "component-inventory.md",
+    "development-guide.md",
+    "deployment-guide.md",
+    "contribution-guide.md",
+    "index.md"
+  ],
+  "resume_instructions": "Scan complete. All outputs generated."
+}
