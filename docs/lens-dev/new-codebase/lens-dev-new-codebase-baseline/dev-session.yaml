@@ -1,0 +1,85 @@
+feature_id: lens-dev-new-codebase-baseline
+feature_slug: baseline
+domain: lens-dev
+service: new-codebase
+target_repo: TargetProjects/lens-dev/new-codebase/lens.core.src
+target_branch: feature/baseline
+branch_mode: feature-id
+status: active
+created: '2026-04-23T00:00:00Z'
+updated: '2026-04-22T10:57:20Z'
+checkpoint_epic_3: |
+  EPIC 3 COMPLETE: Constitution Bug Fix (Story 3.1)
+  
+  Story 3.1 Implementation Status: DONE ✅
+  - Fixed org-level constitution hard-fail bug
+  - Allow partial hierarchies to resolve additively
+  - Preserve read-only behavior across all combinations
+  - Added 6 new partial-hierarchy regression tests
+  - All 87 tests pass
+  - Code review: PASSED
+  
+  Blocked Issue Resolved:
+  - Epic 4 (planning conductors) now unblocked
+  - Story 3.1 was hard prerequisite for Epic 4 work
+  
+  Commit: 121041e
+  Branch: feature/lens-dev-new-codebase-baseline
+  Files: 2 changed, 113 insertions(+), 9 deletions(-)
+  
+  Next: Epic 4 stories can now proceed
+checkpoint_epic_1_story_1: |
+  STORY 1-1 COMPLETE: New Codebase Scaffold, Install Surfaces, and Module Surface Reduction
+  
+  Story 1-1 Implementation Status: DONE ✅
+  - Reduced published prompt surface from 56 to 17 commands
+  - Verified all 17 commands in .github/prompts/ directory
+  - Updated setup.py PROMPT_METADATA with 17 retained entries
+  - Aligned module-help-reduced.csv (17 rows)
+  - Fixed lens-new-domain accessibility: ("any", "plan") for all users
+  - Audited internal skill inventory: 41 total (15 retained, 26 deprecated, 0 orphaned)
+  - Code review: 2 passes - PASSED (issue fixed)
+  
+  Acceptance Criteria:
+  - ✅ 17-command surface exactly met
+  - ✅ All metadata surfaces aligned
+  - ✅ Internal skills audited
+  
+  Commit: 25f1788
+  Branch: feature/lens-dev-new-codebase-baseline
+  Files: 9 changed, 1057 insertions(+), 29 deletions(-)
+  
+  Next: Story 1-2 (validate-phase-artifacts.py Shared Utility)
+current_epic: 1
+current_story: 1-2-validate-phase-artifacts-shared-utility
+stories_completed:
+  - 1-1-scaffold-published-surface
+  - 3-1-fix-constitution-partial-hierarchy
+stories_in_progress: []
+stories_remaining:
+  - 1-2-validate-phase-artifacts-shared-utility
+  - 1-3-batch-two-pass-contract
+  - 1-4-publish-to-governance-entry-hook
+  - 4-1-rewrite-preplan
+  - 4-2-rewrite-businessplan
+  - 4-3-rewrite-techplan
+  - 4-4-rewrite-finalizeplan
+  - 4-5-rewrite-expressplan
+sprint_plan:
+  sprint-1:
+    - id: 1-1-scaffold-published-surface
+      status: done
+      story_points: 8
+    - id: 1-2-validate-phase-artifacts-shared-utility
+      status: ready-for-dev
+      story_points: 5
+    - id: 1-3-batch-two-pass-contract
+      status: ready-for-dev
+      story_points: 5
+    - id: 1-4-publish-to-governance-entry-hook
+      status: ready-for-dev
+      story_points: 5
+notes: |
+  On Activation complete. Ready to begin epic 1 story loop.
+  BMB-first rule active: all lens.core.src edits routed through lens.core/_bmad/bmb.
+  Given/When/Then validation required per story (informational gate).

@@ -1,0 +1,3 @@
+# Shipping a Customization Surface
+
+When your skill's users come from varied contexts (different orgs, different domains, different taste in output formats), a `customize.toml` surface lets them override specific fields without forking. It's opt-in per skill, and the decision is deliberate: every knob you ship is a promise the resolver will carry across releases. Before you opt in during the build, read [Customization for Authors](/explanation/customization-for-authors.md) for the decision framework and [How to Make a Skill Customizable](/how-to/make-a-skill-customizable.md) for the mechanics.

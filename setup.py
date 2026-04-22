@@ -118,31 +118,13 @@ RESET = "\033[0m"
 # Only Keep=Y prompts are listed. Unknown stems are always included.
 # ---------------------------------------------------------------------------
 PROMPT_METADATA: dict[str, tuple[str, str | None]] = {
-    "lens-adversarial-review":          ("full",  "any"),
-    "lens-batch":                        ("both",  "any"),
-    "lens-bmad-brainstorming":           ("full",  "plan"),
-    "lens-bmad-code-review":             ("full",  "dev"),
-    "lens-bmad-create-architecture":     ("full",  "plan"),
-    "lens-bmad-create-epics-and-stories":("full",  "plan"),
-    "lens-bmad-create-prd":              ("full",  "plan"),
-    "lens-bmad-create-story":            ("full",  "plan"),
-    "lens-bmad-create-ux-design":        ("full",  "plan"),
-    "lens-bmad-domain-research":         ("full",  "plan"),
-    "lens-bmad-market-research":         ("full",  "plan"),
-    "lens-bmad-product-brief":           ("full",  "plan"),
-    "lens-bmad-quick-dev":               ("full",  "dev"),
-    "lens-bmad-sprint-planning":         ("full",  "plan"),
-    "lens-bmad-technical-research":      ("full",  "plan"),
     "lens-businessplan":                 ("both",  "plan"),
     "lens-complete":                     ("both",  "any"),
-    "lens-constitution":                 ("full",  "admin"),
+    "lens-constitution":                 ("both",  "admin"),
     "lens-dev":                          ("both",  "dev"),
     "lens-discover":                     ("both",  "any"),
     "lens-expressplan":                  ("both",  "any"),
     "lens-finalizeplan":                 ("both",  "plan"),
-    "lens-help":                         ("both",  "any"),
-    "lens-log-problem":                  ("full",  None),
-    "lens-move-feature":                 ("full",  "plan"),
     "lens-new-domain":                   ("any",   "plan"),
     "lens-new-feature":                  ("both",  "any"),
     "lens-new-service":                  ("both",  "any"),
@@ -152,8 +134,7 @@ PROMPT_METADATA: dict[str, tuple[str, str | None]] = {
     "lens-split-feature":                ("both",  "plan"),
     "lens-switch":                       ("both",  "any"),
     "lens-techplan":                     ("both",  "plan"),
-    "lens-theme":                        ("both",  "any"),
-    "lens-upgrade":                      ("full",  "admin"),
+    "lens-upgrade":                      ("both",  "admin"),
 }
 
 

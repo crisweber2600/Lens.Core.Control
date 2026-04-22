@@ -54,12 +54,12 @@ These axioms are constraints the rewrite inherits unchanged.
 
 ### 1.4 Related Discovery Inputs
 
-The related feature `lens-dev-old-codebase-discovery` produced two reverse-engineered documents that should anchor the rewrite's retained-command mapping work:
+The related feature `lens-dev-old-codebase-discovery` produced two reverse-engineered documents that are approved verification references for retained-command outcome checks and dependency coverage audits:
 
 - `TargetProjects/lens/lens-governance/features/lens-dev/old-codebase/lens-dev-old-codebase-discovery/docs/deep-dive-lens-work-module.md` — command and skill inventory, lifecycle contracts, and skill-level behavioral notes
 - `TargetProjects/lens/lens-governance/features/lens-dev/old-codebase/lens-dev-old-codebase-discovery/docs/dependency-mapping.md` — dependency graph, IPO catalog, shared resource map, and end-to-end journey flows
 
-For the rewrite, every surviving published command should be re-walked with that old-codebase baseline and decomposed using a BMB-style ideation rubric: intent, boundaries, downstream delegates, shared contracts, outputs, and validation. This keeps the retained prompt surface tied to observable old-codebase behavior instead of relying on memory or prompt prose alone.
+For the rewrite, every surviving published command should be specified from the rewrite contract first, then reviewed against approved legacy references to verify expected outcomes and dependency completeness. These documents confirm parity — they do not drive implementation.
 
 ---
 
@@ -215,7 +215,7 @@ These are currently published stubs being deprecated, but their skill implementa
 
 ### 5.1 Reusable Retained-Command Mapping Template
 
-To keep the rewrite grounded in the old-codebase discovery corpus, every surviving published command should be mapped using the same BMB-derived ideation structure. The structure borrows from BMB workflow-builder Phases 1-3: discover intent, classify the workflow boundary, and gather dependencies, outputs, and validation.
+To keep the rewrite grounded in the rewrite contracts, every surviving published command should be mapped using the same BMB-derived ideation structure. The structure borrows from BMB workflow-builder Phases 1-3: discover intent, classify the workflow boundary, and gather dependencies, outputs, and validation. Old-codebase discovery artifacts are consulted after design to verify that expected outcomes and dependencies are fully covered — not before.
 
 Every retained-command map should answer these fields:
 
@@ -363,3 +363,154 @@ This format exists to prevent adversarial reviews from producing prose that requ
 ### 10.3 Scope
 
 This convention applies to all phase adversarial reviews: `preplan-adversarial-review.md`, `businessplan-adversarial-review.md`, `techplan-adversarial-review.md`, `finalizeplan-review.md`, and `expressplan-review.md`. It does not apply to party-mode blind-spot questions (which are rhetorical) or the carry-forward blockers summary table.
+
+---
+
+## Section 11: BMAD Wrapper Behavioral Delta Analysis
+
+> **Research note** — This section was added after the initial TechPlan artifacts were completed. Section 9 Q2 acknowledged that BMAD wrappers are being reimplemented with "noticed gaps" but did not enumerate those gaps. This section documents the behavioral delta between each registered base BMAD skill and the Lens wrapper contract that must be implemented in the rewrite. All source analysis was conducted against old-codebase skill files as verification references only, per the clean-room rule.
+
+---
+
+### 11.1 Purpose
+
+A clean-room implementer of `bmad-lens-bmad-skill` and its phase conductors must know, for each delegated BMAD skill, exactly what behavior the base skill provides and what additional contracts the Lens rewrite must impose. Without this documentation, developers would be forced to read old-codebase implementation files — violating the clean-room mandate.
+
+This section provides that documentation. It is normative: any gap marked **Critical** must be resolved in the rewrite before the wrapper is considered correct.
+
+---
+
+### 11.2 Config Baseline (Verified)
+
+All BMM-module skills load config from `{project-root}/_bmad/bmm/bmadconfig.yaml` at initialization. The verified values in this file are:
+
+```yaml
+planning_artifacts: "{project-root}/docs/planning-artifacts"
+implementation_artifacts: "{project-root}/docs/implementation-artifacts"
+output_folder: docs
+```
+
+The `bmad-brainstorming` skill (Core module) loads from `{project-root}/_bmad/core/bmadconfig.yaml`, which contains:
+
+```yaml
+output_folder: docs
+```
+(No `planning_artifacts` or `implementation_artifacts` — the Core config does not define them.)
+
+**Implication:** When `lens_context.planning_artifacts` is injected by the wrapper, it must explicitly take precedence over the config-loaded `planning_artifacts` for every BMM skill. For Core module skills (brainstorming), there is no `planning_artifacts` value to override — the base skill's output path is computed from `output_folder` alone, making it fundamentally incompatible with the Lens path contract. See Section 11.5.
+
+---
+
+### 11.3 Config Precedence Rule (All Skills)
+
+**Rewrite contract:** When `lens_context` is present and contains `planning_artifacts`, `output_path`, or `write_scope`, those values take absolute precedence over every config-loaded path variable. The base skill initialization must not overwrite lens_context-provided paths with config values.
+
+This rule applies to all 11 registered skills. The rewrite must document and enforce which initialization variables are overridable by `lens_context` and in what order of precedence.
+
+---
+
+### 11.4 Per-Skill Delta Summary
+
+| Skill | Phase | Base output path (from config baseline) | Lens required output path | Gap severity | Wrapper must add |
+|---|---|---|---|---|---|
+| `bmad-brainstorming` | preplan | `docs/brainstorming/brainstorming-session-{date}-{time}.md` | `{planning_artifacts}/brainstorm.md` | **Critical** — path architecture incompatible | Target-file override; filename normalization; Lens frontmatter injection; governance-scoped elicitation |
+| `bmad-product-brief` | preplan | `{planning_artifacts}/product-brief.md` → resolves to `docs/planning-artifacts/product-brief.md` | `{planning_artifacts}/product-brief.md` | Minor — config precedence only | Config precedence enforcement; Lens frontmatter spec |
+| `bmad-technical-research` / `bmad-domain-research` / `bmad-market-research` | preplan | `{planning_artifacts}/research.md` → resolves to `docs/planning-artifacts/research.md` | `{planning_artifacts}/research.md` | Minor — config precedence only | Config precedence enforcement; Lens frontmatter spec |
+| `bmad-create-prd` | businessplan | `{planning_artifacts}/prd.md` → resolves to `docs/planning-artifacts/prd.md` | `{planning_artifacts}/prd.md` | Minor — config precedence only | Config precedence enforcement; Lens frontmatter spec |
+| `bmad-create-ux-design` | businessplan | `{planning_artifacts}/ux-design.md` → resolves to `docs/planning-artifacts/ux-design.md` | `{planning_artifacts}/ux-design.md` | Minor — config precedence only | Config precedence enforcement; Lens frontmatter spec |
+| `bmad-create-architecture` | techplan | `{planning_artifacts}/architecture.md` → resolves to `docs/planning-artifacts/architecture.md` | `{planning_artifacts}/architecture.md` | Minor — config precedence only | Config precedence enforcement; Lens frontmatter spec; target-repo path injection |
+| `bmad-create-epics-and-stories` | finalizeplan | `{planning_artifacts}/epics.md` + `{planning_artifacts}/stories/*.md` | same, with `planning_artifacts` overridden to feature docs path | Minor — config precedence only | Config precedence enforcement; story naming convention (`{NNN}-{NNN}-{slug}.md`); Lens frontmatter spec |
+| `bmad-check-implementation-readiness` | finalizeplan | `{planning_artifacts}/implementation-readiness.md` | same, with `planning_artifacts` overridden to feature docs path | Minor — config precedence only | Config precedence enforcement; Lens frontmatter spec |
+| `bmad-sprint-planning` | finalizeplan | `story_location = {implementation_artifacts}` = `docs/implementation-artifacts`; `status_file = {implementation_artifacts}/sprint-status.yaml` = `docs/implementation-artifacts/sprint-status.yaml` | `story_location = {planning_artifacts}/stories/`; `status_file = {planning_artifacts}/sprint-status.yaml` | **Critical** — `implementation_artifacts` is not in `lens_context`; both story discovery and status output write to the wrong path | Inject `implementation_artifacts` override to `{planning_artifacts}` AND explicit `story_location = {planning_artifacts}/stories/` and `status_file = {planning_artifacts}/sprint-status.yaml` overrides |
+| `bmad-create-story` | finalizeplan / dev | `{planning_artifacts}/stories/{filename}` | `{planning_artifacts}/stories/{NNN}-{NNN}-{slug}.md` | Minor — naming convention | Config precedence enforcement; story naming convention injection |
+
+---
+
+### 11.5 The Brainstorming Delta (Critical)
+
+**Base behavior (verified):** `bmad-brainstorming` computes its output path as:
+```
+{output_folder}/brainstorming/brainstorming-session-{date}-{time}.md
+```
+Using the Core config baseline, this resolves to:
+```
+docs/brainstorming/brainstorming-session-2026-04-22-1430.md
+```
+
+The path has three problems for Lens:
+1. The subdirectory is `brainstorming/`, not the feature's docs path.
+2. The filename is a timestamped session name, not the canonical `brainstorm.md`.
+3. The base skill has no `planning_artifacts` variable — the Core config does not define it — so no `lens_context.planning_artifacts` injection can redirect the base path. The path formula `{output_folder}/brainstorming/...` is computed from `output_folder` only.
+
+**Additional behavioral delta:** The base `bmad-brainstorming` skill targets generative ideation with a 100+ ideas goal and anti-bias protocol. Lens preplan brainstorming is governance-grounded feature ideation: constitution context and cross-feature state are loaded before delegation; the scope is feature-specific exploration, not open-ended creative generation.
+
+**Rewrite options — the wrapper must resolve this with one of:**
+
+**Option A — Wrapper-level path injection:** Extend `lens_context` with an explicit `brainstorm_target_file` field set to `{planning_artifacts}/brainstorm.md`. The base skill's initialization must check for `brainstorm_target_file` and use it instead of computing the timestamped path. This requires modifying the base skill's initialization to accept target-file override — not clean-room if it requires adapting the old brainstorming skill in place.
+
+**Option B — Post-processing normalization:** The wrapper allows the base skill to write its timestamped output, then runs a post-processing step that: (a) reads the timestamped file, (b) prepends Lens frontmatter, (c) writes the content to `{planning_artifacts}/brainstorm.md`, (d) deletes the timestamped file. This works without modifying the base skill but adds fragility (path-discovery of the timestamped file depends on consistent date format).
+
+**Option C — Lens-native brainstorming skill (recommended):** The rewrite implements `bmad-lens-brainstorming` as a purpose-built skill that uses the feature context loaded by the phase conductor, targets `{planning_artifacts}/brainstorm.md` as its canonical output path, injects required Lens frontmatter, and scopes ideation to governance-bounded feature exploration. The creative technique library from the base skill's step files may be used as a verification reference for expected technique coverage. This is the cleanest alignment with the clean-room mandate: it produces a new artifact rather than patching a generic one.
+
+**Recommendation:** Option C. Document the decision in the rewrite's `bmad-lens-preplan` SKILL.md. The `lens-bmad-skill-registry.json` entry for `bmad-brainstorming` should be updated in the rewrite to point to `bmad-lens-brainstorming` if Option C is chosen.
+
+---
+
+### 11.6 The Sprint Planning Delta (Critical)
+
+**Base behavior (verified):** `bmad-sprint-planning` reads two path variables from `bmadconfig.yaml`:
+- `story_location = {implementation_artifacts}` → resolves to `docs/implementation-artifacts/`
+- `status_file = {implementation_artifacts}/sprint-status.yaml` → resolves to `docs/implementation-artifacts/sprint-status.yaml`
+- `epics_location = {planning_artifacts}` → resolves to `docs/planning-artifacts/` (path override works here)
+
+**Lens actual paths (confirmed):**
+- Stories: `docs/lens-dev/new-codebase/lens-dev-new-codebase-baseline/stories/` — under `planning_artifacts`
+- Sprint status: `docs/lens-dev/new-codebase/lens-dev-new-codebase-baseline/sprint-status.yaml` — under `planning_artifacts`
+
+**Root cause:** The current `lens_context` block injected by `bmad-lens-bmad-skill` contains `planning_artifacts` but **does not** contain `implementation_artifacts`. The sprint-planning skill reads `story_location` and `status_file` from `{implementation_artifacts}`, which is loaded from bmadconfig.yaml with no `lens_context` override available.
+
+**Rewrite contract:** The wrapper's `lens_context` block must be extended to include:
+```
+implementation_artifacts: {planning_artifacts}   # redirect to feature docs path
+story_location: {planning_artifacts}/stories/    # explicit override
+status_file: {planning_artifacts}/sprint-status.yaml  # explicit override
+```
+
+All three overrides must take precedence over config-loaded values via the config precedence rule (Section 11.3).
+
+Note on epics discovery: the base skill uses a glob pattern `*epic*.md` to find epics. Since the Lens epics file is named `epics.md`, this pattern matches (`epics` contains the substring `epic`). No additional override is required for epics discovery.
+
+---
+
+### 11.7 Lens Frontmatter Specification (All Planning-Docs Skills)
+
+All planning-docs skills — when running under `lens_context` — must produce output with the following frontmatter fields in addition to whatever the base skill generates:
+
+```yaml
+---
+feature: {feature_id}
+doc_type: brainstorm | product-brief | research | prd | ux-design | architecture | epics | stories | implementation-readiness | sprint-status
+status: draft
+updated_at: {ISO-8601 timestamp}
+---
+```
+
+The `key_decisions`, `open_questions`, `depends_on`, and `blocks` fields are present in current feature docs but are not required from the wrapper — the base skill's interactive elicitation may produce some of them, and the phase conductor fills in the rest. The `feature` and `doc_type` fields are the minimum wrapper-injected additions.
+
+**Rewrite contract:** `bmad-lens-bmad-skill` must post-process each planning-docs output to ensure `feature` and `doc_type` are present in frontmatter, and must set or update `updated_at` on every write.
+
+---
+
+### 11.8 Summary of Rewrite Contracts
+
+| Contract | Scope | Priority |
+|---|---|---|
+| Config precedence rule: `lens_context` paths win over config-loaded values | All 11 registered skills | Required |
+| Brainstorming path normalization: canonical `brainstorm.md` output | `bmad-brainstorming` | Critical |
+| Brainstorming governance scope: feature-bounded elicitation, not open-ended ideation | `bmad-brainstorming` | Critical |
+| `implementation_artifacts` override added to `lens_context` | `bmad-sprint-planning` | Critical |
+| `story_location` explicit override → `{planning_artifacts}/stories/` | `bmad-sprint-planning` | Critical |
+| `status_file` explicit override → `{planning_artifacts}/sprint-status.yaml` | `bmad-sprint-planning` | Critical |
+| Lens frontmatter injection: `feature` + `doc_type` + `updated_at` minimum | All planning-docs skills | Required |
+| Story naming convention: `{NNN}-{NNN}-{slug}.md` | `bmad-create-epics-and-stories`, `bmad-create-story` | Required |
+| Target-repo path injection for architecture context | `bmad-create-architecture` | Required |

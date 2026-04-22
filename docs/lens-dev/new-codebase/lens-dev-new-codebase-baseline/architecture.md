@@ -24,7 +24,7 @@ updated_at: 2026-04-22T12:00:00Z
 
 ## Overview
 
-The `lens-work` rewrite replaces a 54-stub command surface with a 17-command stable surface while preserving 100% of user-observable behavior. The architectural problem is not a greenfield design challenge — it is a constrained brownfield rewrite. The structure of the new codebase mirrors the old one. What changes is:
+The `lens-work` rewrite replaces a 54-stub command surface with a 17-command stable surface while preserving 100% of user-observable behavior. The architectural problem is not a greenfield design challenge — it is a constrained brownfield rewrite. The structure of the new codebase is defined by the rewrite contracts in this document and the supporting PRD — not derived from the old codebase. What changes is:
 
 1. The number of published `.github/prompts/` stubs (54 → 17)
 2. Three cross-phase copy-pasted patterns extracted into shared utilities
@@ -40,7 +40,7 @@ The implementation channel for all source-level changes is **BMB-first**: every 
 
 ### 1. Module Topology
 
-The `lens-work` module lives at `lens.core/_bmad/lens-work/`. The rewrite preserves this root and all relative path conventions. The changes are contained to which skills and stub files exist, not where the module lives.
+The `lens-work` module lives at `lens.core/_bmad/lens-work/`. The rewrite preserves this root and all relative path conventions. The changes are contained to which skills and stub files exist, not where the module lives. All topology decisions are derived from the rewrite contracts in this document and the PRD. Old-codebase path conventions may be consulted as verification references but do not govern the implementation.
 
 ```
 lens.core/_bmad/lens-work/
@@ -207,12 +207,12 @@ This sequencing is part of the architecture, not just implementation advice. It 
 
 ### 7. Internal Skill Retention Matrix
 
-This matrix is the concrete keep/remove decision set requested by ADR-004. It is derived from three sources used together: the current `skills/` and `prompts/` inventories in `lens.core/_bmad/lens-work/`, the retained 17-command surface defined in the PRD, and the old-codebase call graph in `TargetProjects/lens/lens-governance/features/lens-dev/old-codebase/lens-dev-old-codebase-discovery/docs/dependency-mapping.md`.
+This matrix is the concrete keep/remove decision set requested by ADR-004. It is derived from the current `skills/` and `prompts/` inventories in `lens.core/_bmad/lens-work/`, the retained 17-command surface defined in the PRD, and the rewrite contract matrix in this architecture. Old-codebase discovery artifacts (`dependency-mapping.md`, `deep-dive-lens-work-module.md`) are approved verification references for outcome checks — they are not the derivation source for this matrix.
 
 Decision rule:
 
-1. If the old dependency mapping shows a retained command delegating to the skill, remove the public stub but keep the skill as an internal runtime dependency.
-2. If the skill is not on any retained-command dependency path, remove it from the stable-surface rewrite scope.
+1. If the rewrite contract matrix shows a retained command requiring the skill as a runtime dependency, remove the public stub but keep the skill as an internal runtime dependency.
+2. If the skill is not on any retained-command dependency path in the rewrite contract, remove it from the stable-surface rewrite scope.
 3. If a skill currently carries discovery or theme behavior that is still wanted, extract that behavior into a non-command surface before deleting the skill.
 
 #### 7.1 Keep as Internal Runtime Dependencies
@@ -236,8 +236,8 @@ Decision rule:
 
 | Skill | Dependency-mapping status | Decision | Rewrite note |
 |---|---|---|---|
-| `bmad-lens-help` | Not on the retained 17-command call graph | Remove | Discovery responsibility moves to `module-help.csv`, install surfaces, and `lens.agent.md` |
-| `bmad-lens-theme` | Not on the old retained-command graph | Extract assets if still needed, then remove command skill | Do not keep a standalone command just to preserve theme overlays |
+| `bmad-lens-help` | Not required by any retained command in the rewrite contract | Remove | Discovery responsibility moves to `module-help.csv`, install surfaces, and `lens.agent.md` |
+| `bmad-lens-theme` | Not required by any retained command in the rewrite contract | Extract assets if still needed, then remove command skill | Do not keep a standalone command just to preserve theme overlays |
 | `bmad-lens-approval-status` | Not required by retained command paths | Remove | Promotion diagnostics are not part of day-1 parity for the stable surface |
 | `bmad-lens-audit` | Not required by retained command paths | Remove | Compliance dashboarding becomes a follow-on feature, not a parity blocker |
 | `bmad-lens-dashboard` | Reads shared data but is not called by retained commands | Remove | Reporting is not on the day-1 runtime dependency path |
@@ -490,7 +490,7 @@ Regression anchors per PRD Table 3.2. These tests must pass unchanged before the
 
 Architecture is complete when:
 
-1. All 17 retained commands have their full stub → prompt → skill → script chain verified against the old-codebase discovery deep-dive and dependency map
+1. All 17 retained commands have their full stub → prompt → skill → script chain verified first against rewrite contracts and then checked against approved legacy reference outcomes for parity
 2. All three shared utility implementations exist and all phase skills delegate to them (no inline duplicates remain)
 3. The retained-vs-removed skill inventory is confirmed and signed off
 4. Every retained command has an assigned work package, owner lane, and parity gate
