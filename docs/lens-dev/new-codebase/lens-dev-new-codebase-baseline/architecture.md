@@ -55,8 +55,9 @@ lens.core/_bmad/lens-work/
 │   ├── bmad-lens-switch/           # retained — navigation
 │   ├── bmad-lens-next/             # retained — navigation
 │   ├── bmad-lens-init-feature/     # retained — backing skill for new-feature
+│   ├── bmad-lens-discover/         # retained — backing skill for discover
 │   ├── bmad-lens-constitution/     # retained — governance
-│   ├── bmad-lens-git-orchestration/ # retained — backing skill for discover
+│   ├── bmad-lens-git-orchestration/ # retained — git workflow orchestration
 │   ├── bmad-lens-upgrade/          # retained — maintenance
 │   ├── bmad-lens-split-feature/    # retained — published; feature reshaping
 │   ├── bmad-lens-bmad-skill/       # retained — wrapper delegation router
@@ -84,8 +85,8 @@ The `agents/lens.agent.md` shell menu and `module-help.csv` are kept in sync wit
 Every published command follows an identical 3-hop chain. This chain is invariant across all 17 commands:
 
 ```
-.github/prompts/{command}.prompt.md       (stub — user entry point)
-  → lens.core/_bmad/lens-work/prompts/{command}.md  (full prompt — loads skill)
+.github/prompts/lens-{command}.prompt.md       (stub — user entry point)
+  → lens.core/_bmad/lens-work/prompts/lens-{command}.prompt.md  (full prompt — loads skill)
     → skills/bmad-lens-{command}/SKILL.md  (owning skill — orchestrates execution)
       → scripts/ and sub-skill delegates as needed
 ```

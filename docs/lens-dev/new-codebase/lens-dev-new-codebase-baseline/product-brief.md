@@ -34,7 +34,7 @@ The objective of this rewrite is to **reduce surface area without changing any u
 | **New Lens users** | 54 commands with no clear entry point; `/help` surfaces rarely-used commands alongside core workflow commands | 17 clearly-named commands with natural progression plus feature reshaping (`new-domain → new-service → new-feature → next`, plus `split-feature` when scope must be carved out) |
 | **Existing Lens users (mid-feature)** | No behavioral change expected; must be able to resume existing features and in-progress dev sessions without rerun | Zero behavioral regression; all existing feature.yaml, branch topology, and session state must remain readable |
 | **Lens module maintainers** | Fixing a phase contract bug requires updating 3-4 independent SKILL.md implementations of the same pattern | Shared utilities (`lens-phase-gate`, batch lifecycle contract, publish-entry hook) are single-source-of-truth |
-| **bmad-work-system integrators** | Unclear which prompts are load-bearing vs cosmetic; hard to determine what can be safely ignored | Explicit split: 16 published (user-facing) + N internal skills (not published stubs) |
+| **bmad-work-system integrators** | Unclear which prompts are load-bearing vs cosmetic; hard to determine what can be safely ignored | Explicit split: 17 published (user-facing) + N internal skills (not published stubs) |
 
 ---
 
