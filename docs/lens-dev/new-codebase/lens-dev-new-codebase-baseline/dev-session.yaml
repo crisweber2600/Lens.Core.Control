@@ -28,6 +28,28 @@ checkpoint_epic_3: |
   Files: 2 changed, 113 insertions(+), 9 deletions(-)
   
   Next: Epic 4 stories can now proceed
+checkpoint_epic_1_story_1: |
+  STORY 1-1 COMPLETE: New Codebase Scaffold, Install Surfaces, and Module Surface Reduction
+  
+  Story 1-1 Implementation Status: DONE ✅
+  - Reduced published prompt surface from 56 to 17 commands
+  - Verified all 17 commands in .github/prompts/ directory
+  - Updated setup.py PROMPT_METADATA with 17 retained entries
+  - Aligned module-help-reduced.csv (17 rows)
+  - Fixed lens-new-domain accessibility: ("any", "plan") for all users
+  - Audited internal skill inventory: 41 total (15 retained, 26 deprecated, 0 orphaned)
+  - Code review: 2 passes - PASSED (issue fixed)
+  
+  Acceptance Criteria:
+  - ✅ 17-command surface exactly met
+  - ✅ All metadata surfaces aligned
+  - ✅ Internal skills audited
+  
+  Commit: 25f1788
+  Branch: feature/lens-dev-new-codebase-baseline
+  Files: 9 changed, 1057 insertions(+), 29 deletions(-)
+  
+  Next: Story 1-2 (validate-phase-artifacts.py Shared Utility)
 current_epic: 1
 current_story: 1-2-validate-phase-artifacts-shared-utility
 stories_completed:
