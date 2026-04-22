@@ -7,16 +7,38 @@ target_branch: feature/baseline
 branch_mode: feature-id
 status: active
 created: '2026-04-23T00:00:00Z'
-updated: '2026-04-23T00:00:00Z'
-current_epic: 1
-current_story: 1-1-scaffold-published-surface
-stories_completed: []
+updated: '2026-04-22T10:57:20Z'
+checkpoint_epic_3: |
+  EPIC 3 COMPLETE: Constitution Bug Fix (Story 3.1)
+  
+  Story 3.1 Implementation Status: DONE ✅
+  - Fixed org-level constitution hard-fail bug
+  - Allow partial hierarchies to resolve additively
+  - Preserve read-only behavior across all combinations
+  - Added 6 new partial-hierarchy regression tests
+  - All 87 tests pass
+  - Code review: PASSED
+  
+  Blocked Issue Resolved:
+  - Epic 4 (planning conductors) now unblocked
+  - Story 3.1 was hard prerequisite for Epic 4 work
+  
+  Commit: 121041e
+  Branch: feature/lens-dev-new-codebase-baseline
+  Files: 2 changed, 113 insertions(+), 9 deletions(-)
+  
+  Next: Epic 4 stories can now proceed
+current_epic: 3
+current_story: 3-1-fix-constitution-partial-hierarchy
+stories_completed:
+  - 3-1-fix-constitution-partial-hierarchy
 stories_in_progress: []
 stories_remaining:
-  - 1-1-scaffold-published-surface
-  - 1-2-validate-phase-artifacts-shared-utility
-  - 1-3-batch-two-pass-contract
-  - 1-4-publish-to-governance-entry-hook
+  - 4-1-rewrite-preplan
+  - 4-2-rewrite-businessplan
+  - 4-3-rewrite-techplan
+  - 4-4-rewrite-finalizeplan
+  - 4-5-rewrite-expressplan
 sprint_plan:
   sprint-1:
     - id: 1-1-scaffold-published-surface

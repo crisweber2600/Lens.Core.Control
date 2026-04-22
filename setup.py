@@ -125,7 +125,7 @@ PROMPT_METADATA: dict[str, tuple[str, str | None]] = {
     "lens-discover":                     ("both",  "any"),
     "lens-expressplan":                  ("both",  "any"),
     "lens-finalizeplan":                 ("both",  "plan"),
-    "lens-new-domain":                   ("both",  "plan"),
+    "lens-new-domain":                   ("any",   "plan"),
     "lens-new-feature":                  ("both",  "any"),
     "lens-new-service":                  ("both",  "any"),
     "lens-next":                         ("both",  "any"),
