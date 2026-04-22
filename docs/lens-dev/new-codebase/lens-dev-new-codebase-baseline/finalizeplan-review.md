@@ -5,7 +5,7 @@ phase: finalizeplan
 source: phase-complete
 verdict: pass-with-warnings
 reviewed_artifacts: [brainstorm, research, product-brief, prd, architecture, techplan-adversarial-review]
-updated_at: 2026-04-23T00:00:00Z
+updated_at: 2026-04-22T18:02:56Z
 ---
 
 # FinalizePlan Adversarial Review — lens-dev-new-codebase-baseline
@@ -23,8 +23,30 @@ The full planning set is internally consistent, complete, and coherent. The plan
 
 Three carry-forward items are identified below. All are advisory or scoped to downstream work packages — none block the FinalizePlan phase transition.
 
+An approved sprint-change proposal dated 2026-04-22 also reset the downstream implementation backlog to enforce clean-room planning discipline. That reset is now reflected in the staged planning set: `prd.md`, `architecture.md`, `research.md`, and `implementation-readiness.md` were corrected in prior commit `f1740e4`, while the remaining bundle artifacts were reconciled on the base branch in commit `489d1de` by changing backlog items to `re-evaluate` and by downgrading all old-codebase discovery references from implementation/parity inputs to verification-only references.
+
 **Findings summary (this review):** 0 critical · 0 high · 1 medium · 2 low  
 **Carry-forward from TechPlan:** F-02 (compliance audit) acknowledged; F-06 (in-progress feature transition) scoped to WP-17
+
+---
+
+## Approved Sprint-Change Proposal Reconciliation
+
+**Proposal:** `sprint-change-proposal-2026-04-22.md`  
+**Status:** Approved  
+**Purpose:** Remove any remaining clean-room ambiguity that treated old-codebase discovery material as an implementation baseline instead of a verification aid.
+
+### Applied corrections
+
+- `prd.md`, `architecture.md`, `research.md`, and `implementation-readiness.md` were already updated in commit `f1740e4` to reflect clean-room planning constraints and the backlog reset.
+- `epics.md` now carries `status: in-reset` and replaces the old parity-reference-inputs wording with verification-only language.
+- `stories.md` Story 1.1 technical guidance now uses verification-only language instead of parity-baseline language.
+- `stories/1-1-scaffold-published-surface.md` now states that old-codebase discovery docs are verification references only and not implementation inputs.
+- `sprint-status.yaml` preserves the top-level `status: backlog-reset` marker while changing all individual story and development-status entries from `backlog` to `re-evaluate`.
+
+### Review impact
+
+The reset does not invalidate the planning chain or the existing FinalizePlan findings. It changes execution posture: the backlog remains complete enough for planning consolidation, but every implementation story must be re-evaluated against the clean-room constraints before `/dev` starts. This review therefore keeps the verdict at `pass-with-warnings` while treating the backlog reset as acknowledged and incorporated rather than as an open blocker.
 
 ---
 
@@ -198,8 +220,8 @@ This is the most operationally significant blind spot. WP-15 must precede planni
 
 The planning set is complete, internally consistent, and ready for bundle generation. No critical or high blockers were found. The full chain from brainstorm → product-brief → PRD → architecture is coherent and traceable. All TechPlan findings were resolved before this review.
 
-Three new findings (FP-01, FP-02, FP-03) are medium or low and are scoped to WP-17 or advisory governance hygiene. The party-mode blind-spot challenge surfaced one operationally significant bootstrapping dependency (Q3: WP-15 on old surface) with a clear resolution path that requires a sprint planning note, not an architecture change.
+Three new findings (FP-01, FP-02, FP-03) are medium or low and are scoped to WP-17 or advisory governance hygiene. The party-mode blind-spot challenge surfaced one operationally significant bootstrapping dependency (Q3: WP-15 on old surface) with a clear resolution path that requires a sprint planning note, not an architecture change. The approved 2026-04-22 sprint-change proposal is now reconciled into the planning set, so the backlog-reset state is acknowledged and no longer an unresolved review gap.
 
-**Phase transition:** `techplan-complete` → `finalizeplan` → `finalizeplan-complete` may proceed.
+**Phase transition:** `techplan-complete` → `finalizeplan` → `finalizeplan-complete` may proceed, with downstream work starting from the explicitly reset `re-evaluate` backlog.
 
 **Next action after bundle:** `/dev` — begin `lens-dev-new-codebase-constitution` (WP-15) on the existing lens-work surface.
