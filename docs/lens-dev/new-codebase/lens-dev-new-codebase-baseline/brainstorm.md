@@ -2,12 +2,13 @@
 feature: lens-dev-new-codebase-baseline
 doc_type: brainstorm
 status: draft
-goal: "Define the 16-command reduced surface for lens-work rewrite with 100% backwards compatibility"
+goal: "Define the 17-command reduced surface for lens-work rewrite with 100% backwards compatibility"
 key_decisions:
-  - 16 surviving published commands confirmed (switch, new-domain, new-service, new-feature, preflight, upgrade, preplan, businessplan, techplan, finalizeplan, expressplan, dev, complete, constitution, discover, next)
+  - 17 surviving published commands confirmed (switch, new-domain, new-service, new-feature, preflight, upgrade, preplan, businessplan, techplan, finalizeplan, expressplan, dev, complete, split-feature, constitution, discover, next)
   - new-feature is canonical alias; init-feature is deprecated
   - preflight survives; onboard prompt deprecated (onboard skill retained internally)
   - new-project removed with no replacement
+  - split-feature remains published because it is installed, documented, and regression-tested in the old codebase
   - businessplan, techplan, finalizeplan retained (full track preserved)
   - All non-published internal skills (adversarial-review, git-orchestration, bmad-skill, etc.) retained as internal modules
 open_questions:
@@ -16,10 +17,10 @@ open_questions:
   - Confirm onboard vs preflight do not have overlapping workspace-setup responsibilities that need explicit merging
 depends_on: []
 blocks: []
-updated_at: 2026-04-22T00:00:00Z
+updated_at: 2026-04-22T00:45:00Z
 ---
 
-# Brainstorm — lens-work Rewrite: 16-Command Surface with 100% Backwards Compatibility
+# Brainstorm — lens-work Rewrite: 17-Command Surface with 100% Backwards Compatibility
 
 ## Session Context
 
@@ -28,7 +29,7 @@ updated_at: 2026-04-22T00:00:00Z
 
 ---
 
-## Surviving Published Commands (16)
+## Surviving Published Commands (17)
 
 The following `.github/prompts/` stubs are retained as user-facing commands. All others are deprecated as published prompts but their underlying skill implementations are retained as internal modules.
 
@@ -47,9 +48,10 @@ The following `.github/prompts/` stubs are retained as user-facing commands. All
 | 11 | `expressplan` | `lens-expressplan.prompt.md` | `bmad-lens-expressplan` |
 | 12 | `dev` | `lens-dev.prompt.md` | `bmad-lens-dev` |
 | 13 | `complete` | `lens-complete.prompt.md` | `bmad-lens-complete` |
-| 14 | `constitution` | `lens-constitution.prompt.md` | `bmad-lens-constitution` |
-| 15 | `discover` | `lens-discover.prompt.md` | `bmad-lens-discover` |
-| 16 | `next` | `lens-next.prompt.md` | `bmad-lens-next` |
+| 14 | `split-feature` | `lens-split-feature.prompt.md` | `bmad-lens-split-feature` |
+| 15 | `constitution` | `lens-constitution.prompt.md` | `bmad-lens-constitution` |
+| 16 | `discover` | `lens-discover.prompt.md` | `bmad-lens-discover` |
+| 17 | `next` | `lens-next.prompt.md` | `bmad-lens-next` |
 
 ---
 
@@ -118,7 +120,7 @@ All `.github/prompts/` files are pure stubs — they run `light-preflight.py` an
 
 **Internal deps:** `init-feature-ops.py`, `bmad-lens-git-orchestration` (branch creation), `bmad-lens-target-repo` (repo provisioning — internal even if prompt deprecated)
 
-**Backwards compat risk:** HIGH. The featureId formula (`{domain}-{service}-{featureSlug}`) is referenced across feature.yaml, branch names, governance paths, and all 16 commands. **The featureId formula must be frozen.** Any derivation change breaks all existing features.
+**Backwards compat risk:** HIGH. The featureId formula (`{domain}-{service}-{featureSlug}`) is referenced across feature.yaml, branch names, governance paths, and all 17 commands. **The featureId formula must be frozen.** Any derivation change breaks all existing features.
 
 ---
 
@@ -269,7 +271,23 @@ All `.github/prompts/` files are pure stubs — they run `light-preflight.py` an
 
 ---
 
-### 14. `constitution` → `bmad-lens-constitution`
+### 14. `split-feature` → `bmad-lens-split-feature`
+
+**What it does:** Splits an existing feature into two first-class features. Validates a proposed split boundary, blocks in-progress stories from being split, creates a new governance feature with its own `feature.yaml`, `feature-index.yaml` entry, and `summary.md`, and can move eligible story files into the new feature.
+
+**Key behaviors:**
+- Validate first — `validate-split` must pass before creation or story movement
+- Hard-stop on in-progress stories; no workaround path
+- Atomic split — create new feature governance state before modifying the source feature
+- User-confirmed split boundary and dry-run support
+
+**Internal deps:** `split-feature-ops.py`, `feature-index.yaml`, source and target `feature.yaml`, `bmad-lens-feature-yaml`, `bmad-lens-git-state`
+
+**Backwards compat risk:** Medium-high. `split-feature` is still installed, documented, and tested in the old codebase. Removing the prompt while installer and help surfaces still expose it would make the retained command surface internally inconsistent. The validate-first and in-progress-blocked contracts must remain intact.
+
+---
+
+### 15. `constitution` → `bmad-lens-constitution`
 
 **What it does:** Read-only 4-level hierarchy resolver: org → domain → service → repo. Additive merge rules — lower levels extend, never override higher levels. Progressive disclosure of applicable articles.
 
@@ -285,7 +303,7 @@ All `.github/prompts/` files are pure stubs — they run `light-preflight.py` an
 
 ---
 
-### 15. `discover` → `bmad-lens-discover`
+### 16. `discover` → `bmad-lens-discover`
 
 **What it does:** Bidirectional repo-inventory sync. Clones repos registered in `repo-inventory.yaml` that are missing locally. Registers untracked local repos found under `target_projects_path`. Auto-commits sync state to governance `main`.
 
@@ -300,7 +318,7 @@ All `.github/prompts/` files are pure stubs — they run `light-preflight.py` an
 
 ---
 
-### 16. `next` → `bmad-lens-next`
+### 17. `next` → `bmad-lens-next`
 
 **What it does:** Single opinionated next-action router. Reads feature state from `feature.yaml` + `lifecycle.yaml`, picks ONE recommendation, auto-delegates when unblocked. Blockers surface before delegation.
 
@@ -331,6 +349,7 @@ All `.github/prompts/` files are pure stubs — they run `light-preflight.py` an
 | 8 | **expressplan requires QuickPlan internally** — `lens-quickplan.prompt.md` deprecated but skill must survive | Retain `bmad-lens-quickplan` skill as internal module |
 | 9 | **light-preflight.py interface is frozen** — every stub calls it; exit 0 = proceed, non-zero = stop | Interface cannot change; rewrite can consolidate other scripts but not this one |
 | 10 | **constitution partial-hierarchy must not fail** — missing org-level is the normal state | All callers of `bmad-lens-constitution` must be tested with incomplete hierarchy |
+| 11 | **split-feature is part of the shipped prompt surface** — installer, setup, help, and tests still expose it | Retain `lens-split-feature.prompt.md` in the published surface and carry its tested validate-first workflow forward |
 
 ---
 
@@ -373,7 +392,6 @@ The following prompts are removed from `.github/prompts/` but their underlying s
 - `lens-retrospective.prompt.md` (stub only — skill retained)
 - `lens-rollback.prompt.md`
 - `lens-sensing.prompt.md`
-- `lens-split-feature.prompt.md`
 - `lens-target-repo.prompt.md` (stub only — skill retained)
 - `lens-theme.prompt.md`
 - All `lens-bmad-*.prompt.md` wrappers (stubs only — bmad-lens-bmad-skill retained internally)

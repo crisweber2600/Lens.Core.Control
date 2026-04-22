@@ -5,7 +5,7 @@ status: draft
 goal: "Technical research to ground the lens-work rewrite in the current architecture, constraints, and backwards-compat obligations"
 key_decisions:
   - lifecycle.yaml v4.0 schema is the state-of-truth contract; rewrite must remain v4-compatible
-  - All 16 published command SKILL.md contracts have been read and documented
+  - All 17 retained published command SKILL.md contracts have been read and documented
   - Internal skill boundary (publish-to-governance CLI, light-preflight exit code) must not change
 open_questions:
   - Does the new codebase target lifecycle schema v4.0 or introduce a v5.0 migration?
@@ -52,9 +52,18 @@ updated_at: 2026-04-22T00:00:00Z
 
 These axioms are constraints the rewrite inherits unchanged.
 
+### 1.4 Related Discovery Inputs
+
+The related feature `lens-dev-old-codebase-discovery` produced two reverse-engineered documents that should anchor the rewrite's retained-command mapping work:
+
+- `TargetProjects/lens/lens-governance/features/lens-dev/old-codebase/lens-dev-old-codebase-discovery/docs/deep-dive-lens-work-module.md` — command and skill inventory, lifecycle contracts, and skill-level behavioral notes
+- `TargetProjects/lens/lens-governance/features/lens-dev/old-codebase/lens-dev-old-codebase-discovery/docs/dependency-mapping.md` — dependency graph, IPO catalog, shared resource map, and end-to-end journey flows
+
+For the rewrite, every surviving published command should be re-walked with that old-codebase baseline and decomposed using a BMB-style ideation rubric: intent, boundaries, downstream delegates, shared contracts, outputs, and validation. This keeps the retained prompt surface tied to observable old-codebase behavior instead of relying on memory or prompt prose alone.
+
 ---
 
-## 2. Lifecycle Contract Snapshot (phases the 16 commands must implement)
+## 2. Lifecycle Contract Snapshot (phases and utility surfaces the retained commands must implement)
 
 ### 2.1 Full Track Phase Order
 
@@ -184,7 +193,7 @@ When `next` delegates to a phase skill, **that phase skill must not ask a redund
 
 ---
 
-## 5. Internal Skills That Must Survive as Non-Published Modules
+## 5. Internal Skills and Retained Command Requirement Maps
 
 These are currently published stubs being deprecated, but their skill implementations are internal dependencies of surviving commands:
 
@@ -201,6 +210,49 @@ These are currently published stubs being deprecated, but their skill implementa
 | `bmad-lens-document-project` | complete |
 | `bmad-lens-migrate` | upgrade |
 | `bmad-lens-init-feature` (fetch-context) | preplan, businessplan, techplan, finalizeplan |
+
+---
+
+### 5.1 Reusable Retained-Command Mapping Template
+
+To keep the rewrite grounded in the old-codebase discovery corpus, every surviving published command should be mapped using the same BMB-derived ideation structure. The structure borrows from BMB workflow-builder Phases 1-3: discover intent, classify the workflow boundary, and gather dependencies, outputs, and validation.
+
+Every retained-command map should answer these fields:
+
+| Field | What must be captured |
+|---|---|
+| Intent + boundary | What user-facing job the command owns, what phase or context gates it obeys, and what it must explicitly not mutate or bypass |
+| Prompt chain | `.github/prompts/lens-{command}.prompt.md` -> `lens.core/_bmad/lens-work/prompts/lens-{command}.prompt.md` -> owning `bmad-lens-*` skill |
+| Orchestration path | Internal delegates, scripts, wrappers, and external BMAD skills touched end to end |
+| Shared contracts + data | Lifecycle contracts, governance files, branch rules, session files, and frozen interfaces the command depends on |
+| Outputs + authority | What artifacts, state changes, PRs, or session context the command is allowed to produce and which authority owns them |
+| Validation map | Existing regression tests where they exist, plus rewrite-era test obligations for uncovered behavior |
+
+Shared prompt precondition for all 17 commands: each published prompt stub runs `uv run ./lens.core/_bmad/lens-work/scripts/light-preflight.py` before loading the release prompt. That prompt-start contract is global and is not repeated in every row below.
+
+### 5.2 End-to-End Requirement Map for Retained Commands
+
+| Command | Intent + boundary | Prompt + owner | End-to-end path | Shared contracts + data | Outputs + authority | Validation map |
+|---|---|---|---|---|---|---|
+| `preflight` | Validate workspace and onboarding state before feature work; must not mutate feature lifecycle state | `lens-preflight.prompt.md` -> `bmad-lens-onboard` | prompt stub -> release prompt -> onboard skill -> `preflight.py` and `light-preflight.py` -> guidance or setup surfaces | `bmadconfig.yaml`, `lifecycle.yaml`, governance setup paths, light-preflight exit code contract | `.lens/` and setup guidance only; no feature.yaml phase mutation | Preserve `light-preflight.py` exit semantics; keep `test-setup-control-repo.py` green; add prompt-start regression for success/failure routing |
+| `new-domain` | Create a new domain scaffold and constitution entry; must not skip governance marker creation | `lens-new-domain.prompt.md` -> `bmad-lens-init-feature` (`create-domain`) | prompt stub -> release prompt -> init-feature skill -> `init-feature-ops.py create-domain` -> constitution bootstrap | domain slug rules, governance path conventions, constitution hierarchy | governance `domain.yaml`, domain constitution stub, workspace scaffold | Keep init-feature regression coverage for domain creation; add rewrite regression for domain constitution scaffold and naming stability |
+| `new-service` | Create a service beneath an existing domain; must enforce domain existence and inheritance | `lens-new-service.prompt.md` -> `bmad-lens-init-feature` (`create-service`) | prompt stub -> release prompt -> init-feature skill -> `init-feature-ops.py create-service` | service slug rules, domain/service governance hierarchy, inherited constitution rules | governance `service.yaml`, service constitution stub, service scaffold | Keep init-feature regression coverage for service creation; add rewrite regression for inheritance behavior and path stability |
+| `new-feature` | Create feature identity, two-branch topology, and governance registration; must preserve canonical featureId formula | `lens-new-feature.prompt.md` -> `bmad-lens-init-feature` (`create`) | prompt stub -> release prompt -> init-feature skill -> `init-feature-ops.py create` -> `bmad-lens-git-orchestration` -> optional `bmad-lens-target-repo` | frozen `featureId = {domain}-{service}-{featureSlug}`, `feature.yaml`, `feature-index.yaml`, two-branch topology, target repo inventory | governance `feature.yaml` + `feature-index.yaml` entry + `summary.md`; control repo branches `{featureId}` and `{featureId}-plan` | Preserve `test-init-feature-ops.py`; preserve git-orchestration branch tests; add rewrite regression for target-repo handoff and duplicate detection |
+| `switch` | Change active feature context in session; must remain read-only against governance and code repos | `lens-switch.prompt.md` -> `bmad-lens-switch` | prompt stub -> release prompt -> switch skill -> `switch-ops.py` -> constitution/context load | `feature-index.yaml`, feature summaries, constitution hierarchy, session context conventions | session context only; no feature or branch mutation | Add rewrite regression that verifies feature-index listing, selection, and no-write behavior |
+| `next` | Choose exactly one next action and auto-delegate when unblocked; must be blocker-first and never offer a menu | `lens-next.prompt.md` -> `bmad-lens-next` | prompt stub -> release prompt -> next skill -> `next-ops.py suggest` -> owning phase skill | `lifecycle.yaml` routing, `feature.yaml` phase state, blocker rules, next-handoff pre-confirmed contract | delegated skill load only; no direct artifact authoring | Preserve `test-next-ops.py`; add rewrite regression that delegated phase skills do not re-ask launch confirmation |
+| `preplan` | Run analysis-phase artifact creation; must stay governance-grounded and preserve brainstorm-first behavior | `lens-preplan.prompt.md` -> `bmad-lens-preplan` | prompt stub -> release prompt -> preplan skill -> `bmad-lens-bmad-skill` -> `bmad-brainstorming`, research, product-brief flows -> adversarial review -> feature phase update | `validate-phase-artifacts.py`, `feature.yaml`, constitution rules, batch contract, review-ready fast path | control-repo `brainstorm.md`, `research.md`, `product-brief.md`, `preplan-adversarial-review.md`; phase -> `preplan-complete` | Preserve review-ready gate behavior; keep wrapper-equivalence tests; add regression for brainstorm-first sequencing and batch pass-1/pass-2 behavior |
+| `businessplan` | Produce PRD and UX design after publishing reviewed preplan artifacts; must not write governance docs directly | `lens-businessplan.prompt.md` -> `bmad-lens-businessplan` | prompt stub -> release prompt -> businessplan skill -> `bmad-lens-git-orchestration publish-to-governance --phase preplan` -> `bmad-lens-bmad-skill` -> `bmad-create-prd` and `bmad-create-ux-design` -> adversarial review -> phase update | publish-to-governance CLI, preplan artifacts, `feature.yaml`, review-ready fast path, next-handoff consent | governance mirror of reviewed preplan docs; control-repo `prd.md`, `ux-design.md`, `businessplan-adversarial-review.md`; phase -> `businessplan-complete` | Preserve publish-before-author ordering; add wrapper-equivalence regressions for PRD and UX; keep zero direct governance writes |
+| `techplan` | Produce architecture after businessplan is complete; must preserve PRD reference requirement and publish-before-author entry | `lens-techplan.prompt.md` -> `bmad-lens-techplan` | prompt stub -> release prompt -> techplan skill -> publish businessplan artifacts -> `bmad-lens-bmad-skill` -> `bmad-create-architecture` -> adversarial review -> phase update | `prd.md`, `ux-design.md`, `architecture.md`, publish-to-governance CLI, review-ready fast path | governance mirror of reviewed businessplan docs; control-repo `architecture.md`, `techplan-adversarial-review.md`; phase -> `techplan-complete` | Add rewrite regression for architecture `must_reference` PRD, wrapper equivalence, and publish-before-author ordering |
+| `finalizeplan` | Consolidate planning, create plan PR, generate downstream bundle, and open final PR; must preserve strict step atomicity | `lens-finalizeplan.prompt.md` -> `bmad-lens-finalizeplan` | prompt stub -> release prompt -> finalizeplan skill -> publish techplan artifacts -> adversarial review -> `bmad-lens-git-orchestration` commit/push/PR -> `bmad-lens-bmad-skill` bundle for epics, stories, readiness, sprint status -> final PR | architecture + planning artifacts, plan PR topology, feature milestone updates, finalizeplan 3-step contract | control-repo bundle artifacts, plan PR `{featureId}-plan -> {featureId}`, final PR `{featureId} -> main`, `dev-ready` milestone | Preserve git-orchestration regressions; add rewrite regression for step ordering, PR topology, and no partial step skipping |
+| `expressplan` | Compress planning into one express-track flow; must enforce express gating and retain internal QuickPlan behavior | `lens-expressplan.prompt.md` -> `bmad-lens-expressplan` | prompt stub -> release prompt -> expressplan skill -> `bmad-lens-bmad-skill` -> `bmad-lens-quickplan` -> adversarial review hard gate -> finalizeplan bundle reuse | express track gate in `feature.yaml`, quickplan contract, finalizeplan reuse, adversarial review hard-stop | compressed business + tech planning artifacts plus finalizeplan bundle; phase/milestone advance | Preserve internal QuickPlan retention; add rewrite regression for express-only gating, hard-stop review failure, and finalizeplan bundle delegation |
+| `dev` | Execute implementation in target repos story by story; must never write code into control or release repos | `lens-dev.prompt.md` -> `bmad-lens-dev` | prompt stub -> release prompt -> dev skill -> publish finalizeplan artifacts -> `bmad-lens-git-orchestration prepare-dev-branch` -> constitution load -> subagent task execution -> code review -> final target-repo PR | `dev-session.yaml`, target repo inventory, `feature.yaml`, constitution rules, per-task commit rules | target repo branch `feature/{featureId}` or equivalent, target repo commits and PR, `.lens`/session checkpoints | Preserve `dev-session.yaml` compatibility; add rewrite regression for resume checkpoints, per-task commits, and no control-repo code writes |
+| `complete` | Close the feature irreversibly; must document before archive and preserve terminal archived status | `lens-complete.prompt.md` -> `bmad-lens-complete` | prompt stub -> release prompt -> complete skill -> retrospective -> document-project -> `complete-ops.py` finalize/archive | `feature.yaml`, `feature-index.yaml`, summary/retrospective conventions, terminal archive semantics | retrospective, project docs, final summary, `feature.yaml` phase `complete`, `feature-index.yaml` status `archived` | Add rewrite regression for archive atomicity, retrospective/document-before-archive ordering, and terminal-state recognition |
+| `split-feature` | Split an existing feature into a new first-class feature; must validate first and block in-progress stories from moving | `lens-split-feature.prompt.md` -> `bmad-lens-split-feature` | prompt stub -> release prompt -> split-feature skill -> `split-feature-ops.py validate-split` -> `create-split-feature` -> optional `move-stories` | source and target `feature.yaml`, `feature-index.yaml`, summary stub on `main`, validate-first contract, atomic split ordering, in-progress-blocked rule | new feature governance directory, new `feature.yaml`, new feature-index entry, summary stub, and moved story files when requested | Preserve `test-split-feature-ops.py`; add rewrite regression for validate-first gating, in-progress blockers, summary stub creation, feature-index updates, and dry-run behavior |
+| `constitution` | Resolve applicable constitutions read-only; must support partial hierarchy without failure | `lens-constitution.prompt.md` -> `bmad-lens-constitution` | prompt stub -> release prompt -> constitution skill -> hierarchy resolution (org -> domain -> service -> repo) | constitution files, additive merge rules, `gate_mode`, partial-hierarchy fallback | resolved guidance only; no writes | Add rewrite regression with missing org-level constitution and additive-merge expectations |
+| `discover` | Sync repo inventory between governance and local clones; must preserve governance-main auto-commit behavior | `lens-discover.prompt.md` -> `bmad-lens-discover` | prompt stub -> release prompt -> discover skill -> `discover-ops.py` -> local repo scan + clone/register loop | `repo-inventory.yaml`, `profile.yaml`, `target_projects_path`, governance-main auto-commit contract | local clone changes plus governance inventory commit on `main` | Add rewrite regression for bidirectional sync and explicit preservation of auto-commit-to-governance-main |
+| `upgrade` | Apply lifecycle migrations or report no-op; must preserve v4 drop-in behavior for this rewrite | `lens-upgrade.prompt.md` -> `bmad-lens-upgrade` | prompt stub -> release prompt -> upgrade skill -> lifecycle version detection -> `bmad-lens-migrate` when needed | `lifecycle.yaml` schema version, migration table, `[LENS:UPGRADE]` commit contract, v4 drop-in policy | no-op for v4 -> v4; migration plan and commit only when schema actually changes | Preserve `test-upgrade-ops.py` no-op behavior on v4 features; add rewrite regression for migration routing only when schema differs |
+
+The table above is the retained-command traceability baseline for the rewrite. Any reimplemented prompt, skill, or shared utility should be checked against these 17 rows before a command is declared functionally equivalent to the old codebase.
 
 ---
 
@@ -266,7 +318,7 @@ org (missing in this workspace)
 |---|---|---|
 | featureId formula changes in rewrite | Critical | Document as explicit frozen contract; regression test against all existing features in feature-index.yaml |
 | dev-session.yaml format changes | High | Version the checkpoint format; add migration in upgrade paths |
-| light-preflight.py exit-code contract breaks | High | Add integration test covering all 16 stub invocations |
+| light-preflight.py exit-code contract breaks | High | Add integration test covering all 17 stub invocations |
 | QuickPlan skill deleted (breaks expressplan) | High | Retain bmad-lens-quickplan as internal module even without published stub |
 | finalizeplan step atomicity broken | High | Preserve 3-step contract with explicit commit/push at step 1 boundary |
 | next-handoff pre-confirmed contract not implemented | Medium | Standardize as explicit context flag in phase SKILL.md contracts |

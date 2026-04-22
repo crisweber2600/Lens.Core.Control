@@ -4,7 +4,7 @@ doc_type: product-brief
 status: draft
 goal: "Define the product vision, user value, and success criteria for the lens-work rewrite"
 key_decisions:
-  - Rewrite scope: 16 published commands, 100% backwards compatibility, no user-visible behavior changes
+  - Rewrite scope: 17 published commands, explicitly retaining split-feature, 100% backwards compatibility, no user-visible behavior changes
   - Deprioritized commands: all deprecated stubs — removed from .github/prompts/, retained as internal skills
   - Internal skill consolidation: shared utilities extracted from copy-pasted phase skill patterns
 open_questions:
@@ -12,10 +12,10 @@ open_questions:
   - Will the rewrite ship as a new Lens.Core.Release tag, or as a breaking change requiring user upgrade?
 depends_on: [brainstorm, research]
 blocks: []
-updated_at: 2026-04-22T00:00:00Z
+updated_at: 2026-04-22T00:45:00Z
 ---
 
-# Product Brief — lens-work Rewrite: 16-Command Stable Surface
+# Product Brief — lens-work Rewrite: 17-Command Stable Surface
 
 ## 1. Problem Statement
 
@@ -31,7 +31,7 @@ The objective of this rewrite is to **reduce surface area without changing any u
 
 | User | Current Pain | Rewrite Benefit |
 |---|---|---|
-| **New Lens users** | 54 commands with no clear entry point; `/help` surfaces rarely-used commands alongside core workflow commands | 16 clearly-named commands with natural progression (`new-domain → new-service → new-feature → next`) |
+| **New Lens users** | 54 commands with no clear entry point; `/help` surfaces rarely-used commands alongside core workflow commands | 17 clearly-named commands with natural progression plus feature reshaping (`new-domain → new-service → new-feature → next`, plus `split-feature` when scope must be carved out) |
 | **Existing Lens users (mid-feature)** | No behavioral change expected; must be able to resume existing features and in-progress dev sessions without rerun | Zero behavioral regression; all existing feature.yaml, branch topology, and session state must remain readable |
 | **Lens module maintainers** | Fixing a phase contract bug requires updating 3-4 independent SKILL.md implementations of the same pattern | Shared utilities (`lens-phase-gate`, batch lifecycle contract, publish-entry hook) are single-source-of-truth |
 | **bmad-work-system integrators** | Unclear which prompts are load-bearing vs cosmetic; hard to determine what can be safely ignored | Explicit split: 16 published (user-facing) + N internal skills (not published stubs) |
@@ -41,7 +41,7 @@ The objective of this rewrite is to **reduce surface area without changing any u
 ## 3. Goals
 
 ### G1 — Surface Reduction
-Reduce published `.github/prompts/` stubs from 54 to 16. The 16 surviving commands cover the complete lifecycle for both full and express tracks.
+Reduce published `.github/prompts/` stubs from 54 to 17. The 17 surviving commands cover the complete lifecycle for both full and express tracks while retaining `split-feature` as the published feature-reshaping workflow.
 
 ### G2 — 100% Backwards Compatibility
 All existing features (tracked in `feature-index.yaml`), `feature.yaml` schemas, branch topologies, governance path conventions, and in-progress dev sessions must be fully operational after the rewrite. Zero migration required for users on the current codebase who upgrade.
@@ -66,11 +66,14 @@ All deprecated `.github/prompts/` stubs are removed. Their underlying skill impl
 ### G5 — Explicit Rewrite Target Version
 The rewrite targets lifecycle schema **v4.0 (drop-in)**. `schema_version: 4` is the fixed target. No upgrade path is required; no schema fields in `feature.yaml`, `feature-index.yaml`, or `dev-session.yaml` may change during the rewrite. This was confirmed during PrePlan (C1-A resolved).
 
+### G6 — End-to-End Requirement Mapping For Retained Commands
+Every surviving published Lens prompt and its kept owning skill must have a documented end-to-end requirement map. Each map must trace the user-facing command from prompt stub to prompt redirect, owning SKILL.md contract, internal delegates and scripts, shared data contracts, artifact outputs, governance touchpoints, and regression coverage. The mapping baseline comes from the related `lens-dev-old-codebase-discovery` deep-dive and dependency-mapping docs, and the decomposition for each retained command should follow a BMB-style build rubric: intent, boundaries, dependencies, outputs, and validation.
+
 ---
 
 ## 4. Non-Goals
 
-- **No new commands.** The rewrite adds nothing to the 16-command surface. New commands are a future feature.
+- **No new commands.** The rewrite adds nothing to the 17-command surface. New commands are a future feature.
 - **No new lifecycle phases.** The full-track (preplan → businessplan → techplan → finalizeplan → dev → complete) and express-track (expressplan → dev → complete) are unchanged.
 - **No featureId formula changes.** This is explicitly out of scope.
 - **No governance schema changes.** `feature.yaml`, `feature-index.yaml`, and `repo-inventory.yaml` schemas do not change.
@@ -85,7 +88,7 @@ The rewrite targets lifecycle schema **v4.0 (drop-in)**. `schema_version: 4` is 
 
 | Criterion | Measure |
 |---|---|
-| Published command count | Exactly 16 `.github/prompts/` stubs on completion |
+| Published command count | Exactly 17 `.github/prompts/` stubs on completion |
 | Backwards compatibility | All features in `feature-index.yaml` at time of rewrite remain fully operational |
 | featureId regression | `test-init-feature-ops.py` passes unchanged |
 | git-orchestration regression | `test-git-orchestration-ops.py` passes unchanged |
@@ -96,13 +99,14 @@ The rewrite targets lifecycle schema **v4.0 (drop-in)**. `schema_version: 4` is 
 | Schema version declared | `module.yaml` and `lifecycle.yaml` explicitly declare rewrite target schema version |
 | Upgrade regression | `test-upgrade-ops.py` dry-run on a v4 feature reports no-op |
 | BMAD wrapper delegation equivalence | Per-phase test confirms each reimplemented wrapper produces equivalent output to its BMAD counterpart |
+| End-to-end retained-command traceability | All 17 surviving published commands have a documented requirement map covering stub, skill, delegates, scripts, data contracts, outputs, governance touchpoints, and validation |
 | No governance direct writes | Code review confirms zero phase-skill direct writes to governance repo files |
 
 ---
 
 ## 6. Command Surface Map
 
-### 6.1 Surviving Published Commands (16)
+### 6.1 Surviving Published Commands (17)
 
 | Command | Track | Phase | Primary User Action |
 |---|---|---|---|
@@ -119,6 +123,7 @@ The rewrite targets lifecycle schema **v4.0 (drop-in)**. `schema_version: 4` is 
 | `expressplan` | express | planning | Compressed single-session planning |
 | `dev` | all | execution | AI-guided story-by-story development |
 | `complete` | all | closure | Retrospective, document, archive |
+| `split-feature` | all | reshaping | Split a feature into a new initiative and move eligible stories |
 | `constitution` | all | governance | Resolve 4-level constitution hierarchy |
 | `discover` | all | governance | Sync repo inventory bidirectionally |
 | `upgrade` | all | maintenance | Apply lifecycle schema migrations |
@@ -136,7 +141,7 @@ Express track:
   → expressplan → dev → complete
 
 Cross-cutting (any time):
-  switch, next, constitution, discover, upgrade
+  switch, next, split-feature, constitution, discover, upgrade
 ```
 
 ---
@@ -149,7 +154,7 @@ The rewrite introduces an explicit two-category classification for all skills:
 
 | Category | Published Stub | Skill Retained |
 |---|---|---|
-| **Published command** | Yes (16 total) | Yes |
+| **Published command** | Yes (17 total) | Yes |
 | **Internal module** | No | Yes (required by surviving commands) |
 | **Fully removed** | No | No (no surviving command depends on it) |
 
@@ -177,6 +182,8 @@ Each utility is an internal module, not a published command.
 
 - **Lens.Core.Release (`alpha` branch):** The rewrite output will be promoted to the release repo. The PR is already open ([PROMOTE] Full BMAD + lens-work v). The rewrite must produce a clean publishable artifact.
 - **Existing features in `feature-index.yaml`:** `lens-dev-release-discovery`, `lens-dev-old-codebase-discovery`, and `lens-dev-new-codebase-baseline` must all be operable after the rewrite ships. The first two are in active use and cannot be disrupted.
+- **Old-codebase discovery corpus:** `deep-dive-lens-work-module.md` and `dependency-mapping.md` from `lens-dev-old-codebase-discovery` are the authoritative reverse-engineered baseline for retained-command behavior, dependency chains, and end-to-end mapping coverage.
+- **Installed prompt surface parity:** `setup.py`, installer surfaces, and module help currently ship `lens-split-feature.prompt.md`. The rewrite must either retain that command consistently across all surfaces or explicitly remove it everywhere. This spec chooses retention.
 - **Mid-phase transition model:** Phase skills are stateless at their entry point. A user mid-phase on the old codebase can resume by re-entering the phase skill from its start. No mid-phase checkpoint migration is required (H1-A).
 - **`discover` auto-commit behavior:** The `discover` command's auto-commit to governance `main` outside lifecycle phase transitions is preserved as-is. This behavior is not subject to the `publish-entry-hook` consolidation (L1-A).
 
@@ -189,6 +196,7 @@ Each utility is an internal module, not a published command.
 | featureId formula drift | Critical — breaks all existing features | TechPlan: freeze as architectural axiom |
 | Schema version ambiguity | High — wrong option strands active features | TechPlan: explicit decision required |
 | QuickPlan skill deleted (silently breaks expressplan) | High | FinalizePlan: retained-internal inventory check |
+| split-feature removed while install/help surfaces still publish it | High — retained surface becomes internally inconsistent | TechPlan: keep installer, help, docs, and regression coverage aligned |
 | dev-session.yaml checkpoint incompatibility | High — breaks active dev sessions | TechPlan: version checkpoint format |
 | Review-ready utility diverges from phase behavior | Medium | TechPlan: define shared utility contract |
 | next-handoff contract not standardized | Medium — degrades UX | TechPlan: define handoff flag |
