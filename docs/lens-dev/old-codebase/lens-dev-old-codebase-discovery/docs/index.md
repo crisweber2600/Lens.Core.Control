@@ -41,6 +41,7 @@
 ## Deep Dive Documentation
 
 - [Deep Dive — `_bmad/lens-work/` Module](./deep-dive-lens-work-module.md) — Exhaustive analysis: all 41 skills, 56 prompts, 19 operational scripts, lifecycle contract, dependency graph, architectural patterns, contributor checklist, and gotchas
+- [Dependency Mapping and IPO Catalog](./dependency-mapping.md) — Full input-process-output catalog per component; cross-component interaction matrix; shared resource map; end-to-end journey flows (full, express, hotfix, migration tracks)
 
 ## Getting Started
 
