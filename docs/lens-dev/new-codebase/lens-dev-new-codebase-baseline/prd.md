@@ -18,7 +18,9 @@ classification:
   projectContext: brownfield
 key_decisions:
   - Retain 17 published commands, explicitly including split-feature
-  - Use the old-codebase discovery deep-dive and dependency mapping as the behavioral baseline
+  - Use the rewrite PRD, retained-command contract matrix, and architecture as the implementation source of truth
+  - Use old-codebase discovery artifacts only as verification references for expected outcomes and dependency coverage
+  - No implementation may be copied from old files, modules, prompts, or skills into the rewrite
   - Treat retained-command traceability and command-by-command auditability as first-class product requirements
 open_questions: []
 depends_on: [product-brief, research, brainstorm]
@@ -56,7 +58,7 @@ This classification reflects a source-authoritative lifecycle module with AI-fac
 
 ## 1. Product Intent
 
-Rewrite `lens-work` as a reduced but fully backwards-compatible published command surface. The rewrite now targets **17** published commands, not 16, because `split-feature` is still part of the shipped prompt surface, installer metadata, module help, and regression test suite. The old-codebase discovery artifacts remain the source baseline for retained-command behavior, especially the work-module deep dive and dependency map.
+Rewrite `lens-work` as a reduced but fully backwards-compatible published command surface. The rewrite now targets **17** published commands, not 16, because `split-feature` is still part of the shipped prompt surface, installer metadata, module help, and regression test suite. The rewrite is contract-first and clean-room. Retained-command behavior is defined by this PRD and supporting rewrite artifacts. Old-codebase discovery outputs may be consulted only after implementation design to verify expected outcomes, preserved contracts, and dependency coverage.
 
 ## 2. Scope and Invariants
 
@@ -86,6 +88,7 @@ The rewrite must preserve these 17 published commands:
 
 ### 2.2 Rewrite Invariants
 
+- The rewrite is clean-room: old files, modules, prompts, and skills are verification-only references and may not be copied into the implementation.
 - `light-preflight.py` remains the prompt-start gate for every retained published command.
 - The canonical feature identity formula remains `{domain}-{service}-{featureSlug}`.
 - The control-repo planning topology remains `{featureId}-plan -> {featureId} -> main`.
@@ -145,6 +148,7 @@ The rewrite must preserve these 17 published commands:
 4. Planning-phase commands continue to avoid direct governance writes except via `publish-to-governance`; `discover` retains its explicit auto-commit-to-main exception.
 5. `split-feature` remains user-facing, validates before execution, blocks in-progress stories, and preserves feature-index/feature.yaml/summary creation semantics.
 6. Regression coverage remains attached to every retained command, either through existing tests or rewrite-era parity tests.
+7. Retained-command implementations are newly authored from rewrite requirements; old-codebase artifacts are used only to verify outcome parity and dependency completeness.
 
 ## 5. Implementation Checklist
 
@@ -352,7 +356,7 @@ Together, these journeys make the product promise concrete: Lens is being rebuil
 
 - published prompts, installer behavior, setup surfaces, module help, manifests, and tests must all agree on the same retained command surface
 - the rewrite must continue to interoperate cleanly with the governance repo, the release promotion flow, and target repos without blurring authority boundaries
-- old-codebase discovery artifacts remain the authoritative behavior baseline for retained-command mapping and parity decisions
+- old-codebase discovery artifacts are verification-only references for retained-command outcome checks and dependency coverage; they are not the implementation baseline
 - internal skills and scripts required by retained prompts must stay available even when their own published stubs are removed
 - target-repo code writes must remain isolated to target repos, never the control repo or release repo
 

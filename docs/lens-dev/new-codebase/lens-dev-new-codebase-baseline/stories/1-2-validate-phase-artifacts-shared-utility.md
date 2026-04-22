@@ -4,7 +4,7 @@ story_id: "1.2"
 story_key: "1-2-validate-phase-artifacts-shared-utility"
 epic: "1"
 title: "Implement validate-phase-artifacts.py Shared Utility"
-status: ready-for-dev
+status: re-evaluate
 priority: must
 story_points: 5
 depends_on: [1-1-scaffold-published-surface]
@@ -13,7 +13,7 @@ updated_at: 2026-04-22T00:00:00Z
 
 # Story 1.2: Implement validate-phase-artifacts.py Shared Utility
 
-Status: ready-for-dev
+Status: re-evaluate
 
 ## Story
 

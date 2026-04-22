@@ -4,7 +4,7 @@ story_id: "3.1"
 story_key: "3-1-fix-constitution-partial-hierarchy"
 epic: "3"
 title: "Fix Org-Level Constitution Hard-Fail Bug and Add Parity Tests"
-status: ready-for-dev
+status: re-evaluate
 priority: must
 story_points: 5
 depends_on: [1-1-scaffold-published-surface]
@@ -13,7 +13,7 @@ updated_at: 2026-04-22T00:00:00Z
 
 # Story 3.1: Fix Org-Level Constitution Hard-Fail Bug and Add Parity Tests
 
-Status: ready-for-dev
+Status: re-evaluate
 
 ## Story
 

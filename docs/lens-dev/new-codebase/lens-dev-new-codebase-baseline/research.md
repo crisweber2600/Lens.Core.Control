@@ -54,12 +54,12 @@ These axioms are constraints the rewrite inherits unchanged.
 
 ### 1.4 Related Discovery Inputs
 
-The related feature `lens-dev-old-codebase-discovery` produced two reverse-engineered documents that should anchor the rewrite's retained-command mapping work:
+The related feature `lens-dev-old-codebase-discovery` produced two reverse-engineered documents that are approved verification references for retained-command outcome checks and dependency coverage audits:
 
 - `TargetProjects/lens/lens-governance/features/lens-dev/old-codebase/lens-dev-old-codebase-discovery/docs/deep-dive-lens-work-module.md` — command and skill inventory, lifecycle contracts, and skill-level behavioral notes
 - `TargetProjects/lens/lens-governance/features/lens-dev/old-codebase/lens-dev-old-codebase-discovery/docs/dependency-mapping.md` — dependency graph, IPO catalog, shared resource map, and end-to-end journey flows
 
-For the rewrite, every surviving published command should be re-walked with that old-codebase baseline and decomposed using a BMB-style ideation rubric: intent, boundaries, downstream delegates, shared contracts, outputs, and validation. This keeps the retained prompt surface tied to observable old-codebase behavior instead of relying on memory or prompt prose alone.
+For the rewrite, every surviving published command should be specified from the rewrite contract first, then reviewed against approved legacy references to verify expected outcomes and dependency completeness. These documents confirm parity — they do not drive implementation.
 
 ---
 
@@ -215,7 +215,7 @@ These are currently published stubs being deprecated, but their skill implementa
 
 ### 5.1 Reusable Retained-Command Mapping Template
 
-To keep the rewrite grounded in the old-codebase discovery corpus, every surviving published command should be mapped using the same BMB-derived ideation structure. The structure borrows from BMB workflow-builder Phases 1-3: discover intent, classify the workflow boundary, and gather dependencies, outputs, and validation.
+To keep the rewrite grounded in the rewrite contracts, every surviving published command should be mapped using the same BMB-derived ideation structure. The structure borrows from BMB workflow-builder Phases 1-3: discover intent, classify the workflow boundary, and gather dependencies, outputs, and validation. Old-codebase discovery artifacts are consulted after design to verify that expected outcomes and dependencies are fully covered — not before.
 
 Every retained-command map should answer these fields:
 

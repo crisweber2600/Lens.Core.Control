@@ -4,7 +4,7 @@ story_id: "5.5"
 story_key: "5-5-rewrite-upgrade-and-regression-gate"
 epic: "5"
 title: "Rewrite upgrade Command and Run E2E Regression Gate"
-status: ready-for-dev
+status: re-evaluate
 priority: must
 story_points: 8
 depends_on: [2-1-rewrite-preflight, 2-4-rewrite-new-feature, 2-6-rewrite-next, 3-1-fix-constitution-partial-hierarchy, 4-4-rewrite-finalizeplan, 5-1-rewrite-dev, 5-3-rewrite-split-feature, 5-4-rewrite-discover]
@@ -13,7 +13,7 @@ updated_at: 2026-04-22T00:00:00Z
 
 # Story 5.5: Rewrite upgrade Command and Run E2E Regression Gate
 
-Status: ready-for-dev
+Status: re-evaluate
 
 ## Story
 

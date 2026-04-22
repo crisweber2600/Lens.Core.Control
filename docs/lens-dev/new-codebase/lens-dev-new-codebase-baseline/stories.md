@@ -6,7 +6,7 @@ goal: "Stage the full implementation backlog for the lens-work rewrite with orde
 key_decisions:
   - "Use epics.md as the authoritative story inventory and keep the 21-story decomposition unchanged."
   - "Preserve the Epic 3 to Epic 4 prerequisite in both dependencies and sprint sequencing."
-  - "Treat the old-codebase discovery docs as parity-reference inputs, not as a source of new product scope."
+  - "Treat the old-codebase discovery docs as verification-only references for outcome checks; they are not parity-reference inputs or implementation baselines."
 open_questions:
   - "Should the proposed seven-sprint sequence be compressed once team capacity is confirmed?"
   - "Should /dev formally record the target repo path before the first implementation story begins?"
@@ -26,7 +26,7 @@ updated_at: 2026-04-22T00:00:00Z
 
 ## Overview
 
-This backlog stages the approved 21-story implementation sequence for the lens-work rewrite. It follows the existing epic breakdown in epics.md, preserves the hard prerequisite that Story 3.1 must complete before any Epic 4 work starts, and uses the old-codebase discovery docs as parity-reference context for legacy command surface, dependency, and handoff behavior.
+This backlog stages the approved 21-story implementation sequence for the lens-work rewrite. It follows the existing epic breakdown in epics.md, preserves the hard prerequisite that Story 3.1 must complete before any Epic 4 work starts, and uses old-codebase discovery artifacts as verification-only references for outcome checks and dependency coverage after contract design.
 
 ## Story List
 

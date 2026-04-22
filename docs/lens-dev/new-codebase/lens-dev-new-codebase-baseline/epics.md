@@ -161,6 +161,8 @@ This product has no rich visual UI. UX requirements are expressed through comman
 
 ## Epic List
 
+> **Backlog Reset (2026-04-22):** All rewrite stories are reset for re-evaluation per the approved sprint change proposal. No story is implementation-ready until reviewed for clean-room compliance and explicitly re-approved.
+
 1. **Epic 1: Codebase Foundation and Shared Infrastructure** — Scaffold the new source tree, reduce the published stub surface from 54 to 17, and implement the three shared utilities that all retained commands depend on.
 2. **Epic 2: Identity and Navigation Command Surface** — Rewrite the six identity-root and navigation commands: `preflight`, `new-domain`, `new-service`, `new-feature`, `switch`, and `next`.
 3. **Epic 3: Constitution Bug Fix and Governance Rules Engine** — Fix the org-level hard-fail bug in `constitution` and add parity regression coverage. **This epic is a prerequisite for Epic 4.**

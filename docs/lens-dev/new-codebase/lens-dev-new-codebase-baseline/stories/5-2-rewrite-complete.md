@@ -4,7 +4,7 @@ story_id: "5.2"
 story_key: "5-2-rewrite-complete"
 epic: "5"
 title: "Rewrite complete Command"
-status: ready-for-dev
+status: re-evaluate
 priority: must
 story_points: 5
 depends_on: [5-1-rewrite-dev]
@@ -13,7 +13,7 @@ updated_at: 2026-04-22T00:00:00Z
 
 # Story 5.2: Rewrite complete Command
 
-Status: ready-for-dev
+Status: re-evaluate
 
 ## Story
 

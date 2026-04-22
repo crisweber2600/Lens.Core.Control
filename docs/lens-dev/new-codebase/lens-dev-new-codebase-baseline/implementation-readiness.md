@@ -6,7 +6,7 @@ goal: "Assess whether the lens-work rewrite planning set is ready to hand off in
 key_decisions:
   - "Use the approved 21-story backlog and seven-sprint grouping as the current execution plan."
   - "Treat empty target_repos as a current governance convention and capture /dev setup risk here instead of mutating feature metadata ad hoc."
-  - "Carry forward old-codebase discovery docs as parity references for runtime behavior and dependency validation."
+  - "Use old-codebase discovery docs as verification-only references for outcome checks after implementation design; they are not parity baselines or implementation inputs."
 open_questions:
   - "Should target repo registration be formalized before the first /dev run?"
   - "Who owns the final release-readiness report for Story 5.5?"
@@ -25,7 +25,9 @@ updated_at: 2026-04-22T00:00:00Z
 
 ## Readiness Assessment
 
-### Overall Status: Conditionally Ready
+### Overall Status: Not Ready
+
+**Blocking reason:** The approved sprint change proposal (2026-04-22) requires all rewrite stories to be reset to `re-evaluate` and all artifact language referencing old-codebase discovery docs as behavioral baselines or parity inputs to be corrected before implementation resumes. Stories may not proceed until each has been reviewed for clean-room compliance and explicitly re-approved.
 
 | Area | Status | Notes |
 |------|--------|-------|
@@ -51,7 +53,7 @@ updated_at: 2026-04-22T00:00:00Z
 
 | Risk | Likelihood | Impact | Mitigation | Owner |
 |------|-----------|--------|------------|-------|
-| Identity/navigation rewrites uncover hidden dependency drift from the old codebase | M | M | Use the old-codebase dependency map and parity tests to validate each command family before advancing | Maintainer |
+| Identity/navigation rewrites uncover hidden dependency drift | M | M | Specify command behavior from rewrite contracts; use old-codebase discovery artifacts as verification-only references after design | Maintainer |
 | Story 5.5 regression gate expands late in the program | M | H | Keep required regression anchors visible in sprint planning and reserve time for release-readiness reporting | Release lead |
 
 ### Resource Risks

@@ -4,7 +4,7 @@ story_id: "2.4"
 story_key: "2-4-rewrite-new-feature"
 epic: "2"
 title: "Rewrite new-feature Command"
-status: ready-for-dev
+status: re-evaluate
 priority: must
 story_points: 8
 depends_on: [2-2-rewrite-new-domain, 2-3-rewrite-new-service]
@@ -13,7 +13,7 @@ updated_at: 2026-04-22T00:00:00Z
 
 # Story 2.4: Rewrite new-feature Command
 
-Status: ready-for-dev
+Status: re-evaluate
 
 ## Story
 

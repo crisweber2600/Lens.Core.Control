@@ -4,7 +4,7 @@ story_id: "1.3"
 story_key: "1-3-batch-two-pass-contract"
 epic: "1"
 title: "Implement bmad-lens-batch Shared 2-Pass Contract"
-status: ready-for-dev
+status: re-evaluate
 priority: must
 story_points: 5
 depends_on: [1-1-scaffold-published-surface]
@@ -13,7 +13,7 @@ updated_at: 2026-04-22T00:00:00Z
 
 # Story 1.3: Implement bmad-lens-batch Shared 2-Pass Contract
 
-Status: ready-for-dev
+Status: re-evaluate
 
 ## Story
 

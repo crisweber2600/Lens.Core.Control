@@ -4,7 +4,7 @@ story_id: "2.6"
 story_key: "2-6-rewrite-next"
 epic: "2"
 title: "Rewrite next Command"
-status: ready-for-dev
+status: re-evaluate
 priority: must
 story_points: 5
 depends_on: [2-1-rewrite-preflight, 2-4-rewrite-new-feature, 2-5-rewrite-switch]
@@ -13,7 +13,7 @@ updated_at: 2026-04-22T00:00:00Z
 
 # Story 2.6: Rewrite next Command
 
-Status: ready-for-dev
+Status: re-evaluate
 
 ## Story
 

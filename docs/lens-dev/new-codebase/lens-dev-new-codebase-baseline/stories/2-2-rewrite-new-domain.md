@@ -4,7 +4,7 @@ story_id: "2.2"
 story_key: "2-2-rewrite-new-domain"
 epic: "2"
 title: "Rewrite new-domain Command"
-status: ready-for-dev
+status: re-evaluate
 priority: must
 story_points: 3
 depends_on: [1-1-scaffold-published-surface]
@@ -13,7 +13,7 @@ updated_at: 2026-04-22T00:00:00Z
 
 # Story 2.2: Rewrite new-domain Command
 
-Status: ready-for-dev
+Status: re-evaluate
 
 ## Story
 

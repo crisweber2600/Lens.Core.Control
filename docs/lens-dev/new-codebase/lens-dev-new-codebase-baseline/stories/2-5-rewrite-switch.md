@@ -4,7 +4,7 @@ story_id: "2.5"
 story_key: "2-5-rewrite-switch"
 epic: "2"
 title: "Rewrite switch Command"
-status: ready-for-dev
+status: re-evaluate
 priority: must
 story_points: 3
 depends_on: [2-4-rewrite-new-feature]
@@ -13,7 +13,7 @@ updated_at: 2026-04-22T00:00:00Z
 
 # Story 2.5: Rewrite switch Command
 
-Status: ready-for-dev
+Status: re-evaluate
 
 ## Story
 

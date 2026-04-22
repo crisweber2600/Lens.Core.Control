@@ -4,7 +4,7 @@ story_id: "5.4"
 story_key: "5-4-rewrite-discover"
 epic: "5"
 title: "Rewrite discover Command"
-status: ready-for-dev
+status: re-evaluate
 priority: must
 story_points: 5
 depends_on: [1-4-publish-to-governance-entry-hook]
@@ -13,7 +13,7 @@ updated_at: 2026-04-22T00:00:00Z
 
 # Story 5.4: Rewrite discover Command
 
-Status: ready-for-dev
+Status: re-evaluate
 
 ## Story
 

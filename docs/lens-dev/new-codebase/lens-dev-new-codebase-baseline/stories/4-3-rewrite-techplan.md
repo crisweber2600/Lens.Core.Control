@@ -4,7 +4,7 @@ story_id: "4.3"
 story_key: "4-3-rewrite-techplan"
 epic: "4"
 title: "Rewrite techplan Command"
-status: ready-for-dev
+status: re-evaluate
 priority: must
 story_points: 5
 depends_on: [1-4-publish-to-governance-entry-hook, 3-1-fix-constitution-partial-hierarchy, 4-2-rewrite-businessplan]
@@ -13,7 +13,7 @@ updated_at: 2026-04-22T00:00:00Z
 
 # Story 4.3: Rewrite techplan Command
 
-Status: ready-for-dev
+Status: re-evaluate
 
 ## Story
 

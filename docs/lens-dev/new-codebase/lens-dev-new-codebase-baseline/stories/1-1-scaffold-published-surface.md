@@ -4,7 +4,7 @@ story_id: "1.1"
 story_key: "1-1-scaffold-published-surface"
 epic: "1"
 title: "New Codebase Scaffold, Install Surfaces, and Module Surface Reduction"
-status: ready-for-dev
+status: re-evaluate
 priority: must
 story_points: 8
 depends_on: []
@@ -13,7 +13,7 @@ updated_at: 2026-04-22T00:00:00Z
 
 # Story 1.1: New Codebase Scaffold, Install Surfaces, and Module Surface Reduction
 
-Status: ready-for-dev
+Status: re-evaluate
 
 ## Story
 

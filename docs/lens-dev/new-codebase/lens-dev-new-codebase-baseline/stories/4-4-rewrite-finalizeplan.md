@@ -4,7 +4,7 @@ story_id: "4.4"
 story_key: "4-4-rewrite-finalizeplan"
 epic: "4"
 title: "Rewrite finalizeplan Command"
-status: ready-for-dev
+status: re-evaluate
 priority: must
 story_points: 8
 depends_on: [1-2-validate-phase-artifacts-shared-utility, 1-3-batch-two-pass-contract, 1-4-publish-to-governance-entry-hook, 3-1-fix-constitution-partial-hierarchy, 4-3-rewrite-techplan]
@@ -13,7 +13,7 @@ updated_at: 2026-04-22T00:00:00Z
 
 # Story 4.4: Rewrite finalizeplan Command
 
-Status: ready-for-dev
+Status: re-evaluate
 
 ## Story
 
