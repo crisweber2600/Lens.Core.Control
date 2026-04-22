@@ -1,0 +1,37 @@
+feature_id: lens-dev-new-codebase-baseline
+feature_slug: baseline
+domain: lens-dev
+service: new-codebase
+target_repo: TargetProjects/lens-dev/new-codebase/lens.core.src
+target_branch: feature/baseline
+branch_mode: feature-id
+status: active
+created: '2026-04-23T00:00:00Z'
+updated: '2026-04-23T00:00:00Z'
+current_epic: 1
+current_story: 1-1-scaffold-published-surface
+stories_completed: []
+stories_in_progress: []
+stories_remaining:
+  - 1-1-scaffold-published-surface
+  - 1-2-validate-phase-artifacts-shared-utility
+  - 1-3-batch-two-pass-contract
+  - 1-4-publish-to-governance-entry-hook
+sprint_plan:
+  sprint-1:
+    - id: 1-1-scaffold-published-surface
+      status: ready-for-dev
+      story_points: 8
+    - id: 1-2-validate-phase-artifacts-shared-utility
+      status: ready-for-dev
+      story_points: 5
+    - id: 1-3-batch-two-pass-contract
+      status: ready-for-dev
+      story_points: 5
+    - id: 1-4-publish-to-governance-entry-hook
+      status: ready-for-dev
+      story_points: 5
+notes: |
+  On Activation complete. Ready to begin epic 1 story loop.
+  BMB-first rule active: all lens.core.src edits routed through lens.core/_bmad/bmb.
+  Given/When/Then validation required per story (informational gate).
