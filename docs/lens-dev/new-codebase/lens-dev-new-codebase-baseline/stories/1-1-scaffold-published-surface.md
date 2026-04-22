@@ -38,7 +38,7 @@ so that every rewrite starts from a consistent, auditable foundation.
 
 ## Dev Notes
 
-- Use the old-codebase discovery docs as the parity reference for published surface counts and retained dependency coverage.
+- Use the old-codebase discovery docs as the verification reference for published surface counts and retained dependency coverage — do not use them as implementation inputs.
 - Treat the source-authoritative lens-work tree as the implementation surface; do not patch only the copied prompt stubs.
 - Preserve the 17-command contract exactly, including split-feature.
 

@@ -1,5 +1,5 @@
 # generated: 2026-04-22T00:00:00Z
-# last_updated: 2026-04-22T11:47:11Z
+# last_updated: 2026-04-22T18:02:56Z
 # project: lens-dev-new-codebase-baseline
 # project_key: NOKEY
 # tracking_system: file-system
@@ -9,7 +9,7 @@
 # status: backlog-reset
 
 generated: 2026-04-22T00:00:00Z
-last_updated: 2026-04-22T11:47:11Z
+last_updated: 2026-04-22T18:02:56Z
 project: lens-dev-new-codebase-baseline
 project_key: NOKEY
 tracking_system: file-system
@@ -42,57 +42,57 @@ sprints:
     stories: [5-3-rewrite-split-feature, 5-5-rewrite-upgrade-and-regression-gate]
 
 stories:
-  1-1-scaffold-published-surface: { title: "New Codebase Scaffold, Install Surfaces, and Module Surface Reduction", epic: epic-1, sprint: sprint-1, points: 8, status: backlog, depends_on: [] }
-  1-2-validate-phase-artifacts-shared-utility: { title: "Implement validate-phase-artifacts.py Shared Utility", epic: epic-1, sprint: sprint-1, points: 5, status: backlog, depends_on: [1-1-scaffold-published-surface] }
-  1-3-batch-two-pass-contract: { title: "Implement bmad-lens-batch Shared 2-Pass Contract", epic: epic-1, sprint: sprint-1, points: 5, status: backlog, depends_on: [1-1-scaffold-published-surface] }
-  1-4-publish-to-governance-entry-hook: { title: "Implement publish-to-governance Entry Hook", epic: epic-1, sprint: sprint-1, points: 5, status: backlog, depends_on: [1-1-scaffold-published-surface] }
-  2-1-rewrite-preflight: { title: "Rewrite preflight Command", epic: epic-2, sprint: sprint-2, points: 5, status: backlog, depends_on: [1-1-scaffold-published-surface] }
-  2-2-rewrite-new-domain: { title: "Rewrite new-domain Command", epic: epic-2, sprint: sprint-2, points: 3, status: backlog, depends_on: [1-1-scaffold-published-surface] }
-  2-3-rewrite-new-service: { title: "Rewrite new-service Command", epic: epic-2, sprint: sprint-2, points: 3, status: backlog, depends_on: [2-2-rewrite-new-domain] }
-  2-4-rewrite-new-feature: { title: "Rewrite new-feature Command", epic: epic-2, sprint: sprint-3, points: 8, status: backlog, depends_on: [2-2-rewrite-new-domain, 2-3-rewrite-new-service] }
-  2-5-rewrite-switch: { title: "Rewrite switch Command", epic: epic-2, sprint: sprint-2, points: 3, status: backlog, depends_on: [2-4-rewrite-new-feature] }
-  2-6-rewrite-next: { title: "Rewrite next Command", epic: epic-2, sprint: sprint-3, points: 5, status: backlog, depends_on: [2-1-rewrite-preflight, 2-4-rewrite-new-feature, 2-5-rewrite-switch] }
-  3-1-fix-constitution-partial-hierarchy: { title: "Fix Org-Level Constitution Hard-Fail Bug and Add Parity Tests", epic: epic-3, sprint: sprint-3, points: 5, status: backlog, depends_on: [1-1-scaffold-published-surface] }
-  4-1-rewrite-preplan: { title: "Rewrite preplan Command", epic: epic-4, sprint: sprint-4, points: 8, status: backlog, depends_on: [1-2-validate-phase-artifacts-shared-utility, 1-3-batch-two-pass-contract, 3-1-fix-constitution-partial-hierarchy] }
-  4-2-rewrite-businessplan: { title: "Rewrite businessplan Command", epic: epic-4, sprint: sprint-4, points: 5, status: backlog, depends_on: [1-4-publish-to-governance-entry-hook, 3-1-fix-constitution-partial-hierarchy, 4-1-rewrite-preplan] }
-  4-3-rewrite-techplan: { title: "Rewrite techplan Command", epic: epic-4, sprint: sprint-4, points: 5, status: backlog, depends_on: [1-4-publish-to-governance-entry-hook, 3-1-fix-constitution-partial-hierarchy, 4-2-rewrite-businessplan] }
-  4-4-rewrite-finalizeplan: { title: "Rewrite finalizeplan Command", epic: epic-4, sprint: sprint-5, points: 8, status: backlog, depends_on: [1-2-validate-phase-artifacts-shared-utility, 1-3-batch-two-pass-contract, 1-4-publish-to-governance-entry-hook, 3-1-fix-constitution-partial-hierarchy, 4-3-rewrite-techplan] }
-  4-5-rewrite-expressplan: { title: "Rewrite expressplan Command", epic: epic-4, sprint: sprint-5, points: 5, status: backlog, depends_on: [1-3-batch-two-pass-contract, 3-1-fix-constitution-partial-hierarchy, 4-4-rewrite-finalizeplan] }
-  5-1-rewrite-dev: { title: "Rewrite dev Command", epic: epic-5, sprint: sprint-6, points: 8, status: backlog, depends_on: [4-4-rewrite-finalizeplan] }
-  5-2-rewrite-complete: { title: "Rewrite complete Command", epic: epic-5, sprint: sprint-6, points: 5, status: backlog, depends_on: [5-1-rewrite-dev] }
-  5-3-rewrite-split-feature: { title: "Rewrite split-feature Command", epic: epic-5, sprint: sprint-7, points: 8, status: backlog, depends_on: [4-4-rewrite-finalizeplan] }
-  5-4-rewrite-discover: { title: "Rewrite discover Command", epic: epic-5, sprint: sprint-6, points: 5, status: backlog, depends_on: [1-4-publish-to-governance-entry-hook] }
-  5-5-rewrite-upgrade-and-regression-gate: { title: "Rewrite upgrade Command and Run E2E Regression Gate", epic: epic-5, sprint: sprint-7, points: 8, status: backlog, depends_on: [2-1-rewrite-preflight, 2-4-rewrite-new-feature, 2-6-rewrite-next, 3-1-fix-constitution-partial-hierarchy, 4-4-rewrite-finalizeplan, 5-1-rewrite-dev, 5-3-rewrite-split-feature, 5-4-rewrite-discover] }
+  1-1-scaffold-published-surface: { title: "New Codebase Scaffold, Install Surfaces, and Module Surface Reduction", epic: epic-1, sprint: sprint-1, points: 8, status: re-evaluate, depends_on: [] }
+  1-2-validate-phase-artifacts-shared-utility: { title: "Implement validate-phase-artifacts.py Shared Utility", epic: epic-1, sprint: sprint-1, points: 5, status: re-evaluate, depends_on: [1-1-scaffold-published-surface] }
+  1-3-batch-two-pass-contract: { title: "Implement bmad-lens-batch Shared 2-Pass Contract", epic: epic-1, sprint: sprint-1, points: 5, status: re-evaluate, depends_on: [1-1-scaffold-published-surface] }
+  1-4-publish-to-governance-entry-hook: { title: "Implement publish-to-governance Entry Hook", epic: epic-1, sprint: sprint-1, points: 5, status: re-evaluate, depends_on: [1-1-scaffold-published-surface] }
+  2-1-rewrite-preflight: { title: "Rewrite preflight Command", epic: epic-2, sprint: sprint-2, points: 5, status: re-evaluate, depends_on: [1-1-scaffold-published-surface] }
+  2-2-rewrite-new-domain: { title: "Rewrite new-domain Command", epic: epic-2, sprint: sprint-2, points: 3, status: re-evaluate, depends_on: [1-1-scaffold-published-surface] }
+  2-3-rewrite-new-service: { title: "Rewrite new-service Command", epic: epic-2, sprint: sprint-2, points: 3, status: re-evaluate, depends_on: [2-2-rewrite-new-domain] }
+  2-4-rewrite-new-feature: { title: "Rewrite new-feature Command", epic: epic-2, sprint: sprint-3, points: 8, status: re-evaluate, depends_on: [2-2-rewrite-new-domain, 2-3-rewrite-new-service] }
+  2-5-rewrite-switch: { title: "Rewrite switch Command", epic: epic-2, sprint: sprint-2, points: 3, status: re-evaluate, depends_on: [2-4-rewrite-new-feature] }
+  2-6-rewrite-next: { title: "Rewrite next Command", epic: epic-2, sprint: sprint-3, points: 5, status: re-evaluate, depends_on: [2-1-rewrite-preflight, 2-4-rewrite-new-feature, 2-5-rewrite-switch] }
+  3-1-fix-constitution-partial-hierarchy: { title: "Fix Org-Level Constitution Hard-Fail Bug and Add Parity Tests", epic: epic-3, sprint: sprint-3, points: 5, status: re-evaluate, depends_on: [1-1-scaffold-published-surface] }
+  4-1-rewrite-preplan: { title: "Rewrite preplan Command", epic: epic-4, sprint: sprint-4, points: 8, status: re-evaluate, depends_on: [1-2-validate-phase-artifacts-shared-utility, 1-3-batch-two-pass-contract, 3-1-fix-constitution-partial-hierarchy] }
+  4-2-rewrite-businessplan: { title: "Rewrite businessplan Command", epic: epic-4, sprint: sprint-4, points: 5, status: re-evaluate, depends_on: [1-4-publish-to-governance-entry-hook, 3-1-fix-constitution-partial-hierarchy, 4-1-rewrite-preplan] }
+  4-3-rewrite-techplan: { title: "Rewrite techplan Command", epic: epic-4, sprint: sprint-4, points: 5, status: re-evaluate, depends_on: [1-4-publish-to-governance-entry-hook, 3-1-fix-constitution-partial-hierarchy, 4-2-rewrite-businessplan] }
+  4-4-rewrite-finalizeplan: { title: "Rewrite finalizeplan Command", epic: epic-4, sprint: sprint-5, points: 8, status: re-evaluate, depends_on: [1-2-validate-phase-artifacts-shared-utility, 1-3-batch-two-pass-contract, 1-4-publish-to-governance-entry-hook, 3-1-fix-constitution-partial-hierarchy, 4-3-rewrite-techplan] }
+  4-5-rewrite-expressplan: { title: "Rewrite expressplan Command", epic: epic-4, sprint: sprint-5, points: 5, status: re-evaluate, depends_on: [1-3-batch-two-pass-contract, 3-1-fix-constitution-partial-hierarchy, 4-4-rewrite-finalizeplan] }
+  5-1-rewrite-dev: { title: "Rewrite dev Command", epic: epic-5, sprint: sprint-6, points: 8, status: re-evaluate, depends_on: [4-4-rewrite-finalizeplan] }
+  5-2-rewrite-complete: { title: "Rewrite complete Command", epic: epic-5, sprint: sprint-6, points: 5, status: re-evaluate, depends_on: [5-1-rewrite-dev] }
+  5-3-rewrite-split-feature: { title: "Rewrite split-feature Command", epic: epic-5, sprint: sprint-7, points: 8, status: re-evaluate, depends_on: [4-4-rewrite-finalizeplan] }
+  5-4-rewrite-discover: { title: "Rewrite discover Command", epic: epic-5, sprint: sprint-6, points: 5, status: re-evaluate, depends_on: [1-4-publish-to-governance-entry-hook] }
+  5-5-rewrite-upgrade-and-regression-gate: { title: "Rewrite upgrade Command and Run E2E Regression Gate", epic: epic-5, sprint: sprint-7, points: 8, status: re-evaluate, depends_on: [2-1-rewrite-preflight, 2-4-rewrite-new-feature, 2-6-rewrite-next, 3-1-fix-constitution-partial-hierarchy, 4-4-rewrite-finalizeplan, 5-1-rewrite-dev, 5-3-rewrite-split-feature, 5-4-rewrite-discover] }
 
 development_status:
-  epic-1: backlog
-  1-1-scaffold-published-surface: backlog
-  1-2-validate-phase-artifacts-shared-utility: backlog
-  1-3-batch-two-pass-contract: backlog
-  1-4-publish-to-governance-entry-hook: backlog
+  epic-1: re-evaluate
+  1-1-scaffold-published-surface: re-evaluate
+  1-2-validate-phase-artifacts-shared-utility: re-evaluate
+  1-3-batch-two-pass-contract: re-evaluate
+  1-4-publish-to-governance-entry-hook: re-evaluate
   epic-1-retrospective: optional
-  epic-2: backlog
-  2-1-rewrite-preflight: backlog
-  2-2-rewrite-new-domain: backlog
-  2-3-rewrite-new-service: backlog
-  2-4-rewrite-new-feature: backlog
-  2-5-rewrite-switch: backlog
-  2-6-rewrite-next: backlog
+  epic-2: re-evaluate
+  2-1-rewrite-preflight: re-evaluate
+  2-2-rewrite-new-domain: re-evaluate
+  2-3-rewrite-new-service: re-evaluate
+  2-4-rewrite-new-feature: re-evaluate
+  2-5-rewrite-switch: re-evaluate
+  2-6-rewrite-next: re-evaluate
   epic-2-retrospective: optional
-  epic-3: backlog
-  3-1-fix-constitution-partial-hierarchy: backlog
+  epic-3: re-evaluate
+  3-1-fix-constitution-partial-hierarchy: re-evaluate
   epic-3-retrospective: optional
-  epic-4: backlog
-  4-1-rewrite-preplan: backlog
-  4-2-rewrite-businessplan: backlog
-  4-3-rewrite-techplan: backlog
-  4-4-rewrite-finalizeplan: backlog
-  4-5-rewrite-expressplan: backlog
+  epic-4: re-evaluate
+  4-1-rewrite-preplan: re-evaluate
+  4-2-rewrite-businessplan: re-evaluate
+  4-3-rewrite-techplan: re-evaluate
+  4-4-rewrite-finalizeplan: re-evaluate
+  4-5-rewrite-expressplan: re-evaluate
   epic-4-retrospective: optional
-  epic-5: backlog
-  5-1-rewrite-dev: backlog
-  5-2-rewrite-complete: backlog
-  5-3-rewrite-split-feature: backlog
-  5-4-rewrite-discover: backlog
-  5-5-rewrite-upgrade-and-regression-gate: backlog
+  epic-5: re-evaluate
+  5-1-rewrite-dev: re-evaluate
+  5-2-rewrite-complete: re-evaluate
+  5-3-rewrite-split-feature: re-evaluate
+  5-4-rewrite-discover: re-evaluate
+  5-5-rewrite-upgrade-and-regression-gate: re-evaluate
   epic-5-retrospective: optional

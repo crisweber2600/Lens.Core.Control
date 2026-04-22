@@ -1,7 +1,7 @@
 ---
 feature: lens-dev-new-codebase-baseline
 doc_type: epics
-status: complete
+status: in-reset
 stepsCompleted: [step-01-validate-prerequisites, step-02-design-epics, step-03-create-stories]
 inputDocuments:
   - docs/lens-dev/new-codebase/lens-dev-new-codebase-baseline/prd.md
@@ -16,6 +16,7 @@ inputDocuments:
   - TargetProjects/lens/lens-governance/features/lens-dev/old-codebase/lens-dev-old-codebase-discovery/docs/deployment-guide.md
   - TargetProjects/lens/lens-governance/features/lens-dev/old-codebase/lens-dev-old-codebase-discovery/docs/contribution-guide.md
 updated_at: 2026-04-22T00:00:00Z
+updated_at: 2026-04-22T18:02:56Z
 ---
 
 # lens-work Rewrite: 17-Command Stable Surface — Epic Breakdown
@@ -104,7 +105,7 @@ NFR17: Small-team operators must be able to assess release readiness using expli
 - `split-feature` remains validate-first, blocks in-progress stories, and creates the new feature as a first-class governance citizen before modifying the source feature.
 - Planning-phase commands must avoid direct governance writes except via `publish-to-governance`; `discover` retains its explicit auto-commit exception.
 - All retained commands must continue to resolve: prompt stub → release prompt → owning `bmad-lens-*` skill.
-- The old-codebase discovery docs are approved parity-reference inputs for bundle planning, especially the dependency map, component inventory, source tree analysis, and project overview that describe the legacy runtime surface being preserved.
+- The old-codebase discovery docs are approved verification references for retained-command outcome checks and dependency coverage audits — they are not parity baselines or implementation inputs.
 
 ### UX Design Requirements
 

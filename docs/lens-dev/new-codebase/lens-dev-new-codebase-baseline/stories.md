@@ -20,6 +20,7 @@ blocks:
   - sprint-status.yaml
   - stories/
 updated_at: 2026-04-22T00:00:00Z
+updated_at: 2026-04-22T18:02:56Z
 ---
 
 # Stories: lens-dev-new-codebase-baseline
@@ -46,7 +47,7 @@ This backlog stages the approved 21-story implementation sequence for the lens-w
 - [ ] The retained internal skill inventory matches the approved keep/remove matrix.
 
 **Technical Notes:**
-- Use the old-codebase discovery inventory and dependency mapping as parity references for published surface coverage and retained internal dependencies.
+- Use the old-codebase discovery inventory and dependency mapping as verification references for published surface coverage and retained internal dependency checks — not as implementation baselines.
 
 ---
 
