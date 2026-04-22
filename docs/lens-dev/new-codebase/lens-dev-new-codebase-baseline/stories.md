@@ -1,445 +1,349 @@
 ---
 feature: lens-dev-new-codebase-baseline
 doc_type: stories
-status: draft
-goal: "Stage the full implementation backlog for the lens-work rewrite with ordered, estimated, dev-ready stories."
+status: in-review
+goal: "Regenerate the rewrite backlog as a clean 21-story implementation sequence derived from the current planning source documents."
 key_decisions:
-  - "Use epics.md as the authoritative story inventory and keep the 21-story decomposition unchanged."
-  - "Preserve the Epic 3 to Epic 4 prerequisite in both dependencies and sprint sequencing."
-  - "Treat the old-codebase discovery docs as verification-only references for outcome checks; they are not parity-reference inputs or implementation baselines."
-open_questions:
-  - "Should the proposed seven-sprint sequence be compressed once team capacity is confirmed?"
-  - "Should /dev formally record the target repo path before the first implementation story begins?"
+  - "Use the PRD, architecture, and FinalizePlan review as the only regeneration inputs."
+  - "Preserve the 21-story inventory and existing story keys so the current `stories/` folder remains addressable."
+  - "Make Story 3.1 the hard prerequisite for all planning-conductor work and assign release-delivery ownership to Story 5.5."
+open_questions: []
 depends_on:
   - epics.md
   - prd.md
   - architecture.md
   - finalizeplan-review.md
-blocks:
-  - implementation-readiness.md
-  - sprint-status.yaml
-  - stories/
-updated_at: 2026-04-22T00:00:00Z
-updated_at: 2026-04-22T18:02:56Z
+blocks: []
+updated_at: 2026-04-22T23:59:00Z
 ---
 
 # Stories: lens-dev-new-codebase-baseline
 
 ## Overview
 
-This backlog stages the approved 21-story implementation sequence for the lens-work rewrite. It follows the existing epic breakdown in epics.md, preserves the hard prerequisite that Story 3.1 must complete before any Epic 4 work starts, and uses old-codebase discovery artifacts as verification-only references for outcome checks and dependency coverage after contract design.
+This backlog restates the rewrite as a fresh 21-story sequence built from the current planning source of truth rather than the earlier reset-era backlog. It keeps the stable story IDs already used in the `stories/` folder, preserves the architecture's work-package ordering, and folds FinalizePlan carry-forward items into the release gate instead of leaving them as advisory notes.
+
+## Sequencing Rules
+
+- Stories 1.2, 1.3, and 1.4 establish the shared contracts that planning conductors consume.
+- Stories 2.1 through 2.6 restore safe workflow entry, identity, and navigation before planning or execution rewrites depend on them.
+- Story 3.1 must complete before Stories 4.1 through 4.5 begin.
+- Story 4.4 depends on Story 4.3 because FinalizePlan bundles reviewed TechPlan output.
+- Story 5.5 is the terminal release gate and owns upgrade notes, removed-command communication, and parity evidence.
+
+## Backlog Summary
+
+| Epic | Focus | Stories | Story Points |
+|---|---|---:|---:|
+| Epic 1 | Published surface and shared contracts | 4 | 23 |
+| Epic 2 | Workflow entry, identity, and navigation | 6 | 25 |
+| Epic 3 | Constitution resolution | 1 | 5 |
+| Epic 4 | Planning conductors | 5 | 31 |
+| Epic 5 | Delivery, closure, inventory, and release | 5 | 31 |
+| Total | Full rewrite backlog | 21 | 115 |
 
 ## Story List
 
-### EPIC-1: Codebase Foundation and Shared Infrastructure
+### Epic 1: Stable Published Surface and Shared Lifecycle Contracts
 
-#### Story 1.1 (EPIC-1-S1): New Codebase Scaffold, Install Surfaces, and Module Surface Reduction
+#### Story 1.1: Stable Published Surface and Discovery Parity
 
-- Epic: EPIC-1
+- Story Key: `1-1-scaffold-published-surface`
 - Priority: Must
 - Story Points: 8
-- Dependencies: None
-- Description: As a lens-work maintainer, I want the source tree scaffolded with exactly 17 published prompt stubs, aligned help and shell surfaces, and updated installer and adapter metadata so every rewrite starts from a consistent foundation.
+- Depends On: None
+- Outcome: Rebuild the public 17-command surface and every discovery surface so they agree everywhere the user can invoke Lens.
 
-**Acceptance Criteria:**
-- [ ] The published prompt surface is reduced to exactly 17 retained commands.
-- [ ] setup.py, module-help.csv, lens.agent.md, and supported adapters agree on the same command inventory.
-- [ ] The retained internal skill inventory matches the approved keep/remove matrix.
+**Acceptance Focus:**
 
-**Technical Notes:**
-- Use the old-codebase discovery inventory and dependency mapping as verification references for published surface coverage and retained internal dependency checks — not as implementation baselines.
+- Exactly 17 retained public commands remain published across prompt stubs, help surfaces, manifests, and adapters.
+- Retained internal runtime dependencies stay present even when their public stubs are removed.
+- `split-feature` remains visible on every published discovery surface.
 
----
+#### Story 1.2: Shared Review-Ready Artifact Validation
 
-#### Story 1.2 (EPIC-1-S2): Implement validate-phase-artifacts.py Shared Utility
-
-- Epic: EPIC-1
+- Story Key: `1-2-validate-phase-artifacts-shared-utility`
 - Priority: Must
 - Story Points: 5
-- Dependencies: 1.1
-- Description: As a maintainer, I want a single review-ready validation script shared by all planning conductors so lifecycle gate logic is not duplicated.
+- Depends On: `1-1-scaffold-published-surface`
+- Outcome: Centralize review-ready artifact validation so all planning conductors use the same lifecycle gate.
 
-**Acceptance Criteria:**
-- [ ] The script reports success for reviewed, complete phase artifacts.
-- [ ] Missing or unreviewed artifacts fail with specific diagnostics.
-- [ ] preplan, businessplan, techplan, and finalizeplan delegate to the shared script.
+**Acceptance Focus:**
 
-**Technical Notes:**
-- Regression coverage must include happy path, missing artifact, and unreviewed artifact cases.
+- `validate-phase-artifacts.py` returns a clean success result for complete, reviewed artifacts.
+- Missing or non-reviewed artifacts fail with explicit diagnostics.
+- Planning conductors delegate to the shared validator instead of carrying local gate logic.
 
----
+#### Story 1.3: Shared Two-Pass Batch Contract
 
-#### Story 1.3 (EPIC-1-S3): Implement bmad-lens-batch Shared 2-Pass Contract
-
-- Epic: EPIC-1
+- Story Key: `1-3-batch-two-pass-contract`
 - Priority: Must
 - Story Points: 5
-- Dependencies: 1.1
-- Description: As a maintainer, I want a single two-pass batch contract so every planning conductor handles batch intake and resume consistently.
+- Depends On: `1-1-scaffold-published-surface`
+- Outcome: Standardize planning batch intake and resume behavior behind `bmad-lens-batch`.
 
-**Acceptance Criteria:**
-- [ ] Planning conductors delegate batch intake and resume behavior to bmad-lens-batch.
-- [ ] Pass 1 collects the required artifacts in order without mutation.
-- [ ] Pass 2 invokes downstream skills sequentially and stops cleanly on first failure.
+**Acceptance Focus:**
 
-**Technical Notes:**
-- Preserve wrapper-equivalence behavior from the old orchestration chain.
+- Pass 1 writes the correct `{phase}-batch-input.md` file and stops.
+- Pass 2 resumes with approved context and forwards it to downstream skills in order.
+- Batch execution stops at the first failing delegated target.
 
----
+#### Story 1.4: Canonical Publish-Before-Author Governance Hook
 
-#### Story 1.4 (EPIC-1-S4): Implement publish-to-governance Entry Hook
-
-- Epic: EPIC-1
+- Story Key: `1-4-publish-to-governance-entry-hook`
 - Priority: Must
 - Story Points: 5
-- Dependencies: 1.1
-- Description: As a maintainer, I want a single publish-before-author entry hook so planning conductors can mirror reviewed docs to governance without direct governance writes.
+- Depends On: `1-1-scaffold-published-surface`
+- Outcome: Ensure reviewed predecessor artifacts are published through one hook before downstream authoring begins.
 
-**Acceptance Criteria:**
-- [ ] businessplan, techplan, and finalizeplan invoke publish-to-governance before authoring work begins.
-- [ ] No-op entry is graceful when nothing is pending publication.
-- [ ] Governance write audits show the entry hook is the only planning-phase write path.
+**Acceptance Focus:**
 
-**Technical Notes:**
-- discover remains the only explicit auto-commit exception.
+- `businessplan`, `techplan`, `finalizeplan`, and `dev` all use the shared publish hook.
+- The hook is a safe no-op when nothing new needs publication.
+- No planning conductor performs direct governance writes outside this path.
 
-### EPIC-2: Identity and Navigation Command Surface
+### Epic 2: Safe Feature Creation and Navigation
 
-#### Story 2.1 (EPIC-2-S1): Rewrite preflight Command (WP-01)
+#### Story 2.1: Rewrite Preflight Entry and Workspace Validation
 
-- Epic: EPIC-2
-- Priority: Must
-- Story Points: 5
-- Dependencies: 1.1
-- Description: As a Lens user, I want preflight to preserve prompt-start sync and workspace validation exactly as it works today.
-
-**Acceptance Criteria:**
-- [ ] light-preflight.py runs before any workspace validation.
-- [ ] Correctly configured workspaces pass without lifecycle mutation.
-- [ ] Missing governance or install dependencies fail clearly and non-destructively.
-
-**Technical Notes:**
-- Keep parity with test-setup-control-repo.py and remove onboard as a published stub.
-
----
-
-#### Story 2.2 (EPIC-2-S2): Rewrite new-domain Command (WP-02)
-
-- Epic: EPIC-2
+- Story Key: `2-1-rewrite-preflight`
 - Priority: Must
 - Story Points: 3
-- Dependencies: 1.1
-- Description: As a Lens user, I want new-domain to create governance markers and a constitution scaffold with the existing naming rules.
+- Depends On: `1-1-scaffold-published-surface`
+- Outcome: Keep `light-preflight.py` as the frozen entry gate and preserve safe workspace validation.
 
-**Acceptance Criteria:**
-- [ ] Governance domain markers are written under the approved naming convention.
-- [ ] The domain constitution scaffold lands in the expected location.
-- [ ] Duplicate-domain attempts fail without overwriting artifacts.
+**Acceptance Focus:**
 
-**Technical Notes:**
-- Preserve init-feature domain regression behavior.
+- Every retained public command fires `light-preflight.py` before prompt redirection.
+- Healthy workspaces continue without feature-state mutation.
+- Missing repos, config, or tooling fail clearly and non-destructively.
 
----
+#### Story 2.2: Rewrite New Domain
 
-#### Story 2.3 (EPIC-2-S3): Rewrite new-service Command (WP-03)
-
-- Epic: EPIC-2
+- Story Key: `2-2-rewrite-new-domain`
 - Priority: Must
 - Story Points: 3
-- Dependencies: 2.2
-- Description: As a Lens user, I want new-service to create service governance artifacts under an existing domain while preserving inherited rules.
+- Depends On: `2-1-rewrite-preflight`
+- Outcome: Restore domain creation with stable naming, markers, and constitution scaffolding.
 
-**Acceptance Criteria:**
-- [ ] Service markers use the correct location and naming rules.
-- [ ] Domain-to-service inheritance remains intact.
-- [ ] Missing parent domains fail fast with a clear message.
+**Acceptance Focus:**
 
-**Technical Notes:**
-- Preserve init-feature service regression coverage.
+- Domain markers and constitution scaffolds land in the expected governance path.
+- Duplicate-domain creation does not overwrite existing artifacts.
+- The new domain becomes usable by downstream service and feature setup flows immediately.
 
----
+#### Story 2.3: Rewrite New Service
 
-#### Story 2.4 (EPIC-2-S4): Rewrite new-feature Command (WP-04)
-
-- Epic: EPIC-2
-- Priority: Must
-- Story Points: 8
-- Dependencies: 2.2, 2.3
-- Description: As a Lens user, I want new-feature to keep the canonical featureId formula, feature-index registration, and 2-branch topology intact.
-
-**Acceptance Criteria:**
-- [ ] The canonical featureId `{domain}-{service}-{featureSlug}` is written to feature.yaml.
-- [ ] feature-index.yaml records both featureId and featureSlug.
-- [ ] The control repo creates exactly `{featureId}` and `{featureId}-plan`.
-
-**Technical Notes:**
-- Preserve parity with test-init-feature-ops.py and test-git-orchestration-ops.py.
-
----
-
-#### Story 2.5 (EPIC-2-S5): Rewrite switch Command (WP-05)
-
-- Epic: EPIC-2
+- Story Key: `2-3-rewrite-new-service`
 - Priority: Must
 - Story Points: 3
-- Dependencies: 2.4
-- Description: As a Lens user, I want switch to update active feature context without mutating lifecycle state.
+- Depends On: `2-2-rewrite-new-domain`
+- Outcome: Restore service creation under an existing domain while preserving inherited governance context.
 
-**Acceptance Criteria:**
-- [ ] Session context changes to the selected feature.
-- [ ] No governance or lifecycle artifact is written during a switch.
-- [ ] Invalid feature selection fails cleanly.
+**Acceptance Focus:**
 
-**Technical Notes:**
-- Keep the switch no-write regression in place.
+- Service markers are written only when the parent domain exists.
+- Domain-to-service inheritance remains intact.
+- Duplicate or invalid service setup fails without partial writes.
 
----
+#### Story 2.4: Rewrite New Feature
 
-#### Story 2.6 (EPIC-2-S6): Rewrite next Command (WP-06)
-
-- Epic: EPIC-2
-- Priority: Must
-- Story Points: 5
-- Dependencies: 2.1, 2.4, 2.5
-- Description: As a Lens user, I want next to identify the one unblocked action and auto-delegate without redundant confirmation.
-
-**Acceptance Criteria:**
-- [ ] Exactly one unblocked next action is selected.
-- [ ] Delegation is pre-confirmed and does not re-ask to proceed.
-- [ ] Blockers stop delegation and are surfaced clearly.
-
-**Technical Notes:**
-- Preserve blocker-first routing and handoff regression behavior.
-
-### EPIC-3: Constitution Bug Fix and Governance Rules Engine
-
-#### Story 3.1 (EPIC-3-S1): Fix Org-Level Constitution Hard-Fail Bug and Add Parity Tests (WP-15)
-
-- Epic: EPIC-3
-- Priority: Must
-- Story Points: 5
-- Dependencies: 1.1
-- Description: As a Lens user working without an org-level constitution, I want additive resolution from available hierarchy levels without a hard failure.
-
-**Acceptance Criteria:**
-- [ ] Partial-hierarchy environments resolve constitution guidance without crashing.
-- [ ] Full hierarchy resolution remains additive and ordered.
-- [ ] The command remains read-only across all hierarchy combinations.
-
-**Technical Notes:**
-- This story is a hard prerequisite for every Epic 4 story.
-
-### EPIC-4: Planning Conductor Rewrite
-
-#### Story 4.1 (EPIC-4-S1): Rewrite preplan Command (WP-07)
-
-- Epic: EPIC-4
+- Story Key: `2-4-rewrite-new-feature`
 - Priority: Must
 - Story Points: 8
-- Dependencies: 1.2, 1.3, 3.1
-- Description: As a Lens user, I want preplan to preserve brainstorm-first behavior, shared batch semantics, and the review-ready fast path.
+- Depends On: `2-2-rewrite-new-domain`, `2-3-rewrite-new-service`
+- Outcome: Rebuild canonical feature creation, feature-index registration, and the two-branch topology.
 
-**Acceptance Criteria:**
-- [ ] The Epic 3 prerequisite is enforced before work begins.
-- [ ] Non-batch runs author brainstorm before research or product brief.
-- [ ] Batch and review gates delegate to shared utilities instead of inline logic.
+**Acceptance Focus:**
 
-**Technical Notes:**
-- Preserve wrapper-equivalence and phase-gate regression anchors.
+- `featureId` keeps the `{domain}-{service}-{featureSlug}` formula and persists `featureSlug` separately.
+- Control-repo branch creation remains exactly `{featureId}` and `{featureId}-plan`.
+- Target-repo metadata and branch mode remain compatible with downstream `/dev` work.
 
----
+#### Story 2.5: Rewrite Switch
 
-#### Story 4.2 (EPIC-4-S2): Rewrite businessplan Command (WP-08)
+- Story Key: `2-5-rewrite-switch`
+- Priority: Must
+- Story Points: 3
+- Depends On: `2-4-rewrite-new-feature`
+- Outcome: Preserve safe, read-only feature context switching.
 
-- Epic: EPIC-4
+**Acceptance Focus:**
+
+- Switching changes session context but does not write lifecycle or governance state.
+- Invalid selections fail without altering the current active context.
+- Downstream commands read the new feature context consistently after a successful switch.
+
+#### Story 2.6: Rewrite Next
+
+- Story Key: `2-6-rewrite-next`
 - Priority: Must
 - Story Points: 5
-- Dependencies: 1.4, 3.1, 4.1
-- Description: As a Lens user, I want businessplan to publish reviewed predecessors before PRD and UX authoring, with no direct governance writes.
+- Depends On: `2-1-rewrite-preflight`, `2-4-rewrite-new-feature`, `2-5-rewrite-switch`
+- Outcome: Preserve blocker-first single-choice routing with the pre-confirmed handoff contract.
 
-**Acceptance Criteria:**
-- [ ] publish-to-governance runs before BMAD authoring delegation.
-- [ ] Governance write audits show no direct writes from businessplan.
-- [ ] Wrapper-equivalence and governance-audit regressions stay green.
+**Acceptance Focus:**
 
-**Technical Notes:**
-- Preserve the published predecessor snapshot as authoring context.
+- `next` selects one unblocked action, not a menu of loosely ranked options.
+- Delegated phase skills do not re-ask whether to proceed.
+- Blockers stop delegation and are surfaced first.
 
----
+### Epic 3: Reliable Constitution Resolution
 
-#### Story 4.3 (EPIC-4-S3): Rewrite techplan Command (WP-09)
+#### Story 3.1: Fix Partial-Hierarchy Constitution Resolution
 
-- Epic: EPIC-4
+- Story Key: `3-1-fix-constitution-partial-hierarchy`
 - Priority: Must
 - Story Points: 5
-- Dependencies: 1.4, 3.1, 4.2
-- Description: As a Lens user, I want techplan to generate architecture through the shared publish-before-author hook while enforcing the PRD reference rule.
+- Depends On: `1-1-scaffold-published-surface`
+- Outcome: Make constitution lookup additive and read-only across partial hierarchies so downstream planning can rely on it.
 
-**Acceptance Criteria:**
-- [ ] The publish entry hook runs before architecture authoring.
-- [ ] The architecture artifact explicitly references the authoritative PRD.
-- [ ] Architecture-reference and wrapper-equivalence regressions remain green.
+**Acceptance Focus:**
 
-**Technical Notes:**
-- Preserve the architecture-to-PRD linkage defined in lifecycle validation.
+- Missing org-level constitutions no longer hard-fail resolution.
+- Full-hierarchy merge behavior remains intact.
+- The command stays read-only across all hierarchy combinations.
 
----
+### Epic 4: Reviewed Planning Handoff
 
-#### Story 4.4 (EPIC-4-S4): Rewrite finalizeplan Command (WP-10)
+#### Story 4.1: Rewrite Preplan
 
-- Epic: EPIC-4
+- Story Key: `4-1-rewrite-preplan`
 - Priority: Must
 - Story Points: 8
-- Dependencies: 1.2, 1.3, 1.4, 3.1, 4.3
-- Description: As a Lens user, I want finalizeplan to preserve strict three-step ordering: review, plan PR, then downstream bundle plus final PR.
+- Depends On: `1-2-validate-phase-artifacts-shared-utility`, `1-3-batch-two-pass-contract`, `3-1-fix-constitution-partial-hierarchy`
+- Outcome: Restore brainstorm-first discovery with shared review and batch behavior.
 
-**Acceptance Criteria:**
-- [ ] Step 1 review completes before plan PR work begins.
-- [ ] Step 2 creates the correct `{featureId}-plan` to `{featureId}` PR.
-- [ ] Step 3 generates epics, stories, readiness, sprint status, and story files before the final PR is opened.
+**Acceptance Focus:**
 
-**Technical Notes:**
-- Preserve the finalizeplan step-order regression and plan/final PR topology.
+- Brainstorm work stays first in the preplan flow.
+- Batch mode and review-ready checks delegate to shared contracts.
+- Preplan remains a thin conductor over wrapper and review infrastructure.
 
----
+#### Story 4.2: Rewrite Businessplan
 
-#### Story 4.5 (EPIC-4-S5): Rewrite expressplan Command (WP-11)
-
-- Epic: EPIC-4
+- Story Key: `4-2-rewrite-businessplan`
 - Priority: Must
 - Story Points: 5
-- Dependencies: 1.3, 3.1, 4.4
-- Description: As a Lens user, I want expressplan to run only for express-eligible features, delegate to QuickPlan, and stop on an adversarial-review failure.
+- Depends On: `1-4-publish-to-governance-entry-hook`, `3-1-fix-constitution-partial-hierarchy`, `4-1-rewrite-preplan`
+- Outcome: Publish reviewed predecessor artifacts before PRD and any track-sensitive UX authoring.
 
-**Acceptance Criteria:**
-- [ ] Non-express features are blocked from entering expressplan.
-- [ ] Express-eligible features delegate to bmad-lens-quickplan.
-- [ ] The hard-stop adversarial review completes before finalize bundling.
+**Acceptance Focus:**
 
-**Technical Notes:**
-- Preserve express-only gating and quickplan retention behavior.
+- Businessplan publishes reviewed preplan artifacts before authoring.
+- Track-sensitive UX behavior remains correct for non-UX tracks.
+- No direct governance writes appear outside the publish hook.
 
-### EPIC-5: Execution, Closure, and Maintenance Commands
+#### Story 4.3: Rewrite Techplan
 
-#### Story 5.1 (EPIC-5-S1): Rewrite dev Command (WP-12)
-
-- Epic: EPIC-5
-- Priority: Must
-- Story Points: 8
-- Dependencies: 4.4
-- Description: As a Lens user, I want dev to keep target-repo-only writes, per-task commits, resumable checkpoints, and a final PR.
-
-**Acceptance Criteria:**
-- [ ] All code writes stay in the target repo, never the control or release repo.
-- [ ] Each completed task produces a per-task commit.
-- [ ] dev-session.yaml resumes interrupted work without schema changes and ends with a final PR.
-
-**Technical Notes:**
-- Preserve dev-session compatibility and repo-scoped branch mode behavior.
-
----
-
-#### Story 5.2 (EPIC-5-S2): Rewrite complete Command (WP-13)
-
-- Epic: EPIC-5
+- Story Key: `4-3-rewrite-techplan`
 - Priority: Must
 - Story Points: 5
-- Dependencies: 5.1
-- Description: As a Lens user, I want complete to preserve retrospective, documentation, and archive ordering with terminal archive semantics.
+- Depends On: `1-4-publish-to-governance-entry-hook`, `3-1-fix-constitution-partial-hierarchy`, `4-2-rewrite-businessplan`
+- Outcome: Preserve publish-before-author entry and architecture generation against the authoritative PRD.
 
-**Acceptance Criteria:**
-- [ ] Retrospective runs before documentation.
-- [ ] Documentation completes before archive.
-- [ ] Archive is atomic and prevents future lifecycle mutation.
+**Acceptance Focus:**
 
-**Technical Notes:**
-- Preserve complete/archive atomicity regression behavior.
+- Reviewed businessplan artifacts publish before architecture work starts.
+- Architecture output explicitly references the PRD.
+- Shared validation and review gates are reused instead of forked.
 
----
+#### Story 4.4: Rewrite FinalizePlan
 
-#### Story 5.3 (EPIC-5-S3): Rewrite split-feature Command (WP-14)
-
-- Epic: EPIC-5
+- Story Key: `4-4-rewrite-finalizeplan`
 - Priority: Must
 - Story Points: 8
-- Dependencies: 4.4
-- Description: As a Lens user, I want split-feature to validate first, block in-progress stories, create the new feature before modifying the source, and move eligible stories safely.
+- Depends On: `1-2-validate-phase-artifacts-shared-utility`, `1-3-batch-two-pass-contract`, `1-4-publish-to-governance-entry-hook`, `3-1-fix-constitution-partial-hierarchy`, `4-3-rewrite-techplan`
+- Outcome: Preserve the strict three-step ordering: review, plan PR, then downstream bundle plus final PR.
 
-**Acceptance Criteria:**
-- [ ] validate-split runs before any governance mutation.
-- [ ] In-progress stories hard-stop split execution.
-- [ ] create-split-feature creates the child feature before source modification, and move-stories preserves file integrity.
+**Acceptance Focus:**
 
-**Technical Notes:**
-- Preserve test-split-feature-ops.py and dry-run regression semantics.
+- Review outputs are committed and pushed before plan PR work begins.
+- The planning PR path remains `{featureId}-plan` -> `{featureId}`.
+- Bundle generation happens only after the planning PR merge and before the final `{featureId}` -> `main` PR.
 
----
+#### Story 4.5: Rewrite ExpressPlan
 
-#### Story 5.4 (EPIC-5-S4): Rewrite discover Command (WP-16)
-
-- Epic: EPIC-5
+- Story Key: `4-5-rewrite-expressplan`
 - Priority: Must
 - Story Points: 5
-- Dependencies: 1.4
-- Description: As a maintainer, I want discover to preserve bidirectional inventory sync and the governance-main auto-commit exception.
+- Depends On: `1-3-batch-two-pass-contract`, `3-1-fix-constitution-partial-hierarchy`, `4-4-rewrite-finalizeplan`
+- Outcome: Preserve express-only gating, internal QuickPlan delegation, and the hard review stop.
 
-**Acceptance Criteria:**
-- [ ] Governance-to-local and local-to-governance inventory sync both execute.
-- [ ] Governance-main auto-commit occurs only when inventory changes exist.
-- [ ] No-op runs report cleanly without creating a commit.
+**Acceptance Focus:**
 
-**Technical Notes:**
-- Preserve discover bidirectional sync and auto-commit regression behavior.
+- Non-express features are blocked from express planning.
+- Express-eligible work delegates through retained QuickPlan internals.
+- Review failure halts the compressed flow before final bundling continues.
 
----
+### Epic 5: Governed Delivery, Closure, and Release Compatibility
 
-#### Story 5.5 (EPIC-5-S5): Rewrite upgrade Command and Run E2E Regression Gate (WP-17)
+#### Story 5.1: Rewrite Dev
 
-- Epic: EPIC-5
+- Story Key: `5-1-rewrite-dev`
 - Priority: Must
 - Story Points: 8
-- Dependencies: 2.1, 2.4, 2.6, 3.1, 4.4, 5.1, 5.3, 5.4
-- Description: As a maintainer, I want upgrade to stay a v4 no-op while the final regression gate proves the rewritten 17-command surface is release-ready.
+- Depends On: `4-4-rewrite-finalizeplan`
+- Outcome: Preserve target-repo-only implementation, resumable dev sessions, and per-task commit discipline.
 
-**Acceptance Criteria:**
-- [ ] upgrade remains a no-op for v4 features and retains explicit migration paths for older versions.
-- [ ] The focused regression anchor set passes: init-feature, next, setup-control-repo, split-feature, upgrade, and git-orchestration.
-- [ ] Release readiness explicitly confirms 17 reachable prompts, end-to-end traceability, and zero broken active features.
+**Acceptance Focus:**
 
-**Technical Notes:**
-- This is the final release-promotion gate and should remain the last story in the program order.
+- `/dev` prepares or selects the correct target-repo branch without writing code in the control repo.
+- `dev-session.yaml` remains resumable and schema-compatible.
+- The final implementation slice still closes through the retained PR model.
 
-## Story Summary
+#### Story 5.2: Rewrite Complete
 
-| Epic | Story | Points | Priority | Dependencies |
-|------|-------|--------|----------|--------------|
-| EPIC-1 | 1.1 | 8 | Must | None |
-| EPIC-1 | 1.2 | 5 | Must | 1.1 |
-| EPIC-1 | 1.3 | 5 | Must | 1.1 |
-| EPIC-1 | 1.4 | 5 | Must | 1.1 |
-| EPIC-2 | 2.1 | 5 | Must | 1.1 |
-| EPIC-2 | 2.2 | 3 | Must | 1.1 |
-| EPIC-2 | 2.3 | 3 | Must | 2.2 |
-| EPIC-2 | 2.4 | 8 | Must | 2.2, 2.3 |
-| EPIC-2 | 2.5 | 3 | Must | 2.4 |
-| EPIC-2 | 2.6 | 5 | Must | 2.1, 2.4, 2.5 |
-| EPIC-3 | 3.1 | 5 | Must | 1.1 |
-| EPIC-4 | 4.1 | 8 | Must | 1.2, 1.3, 3.1 |
-| EPIC-4 | 4.2 | 5 | Must | 1.4, 3.1, 4.1 |
-| EPIC-4 | 4.3 | 5 | Must | 1.4, 3.1, 4.2 |
-| EPIC-4 | 4.4 | 8 | Must | 1.2, 1.3, 1.4, 3.1, 4.3 |
-| EPIC-4 | 4.5 | 5 | Must | 1.3, 3.1, 4.4 |
-| EPIC-5 | 5.1 | 8 | Must | 4.4 |
-| EPIC-5 | 5.2 | 5 | Must | 5.1 |
-| EPIC-5 | 5.3 | 8 | Must | 4.4 |
-| EPIC-5 | 5.4 | 5 | Must | 1.4 |
-| EPIC-5 | 5.5 | 8 | Must | 2.1, 2.4, 2.6, 3.1, 4.4, 5.1, 5.3, 5.4 |
+- Story Key: `5-2-rewrite-complete`
+- Priority: Must
+- Story Points: 5
+- Depends On: `5-1-rewrite-dev`
+- Outcome: Preserve retrospective, documentation, and archive ordering at feature closeout.
 
-## Velocity Estimate
+**Acceptance Focus:**
 
-| Metric | Value |
-|--------|-------|
-| Total stories | 21 |
-| Total story points | 120 |
-| Estimated sprints | 7 |
-| Sprint sequencing rule | Epic 3 must complete before Epic 4 begins |
+- Retrospective work happens before archival mutation.
+- Final documentation lands before terminal archive state is applied.
+- Completed features remain discoverable and unambiguously archived.
+
+#### Story 5.3: Rewrite Split-Feature
+
+- Story Key: `5-3-rewrite-split-feature`
+- Priority: Must
+- Story Points: 5
+- Depends On: `2-4-rewrite-new-feature`, `5-1-rewrite-dev`
+- Outcome: Keep validate-first feature splitting with safe governance creation and optional eligible story movement.
+
+**Acceptance Focus:**
+
+- In-progress or otherwise ineligible work blocks the split before mutation.
+- New governance feature creation happens before optional story movement.
+- The retained script surface remains visible and intact.
+
+#### Story 5.4: Rewrite Discover
+
+- Story Key: `5-4-rewrite-discover`
+- Priority: Must
+- Story Points: 5
+- Depends On: `2-4-rewrite-new-feature`
+- Outcome: Preserve explicit repo-inventory synchronization and the governance-main exception behavior.
+
+**Acceptance Focus:**
+
+- Repo inventory and local clone state synchronize bidirectionally.
+- The governance-main auto-commit exception stays scoped only to `discover`.
+- Post-sync inventory is clearer and more trustworthy than pre-sync state.
+
+#### Story 5.5: Rewrite Upgrade and Release-Readiness Gate
+
+- Story Key: `5-5-rewrite-upgrade-and-regression-gate`
+- Priority: Must
+- Story Points: 8
+- Depends On: `1-1-scaffold-published-surface`, `4-4-rewrite-finalizeplan`, `5-1-rewrite-dev`, `5-2-rewrite-complete`, `5-3-rewrite-split-feature`, `5-4-rewrite-discover`
+- Outcome: Preserve no-op upgrade behavior for current v4 users and produce the explicit evidence needed to release the rewrite safely.
+
+**Acceptance Focus:**
+
+- `upgrade` remains a no-op for v4-to-v4 cases and routes explicitly for future migrations.
+- Release notes capture the delivery mechanism and the hard-cut behavior for the 37 removed public stubs.
+- Final parity evidence covers all retained commands, required dependencies, and at least one integration-level coherence check.
