@@ -98,7 +98,7 @@ Every test that creates files must:
 - [ ] No test references any real governance repo path
 - [ ] Tests are independent: running them in any order produces the same results
 - [ ] No shared mutable state between tests (no module-level test fixtures that persist between tests)
-- [ ] All tests pass via: `uv run --with pytest --with pyyaml pytest tests/test-init-feature-ops.py -q`
+- [ ] All tests pass via: `uv run --with pytest --with pyyaml pytest scripts/tests/test-init-feature-ops.py -q`
 
 ## Review Requirement
 
