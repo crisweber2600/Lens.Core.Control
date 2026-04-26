@@ -58,7 +58,7 @@ Every test that creates files must:
 - Asserts `domain.yaml` exists at `{tmp_governance}/features/{domain}/domain.yaml`
 - Asserts `constitution.md` exists at `{tmp_governance}/constitutions/{domain}/constitution.md`
 - Does not assert `context.yaml`; personal context creation is covered separately when `--personal-folder` is provided
-- Asserts `status: ok` in output JSON
+- Asserts `status: pass` in output JSON
 
 ### `test_create_domain_with_scaffolds`
 - Invokes `create-domain` with both `--target-projects-root` and `--docs-root` pointing to temp dirs
@@ -66,7 +66,7 @@ Every test that creates files must:
 - Asserts `.gitkeep` at `{tmp_target}/{domain}/.gitkeep`
 - Asserts `.gitkeep` at `{tmp_docs}/{domain}/.gitkeep`
 - Asserts `context.yaml` at `{tmp_personal}/context.yaml`
-- Asserts all scaffold paths appear in `scaffolds_created` list in output
+- Asserts all scaffold paths appear in `created_marker_paths` list in output
 
 ### `test_create_domain_duplicate_fails`
 - Pre-creates `{tmp_governance}/features/{domain}/domain.yaml` before invocation

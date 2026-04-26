@@ -145,7 +145,7 @@ updated_by: new-domain
 - [ ] When `--personal-folder` provided: `context.yaml` written with frozen schema
 - [ ] Returns `status: fail` and exit code 1 when `domain.yaml` already exists (duplicate_check)
 - [ ] Returns `status: fail` and exit code 1 when `sync_governance_main` fails (with `--execute-governance-git`)
-- [ ] Returns `status: ok` with all paths populated on success
+- [ ] Returns `status: pass` with all paths populated on success
 - [ ] `governance_git_executed: true` and `governance_commit_sha` present when auto-git succeeds
 - [ ] `remaining_git_commands` populated when `--execute-governance-git` NOT used
 - [ ] Exit code 0 on success, 1 on failure (no unhandled exceptions reach the user)

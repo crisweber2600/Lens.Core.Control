@@ -48,17 +48,21 @@ When `--dry-run` is set:
 **Return JSON example (dry-run):**
 ```json
 {
-  "status": "ok",
-  "domain": "my-domain",
+  "status": "pass",
+  "scope": "domain",
   "path": "/governance/features/my-domain/domain.yaml",
   "constitution_path": "/governance/constitutions/my-domain/constitution.md",
+  "created_marker_paths": [],
+  "created_constitution_paths": [],
+  "target_projects_path": null,
+  "docs_path": null,
   "context_path": null,
-  "scaffolds_created": [],
+  "governance_git_commands": [],
+  "workspace_git_commands": [],
+  "remaining_git_commands": [],
   "governance_git_executed": false,
   "governance_commit_sha": null,
-  "remaining_git_commands": null,
-  "dry_run": true,
-  "error": null
+  "dry_run": true
 }
 ```
 
