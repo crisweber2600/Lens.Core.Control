@@ -54,9 +54,10 @@ Every test that creates files must:
 - Asserts no files exist at any of the returned paths
 
 ### `test_create_domain_basic`
-- Invokes `create-domain` (without `--execute-governance-git`) with temp governance repo
+- Invokes `create-domain` (without `--execute-governance-git` and without `--personal-folder`) with temp governance repo
 - Asserts `domain.yaml` exists at `{tmp_governance}/features/{domain}/domain.yaml`
 - Asserts `constitution.md` exists at `{tmp_governance}/constitutions/{domain}/constitution.md`
+- Does not assert `context.yaml`; personal context creation is covered separately when `--personal-folder` is provided
 - Asserts `status: ok` in output JSON
 
 ### `test_create_domain_with_scaffolds`
