@@ -84,22 +84,13 @@ uv run init-feature-ops.py create-domain \
 ```
 
 **Return JSON (stdout):**
-```json
-{
-  "status": "ok" | "fail",
-  "domain": "{domain}",
-  "path": "{governance_repo}/features/{domain}/domain.yaml",
-  "constitution_path": "{governance_repo}/constitutions/{domain}/constitution.md",
-  "context_path": "{personal_folder}/context.yaml" | null,
-  "scaffolds_created": ["{target_projects_root}/{domain}/.gitkeep", ...],
-  "governance_git_executed": true | false,
-  "governance_commit_sha": "{sha}" | null,
-  "remaining_git_commands": ["git -C {governance_repo} add ...", "git -C {governance_repo} commit ...", "git -C {governance_repo} push"] | null,
-  "dry_run": false,
-  "error": null | "descriptive error message"
-}
-```
 
+The `create-domain` stdout JSON contract for this story is the canonical contract defined in the tech plan and must be reused verbatim here. Do not introduce a story-specific variant.
+
+In particular:
+- `status` must use `"pass" | "fail"` (not `"ok" | "fail"`).
+- The response field set must exactly match the canonical tech-plan contract.
+- Do not introduce alternate aliases such as `domain`/`scaffolds_created` if the canonical contract uses different field names.
 **Exit codes:** 0 for success, 1 for any failure.
 
 ---
