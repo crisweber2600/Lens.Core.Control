@@ -30,7 +30,7 @@ updated_at: 2026-04-26T00:00:00Z
 
 ## Technical Summary
 
-The `new-domain` command reimplements the `create-domain` subcommand of `bmad-lens-init-feature` from scratch. The prompt stub runs `light-preflight.py`, then loads the release prompt, which delegates to `bmad-lens-init-feature` SKILL.md. The skill's `Create Domain` capability invokes `init-feature-ops.py create-domain`. The script validates the domain slug, checks for duplicates, optionally runs governance-main sync preflight, writes `domain.yaml` and `constitution.md` atomically, creates optional workspace scaffolds, writes `context.yaml` to the personal folder, and optionally executes the governance git sequence. All output schemas are frozen from the old codebase. No schema changes are introduced anywhere in this feature.
+The `new-domain` command reimplements the `create-domain` subcommand of `bmad-lens-init-feature` from scratch. The prompt stub runs `light-preflight.py`, then loads the release prompt, which delegates to `bmad-lens-init-feature` SKILL.md. The skill's `Create Domain` capability invokes `init-feature-ops.py create-domain`. The script validates the domain slug, checks for duplicates, optionally runs governance-main sync preflight, writes `domain.yaml` atomically, writes `constitution.md`, creates optional workspace scaffolds, writes `context.yaml` to the personal folder, and optionally executes the governance git sequence. All output schemas are frozen from the old codebase. No schema changes are introduced anywhere in this feature.
 
 ---
 
