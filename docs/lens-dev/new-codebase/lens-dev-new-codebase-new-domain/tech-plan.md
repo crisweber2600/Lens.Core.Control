@@ -200,7 +200,7 @@ uv run scripts/init-feature-ops.py create-domain \
   "remaining_git_commands": ["<shell command>"],
   "governance_git_executed": true | false,
   "governance_commit_sha": "<40-char SHA or null>",
-  "dry_run": true                   // only present when --dry-run was set
+  "dry_run": true | false          // always present; true when --dry-run was set
 }
 ```
 
