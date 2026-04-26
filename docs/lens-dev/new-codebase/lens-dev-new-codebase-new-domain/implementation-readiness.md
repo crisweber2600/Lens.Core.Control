@@ -47,11 +47,11 @@ Each finding from finalizeplan-review.md is mapped to a story with a disposition
 
 ### F3 / R1 (Medium) — SAFE_ID_PATTERN Discrepancy
 
-**Original finding:** Business plan documents `^[a-z0-9][a-z0-9-]{0,63}$`; tech plan documents `^[a-z0-9][a-z0-9._-]{0,63}$`. These differ.
+**Original finding status:** The current `business-plan.md` and `tech-plan.md` both show `^[a-z0-9][a-z0-9._-]{0,63}$`; there is no longer a plan-to-plan discrepancy in the reviewed artifacts.
 
-**Disposition:** Implementation gate in Story 1.1 (first story). Developer must open old-codebase `init-feature-ops.py`, read the actual constant value, and embed it with a citation comment. Pattern resolution must be documented in `docs/lens-dev/new-codebase/SHARED_CONTRACTS.md` before `new-service` or `new-feature` begin their validators.
+**Disposition:** Treat this as a source-of-truth confirmation step in Story 1.1 (first story), not as an active artifact mismatch. Developer must open old-codebase `init-feature-ops.py`, read the actual constant value, and embed it with a citation comment. The confirmed pattern must be documented in `docs/lens-dev/new-codebase/SHARED_CONTRACTS.md` before `new-service` or `new-feature` begin their validators.
 
-**Condition:** Story 1.1 cannot be marked complete until the resolved pattern is confirmed against the old-codebase source and cited.
+**Condition:** Story 1.1 cannot be marked complete until the pattern used for implementation is confirmed against the old-codebase source and cited.
 
 ---
 
