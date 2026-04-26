@@ -22,7 +22,7 @@ updated_at: 2026-04-26T00:00:00Z
 
 ## Why This Story Exists
 
-The finalizeplan review found a discrepancy (finding F3/R1, Medium severity): the business plan documents `^[a-z0-9][a-z0-9-]{0,63}$` and the tech plan documents `^[a-z0-9][a-z0-9._-]{0,63}$`. These are different patterns. Before any slug validation code is written, the authoritative value must be read directly from the old-codebase source and embedded with a citation.
+The finalizeplan review raised a concern (finding F3/R1, Medium severity) that `SAFE_ID_PATTERN` might not be consistently documented. In the current planning bundle, the business plan and related references align on `^[a-z0-9][a-z0-9._-]{0,63}$`; however, before any slug validation code is written, the authoritative value must still be read directly from the old-codebase source and embedded with a citation so the new codebase and shared contracts are anchored to the source of truth.
 
 This is the first story in Sprint 1. It is a prerequisite for Story 1.2 and all downstream validator implementations in `new-service` and `new-feature`.
 
