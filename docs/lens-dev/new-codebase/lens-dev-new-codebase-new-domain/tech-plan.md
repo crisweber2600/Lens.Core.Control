@@ -5,7 +5,9 @@ status: draft
 goal: "Design the clean-room reimplementation of the new-domain command: prompt chain, init-feature-ops.py create-domain subcommand, all output schemas, and regression coverage"
 key_decisions:
   - new-domain delegates to bmad-lens-init-feature create-domain; no standalone skill is introduced
+  - new-domain remains one shared capability inside bmad-lens-init-feature for the future multi-skill bundle; no per-command standalone skill will be created
   - All output schemas (domain.yaml, constitution.md, context.yaml) are frozen and identical to old codebase
+  - context.yaml write is mandatory after successful domain creation (using resolved personal folder; --personal-folder is an override)
   - --execute-governance-git provides atomic governance-main checkout/pull/add/commit/push
   - Dry-run mode returns complete planned-operations JSON without side effects
   - Duplicate detection (fail-fast on existing domain.yaml) is implemented before any write
@@ -30,7 +32,7 @@ updated_at: 2026-04-26T00:00:00Z
 
 ## Technical Summary
 
-The `new-domain` command reimplements the `create-domain` subcommand of `bmad-lens-init-feature` from scratch. The prompt stub runs `light-preflight.py`, then loads the release prompt, which delegates to `bmad-lens-init-feature` SKILL.md. The skill's `Create Domain` capability invokes `init-feature-ops.py create-domain`. The script validates the domain slug, checks for duplicates, optionally runs governance-main sync preflight, writes `domain.yaml` atomically, writes `constitution.md`, creates optional workspace scaffolds, writes `context.yaml` to the personal folder, and optionally executes the governance git sequence. All output schemas are frozen from the old codebase. No schema changes are introduced anywhere in this feature.
+The `new-domain` command reimplements the `create-domain` subcommand of `bmad-lens-init-feature` from scratch. The prompt stub runs `light-preflight.py`, then loads the release prompt, which delegates to `bmad-lens-init-feature` SKILL.md. The skill's `Create Domain` capability invokes `init-feature-ops.py create-domain`. The script validates the domain slug, checks for duplicates, optionally runs governance-main sync preflight, writes `domain.yaml` atomically, writes `constitution.md`, creates optional workspace scaffolds, writes `context.yaml` to the resolved personal folder (mandatory after successful create-domain), and optionally executes the governance git sequence. All output schemas are frozen from the old codebase. No schema changes are introduced anywhere in this feature.
 
 ---
 
@@ -65,7 +67,7 @@ lens.core/_bmad/lens-work/skills/bmad-lens-init-feature/scripts/init-feature-ops
     ├── constitution_path.write_text()             [make_domain_constitution_md()]
     ├── tp_gitkeep_path.touch()                    [only when --target-projects-root]
     ├── docs_gitkeep_path.touch()                  [only when --docs-root]
-    ├── write_context_yaml(personal_folder, domain, None, "new-domain")  [when --personal-folder]
+    ├── write_context_yaml(resolved_personal_folder, domain, None, "new-domain")
     └── governance git sequence                    [only when --execute-governance-git]
          (git add → git commit → git push)
     │
@@ -106,6 +108,8 @@ lens.core/_bmad/lens-work/skills/bmad-lens-init-feature/scripts/init-feature-ops
 - `bmad-lens-new-domain` standalone skill: duplicates all shared utilities; two maintenance surfaces for identical logic; inconsistency risk when one skill is updated but not the other.
 - Generic `bmad-lens-scaffold` skill combining all three: too broad; would require routing logic that adds complexity without reducing duplication.
 
+**Bundle positioning clarification:** This feature implements one capability (`create-domain`) inside `bmad-lens-init-feature`, which is one skill in a future multi-skill lens-work bundle. The command remains user-facing as `/new-domain`, while implementation remains shared inside the existing init-feature skill family.
+
 ---
 
 ### ADR-2: --execute-governance-git for atomic governance-main operations
@@ -122,7 +126,7 @@ lens.core/_bmad/lens-work/skills/bmad-lens-init-feature/scripts/init-feature-ops
 
 ### ADR-3: context.yaml for domain/service active context
 
-**Decision:** After a successful `create-domain`, write `context.yaml` to `{personal_folder}/context.yaml` with `domain: {domain}`, `service: null`, `updated_at: {ISO timestamp}`, `updated_by: new-domain`. This file is local-only and not git-tracked.
+**Decision:** After a successful `create-domain`, always write `context.yaml` to `{resolved_personal_folder}/context.yaml` with `domain: {domain}`, `service: null`, `updated_at: {ISO timestamp}`, `updated_by: new-domain`. `--personal-folder` is an override input; otherwise the folder is resolved from config.
 
 **Rationale:** Immediately after creating a domain, the user's next command is typically `new-service {domain}`. If context.yaml is not written, `new-service` cannot resolve the active domain without requiring the user to re-specify it on the command line. context.yaml provides a simple, persistent, non-git-tracked way to remember the last active domain/service across commands and terminal sessions.
 
@@ -169,7 +173,7 @@ uv run scripts/init-feature-ops.py create-domain \
   --username <username>              # required: owner username; used in domain.yaml and context.yaml
   [--target-projects-root <path>]    # optional: TargetProjects root; triggers .gitkeep scaffold
   [--docs-root <path>]               # optional: docs output root in control repo; triggers .gitkeep scaffold
-  [--personal-folder <path>]         # optional: personal context folder; writes context.yaml
+  [--personal-folder <path>]         # optional override for personal context folder
   [--execute-governance-git]         # optional: auto-execute governance git sequence
   [--dry-run]                        # optional: return planned operations JSON without writing
 ```
@@ -190,11 +194,11 @@ uv run scripts/init-feature-ops.py create-domain \
   "scope": "domain",
   "path": "<absolute path to domain.yaml>",
   "constitution_path": "<absolute path to constitution.md>",
-  "created_marker_paths": ["<governance-repo-relative path>"],
+  "created_marker_paths": ["<governance-repo-relative path for governance markers only>"],
   "created_constitution_paths": ["<governance-repo-relative path>"],
   "target_projects_path": "<absolute path to scaffold dir or null>",
   "docs_path": "<absolute path to docs scaffold dir or null>",
-  "context_path": "<absolute path to context.yaml or null>",
+  "context_path": "<absolute path to context.yaml>",
   "governance_git_commands": ["<shell command>"],
   "workspace_git_commands": ["<shell command>"],
   "remaining_git_commands": ["<shell command>"],
@@ -204,7 +208,7 @@ uv run scripts/init-feature-ops.py create-domain \
 }
 ```
 
-**Breaking change flag:** `false`. This contract is identical to the old codebase. No field is added, removed, or renamed.
+**Breaking change flag:** `false` for schema fields. `context.yaml` write behavior is an approved plan-level tightening: mandatory write after successful create-domain in the new bundle.
 
 ### Prompt Interface
 
@@ -271,7 +275,7 @@ updated_at: {ISO-8601}     # UTC timestamp at write
 updated_by: new-domain     # literal string "new-domain"
 ```
 
-Written to: `{personal_folder}/context.yaml`  
+Written to: `{resolved_personal_folder}/context.yaml`  
 Local-only; never git-tracked. Overwritten (not merged) on each `new-domain` invocation.
 
 ---
@@ -280,7 +284,7 @@ Local-only; never git-tracked. Overwritten (not merged) on each `new-domain` inv
 
 | Dependency | Version | Source |
 |---|---|---|
-| Python | ≥ 3.10 | Runtime prerequisite (same as old codebase) |
+| Python | ≥ 3.12 | Runtime prerequisite aligned with lens-work preflight gate (`light-preflight.py`) |
 | `pyyaml` | ≥ 6.0 | `atomic_write_yaml` uses yaml.safe_dump |
 | `bmad-lens-init-feature` | internal | Owning skill; holds the `create-domain` capability and script |
 | `bmad-lens-constitution` | internal | Provides constitution context during skill prompt; not invoked by the script directly |
@@ -317,9 +321,9 @@ Local-only; never git-tracked. Overwritten (not merged) on each `new-domain` inv
 
 | Test | Scope | Assertion |
 |---|---|---|
-| `test_create_domain_dry_run` | `create-domain --dry-run` | Returns planned-operations JSON; no files written; no git executed |
+| `test_create_domain_dry_run` | `create-domain --dry-run` | Returns planned-operations JSON; no files written; no git executed; `context_path` is still planned |
 | `test_create_domain_basic` | `create-domain` | `domain.yaml` and `constitution.md` written at correct paths; `context.yaml` written |
-| `test_create_domain_with_scaffolds` | `create-domain --target-projects-root --docs-root` | Both `.gitkeep` files created at correct paths |
+| `test_create_domain_with_scaffolds` | `create-domain --target-projects-root --docs-root` | Both `.gitkeep` files created at correct paths; verify via `target_projects_path` and `docs_path` |
 | `test_create_domain_duplicate_fails` | `create-domain` (domain already exists) | Returns `status: fail` before writing any file |
 | `test_create_domain_execute_governance_git` | `create-domain --execute-governance-git` | Governance git sequence runs; `governance_commit_sha` present in output |
 | `test_create_domain_governance_git_dirty_repo` | `create-domain --execute-governance-git` (dirty governance repo) | Returns `status: fail` before writing any file; no governance artifacts created |
@@ -361,5 +365,5 @@ None. All technical questions are resolved by the behavioral baseline from the o
 
 - **Schema version:** v4.0 drop-in confirmed (baseline C1-A resolution). No schema fields may change.
 - **context.yaml schema:** Frozen (fields: `domain`, `service`, `updated_at`, `updated_by`). No additions, no removals.
-- **Domain slug pattern:** Frozen as `^[a-z0-9][a-z0-9._-]{0,63}$`. Matches old-codebase `SAFE_ID_PATTERN`.
+- **Domain slug pattern:** Frozen as `^[a-z0-9][a-z0-9._-]{0,63}$`. Verified against old-codebase `SAFE_ID_PATTERN` in `init-feature-ops.py`.
 - **Constitution path template:** Frozen as `constitutions/{domain}/constitution.md` under governance repo root.

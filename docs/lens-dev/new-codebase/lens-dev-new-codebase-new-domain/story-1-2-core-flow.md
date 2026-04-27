@@ -35,7 +35,7 @@ The correct operation order when `--execute-governance-git` is used is:
 4. write_domain_yaml(...)
 5. write_constitution_md(...)
 6. write_scaffolds(...) [if flags provided]
-7. write_context_yaml(...) [if --personal-folder provided]
+7. write_context_yaml(...) [always, using resolved personal folder]
 8. governance_git_sequence(...)
 ```
 
@@ -48,7 +48,7 @@ When `--execute-governance-git` is NOT set:
 3. write_domain_yaml(...)
 4. write_constitution_md(...)
 5. write_scaffolds(...) [if flags provided]
-6. write_context_yaml(...) [if --personal-folder provided]
+6. write_context_yaml(...) [always, using resolved personal folder]
 ```
 
 ---
@@ -126,7 +126,7 @@ updated_at: {ISO-8601}
 updated_by: new-domain
 ```
 
-- Only written when `--personal-folder` is provided  
+- Always written after successful create-domain, using resolved personal folder from config or `--personal-folder` override  
 - `service` is always `null` (literal YAML null) for domain-level context  
 - `updated_by` is always the literal string `"new-domain"`  
 
@@ -142,7 +142,7 @@ updated_by: new-domain
 - [ ] `constitution.md` written at correct path with frozen body
 - [ ] When `--target-projects-root` provided: `.gitkeep` created at `{target_projects_root}/{domain}/.gitkeep`
 - [ ] When `--docs-root` provided: `.gitkeep` created at `{docs_root}/{domain}/.gitkeep`
-- [ ] When `--personal-folder` provided: `context.yaml` written with frozen schema
+- [ ] `context.yaml` always written with frozen schema after successful create-domain
 - [ ] Returns `status: fail` and exit code 1 when `domain.yaml` already exists (duplicate_check)
 - [ ] Returns `status: fail` and exit code 1 when `sync_governance_main` fails (with `--execute-governance-git`)
 - [ ] Returns `status: pass` with all paths populated on success

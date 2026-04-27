@@ -54,6 +54,6 @@ The release prompt must:
 - [ ] Prompt declares `intent: create-domain`
 - [ ] Prompt resolves `governance_repo` from bmadconfig.yaml
 - [ ] Prompt resolves `target_projects_path` from bmadconfig.yaml
-- [ ] Prompt resolves `personal_output_folder` from bmadconfig.yaml (optional key — gracefully absent)
+- [ ] Prompt resolves `personal_output_folder` from bmadconfig.yaml (required for context.yaml writes; fail with actionable message if missing)
 - [ ] No domain creation logic in the release prompt
 - [ ] Prompt structure matches the pattern of at least one existing release prompt in `lens.core/_bmad/lens-work/prompts/`
