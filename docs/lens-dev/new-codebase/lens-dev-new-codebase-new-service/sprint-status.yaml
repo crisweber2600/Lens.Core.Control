@@ -1,0 +1,129 @@
+feature: lens-dev-new-codebase-new-service
+doc_type: sprint-status
+updated_at: "2026-04-27T16:00:00Z"
+
+sprints:
+  - sprint_number: 1
+    name: Contract and Test Lock
+    goal: Lock the observable CLI contract for create-service with failing tests before any implementation begins
+    epic: NS-E1
+    stories:
+      - id: ns-1
+        title: Define service CLI contract tests
+        status: backlog
+        points: 3
+        dependencies: []
+      - id: ns-2
+        title: Assert service-not-feature boundary
+        status: backlog
+        points: 2
+        dependencies: [ns-1]
+      - id: ns-3
+        title: Add prompt and help discovery expectations
+        status: backlog
+        points: 2
+        dependencies: [ns-1]
+    total_points: 7
+    exit_gate: Failing tests cover all CLI contract scenarios (NS-1 through NS-3 red)
+
+  - sprint_number: 2
+    name: Script Implementation
+    goal: Implement create-service so all NS-E1 contract tests turn green
+    epic: NS-E2
+    stories:
+      - id: ns-4
+        title: Add service marker and constitution builders
+        status: backlog
+        points: 3
+        dependencies: [ns-1]
+      - id: ns-5
+        title: Implement create-service parser route
+        status: backlog
+        points: 3
+        dependencies: [ns-4]
+      - id: ns-6
+        title: Extend context writer safely
+        status: backlog
+        points: 2
+        dependencies: [ns-5]
+      - id: ns-7
+        title: Preserve governance git behavior
+        status: backlog
+        points: 3
+        dependencies: [ns-5]
+    total_points: 11
+    exit_gate: All NS-E1 tests pass green; idempotency test passes
+
+  - sprint_number: 3
+    name: Skill, Prompt, and Surface Parity
+    goal: Make /new-service reachable and discoverable through all retained command surfaces
+    epic: NS-E3
+    stories:
+      - id: ns-8
+        title: Document new-service intent flow in SKILL.md
+        status: backlog
+        points: 2
+        dependencies: [ns-5]
+      - id: ns-9
+        title: Add release prompt
+        status: backlog
+        points: 2
+        dependencies: [ns-8]
+      - id: ns-10
+        title: Align command discovery metadata
+        status: backlog
+        points: 2
+        dependencies: [ns-9]
+    total_points: 6
+    exit_gate: Three discovery surfaces in sync; NS-10 acceptance gate confirmed (John PM finding)
+
+  - sprint_number: 4
+    name: Verification and Handoff
+    goal: Prove end-to-end parity and produce complete implementation handoff
+    epic: NS-E4
+    stories:
+      - id: ns-11
+        title: Run focused service parity tests
+        status: backlog
+        points: 2
+        dependencies: [ns-7, ns-10]
+      - id: ns-12
+        title: Run full init-feature regression
+        status: backlog
+        points: 2
+        dependencies: [ns-11]
+      - id: ns-13
+        title: Prepare implementation handoff notes (required)
+        status: backlog
+        points: 1
+        dependencies: [ns-12]
+    total_points: 5
+    exit_gate: Full regression passes; NS-13 handoff verified by NS-12
+
+summary:
+  total_points: 29
+  total_stories: 13
+  total_epics: 4
+  status: planning-complete
+  feature_phase: finalizeplan-complete
+  blocks: [lens-dev-new-codebase-new-feature]
+  depends_on: [lens-dev-new-codebase-baseline]
+
+development_status:
+  epic-1: backlog
+  ns-1-define-service-cli-contract-tests: backlog
+  ns-2-assert-service-not-feature-boundary: backlog
+  ns-3-add-prompt-and-help-discovery-expectations: backlog
+  epic-2: backlog
+  ns-4-add-service-marker-and-constitution-builders: backlog
+  ns-5-implement-create-service-parser-route: backlog
+  ns-6-extend-context-writer-safely: backlog
+  ns-7-preserve-governance-git-behavior: backlog
+  epic-3: backlog
+  ns-8-document-new-service-intent-flow: backlog
+  ns-9-add-release-prompt: backlog
+  ns-10-align-command-discovery-metadata: backlog
+  epic-4: backlog
+  ns-11-run-focused-service-parity-tests: backlog
+  ns-12-run-full-init-feature-regression: backlog
+  ns-13-prepare-implementation-handoff-notes: backlog
