@@ -5,11 +5,11 @@ epic: EP-2
 sprint: 2
 title: Report Branch Checkout Result
 estimate: S
-status: not-started
+status: review
 blocked_by: [SW-6]
 assignee: crisweber2600
 doc_type: story
-updated_at: 2026-04-27T00:00:00Z
+updated_at: 2026-04-27T18:00:00Z
 ---
 
 # SW-8 — Report Branch Checkout Result
@@ -46,3 +46,39 @@ In `switch-ops.py` switch operation, after context write (SW-7):
 
 - Parse git stderr for "pathspec ... did not match any file(s) known to git" to detect branch-not-found specifically.
 - The user-facing message must use the retained command alias (confirmed in SW-4), not `init-feature`.
+
+## Status
+
+review
+
+## Dev Agent Record
+
+### Debug Log
+
+- 2026-04-27: Implemented `SW-8` under target repo `TargetProjects/lens-dev/new-codebase/lens.core.src` on branch `feature/switch-dev`.
+- 2026-04-27: Verified with `uv run --with pytest _bmad/lens-work/skills/bmad-lens-switch/scripts/tests/test-switch-ops.py -q`.
+- 2026-04-27: Verified with `uv run --with pytest --with pyyaml python -m pytest _bmad/lens-work -q`.
+
+### Completion Notes
+
+- Reported branch checkout success, branch_not_found guidance, and raw git checkout errors without fallback.
+- Story status moved to `review`; implementation is ready for code review.
+
+### File List
+
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/agents/lens.agent.md`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/bmad-lens-work-setup/assets/module-help.csv`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/module-help.csv`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/prompts/lens-switch.prompt.md`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/bmad-lens-switch/SKILL.md`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/bmad-lens-switch/references/list-features.md`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/bmad-lens-switch/references/switch-feature.md`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/bmad-lens-switch/scripts/switch-ops.py`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/bmad-lens-switch/scripts/tests/test-switch-ops.py`
+- `docs/lens-dev/new-codebase/lens-dev-new-codebase-switch/stories/SW-8.md`
+- `docs/lens-dev/new-codebase/lens-dev-new-codebase-switch/sprint-status.yaml`
+
+### Change Log
+
+- 2026-04-27: Implemented, tested, and moved to review.
+

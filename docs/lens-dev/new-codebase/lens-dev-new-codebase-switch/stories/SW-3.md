@@ -5,11 +5,11 @@ epic: EP-1
 sprint: 1
 title: Lock Numbered Menu Behavior
 estimate: M
-status: not-started
+status: review
 blocked_by: [SW-2]
 assignee: crisweber2600
 doc_type: story
-updated_at: 2026-04-27T00:00:00Z
+updated_at: 2026-04-27T18:00:00Z
 ---
 
 # SW-3 — Lock Numbered Menu Behavior
@@ -52,3 +52,39 @@ In the switch release prompt and/or `switch-ops.py`:
 
 - The no-inference constraint is absolute. Do not add any "most-recently-used" or "current branch" shortcuts.
 - If `vscode_askQuestions` is available in the agent environment, the prompt may use it to collect the numeric selection; otherwise render the menu and stop.
+
+## Status
+
+review
+
+## Dev Agent Record
+
+### Debug Log
+
+- 2026-04-27: Implemented `SW-3` under target repo `TargetProjects/lens-dev/new-codebase/lens.core.src` on branch `feature/switch-dev`.
+- 2026-04-27: Verified with `uv run --with pytest _bmad/lens-work/skills/bmad-lens-switch/scripts/tests/test-switch-ops.py -q`.
+- 2026-04-27: Verified with `uv run --with pytest --with pyyaml python -m pytest _bmad/lens-work -q`.
+
+### Completion Notes
+
+- Locked list output numbering and documented no-inference menu behavior; regression covers domains/features modes.
+- Story status moved to `review`; implementation is ready for code review.
+
+### File List
+
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/agents/lens.agent.md`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/bmad-lens-work-setup/assets/module-help.csv`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/module-help.csv`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/prompts/lens-switch.prompt.md`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/bmad-lens-switch/SKILL.md`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/bmad-lens-switch/references/list-features.md`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/bmad-lens-switch/references/switch-feature.md`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/bmad-lens-switch/scripts/switch-ops.py`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/bmad-lens-switch/scripts/tests/test-switch-ops.py`
+- `docs/lens-dev/new-codebase/lens-dev-new-codebase-switch/stories/SW-3.md`
+- `docs/lens-dev/new-codebase/lens-dev-new-codebase-switch/sprint-status.yaml`
+
+### Change Log
+
+- 2026-04-27: Implemented, tested, and moved to review.
+

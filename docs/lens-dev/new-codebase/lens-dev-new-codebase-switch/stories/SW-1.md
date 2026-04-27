@@ -5,11 +5,11 @@ epic: EP-1
 sprint: 1
 title: Verify Prompt-Start Gate Parity
 estimate: S
-status: not-started
+status: review
 blocked_by: []
 assignee: crisweber2600
 doc_type: story
-updated_at: 2026-04-27T00:00:00Z
+updated_at: 2026-04-27T18:00:00Z
 ---
 
 # SW-1 — Verify Prompt-Start Gate Parity
@@ -47,3 +47,39 @@ Inspect `lens-switch.prompt.md` in the target repo (`TargetProjects/lens-dev/new
 - Compare against `lens-init.prompt.md` or another retained command stub as a reference pattern.
 - Do not modify `light-preflight.py`.
 - If the stub is already correct, document that as the acceptance outcome and close the story.
+
+## Status
+
+review
+
+## Dev Agent Record
+
+### Debug Log
+
+- 2026-04-27: Implemented `SW-1` under target repo `TargetProjects/lens-dev/new-codebase/lens.core.src` on branch `feature/switch-dev`.
+- 2026-04-27: Verified with `uv run --with pytest _bmad/lens-work/skills/bmad-lens-switch/scripts/tests/test-switch-ops.py -q`.
+- 2026-04-27: Verified with `uv run --with pytest --with pyyaml python -m pytest _bmad/lens-work -q`.
+
+### Completion Notes
+
+- Verified prompt-start preflight handoff via focused regression; no light-preflight.py change required.
+- Story status moved to `review`; implementation is ready for code review.
+
+### File List
+
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/agents/lens.agent.md`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/bmad-lens-work-setup/assets/module-help.csv`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/module-help.csv`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/prompts/lens-switch.prompt.md`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/bmad-lens-switch/SKILL.md`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/bmad-lens-switch/references/list-features.md`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/bmad-lens-switch/references/switch-feature.md`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/bmad-lens-switch/scripts/switch-ops.py`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/bmad-lens-switch/scripts/tests/test-switch-ops.py`
+- `docs/lens-dev/new-codebase/lens-dev-new-codebase-switch/stories/SW-1.md`
+- `docs/lens-dev/new-codebase/lens-dev-new-codebase-switch/sprint-status.yaml`
+
+### Change Log
+
+- 2026-04-27: Implemented, tested, and moved to review.
+

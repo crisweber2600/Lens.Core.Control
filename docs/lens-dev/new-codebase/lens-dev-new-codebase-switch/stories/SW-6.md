@@ -5,11 +5,11 @@ epic: EP-2
 sprint: 2
 title: Return Complete Feature Context
 estimate: M
-status: not-started
+status: review
 blocked_by: [SW-5]
 assignee: crisweber2600
 doc_type: story
-updated_at: 2026-04-27T00:00:00Z
+updated_at: 2026-04-27T18:00:00Z
 ---
 
 # SW-6 — Return Complete Feature Context
@@ -69,3 +69,39 @@ In `switch-ops.py` switch operation, after identity validation (SW-5):
 - [ ] `target_repo_state: null` when `target_repos` is empty.
 - [ ] `target_repo_state` populated with `repo`, `working_branch`, `dev_branch_mode`, `pr_state` when `target_repos` is not empty.
 - [ ] Test fixtures: stale feature (old timestamp), fresh feature, feature with target repo, feature without target repo.
+
+## Status
+
+review
+
+## Dev Agent Record
+
+### Debug Log
+
+- 2026-04-27: Implemented `SW-6` under target repo `TargetProjects/lens-dev/new-codebase/lens.core.src` on branch `feature/switch-dev`.
+- 2026-04-27: Verified with `uv run --with pytest _bmad/lens-work/skills/bmad-lens-switch/scripts/tests/test-switch-ops.py -q`.
+- 2026-04-27: Verified with `uv run --with pytest --with pyyaml python -m pytest _bmad/lens-work -q`.
+
+### Completion Notes
+
+- Returned full top-level switch JSON contract including stale, target_repo_state, context paths, and branch result.
+- Story status moved to `review`; implementation is ready for code review.
+
+### File List
+
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/agents/lens.agent.md`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/bmad-lens-work-setup/assets/module-help.csv`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/module-help.csv`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/prompts/lens-switch.prompt.md`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/bmad-lens-switch/SKILL.md`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/bmad-lens-switch/references/list-features.md`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/bmad-lens-switch/references/switch-feature.md`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/bmad-lens-switch/scripts/switch-ops.py`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/bmad-lens-switch/scripts/tests/test-switch-ops.py`
+- `docs/lens-dev/new-codebase/lens-dev-new-codebase-switch/stories/SW-6.md`
+- `docs/lens-dev/new-codebase/lens-dev-new-codebase-switch/sprint-status.yaml`
+
+### Change Log
+
+- 2026-04-27: Implemented, tested, and moved to review.
+

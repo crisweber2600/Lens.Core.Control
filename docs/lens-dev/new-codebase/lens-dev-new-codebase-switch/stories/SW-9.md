@@ -5,11 +5,11 @@ epic: EP-2
 sprint: 2
 title: Normalize Dependency Context Paths
 estimate: S
-status: not-started
+status: review
 blocked_by: []
 assignee: crisweber2600
 doc_type: story
-updated_at: 2026-04-27T00:00:00Z
+updated_at: 2026-04-27T18:00:00Z
 ---
 
 # SW-9 — Normalize Dependency Context Paths
@@ -65,3 +65,39 @@ Also in this story: **create `test-switch-ops.py`** at the path referenced in th
 
 - Resolve domain and service for dependency ids by looking them up in `feature-index.yaml`. If not found, include `exists: false` and skip path resolution.
 - This story unblocks SW-12. Do not mark SW-9 complete until `test-switch-ops.py` exists and the fixture tests pass.
+
+## Status
+
+review
+
+## Dev Agent Record
+
+### Debug Log
+
+- 2026-04-27: Implemented `SW-9` under target repo `TargetProjects/lens-dev/new-codebase/lens.core.src` on branch `feature/switch-dev`.
+- 2026-04-27: Verified with `uv run --with pytest _bmad/lens-work/skills/bmad-lens-switch/scripts/tests/test-switch-ops.py -q`.
+- 2026-04-27: Verified with `uv run --with pytest --with pyyaml python -m pytest _bmad/lens-work -q`.
+
+### Completion Notes
+
+- Normalized related/depends_on/blocks context paths with exists flags and created focused pytest regression file.
+- Story status moved to `review`; implementation is ready for code review.
+
+### File List
+
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/agents/lens.agent.md`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/bmad-lens-work-setup/assets/module-help.csv`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/module-help.csv`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/prompts/lens-switch.prompt.md`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/bmad-lens-switch/SKILL.md`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/bmad-lens-switch/references/list-features.md`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/bmad-lens-switch/references/switch-feature.md`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/bmad-lens-switch/scripts/switch-ops.py`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/bmad-lens-switch/scripts/tests/test-switch-ops.py`
+- `docs/lens-dev/new-codebase/lens-dev-new-codebase-switch/stories/SW-9.md`
+- `docs/lens-dev/new-codebase/lens-dev-new-codebase-switch/sprint-status.yaml`
+
+### Change Log
+
+- 2026-04-27: Implemented, tested, and moved to review.
+
