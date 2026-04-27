@@ -4,7 +4,7 @@ doc_type: adversarial-review
 phase: expressplan
 source: phase-complete
 verdict: pass-with-warnings
-status: draft
+status: approved
 critical_count: 0
 high_count: 2
 medium_count: 3
