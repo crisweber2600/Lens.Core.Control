@@ -52,10 +52,21 @@ so that the command works from any Lens-equipped IDE.
 
 ### Agent Model Used
 
-_to be filled by dev agent_
+Claude Sonnet 4.6 (GitHub Copilot)
 
 ### Debug Log References
 
+N/A
+
 ### Completion Notes List
 
+- Release prompt created at target path via `bmad-workflow-builder` channel as required by H2 rule.
+- Published stub created at `.github/prompts/lens-new-service.prompt.md` matching `new-domain` pattern.
+- NS-8 SKILL.md extension authored in same pass (both target files are in `TargetProjects/lens-dev/new-codebase/lens.core.src/`); deviation from strict module-builder channel recorded here per NS-13 requirement.
+- Breaking change: false — additive only.
+
 ### File List
+
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/prompts/lens-new-service.prompt.md` (created)
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/.github/prompts/lens-new-service.prompt.md` (created)
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/bmad-lens-init-feature/SKILL.md` (updated — new-service intent flow added)
