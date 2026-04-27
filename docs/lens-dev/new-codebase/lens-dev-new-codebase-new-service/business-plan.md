@@ -44,7 +44,7 @@ This feature matters because service creation is the bridge between organization
 3. The `create-service` script path creates a service marker at `features/{domain}/{service}/service.yaml`.
 4. Missing parent domain markers and domain constitutions are created when required, matching the observed old setup contract.
 5. A service-level constitution is created at `constitutions/{domain}/{service}/constitution.md` and explicitly inherits from the domain constitution.
-6. Optional TargetProjects and docs scaffolds create `{domain}/{service}/.gitkeep` entries when configured.
+6. The TargetProjects and docs scaffolds create `{domain}/{service}/.gitkeep` entries.
 7. The personal context file is updated with both `domain` and `service`, using `updated_by: new-service`.
 8. Governance git automation can pull, write, commit, and push to governance `main`, returning `governance_commit_sha` when successful.
 9. Dry-run mode reports planned paths and commands without writing files.
