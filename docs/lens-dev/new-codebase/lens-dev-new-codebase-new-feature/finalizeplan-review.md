@@ -10,14 +10,39 @@ high_count: 1
 medium_count: 3
 low_count: 1
 updated_at: 2026-04-27T00:00:00Z
+review_format: abc-choice-v1
 ---
 
 # FinalizePlan Review — lens-dev-new-codebase-new-feature
 
 **Reviewed:** 2026-04-27T00:00:00Z  
 **Source:** phase-complete (party-mode challenge + governance cross-check)  
-**Artifacts Reviewed:** business-plan.md, tech-plan.md, expressplan-adversarial-review.md, sprint-plan.md  
+**Artifacts Reviewed:** business-plan.md, tech-plan.md, expressplan-review.md, sprint-plan.md  
 **Overall Verdict:** **pass-with-warnings**
+
+---
+
+## How to Respond
+
+For each finding below, reply with the letter of your chosen option. You may add a clarifying note after the letter. Your response is recorded and drives the carry-forward action for that finding.
+
+| Option | Meaning |
+|---|---|
+| A / B / C | Accept the proposed resolution (with its stated trade-offs) |
+| D | You will provide a custom resolution — write it after "D:" |
+| E | Explicitly no action — this finding is accepted as-is |
+
+---
+
+## Finding Summary
+
+| ID | Severity | Title | Your Response |
+|---|---|---|---|
+| H1 | High | `fetch-context` parity scope remains a gating open question | |
+| M1 | Medium | Shared script coordination with `lens-dev-new-codebase-new-service` | |
+| M2 | Medium | Constitution compliance — BMB-first rule not addressed in sprint stories | |
+| M3 | Medium | Sprint 4 sizing risk if `fetch-context` remains in scope | |
+| L1 | Low | Quickplan alias parity test not called out in acceptance criteria | |
 
 ---
 
@@ -38,29 +63,149 @@ updated_at: 2026-04-27T00:00:00Z
 
 ### Critical
 
-| # | Dimension | Finding | Recommendation |
-|---|-----------|---------|----------------|
-| — | — | No critical blockers found in the combined planning artifact set. | Continue. |
+| # | Dimension | Finding |
+|---|-----------|---------|
+| — | — | No critical blockers found in the combined planning artifact set. Continue. |
+
+---
 
 ### High
 
-| # | Dimension | Finding | Recommendation |
-|---|-----------|---------|----------------|
-| H1 | Coverage Gap | `fetch-context` parity scope remains a gating open question. NF-4.3 defers the scope decision; however the Definition of Done ("all focused initializer tests pass") can be satisfied without fetch-context if the decision is deliberately recorded. The risk is that downstream feature planners (e.g., `/businessplan` callers) may silently depend on context output that this delivery will not produce. | **Before dev starts:** record an explicit accept/defer decision in the implementation notes or in a follow-up feature entry. If deferred, update the Definition of Done to say "fetch-context is out of scope in this slice." Do not leave it undefined at dev-start. |
+---
+
+#### H1 — `fetch-context` parity scope remains a gating open question
+
+**Location:** sprint-plan.md (NF-4.3), Definition of Done  
+**Gate:** Must be resolved before dev starts
+
+NF-4.3 defers the scope decision on `fetch-context` parity. The Definition of Done ("all focused initializer tests pass") can technically be satisfied without fetch-context if the decision is deliberately recorded. The risk is that downstream feature planners (e.g., `/businessplan` callers) may silently depend on context output that this delivery will not produce.
+
+**Choose one:**
+
+- **A.** Explicitly defer `fetch-context` — update the Definition of Done to say "fetch-context is out of scope in this slice"; record the defer decision in implementation notes; NF-4.3 becomes a spike or backlog item.  
+  **Why pick this:** Closes the ambiguity; any downstream caller gets a clear "not implemented" signal; sprint 4 scope is immediately clarified.  
+  **Why not:** If fetch-context is a silent dependency for `/businessplan` callers, deferred delivery may create a gap that is not caught until downstream planners invoke it.
+
+- **B.** Include `fetch-context` in scope — update NF-4.3 with explicit acceptance criteria for full fetch-context parity; commit to this as a delivery requirement.  
+  **Why pick this:** Eliminates any downstream dependency surprise; the feature delivers true initializer parity; no follow-up feature required.  
+  **Why not:** Sprint 4 is already the heaviest sprint; adding fetch-context in scope risks a sprint slip that blocks the entire delivery.
+
+- **C.** Create a follow-up feature entry for `fetch-context` — record an explicit new feature or backlog entry before dev-start; this delivery is explicitly "initializer parity minus fetch-context."  
+  **Why pick this:** Honest scope boundary; the follow-up is tracked and actionable; downstream planners can reference the follow-up feature.  
+  **Why not:** If the follow-up feature is never prioritized, the gap persists indefinitely; requires creating and maintaining a separate governance entry.
+
+- **D.** Write your own response.
+- **E.** Keep as-is — leave fetch-context scope undefined in the Definition of Done; resolve at NF-4.3 implementation time.
+
+---
 
 ### Medium
 
-| # | Dimension | Finding | Recommendation |
-|---|-----------|---------|----------------|
-| M1 | Shared Script Coordination | `lens-dev-new-codebase-new-service` is at `expressplan-complete` and will also extend `init-feature-ops.py`. Both `new-feature` and `new-service` will modify the same script in separate dev branches, creating a near-certain merge conflict window. | **Action item:** Before both features enter dev in the same sprint, assign PR ordering or designate one as the merge-base. Recommend: `new-service` dev branch merges first (it is already at expressplan-complete and may be closer to dev-start); `new-feature` rebases on top of that merge. |
-| M2 | Constitution Compliance — BMB-first Rule | The new-codebase service constitution requires edits to `lens.core.src` to go through the `lens.core/_bmad/bmb` module (BMB-first rule). The sprint plan has no story for BMB scaffolding or module-routed implementation. If the BMB-first rule is informational-gate, non-compliance may be flagged during compliance review rather than blocking dev. | Confirm with the lead whether any NF-* stories involve direct edits to `lens.core.src` vs. adding new files. If direct edits are required, add a BMB-routed scaffolding step or document the exception. |
-| M3 | Sprint 4 Sizing | Sprint 4 carries three M-sized stories (NF-4.1 governance git execution, NF-4.2 help/manifests, NF-4.3 fetch-context). If fetch-context is fully deferred, NF-4.3 becomes a spike or backlog item. Conversely, if fetch-context is in scope, Sprint 4 is the heaviest sprint by story count and all three stories have hard dependencies on earlier sprints. | Re-scope Sprint 4 at dev-start once fetch-context decision is made. Consider splitting or deferring NF-4.2 if the 17-command sweep owns help registration. |
+---
+
+#### M1 — Shared script coordination with `lens-dev-new-codebase-new-service`
+
+**Location:** sprint-plan.md (all sprints), tech-plan.md (init-feature-ops.py)  
+**Context:** `lens-dev-new-codebase-new-service` is at `expressplan-complete` and will also extend `init-feature-ops.py`.
+
+Both `new-feature` and `new-service` will modify the same script in separate dev branches, creating a near-certain merge conflict window.
+
+**Choose one:**
+
+- **A.** Assign PR ordering now — designate `new-service` as the merge-base; `new-feature` dev branch rebases on top of the `new-service` merge before opening its PR.  
+  **Why pick this:** Eliminates the conflict by design; `new-service` is closer to dev-start and the ordering is documented before work begins.  
+  **Why not:** If `new-service` slips, `new-feature` is blocked from merging until `new-service` lands; creates a hard sequencing dependency.
+
+- **B.** Coordinate via shared feature branch — create a temporary integration branch that both features target; merge from integration to main after both land.  
+  **Why pick this:** Allows both features to develop in parallel; the integration branch absorbs the conflict; no ordering dependency.  
+  **Why not:** Integration branches require additional governance overhead; conflict resolution still happens, just at a different point.
+
+- **C.** Defer coordination to dev-start — record this as an action item; assign an owner to coordinate before both features enter the same sprint.  
+  **Why pick this:** Low overhead now; the action item is visible and tracked; coordination happens when the timeline is concrete.  
+  **Why not:** If both features enter dev without coordination, the conflict materializes and blocks one PR; deferral risks the issue becoming urgent rather than planned.
+
+- **D.** Write your own response.
+- **E.** Keep as-is — accept the merge conflict risk; resolve when it occurs.
+
+---
+
+#### M2 — Constitution compliance — BMB-first rule not addressed in sprint stories
+
+**Location:** sprint-plan.md (NF-1.x through NF-4.x), new-codebase service constitution
+
+The new-codebase service constitution requires edits to `lens.core.src` to go through the `lens.core/_bmad/bmb` module (BMB-first rule). The sprint plan has no story for BMB scaffolding or module-routed implementation.
+
+**Choose one:**
+
+- **A.** Audit sprint stories for `lens.core.src` direct edits — before dev starts, identify which NF-* stories involve direct edits vs. adding new files; if direct edits are required, add a BMB-routed scaffolding step to the affected story.  
+  **Why pick this:** Targeted; only adds overhead to stories that actually touch `lens.core.src` directly; avoids blanket BMB scaffolding if none is needed.  
+  **Why not:** If the audit reveals multiple direct-edit stories, the scaffolding cost may be higher than anticipated; sprint plan may need re-sequencing.
+
+- **B.** Document a BMB-first exception for this feature — confirm with the lead that the new-feature implementation will NOT directly edit `lens.core.src`; record the scope boundary in implementation notes.  
+  **Why pick this:** If the feature only adds new files, no BMB scaffolding is needed; the exception is documented and auditable.  
+  **Why not:** If the scope boundary is wrong (some stories do require direct edits), the exception creates a compliance gap discovered late in dev.
+
+- **C.** Add a BMB scaffolding story to Sprint 1 — regardless of which stories need it, scaffold the BMB-routed module path in Sprint 1 so all subsequent stories can route through it.  
+  **Why pick this:** Proactive compliance; the scaffolding is done once and benefits all subsequent stories; no story-level audit required.  
+  **Why not:** Adds a Sprint 1 story that may be unnecessary if no direct `lens.core.src` edits are actually needed; adds sprint cost speculatively.
+
+- **D.** Write your own response.
+- **E.** Keep as-is — accept that BMB-first compliance is informational; if flagged during compliance review, address it then.
+
+---
+
+#### M3 — Sprint 4 sizing risk if `fetch-context` remains in scope
+
+**Location:** sprint-plan.md (Sprint 4: NF-4.1, NF-4.2, NF-4.3)
+
+Sprint 4 carries three M-sized stories (NF-4.1 governance git execution, NF-4.2 help/manifests, NF-4.3 fetch-context), all with hard dependencies on earlier sprints. If fetch-context is fully deferred, NF-4.3 becomes a spike; if it is in scope, Sprint 4 is the heaviest sprint.
+
+**Choose one:**
+
+- **A.** Re-scope Sprint 4 at dev-start after H1 is resolved — once the fetch-context decision is recorded, immediately re-sequence Sprint 4; if NF-4.3 is deferred, redistribute the freed capacity to NF-4.1 or NF-4.2.  
+  **Why pick this:** Keeps the sprint plan accurate to actual scope; the H1 decision drives Sprint 4 re-scoping automatically.  
+  **Why not:** Re-scoping at dev-start requires a planning session before Sprint 4; adds overhead at a phase transition point.
+
+- **B.** Split NF-4.2 into a separate follow-up — if the 17-command sweep owns help/manifests registration, defer NF-4.2 to a sweep feature now; Sprint 4 carries only NF-4.1 and NF-4.3.  
+  **Why pick this:** Reduces Sprint 4 to two stories regardless of the fetch-context decision; removes the ownership ambiguity proactively.  
+  **Why not:** If this feature does own help/manifests, splitting it out creates an extra governance artifact and tracking overhead for one story.
+
+- **C.** Accept Sprint 4 as currently scoped — proceed with three M-sized stories; re-scope only if sprint 4 is projected to slip during execution.  
+  **Why pick this:** No pre-emptive overhead; the risk may not materialize; many M-sized stories complete faster than estimated.  
+  **Why not:** All three NF-4.x stories have hard upstream dependencies; if any Sprint 3 story slips, Sprint 4 has no buffer and the entire sprint may slip.
+
+- **D.** Write your own response.
+- **E.** Keep as-is — accept the Sprint 4 sizing risk; address during sprint execution.
+
+---
 
 ### Low
 
-| # | Dimension | Finding | Recommendation |
-|---|-----------|---------|----------------|
-| L1 | Quickplan Alias Testing | The plan confirms ADR 3 resolves track aliases from lifecycle.yaml, but no specific test skeleton is called out for the quickplan alias path. Other tracks (full, express) have explicit acceptance criteria; quickplan does not. | Add a quickplan-alias parity test to NF-1.3 or NF-3.1 if the new codebase retains it. If the alias is removed, document that as a deliberate behavior delta in the Definition of Done. |
+---
+
+#### L1 — Quickplan alias parity test not called out in acceptance criteria
+
+**Location:** sprint-plan.md (NF-1.3, NF-3.1), tech-plan.md (ADR 3)  
+**Context:** ADR 3 resolves track aliases from lifecycle.yaml; other tracks (full, express) have explicit acceptance criteria.
+
+The plan confirms ADR 3 resolves track aliases from lifecycle.yaml, but no specific test skeleton is called out for the quickplan alias path. Other tracks have explicit acceptance criteria; quickplan does not.
+
+**Choose one:**
+
+- **A.** Add a quickplan-alias parity test to NF-1.3 — explicitly include a test skeleton that verifies the alias routes correctly; the test documents the expected behavior.  
+  **Why pick this:** Closes the coverage gap; the test doubles as documentation; consistent with how other tracks are covered.  
+  **Why not:** If the alias is confirmed removed in the new codebase, the test will be written only to be deleted; adds short-lived test maintenance overhead.
+
+- **B.** Explicitly remove the quickplan alias in the Definition of Done — document that the new codebase does not retain `quickplan` as an alias; users are expected to use `express` directly.  
+  **Why pick this:** Deliberate behavior delta is better than an undocumented removal; makes the change visible in the DoD.  
+  **Why not:** If any existing users rely on the quickplan alias, this commits to removing it without a migration notice or deprecation path.
+
+- **C.** Confirm alias status in lifecycle.yaml before Sprint 1 — verify whether `quickplan` is listed in lifecycle.yaml; if present, add the parity test (option A); if absent, document the removal (option B).  
+  **Why pick this:** Data-driven; the test or removal decision is made based on the actual lifecycle.yaml state, not assumption.  
+  **Why not:** Requires a pre-sprint confirmation step; if lifecycle.yaml has not been updated for the new codebase, the confirmation may be provisional.
+
+- **D.** Write your own response.
+- **E.** Keep as-is — accept the missing quickplan test; address if the alias path is confirmed retained.
 
 ---
 
