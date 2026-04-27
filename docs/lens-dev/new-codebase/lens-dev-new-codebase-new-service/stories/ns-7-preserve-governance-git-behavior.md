@@ -24,7 +24,7 @@ so that a failed and retried run never creates duplicate service markers, domain
   - [ ] On skip: include `remaining_git_commands` with add/commit/push text; set `governance_git_executed: false`
 - [ ] Task 2: Add idempotency guard for service marker writes (AC: 3)
   - [ ] Before writing `service.yaml`: check if file already exists with identical content; skip write if content matches
-  - [ ] Before writing `service-constitution.md`: same existence check
+  - [ ] Before writing `constitution.md`: same existence check
   - [ ] Before calling parent-domain helpers (ADR-3): check if domain marker already exists; delegate to `create-domain` which already has this guard
 - [ ] Task 3: Add idempotency test (AC: 5)
   - [ ] In `tests/test_create_service.py`: write a test that runs `create-service --execute-governance-git`, leaves files in place, runs again; asserts no duplicate artifacts and exit code 0
