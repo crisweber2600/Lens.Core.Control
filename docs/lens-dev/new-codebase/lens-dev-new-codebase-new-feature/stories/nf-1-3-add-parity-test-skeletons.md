@@ -38,7 +38,7 @@ Add red-failing parity test skeletons to the existing `test-init-feature-ops.py`
 | `test_create_duplicate_feature_rejected` | Feature already in index → `status: fail` before any file write |
 | `test_create_missing_track_rejected` | No `--track` argument → `status: fail` with clear error |
 | `test_create_dry_run_no_files_created` | `--dry-run` returns planned paths and commands, creates no files |
-| `test_create_dry_run_returns_paths` | `--dry-run` output includes `feature_yaml_path`, `index_path`, `summary_path` |
+| `test_create_dry_run_returns_paths` | `--dry-run` output includes `feature_yaml_path`, `index_updated`, `summary_path` |
 
 ### Required Skeleton Tests — `fetch-context` subcommand
 
