@@ -1,0 +1,144 @@
+# Sprint Status — Switch Command
+# doc_type: sprint-status
+# feature: lens-dev-new-codebase-switch
+# updated_at: 2026-04-27T00:00:00Z
+
+feature: lens-dev-new-codebase-switch
+sprint_status: not-started
+active_sprint: 1
+total_sprints: 3
+target_repo: crisweber2600/lens.core.src
+working_branch: feature/switch-dev
+
+sprints:
+  - id: 1
+    name: Contract Lock And Prompt Parity
+    epic: EP-1
+    goal: Preserve the user-visible switch entrypoint and selection model
+    status: not-started
+    stories:
+      - id: SW-1
+        title: Verify Prompt-Start Gate Parity
+        estimate: S
+        status: not-started
+        blocked_by: []
+        assignee: crisweber2600
+
+      - id: SW-2
+        title: Preserve Config Resolution
+        estimate: S
+        status: not-started
+        blocked_by: []
+        assignee: crisweber2600
+
+      - id: SW-3
+        title: Lock Numbered Menu Behavior
+        estimate: M
+        status: not-started
+        blocked_by: [SW-2]
+        assignee: crisweber2600
+
+      - id: SW-4
+        title: Remove Deprecated Public Command References
+        estimate: S
+        status: not-started
+        blocked_by: []
+        carry_forward: H1
+        assignee: crisweber2600
+
+    validation:
+      - Prompt smoke test
+      - Switch list fixture
+      - No-inference menu regression
+
+  - id: 2
+    name: Switch Operation Parity
+    epic: EP-2
+    goal: Preserve deterministic feature switching behavior and bounded side effects
+    status: not-started
+    blocked_until_sprint: 1
+    stories:
+      - id: SW-5
+        title: Validate Target Feature Identity
+        estimate: S
+        status: not-started
+        blocked_by: []
+        assignee: crisweber2600
+
+      - id: SW-6
+        title: Return Complete Feature Context
+        estimate: M
+        status: not-started
+        blocked_by: [SW-5]
+        assignee: crisweber2600
+
+      - id: SW-7
+        title: Persist Local Context Only
+        estimate: S
+        status: not-started
+        blocked_by: []
+        assignee: crisweber2600
+
+      - id: SW-8
+        title: Report Branch Checkout Result
+        estimate: S
+        status: not-started
+        blocked_by: [SW-6]
+        assignee: crisweber2600
+
+      - id: SW-9
+        title: Normalize Dependency Context Paths
+        estimate: S
+        status: not-started
+        blocked_by: []
+        assignee: crisweber2600
+
+    validation:
+      - test-switch-ops.py
+      - Governance no-write regression
+
+  - id: 3
+    name: Release Surface And Documentation Parity
+    epic: EP-3
+    goal: Ensure switch remains coherent inside the 17-command release surface
+    status: not-started
+    blocked_until_sprint: 2
+    stories:
+      - id: SW-10
+        title: Align Command Discovery Surfaces
+        estimate: M
+        status: not-started
+        blocked_by: []
+        assignee: crisweber2600
+
+      - id: SW-11
+        title: Document JSON Contracts
+        estimate: M
+        status: not-started
+        blocked_by: []
+        assignee: crisweber2600
+
+      - id: SW-12
+        title: Wire Focused Regression Command
+        estimate: S
+        status: not-started
+        blocked_by: [SW-9, SW-10]
+        carry_forward: L1, L2
+        assignee: crisweber2600
+
+    validation:
+      - Switch tests
+      - Command-surface scan
+      - Quickplan frontmatter checks
+      - ExpressPlan readiness validation
+
+summary:
+  total_stories: 12
+  not_started: 12
+  in_progress: 0
+  completed: 0
+  blocked: 2
+  carry_forward_items: [H1-SW-4, L1-SW-12, L2-SW-12]
+  governance_items_open: 3
+  risks_open: 5
+  risks_resolved: 1
