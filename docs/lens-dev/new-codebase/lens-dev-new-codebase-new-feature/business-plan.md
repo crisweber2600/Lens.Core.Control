@@ -1,15 +1,14 @@
 ---
 feature: lens-dev-new-codebase-new-feature
 doc_type: business-plan
-status: draft
+status: approved
 goal: "Define clean-room business requirements for new-feature command parity"
 key_decisions:
   - Treat the old-codebase prompt and init-feature contract as behavioral evidence only; do not copy source files directly.
   - Preserve the public new-feature command as a retained Lens command in the 17-command surface.
   - Require output parity for feature identity, governance registration, branch topology, and returned handoff commands.
   - Keep express-track planning PR deferral distinct from full/feature-track immediate planning PR behavior.
-open_questions:
-  - Should the new-codebase feature initializer restore fetch-context in the same delivery slice or leave it to a separate follow-up?
+open_questions: []
 depends_on:
   - lens-dev-new-codebase-baseline
 blocks: []
