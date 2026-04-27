@@ -32,7 +32,7 @@ updated_at: 2026-04-27T14:15:58Z
 | Story | Title | Estimate | Acceptance Criteria Summary | Risks |
 |---|---|---:|---|---|
 | NF-1.1 | Add command prompt surfaces | M | Installed stub and release prompt exist; stub runs light preflight; release prompt loads `bmad-lens-init-feature` | Path resolution must stay relative to `lens.core/` in installed use |
-| NF-1.2 | Expand skill contract for new-feature | M | SKILL.md documents progressive disclosure, explicit track selection, create invocation, outputs, and failure behavior | Contract could overpromise fetch-context if not in scope |
+| NF-1.2 | Expand skill contract for new-feature | M | SKILL.md documents progressive disclosure, explicit track selection, create invocation, outputs, and failure behavior | Contract could overpromise fetch-context implementation timing or parity complexity |
 | NF-1.3 | Add parity test skeletons | S | Tests fail red for `create`, full-track start phase, express PR deferral, invalid IDs, duplicate feature, and dry-run no-write | Existing create-domain tests must remain unchanged |
 
 ## Sprint 2
