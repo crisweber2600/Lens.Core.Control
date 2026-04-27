@@ -105,6 +105,49 @@ The shared initializer should expose three conceptual layers:
 - Always auto-commit governance artifacts: rejected because dry-run/manual modes remain useful and tested.
 - Write files first and then check git cleanliness: rejected because that can leave a dirty governance repo after a preventable failure.
 
+### ADR 6 — Implement `fetch-context` as a Required Subcommand with Full Parity
+
+**Decision:** Implement `init-feature-ops.py fetch-context` in the new codebase with full behavioral parity to the old codebase implementation. This subcommand is **in scope** for this delivery and is not deferred.
+
+**Rationale:** Downstream planning commands (`/businessplan`, `/techplan`) depend on `fetch-context` to load related feature summaries and dependency docs from governance before authoring planning artifacts. Delivering `new-feature` without `fetch-context` would produce a command that silently omits cross-feature context loading, making the new codebase incompatible with planning workflows that expect context to be available immediately after feature initialization. Full parity means the new implementation must produce identical output fields and file-path resolution logic to the old codebase.
+
+**Parity contract — input:**
+
+| Argument | Behavior |
+|---|---|
+| `--governance-repo` | Required. Path to governance repo root. |
+| `--feature-id` | Required. Must match an entry in `feature-index.yaml`. |
+| `--depth` | Optional. `summaries` (default) or `full`. Controls whether related features return summary paths or full `feature.yaml` + docs paths. |
+| `--service-ref` | Optional, repeatable. Named service reference to load governance context for explicitly. |
+| `--service-ref-text` | Optional, repeatable. Freeform text scanned for implicit service name mentions. |
+
+**Parity contract — output fields:**
+
+| Field | Meaning |
+|---|---|
+| `status` | `pass` or `fail` |
+| `related` | Feature IDs in the same domain (excluding self) |
+| `depends_on` | Feature IDs from `feature.yaml` `dependencies.depends_on` |
+| `blocks` | Feature IDs from `feature.yaml` `dependencies.blocks` |
+| `service_refs` | Union of explicit and detected service names |
+| `detected_service_refs` | Services inferred from `--service-ref-text` content |
+| `missing_service_refs` | Requested/detected services with no governance context |
+| `context_paths` | Deduplicated list of filesystem paths to load (summary.md or full docs per depth) |
+| `service_context_paths` | Context paths that came from service-level governance files |
+
+**Path resolution rules (must match old codebase exactly):**
+- Related features at `--depth summaries`: `{governance_repo}/features/{domain}/{service}/{id}/summary.md`
+- Related features at `--depth full`: `feature.yaml` + all docs files under `features/{domain}/{service}/{id}/docs/`
+- `depends_on` and `blocks` features: always full depth regardless of `--depth` flag
+- Service context: `service.yaml` + docs files + non-excluded child `summary.md` files under `features/{domain}/{service_name}/`
+- `context_paths` is the union of related + dependency + service paths, deduplicated in stable order
+
+**Alternatives Rejected:**
+
+- Defer `fetch-context` to a follow-up: rejected. User decision — full parity is required before this feature is considered done.
+- Implement as a separate skill or script: rejected. Old codebase co-locates `fetch-context` in `init-feature-ops.py` alongside `create`; parity means same file.
+- Return only `context_paths` without the breakdown fields: rejected. Old codebase output includes `related`, `depends_on`, `blocks`, `service_refs`, etc.; callers depend on the full field set.
+
 ## API Contracts
 
 ### Prompt Contract
@@ -178,6 +221,39 @@ Required failure behavior:
 - Duplicate feature ID in `feature-index.yaml` fails before file writes.
 - Dirty governance repo with `--execute-governance-git` fails before file writes.
 - Dry-run returns planned paths and commands but creates no files.
+
+### fetch-context Script Contract
+
+The implementation must support:
+
+```bash
+uv run _bmad/lens-work/skills/bmad-lens-init-feature/scripts/init-feature-ops.py fetch-context \
+  --governance-repo {governance_repo} \
+  --feature-id {featureId} \
+  [--depth summaries|full] \
+  [--service-ref {service_name}] \
+  [--service-ref-text "{recent_user_text}"]
+```
+
+Success payload fields:
+
+| Field | Requirement |
+|---|---|
+| `status` | `pass` on success, `fail` if feature not found or index missing |
+| `related` | List of feature IDs in the same domain, excluding self |
+| `depends_on` | Feature IDs from `dependencies.depends_on` in the target `feature.yaml` |
+| `blocks` | Feature IDs from `dependencies.blocks` in the target `feature.yaml` |
+| `service_refs` | Deduplicated union of explicit `--service-ref` values and detected service names |
+| `detected_service_refs` | Services inferred from `--service-ref-text` content |
+| `missing_service_refs` | Services referenced but with no matching governance context |
+| `context_paths` | Deduplicated list of all filesystem paths to load |
+| `service_context_paths` | Subset of `context_paths` that came from service-level governance |
+
+Required failure behavior:
+
+- Missing or unreadable `feature-index.yaml` fails with `status: fail`.
+- `feature-id` not found in index fails with `status: fail`.
+- `feature.yaml` not found for the target feature fails with `status: fail`.
 
 ## Data Model Changes
 
@@ -268,6 +344,14 @@ Minimum test cases:
 | Control repo commands | branch creation delegated to git-orchestration; activation delegated to switch; no raw checkout commands |
 | Express behavior | `gh_commands` empty and `planning_pr_created` false |
 | Personal folder | activation command includes `--personal-folder` when configured |
+| fetch-context — summaries depth | related feature IDs returned; context_paths resolve to summary.md files for same-domain features |
+| fetch-context — full depth | context_paths include feature.yaml and docs for related features |
+| fetch-context — depends_on/blocks | dependency features always return full paths regardless of `--depth` |
+| fetch-context — service ref explicit | `--service-ref` populates `service_context_paths` with service.yaml and child summaries |
+| fetch-context — service ref text | `--service-ref-text` detects known service names and populates `service_context_paths` |
+| fetch-context — missing service | unresolvable service name appears in `missing_service_refs`; no failure |
+| fetch-context — feature not found | unknown feature ID returns `status: fail` |
+| fetch-context — no index | missing feature-index.yaml returns `status: fail` |
 | Regression safety | existing create-domain tests remain green |
 
 ## Observability
@@ -276,6 +360,6 @@ The command is primarily a CLI/script workflow, so observability comes from stru
 
 ## Open Questions
 
-1. Should `fetch-context` be implemented now so downstream planning can immediately load related summaries and dependency docs in the new codebase?
+1. ~~Should `fetch-context` be implemented now so downstream planning can immediately load related summaries and dependency docs in the new codebase?~~ **Decided:** `fetch-context` is in scope with full parity required. See ADR 6.
 2. Should the new implementation keep `quickplan` as a legacy track alias to `feature` even if the rewritten public track names emphasize `full` and `express`?
 3. Should command-surface updates for module help and prompt manifests be included in this feature's implementation branch or in a broader retained-command sweep?

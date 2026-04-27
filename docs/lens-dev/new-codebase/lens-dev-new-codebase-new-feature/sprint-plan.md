@@ -6,9 +6,8 @@ goal: "Sequence clean-room implementation of new-feature command parity"
 key_decisions:
   - Deliver tests and command-surface scaffolding before write-mode implementation.
   - Keep create-domain regression coverage in every sprint because the initializer is shared.
-  - Treat fetch-context as a planned hardening item unless accepted into the implementation slice.
-open_questions:
-  - Whether fetch-context parity is required before declaring the command complete.
+  - fetch-context parity is in scope and required; it is not deferred (user decision, 2026-04-27).
+open_questions: []
 depends_on:
   - lens-dev-new-codebase-baseline
 blocks: []
@@ -24,7 +23,7 @@ updated_at: 2026-04-27T14:15:58Z
 | 1 | Establish command surface and parity tests | NF-1.1, NF-1.2, NF-1.3 | M + M + S | Test expectations may expose missing shared helpers |
 | 2 | Implement script-level feature creation | NF-2.1, NF-2.2, NF-2.3 | L + M + M | Governance write ordering and duplicate detection must remain atomic |
 | 3 | Wire git handoff and command integration | NF-3.1, NF-3.2, NF-3.3 | M + M + S | Branch commands must stay delegated; express PR deferral is easy to regress |
-| 4 | Harden context and release-surface parity | NF-4.1, NF-4.2, NF-4.3 | M + S + M | Scope may expand if fetch-context is considered mandatory parity |
+| 4 | Harden context and release-surface parity | NF-4.1, NF-4.2, NF-4.3 | M + S + L | Sprint 4 is the heaviest sprint; all three stories have hard dependencies on earlier sprints |
 
 ## Sprint 1
 
@@ -64,7 +63,7 @@ updated_at: 2026-04-27T14:15:58Z
 |---|---|---:|---|---|
 | NF-4.1 | Implement governance git execution | M | Clean governance repo auto-commits/pushes and returns SHA; dirty repo fails before writes | Partial writes after failed git preflight would violate Lens git discipline |
 | NF-4.2 | Align help/manifests if owned here | S | Module help and prompt manifests include `new-feature` consistently if this feature owns surface registration | Broader 17-command sweep may own this instead |
-| NF-4.3 | Decide and implement fetch-context parity | M | Either implement `fetch-context` with tests or record it as a follow-up dependency with a blocking rationale | Downstream phases may expect context loading immediately after init |
+| NF-4.3 | Implement fetch-context with full parity | L | `fetch-context` subcommand implemented in `init-feature-ops.py` with all old-codebase output fields; `--depth summaries` and `--depth full` both pass; `--service-ref` and `--service-ref-text` detection work; missing service returns in `missing_service_refs` not as failure; all focused `fetch-context` test cases pass | Parity requires exact match of path-resolution logic for related, depends_on, blocks, and service context paths |
 
 ## Cross-Sprint Dependencies
 
@@ -73,7 +72,7 @@ updated_at: 2026-04-27T14:15:58Z
 | NF-1.3 parity tests | NF-2.1, NF-2.2, NF-2.3 |
 | NF-2.1 identity/data builders | NF-3.1, NF-3.2, NF-3.3 |
 | NF-3.2 command group generation | NF-4.1 governance git execution |
-| Fetch-context scope decision | NF-4.3 and final acceptance |
+| NF-4.1 governance git execution | NF-4.3 (fetch-context reads governance repo; governance must be in valid state) |
 
 ## Definition of Done
 
@@ -83,5 +82,6 @@ updated_at: 2026-04-27T14:15:58Z
 - Governance files are created only under the governance repo and only committed to `main` when `--execute-governance-git` succeeds.
 - Control-repo branch creation is returned as a git-orchestration command, not implemented with raw checkout commands.
 - Express-track feature creation defers planning PR creation.
-- All focused initializer tests pass from the new-codebase root.
+- All focused initializer tests pass from the new-codebase root, including all `fetch-context` test cases.
+- `fetch-context` subcommand is implemented with full parity to the old codebase: same input arguments, same output fields, same path-resolution logic for related features, depends_on/blocks, and service context.
 - No old-codebase implementation file is copied into the new codebase.
