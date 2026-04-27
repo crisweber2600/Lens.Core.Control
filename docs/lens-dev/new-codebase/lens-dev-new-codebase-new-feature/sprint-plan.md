@@ -1,7 +1,7 @@
 ---
 feature: lens-dev-new-codebase-new-feature
 doc_type: sprint-plan
-status: draft
+status: approved
 goal: "Sequence clean-room implementation of new-feature command parity"
 key_decisions:
   - Deliver tests and command-surface scaffolding before write-mode implementation.
