@@ -28,7 +28,7 @@ updated_at: 2026-04-26T00:00:00Z
 
 #### Context
 
-The old-codebase `init-feature-ops.py` defines `SAFE_ID_PATTERN` as a module constant. The business plan and tech plan document conflicting patterns (`^[a-z0-9][a-z0-9-]{0,63}$` vs `^[a-z0-9][a-z0-9._-]{0,63}$`). Before implementation begins the exact value must be read from the old-codebase source and embedded as an authoritative constant.
+The old-codebase `init-feature-ops.py` defines `SAFE_ID_PATTERN` as a module constant. The current plan set aligns on `^[a-z0-9][a-z0-9._-]{0,63}$`, but Story 1.1 still requires source-of-truth verification against old-codebase before implementation begins.
 
 **Old-codebase source location:** `TargetProjects/lens-dev/old-codebase/lens.core.src/_bmad/lens-work/skills/bmad-lens-init-feature/scripts/init-feature-ops.py`
 
@@ -68,7 +68,7 @@ Implements the main `create-domain` subcommand logic in `init-feature-ops.py`. T
 - [ ] `constitution.md` written at `{governance_repo}/constitutions/{domain}/constitution.md` with frozen frontmatter + body
 - [ ] `.gitkeep` scaffold created at `{target_projects_root}/{domain}/.gitkeep` when flag provided
 - [ ] `.gitkeep` scaffold created at `{docs_root}/{domain}/.gitkeep` when flag provided
-- [ ] `context.yaml` written with `domain`, `service: null`, `updated_at`, `updated_by: new-domain` when `--personal-folder` provided
+- [ ] `context.yaml` written with `domain`, `service: null`, `updated_at`, `updated_by: new-domain` on every successful create-domain run (resolved personal folder; `--personal-folder` override)
 - [ ] Returns JSON to stdout (see tech-plan Return JSON schema)
 - [ ] Exit code 0 on success, non-zero on any failure
 - [ ] Returns `status: fail` immediately when `domain.yaml` already exists

@@ -56,7 +56,7 @@ When `--dry-run` is set:
   "created_constitution_paths": [],
   "target_projects_path": null,
   "docs_path": null,
-  "context_path": null,
+  "context_path": "/personal/context.yaml",
   "governance_git_commands": [],
   "workspace_git_commands": [],
   "remaining_git_commands": [],
@@ -73,7 +73,7 @@ When `--dry-run` is set:
 - [ ] `--dry-run` flag accepted by `create-domain` subcommand
 - [ ] No files created when `--dry-run` is active
 - [ ] No git commands executed when `--dry-run` is active
-- [ ] All planned paths (domain.yaml, constitution, scaffolds if flags provided, context if `--personal-folder`) populated in JSON output
+- [ ] All planned paths (domain.yaml, constitution, scaffolds if flags provided, context path) populated in JSON output
 - [ ] `dry_run: true` present in output JSON
 - [ ] `test_create_domain_dry_run` passes:
   - Invokes with `--dry-run`

@@ -5,6 +5,7 @@ status: draft
 goal: "Deliver a clean-room reimplementation of the new-domain command that bootstraps governance domains with full behavioral parity to the old codebase"
 key_decisions:
   - new-domain is retained as a first-class published command (#2 of 17) delegating to bmad-lens-init-feature create-domain; it is not a standalone skill
+  - new-domain remains one shared capability inside bmad-lens-init-feature in the future multi-skill lens-work bundle
   - The command produces domain.yaml, constitution.md, optional TargetProjects scaffold, optional docs scaffold, and context.yaml atomically
   - governance-main auto-commit is preserved via --execute-governance-git flag; absence of the flag returns git commands for manual execution
   - context.yaml schema is frozen; clean-room rewrite must not change any field names or semantics (domain, service, updated_at, updated_by)
@@ -12,7 +13,7 @@ key_decisions:
   - constitution.md frontmatter schema is frozen (permitted_tracks, required_artifacts, gate_mode, sensing_gate_mode, additional_review_participants, enforce_stories, enforce_review)
   - Duplicate detection is fail-fast: if domain.yaml already exists, return status fail before writing anything
   - Dry-run mode returns full planned-operations JSON without creating any files or executing any git commands
-  - new-domain must bootstrap the personal context.yaml with service=null after successful domain creation
+  - new-domain must always write personal context.yaml with service=null after successful domain creation (resolved from config, with --personal-folder as override)
 open_questions: []
 depends_on:
   - lens-dev-new-codebase-baseline
@@ -89,7 +90,7 @@ The following outcomes define a successful delivery. Each is measurable against 
 - `.github/prompts/lens-new-domain.prompt.md` stub (retained as published command)
 - `lens.core/_bmad/lens-work/prompts/lens-new-domain.prompt.md` release prompt
 - All outputs: `domain.yaml`, `constitution.md`, TargetProjects scaffold, docs scaffold, `context.yaml`
-- `--execute-governance-git`, `--dry-run`, and `--personal-folder` flag behavior
+- `--execute-governance-git`, `--dry-run`, and `--personal-folder` override behavior
 - Regression test coverage for domain creation paths
 
 ### Out of Scope

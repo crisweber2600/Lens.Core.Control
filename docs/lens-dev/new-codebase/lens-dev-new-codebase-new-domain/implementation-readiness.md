@@ -119,7 +119,7 @@ Each finding from finalizeplan-review.md is mapped to a story with a disposition
 
 | Concern | Resolution |
 |---|---|
-| context.yaml inclusion scope | ADR-3 accepted: context.yaml is optional, only created when `--personal-folder` is provided |
+| context.yaml inclusion scope | ADR-3 updated: context.yaml is always written after successful create-domain using resolved personal folder; `--personal-folder` is an override |
 | governance_git vs manual | ADR-2 accepted: `--execute-governance-git` flag controls this; default is manual |
 | Scaffold creation atomicity | No atomicity requirement for `.gitkeep` files; they are idempotent |
 

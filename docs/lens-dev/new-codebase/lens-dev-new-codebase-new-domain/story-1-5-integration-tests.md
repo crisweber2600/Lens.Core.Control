@@ -54,19 +54,20 @@ Every test that creates files must:
 - Asserts no files exist at any of the returned paths
 
 ### `test_create_domain_basic`
-- Invokes `create-domain` (without `--execute-governance-git` and without `--personal-folder`) with temp governance repo
+- Invokes `create-domain` (without `--execute-governance-git`) with temp governance repo and a resolved/explicit personal folder
 - Asserts `domain.yaml` exists at `{tmp_governance}/features/{domain}/domain.yaml`
 - Asserts `constitution.md` exists at `{tmp_governance}/constitutions/{domain}/constitution.md`
-- Does not assert `context.yaml`; personal context creation is covered separately when `--personal-folder` is provided
+- Asserts `context.yaml` exists at `{tmp_personal}/context.yaml`
 - Asserts `status: pass` in output JSON
 
 ### `test_create_domain_with_scaffolds`
 - Invokes `create-domain` with both `--target-projects-root` and `--docs-root` pointing to temp dirs
-- Also includes `--personal-folder` pointing to a temp dir
+- Includes `--personal-folder` pointing to a temp dir
 - Asserts `.gitkeep` at `{tmp_target}/{domain}/.gitkeep`
 - Asserts `.gitkeep` at `{tmp_docs}/{domain}/.gitkeep`
 - Asserts `context.yaml` at `{tmp_personal}/context.yaml`
-- Asserts all scaffold paths appear in `created_marker_paths` list in output
+- Asserts `created_marker_paths` contains governance marker paths only
+- Asserts scaffold locations are represented by `target_projects_path` and `docs_path`
 
 ### `test_create_domain_duplicate_fails`
 - Pre-creates `{tmp_governance}/features/{domain}/domain.yaml` before invocation

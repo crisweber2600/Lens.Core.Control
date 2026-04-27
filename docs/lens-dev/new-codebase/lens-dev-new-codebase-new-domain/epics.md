@@ -39,7 +39,7 @@ updated_at: 2026-04-26T00:00:00Z
 | FR-3 | create-domain writes `constitution.md` at `{governance_repo}/constitutions/{domain}/constitution.md` | tech-plan §Data Model |
 | FR-4 | When `--target-projects-root` is provided, creates `{target_projects_root}/{domain}/.gitkeep` | business-plan §Success Criteria |
 | FR-5 | When `--docs-root` is provided, creates `{docs_root}/{domain}/.gitkeep` | business-plan §Success Criteria |
-| FR-6 | When `--personal-folder` is provided, writes `context.yaml` with `domain`, `service: null`, `updated_by: new-domain` | tech-plan §Data Model |
+| FR-6 | Always writes `context.yaml` with `domain`, `service: null`, `updated_by: new-domain` after successful create-domain (resolved folder; `--personal-folder` override) | tech-plan §Data Model |
 | FR-7 | When `--execute-governance-git` is set: runs `sync_governance_main` (pull), duplicate check, write, then git add/commit/push | tech-plan ADR-2, ADR-5, finalizeplan-review Winston-P |
 | FR-8 | Duplicate detection: if `domain.yaml` already exists, return `status: fail` before writing any file | tech-plan ADR-4 |
 | FR-9 | `--dry-run` returns complete planned-operations JSON without writing any file or running any git command | business-plan §Success Criteria |
