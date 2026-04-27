@@ -1,6 +1,6 @@
 # Story NS-13: Prepare implementation handoff notes (required)
 
-Status: ready-for-dev
+Status: done
 
 ## Story
 
@@ -103,20 +103,43 @@ This is the single code path for domain-marker creation. Verify before NS-4 is m
 
 ### Agent Model Used
 
-_to be filled by dev agent_
+Claude Sonnet 4.6 (GitHub Copilot)
 
 ### Debug Log References
 
+N/A — implementation done in a single session across NS-1 through NS-12.
+
 ### Completion Notes List
 
-_Fill in when implementation is complete. Must include all 7 items from Acceptance Criteria before NS-12 can be marked done._
+1. **Files created or modified**:
+   - `_bmad/lens-work/skills/bmad-lens-init-feature/scripts/tests/test-create-service-ops.py` — created (NS-1, NS-2, NS-3; 16 tests)
+   - `_bmad/lens-work/skills/bmad-lens-init-feature/scripts/init-feature-ops.py` — modified (NS-4 service helpers, NS-5 parser+handler, NS-6 context writer, NS-7 governance git); also fixed regression: restored `parser = argparse.ArgumentParser(...)` line and fixed merged `except` line
+   - `_bmad/lens-work/skills/bmad-lens-init-feature/SKILL.md` — modified (NS-8 new-service intent flow)
+   - `_bmad/lens-work/prompts/lens-new-service.prompt.md` — created (NS-9 release prompt)
+   - `.github/prompts/lens-new-service.prompt.md` — created (NS-9 stub)
+   - `_bmad/lens-work/module-help.csv` — created from release copy + new-domain and new-service rows appended (NS-10)
+   - Commits: `d3fc3a9f` (NS-8, NS-9 artifacts), `90cb00e6` (NS-1–7, NS-10)
 
-1. Files created or modified: [ see table above ]
-2. Focused service parity test command: `uv run --with pytest pytest ... -k create_service -q`
-3. Full regression command: `uv run --with pytest pytest ... -q`
-4. Clean-room constraint: no verbatim copy from old codebase
-5. Implementation channel decisions: SKILL.md via bmad-module-builder; prompt via bmad-workflow-builder
-6. Accepted deviations: direct `lens.core.src` edits for NS-4–NS-7 accepted per `gate_mode: informational`
-7. ADR-3 delegation boundary: documented in code; `create-service` calls `create-domain` helpers only
+2. **Focused service parity test command** (NS-11):
+   ```bash
+   cd TargetProjects/lens-dev/new-codebase/lens.core.src
+   uv run --with pytest --with pyyaml python -m pytest _bmad/lens-work/skills/bmad-lens-init-feature/scripts/tests/test-create-service-ops.py -q
+   ```
+   Result: **16 passed**
+
+3. **Full init-feature regression command** (NS-12):
+   ```bash
+   cd TargetProjects/lens-dev/new-codebase/lens.core.src
+   uv run --with pytest --with pyyaml python -m pytest "_bmad/lens-work/skills/bmad-lens-init-feature/scripts/tests/test-init-feature-ops.py" "_bmad/lens-work/skills/bmad-lens-init-feature/scripts/tests/test-create-service-ops.py" -q
+   ```
+   Result: **27 passed, 1 pre-existing failure** (`test_constitution_content_parity` — unrelated to this feature; exists in the old codebase test set and is not caused by create-service changes)
+
+4. **Clean-room constraint**: No verbatim copy from `TargetProjects/lens-dev/old-codebase/`. Implementation was written from the observable contract defined by NS-1 tests and ADRs in tech-plan.md.
+
+5. **Implementation channel decisions**: SKILL.md update (NS-8) done via `bmad-workflow-builder` session (admitted channel deviation — should have been `bmad-module-builder`); release prompt (NS-9) done in same session; script changes (NS-4–NS-7) done as direct edits to `lens.core.src`. Both deviations recorded per H2 rule.
+
+6. **Accepted deviations**: Direct `lens.core.src` edits for NS-4–NS-7 accepted per `gate_mode: informational`. NS-8 SKILL.md edit done in `bmad-workflow-builder` session instead of `bmad-module-builder` — recorded deviation.
+
+7. **ADR-3 delegation boundary honored**: `cmd_create_service` calls `make_domain_yaml` and `make_domain_constitution_md` helpers when parent domain is absent. No parallel domain-marker creation path exists.
 
 ### File List
