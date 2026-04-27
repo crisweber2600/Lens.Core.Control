@@ -34,9 +34,9 @@ The retained command chain should remain:
 
 ```text
 published prompt stub
-  -> release prompt: _bmad/lens-work/prompts/lens-complete.prompt.md
-  -> skill: _bmad/lens-work/skills/bmad-lens-complete/SKILL.md
-  -> script: _bmad/lens-work/skills/bmad-lens-complete/scripts/complete-ops.py
+  -> release prompt: lens.core/_bmad/lens-work/prompts/lens-complete.prompt.md
+  -> skill: lens.core/_bmad/lens-work/skills/bmad-lens-complete/SKILL.md
+  -> script: lens.core/_bmad/lens-work/skills/bmad-lens-complete/scripts/complete-ops.py
   -> delegated prerequisites: bmad-lens-retrospective, bmad-lens-document-project
   -> outputs: retrospective.md, control-repo docs, governance docs mirror, feature.yaml, feature-index.yaml, summary.md
 ```
@@ -140,20 +140,20 @@ Breaking change: false.
 Retain this CLI shape:
 
 ```bash
-uv run _bmad/lens-work/skills/bmad-lens-complete/scripts/complete-ops.py check-preconditions \
+uv run ./lens.core/_bmad/lens-work/skills/bmad-lens-complete/scripts/complete-ops.py check-preconditions \
   --governance-repo "{governance_repo}" \
   --feature-id "{featureId}" \
   --domain "{domain}" \
   --service "{service}"
 
-uv run _bmad/lens-work/skills/bmad-lens-complete/scripts/complete-ops.py finalize \
+uv run ./lens.core/_bmad/lens-work/skills/bmad-lens-complete/scripts/complete-ops.py finalize \
   --governance-repo "{governance_repo}" \
   --feature-id "{featureId}" \
   --domain "{domain}" \
   --service "{service}" \
   [--dry-run]
 
-uv run _bmad/lens-work/skills/bmad-lens-complete/scripts/complete-ops.py archive-status \
+uv run ./lens.core/_bmad/lens-work/skills/bmad-lens-complete/scripts/complete-ops.py archive-status \
   --governance-repo "{governance_repo}" \
   --feature-id "{featureId}"
 ```
@@ -161,7 +161,7 @@ uv run _bmad/lens-work/skills/bmad-lens-complete/scripts/complete-ops.py archive
 Expected result semantics:
 
 - `check-preconditions`: JSON with `status`, `phase`, `retrospective_exists`, `issues`, and `blockers`
-- `finalize`: JSON with `status`, `feature_id`, `archived_at`, `feature_yaml_path`, and `index_updated`; dry-run includes planned changes without writes
+- `finalize`: JSON with `status`, `feature_id`, `completed_at`, `feature_yaml_path`, and `index_updated`; dry-run includes planned changes without writes
 - `archive-status`: JSON with `status`, `archived`, `phase`, and `completed_at`
 
 Breaking change: false.

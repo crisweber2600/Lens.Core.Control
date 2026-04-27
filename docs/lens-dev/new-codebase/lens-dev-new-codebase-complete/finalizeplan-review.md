@@ -30,7 +30,7 @@ Cross-feature scan for the `lens-dev/new-codebase` service:
 |---|---|---|---|
 | `lens-dev-new-codebase-baseline` | finalizeplan-complete | full | **Depends-on dependency.** Complete relies on baseline for lifecycle graph and feature record schemas. Baseline is at finalizeplan-complete and stable. No conflict. |
 | `lens-dev-new-codebase-new-service` | complete | express | Informational. New-service reached the `complete` phase via express track — proving the archive path works for express features and providing a live behavioral reference. |
-| `lens-dev-new-codebase-switch` | complete | express | Informational. Switch also completed via express track. Two prior archived express features confirms archive-state readers already recognize terminal express features. |
+| `lens-dev-new-codebase-switch` | complete | express | Informational. Switch also completed via express track. Two prior archived express features confirm archive-state readers already recognize terminal express features. |
 | `lens-dev-new-codebase-new-domain` | complete | full | Informational. Full-track archived feature. Terminal-state reader behavior confirmed for full-track too. |
 | `lens-dev-new-codebase-new-feature` | finalizeplan-complete | full | Adjacent at finalizeplan-complete. No overlap with the closure domain. No conflict. |
 | All other features | preplan | full | No planning-stage features have scope overlap with `complete` command behavior. |
