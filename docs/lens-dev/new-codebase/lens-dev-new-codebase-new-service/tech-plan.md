@@ -65,10 +65,13 @@ The new-codebase source currently has the `new-domain` release prompt and a `cre
 
 **Rationale:** The old prompt explicitly allowed service creation to create the parent `domain.yaml` and domain constitution when absent. This keeps setup progressive and avoids forcing users to repair partial governance hierarchies manually.
 
+**Helper Delegation Boundary (H1):** `create-service` must call the existing `create-domain` helper functions (`make_domain_yaml`, `make_domain_constitution_md`, `get_domain_marker_path`, `get_domain_constitution_path`, and any governance-git helpers already proven by `new-domain`) when establishing a missing parent domain container. It must not re-implement a parallel domain-marker creation path. This eliminates the dual-mutation-path risk: there is exactly one code path that creates a `domain.yaml` or domain constitution, and it is owned by the `create-domain` family. The boundary must be documented in the NS-13 handoff notes and must be established before NS-4 implementation begins.
+
 **Alternatives Rejected:**
 
 - Hard fail when the domain is absent: rejected because it is stricter than the observed old command behavior.
 - Create only the service and omit domain artifacts: rejected because it produces an incomplete hierarchy for constitution resolution.
+- Re-implement domain marker creation inside `create-service`: rejected because it creates two mutation paths for the same governance entity (H1 finding in FinalizePlan review).
 
 ### ADR 4 - Extend Context Writer Instead of Adding a Parallel Helper
 
@@ -193,6 +196,7 @@ updated_by: new-service
 - Git CLI for `--execute-governance-git`, following the existing `create-domain` path.
 - Existing helper concepts in the new script: safe ID validation, atomic YAML write, governance git preflight, git command text generation, scaffold command generation, current head SHA resolution.
 - Existing Lens config keys from module defaults: `governance_repo_path`, `target_projects_path`, `output_folder`, and `personal_output_folder`.
+- **Implementation channel (BMB-first rule, H2):** Skill artifact changes (SKILL.md update, NS-8) are authored through `.github/skills/bmad-module-builder`. Release prompt and workflow artifacts (NS-9) are authored through `.github/skills/bmad-workflow-builder`. These are the canonical BMB implementation channels for this service. Direct edits to `lens.core.src` for the script implementation stories (NS-4 through NS-7) are accepted per `gate_mode: informational` for this cycle; the deviation must be recorded explicitly in the NS-13 handoff notes.
 
 ## Rollout Strategy
 
@@ -235,6 +239,16 @@ uv run --with pytest pytest _bmad/lens-work/skills/bmad-lens-init-feature/script
 The command is CLI-observable through its JSON result. The result should make partial completion obvious by separating governance git commands from workspace scaffold commands and by returning `remaining_git_commands` after auto governance git succeeds. Failure payloads should include the same `status: fail` and actionable `error` pattern used by `create-domain`.
 
 No runtime telemetry is required for this planning scope. The important operational signal is deterministic command output plus focused regression coverage.
+
+## Pre-Development Setup
+
+Before beginning Sprint 1 (NS-1), the implementing developer must complete the following setup:
+
+1. Clone the `lens.core.src` target repository into `TargetProjects/lens-dev/new-codebase/lens.core.src` if not already present.
+2. Clone the governance repository into `TargetProjects/lens/lens-governance` if not already present.
+3. Run `/discover` with `domain: lens-dev`, `service: new-codebase` to activate cross-feature context and confirm that `new-domain` (phase: complete) and this feature are both visible in the Lens index.
+
+The Lens control repo must be on branch `lens-dev-new-codebase-new-service-plan` (or `lens-dev-new-codebase-new-service` after PR merge) for `/discover` to surface the correct feature context. Do not begin NS-1 test authoring until `/discover` returns a successful context activation for `lens-dev / new-codebase`.
 
 ## Open Questions
 
