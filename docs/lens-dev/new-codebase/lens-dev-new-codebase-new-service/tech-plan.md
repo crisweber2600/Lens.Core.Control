@@ -26,10 +26,10 @@ Implement `new-service` inside the new-codebase `bmad-lens-init-feature` module 
 The command remains part of the shared init-feature family:
 
 ```text
-published prompt stub
-  -> release prompt: _bmad/lens-work/prompts/lens-new-service.prompt.md
-  -> skill: _bmad/lens-work/skills/bmad-lens-init-feature/SKILL.md
-  -> script: _bmad/lens-work/skills/bmad-lens-init-feature/scripts/init-feature-ops.py create-service
+published prompt stub: .github/prompts/lens-new-service.prompt.md
+  -> release prompt: lens.core/_bmad/lens-work/prompts/lens-new-service.prompt.md
+  -> skill: lens.core/_bmad/lens-work/skills/bmad-lens-init-feature/SKILL.md
+  -> script: lens.core/_bmad/lens-work/skills/bmad-lens-init-feature/scripts/init-feature-ops.py create-service
   -> outputs: governance markers, constitutions, optional scaffolds, personal context
 ```
 
