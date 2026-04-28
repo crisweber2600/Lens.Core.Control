@@ -2,15 +2,23 @@
 feature: lens-dev-new-codebase-techplan
 doc_type: tech-plan
 status: draft
-goal: "Describe the clean-room implementation plan for the techplan command in the new codebase target project."
+goal: "Define the implementation plan for adding the governed techplan command surface to the new codebase target project."
 key_decisions:
-  - Implement the public chain as stub to release prompt to bmad-lens-techplan under TargetProjects/lens-dev/new-codebase/lens.core.src.
-  - Reuse shared publish-before-author, batch, and adversarial-review contracts instead of embedding new copies.
-  - Treat reviewed businessplan artifacts and the authoritative PRD as hard prerequisites for architecture authoring.
+  - Implement the full prompt chain in the target project: public stub, release prompt, and owning skill.
+  - Reuse the shared publish-before-author, adversarial-review, and BMAD delegation contracts instead of inventing techplan-specific mutations.
+  - Preserve the PRD reference rule as a hard validation requirement for architecture output.
+  - Treat missing upstream shared utilities as prerequisites rather than re-solving them inside techplan.
   - Keep governance publication inside bmad-lens-git-orchestration only.
-open_questions: []
+open_questions:
+  - "Does publish-to-governance --phase businessplan produce the right artifact set when businessplan is express-track? Which file satisfies the architecture must_reference check?"
+  - "Is bmad-lens-techplan intended only for track:full features, or should it also serve track:tech-change and track:feature?"
+  - "When will lens-dev-new-codebase-constitution advance from preplan? Does any story gate on it?"
+  - "Where do focused regression tests live in the target project, and which CI step runs them?"
+  - "Does the new codebase require a module-help.csv or manifest update to expose techplan as a discoverable command?"
 depends_on:
   - business-plan
+  - lens-dev-new-codebase-businessplan
+  - lens-dev-new-codebase-constitution
   - TargetProjects/lens/lens-governance/features/lens-dev/new-codebase/lens-dev-new-codebase-baseline/docs/architecture.md
   - TargetProjects/lens/lens-governance/features/lens-dev/new-codebase/lens-dev-new-codebase-baseline/docs/4-3-rewrite-techplan.md
 blocks:
@@ -18,13 +26,19 @@ blocks:
 updated_at: 2026-04-28T00:00:00Z
 ---
 
-# Tech Plan - Techplan Command
+# Tech Plan — Techplan Command
 
 ## Overview
 
-This feature plans the missing `techplan` command for `TargetProjects/lens-dev/new-codebase/lens.core.src`. The implementation target is not the workspace-root release payload. It is the target-project source tree that will eventually carry the rewritten command surface. The command must behave as the full-track `techplan` conductor described in the baseline rewrite corpus, not as an express shortcut or a standalone architecture generator.
+The new codebase target project currently lacks the entire `techplan` execution surface. There is no public stub for `techplan`, no release prompt, and no owning `bmad-lens-techplan` skill under `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/`. This plan adds that missing vertical slice while preserving the retained-command behavior defined by the rewrite baseline.
 
-The current target-project surface confirms the gap: it contains `_bmad/lens-work/skills/bmad-lens-preflight`, `_bmad/lens-work/skills/bmad-lens-init-feature`, and `_bmad/lens-work/skills/bmad-lens-complete`, but not `bmad-lens-businessplan`, `bmad-lens-techplan`, or `bmad-lens-expressplan`. This feature therefore plans both the missing public entry chain and the minimal orchestration behavior required for parity.
+The implementation target is the target project source tree:
+
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/.github/prompts/`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/prompts/`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/`
+
+The docs in this feature folder remain the staging authority for planning. The code changes themselves belong in the target project.
 
 ## Clean-Room Interpretation Rule
 
@@ -80,8 +94,8 @@ The command's staged outputs remain local to the feature docs path until the nex
 ### Feature State
 
 - Feature id remains `lens-dev-new-codebase-techplan`.
-- Track remains `full`; this feature does not use the express path.
 - The feature docs root is the authoritative staging location for these planning artifacts.
+- The `bmad-lens-techplan` skill being built targets full-track and tech-change features; the current feature's own lifecycle track is separate from the tracks the skill supports.
 
 ### Shared Dependencies
 
@@ -128,45 +142,6 @@ This sequence keeps the command surface installable early while leaving risky sh
 - Wrapper-equivalence checks stay green for architecture delegation.
 - Governance-write audit shows no direct governance writes from `techplan`.
 - Architecture-reference regression remains green.
-
-## Delivery Boundaries
-
-This feature should not attempt to solve FinalizePlan, ExpressPlan, or unrelated prompt-surface gaps as part of the same implementation slice. Its job is to restore the full-track `techplan` conductor with the right contracts so that later planning and delivery stages can depend on it safely.
-
-## Definition Of Done
-
-The feature is technically complete when the target project contains a working `techplan` prompt chain, the command honors publish-before-author and PRD reference rules, and the focused regressions named above pass without requiring direct governance writes or clean-room exceptions.---
-feature: lens-dev-new-codebase-techplan
-doc_type: tech-plan
-status: draft
-goal: "Define the implementation plan for adding the governed techplan command surface to the new codebase target project."
-key_decisions:
-  - Implement the full prompt chain in the target project: public stub, release prompt, and owning skill.
-  - Reuse the shared publish-before-author, adversarial-review, and BMAD delegation contracts instead of inventing techplan-specific mutations.
-  - Preserve the PRD reference rule as a hard validation requirement for architecture output.
-  - Treat missing upstream shared utilities as prerequisites rather than re-solving them inside techplan.
-open_questions: []
-depends_on:
-  - business-plan
-  - rewrite-businessplan
-  - constitution-partial-hierarchy-fix
-blocks: []
-updated_at: 2026-04-28T00:00:00Z
----
-
-# Tech Plan — Techplan Command
-
-## Overview
-
-The new codebase target project currently lacks the entire `techplan` execution surface. There is no public stub for `techplan`, no release prompt, and no owning `bmad-lens-techplan` skill under `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/`. This plan adds that missing vertical slice while preserving the retained-command behavior defined by the rewrite baseline.
-
-The implementation target is the target project source tree:
-
-- `TargetProjects/lens-dev/new-codebase/lens.core.src/.github/prompts/`
-- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/prompts/`
-- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/`
-
-The docs in this feature folder remain the staging authority for planning. The code changes themselves belong in the target project.
 
 ## Current State
 
@@ -294,5 +269,15 @@ If any prerequisite is absent in the target project at implementation time, the 
 | Businessplan publication is treated as optional | Wire the shared publish hook at skill entry and cover ordering with regression tests |
 
 ## Clean-Room Boundary
+
+All functional behavior is derived from the baseline rewrite PRD, architecture, research, and rewrite stories. The old-codebase prompt available in this workspace is a stub whose only actionable information is the public chain shape (`lens-techplan` → `bmad-lens-techplan`). No implementation text may be copied from it.
+
+## Delivery Boundaries
+
+This feature should not attempt to solve FinalizePlan, ExpressPlan, or unrelated prompt-surface gaps as part of the same implementation slice. Its job is to restore the `techplan` conductor with the right contracts so that later planning and delivery stages can depend on it safely.
+
+## Definition Of Done
+
+The feature is technically complete when the target project contains a working `techplan` prompt chain, the command honors publish-before-author and PRD reference rules, and the focused regressions named above pass without requiring direct governance writes or clean-room exceptions.
 
 The old-codebase prompt supplied to this task is a stub and provides only the existence of the command surface. The normative behavior for the rewrite comes from the approved baseline artifacts, especially story 4.3, the rewrite architecture, the PRD retained-command matrix, and the research record. Implementation work should use those documents as the source of truth and use old-codebase material only to verify externally observable parity.
