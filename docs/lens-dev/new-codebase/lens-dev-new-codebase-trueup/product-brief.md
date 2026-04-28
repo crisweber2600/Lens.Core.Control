@@ -2,16 +2,15 @@
 feature: lens-dev-new-codebase-trueup
 doc_type: product-brief
 status: draft
-goal: "Define the True Up initiative as a product: what it is, who needs it, what success looks like, and how it fits the rewrite roadmap"
+goal: "Close delivery gaps in the 5 non-preplan new-codebase features: audit parity against old-codebase baseline, fix missing prompts and SKILL.md packages, and resolve the complete prerequisite design decision"
 key_decisions:
-  - True Up is a cross-cutting gap-closure initiative, not an implementation sprint for a single command
-  - Its primary output is shared infrastructure that unblocks 10 of 12 remaining retained commands
-  - Success is defined by measurable parity gates, not subjective completeness
-  - True Up does not own individual command features — it owns the shared floor and the audit that verifies parity
+  - Scope is limited to features NOT in preplan: new-domain, new-service, switch (complete); new-feature, complete (finalizeplan-complete)
+  - Shared infrastructure (adversarial-review, publish-to-governance, feature-yaml updates) is explicitly out of scope — those belong to individual preplan feature planning cycles
+  - Success is defined by measurable parity gates for the 5 in-scope features only
+  - True Up does not activate or plan any of the 12 preplan-phase features
 open_questions:
-  - Should True Up be tracked as a single feature or decomposed into sub-features per tier?
-  - What is the target timeline or release milestone for Tier 1 infrastructure?
-  - Is there an existing test harness that can be extended for parity validation, or does one need to be built?
+  - Should the complete prerequisite decision (graceful degradation vs. hard prerequisite) be an ADR artifact owned by True Up or by the complete feature itself?
+  - Is there an existing test harness that can be extended for behavioral parity validation?
 depends_on: [brainstorm, research]
 blocks: []
 updated_at: 2026-04-28T01:00:00Z
@@ -23,58 +22,54 @@ updated_at: 2026-04-28T01:00:00Z
 
 ## 1. Vision
 
-The **True Up** initiative closes the gap between the old-codebase Lens Workbench (41 skills, 17 retained commands, 57 prompts) and the new-codebase rewrite (currently: 5 skill directories, 3 commands with prompt stubs, 0 planning-phase skills implemented).
+The **True Up** initiative brings the 5 non-preplan new-codebase features to genuine parity with the old-codebase baseline. These are the features where governance phase tracking has outpaced delivery verification — commands that are marked complete or dev-ready but have observable gaps in their prompt publishing, SKILL.md packages, test coverage, and behavioral contracts.
 
-True Up does not implement the 12 unimplemented retained commands. Instead, it:
+The 5 in-scope features are:
 
-1. **Builds the shared infrastructure** that all 10 planning-phase and session-management commands depend on
-2. **Audits the 5 already-delivered commands** for parity gaps not caught by governance phase tracking
-3. **Creates the parity checklist** — a runnable, automated verification suite that validates the new codebase against the old
-4. **Documents the dependency order** so each of the 12 remaining features can be activated without blocking surprises
+| Feature | Governance Phase | Gap Summary |
+|---------|-----------------|------------|
+| `new-domain` | complete | Structural parity unverified against old-codebase schema outputs |
+| `new-service` | complete | Structural parity unverified against old-codebase schema outputs |
+| `switch` | complete | `lens-switch.prompt.md` not mirrored to `.github/prompts/` |
+| `new-feature` | finalizeplan-complete | No prompt stub; governance phase label may lag actual implementation state; fetch-context parity open |
+| `complete` | finalizeplan-complete | No SKILL.md, no script, no tests; prerequisite delegation design unresolved |
 
-Without True Up, the next 10 features to be dev'd will each independently discover they need `bmad-lens-adversarial-review`, `publish-to-governance`, and `bmad-lens-feature-yaml` updates — and will be blocked. True Up runs first to prevent that compounding delay.
+True Up does not plan or unblock the 12 preplan-phase features. Shared infrastructure (adversarial-review, publish-to-governance, feature-yaml updates) is explicitly deferred — those components will be scoped into the individual preplan feature planning cycles as each activates.
 
 ---
 
 ## 2. Problem Statement
 
-### 2.1 The Blocking Gap
+Governance phase labels track **planning status**, not **implementation completeness**. The 5 non-preplan features have all advanced through planning, but their actual delivery state has not been verified against the old-codebase parity baseline. Research has confirmed the following gaps:
 
-The three critical infrastructure components missing from the new codebase are:
+### 2.1 Behavioral Parity Unverified (new-domain, new-service)
 
-| Component | Blocked Commands |
-|-----------|----------------|
-| `bmad-lens-adversarial-review` | preplan, businessplan, techplan, finalizeplan, expressplan, dev (all 6 planning phases) |
-| `git-orchestration-ops.py publish-to-governance` | businessplan, techplan, finalizeplan, dev (4 commands) |
-| `bmad-lens-feature-yaml` update operations | Every phase-transition workflow (all 12 unimplemented commands) |
+`new-domain` and `new-service` are marked `complete` with tech plans that specify frozen schemas (domain.yaml, service.yaml, constitution.md). However, no parity validation has been run to confirm that the new-codebase outputs match the old-codebase outputs field-for-field. The schemas are declared frozen, but whether the new implementation actually produces them correctly is an open assumption.
 
-If any one of these three components is missing when the next command feature begins dev, that feature will be blocked at the implementation gate.
+### 2.2 Prompt Publishing Gap (switch, new-feature)
 
-### 2.2 The Audit Gap
+`lens-switch.prompt.md` exists in `_bmad/lens-work/prompts/` but is **not mirrored to `.github/prompts/`** — the location IDE agents use to discover prompts. `lens-new-feature.prompt.md` does not exist in either location. Both commands are invisible to IDE agent sessions until their stubs are correctly published.
 
-The 5 delivered commands (new-domain, new-service, switch, new-feature, complete) were tracked by governance phase. But governance phase labels track **planning status**, not **implementation completeness**. Research has confirmed:
+### 2.3 Governance Phase Label vs. Implementation State (new-feature)
 
-- `new-feature` is labeled `finalizeplan-complete` (planning done, dev not started) but its core script (`init-feature-ops.py create`) appears to already work in production
-- `complete` is labeled `finalizeplan-complete` but has no SKILL.md, no tests, and a reference-only doc — it is not dev-ready
-- `switch` prompt stub is not mirrored to `.github/prompts/` — IDE integrations cannot discover it
-- `preflight` has its script but no SKILL.md or tests — it is not a fully delivered skill package
+`new-feature` is labeled `finalizeplan-complete` (planning done, dev not started), but `init-feature-ops.py create` — its core script — ran successfully in this session to create the trueup feature. Either the governance label is stale (implementation outpaced governance tracking), or the `create` subcommand is partially implemented with untested gaps (specifically `fetch-context`). Neither state has been confirmed.
 
-### 2.3 The Prompt Gap
+### 2.4 Incomplete Delivery Package (complete)
 
-14 of 17 retained commands have no published `.prompt.md` stub in the new codebase. Without prompt stubs, users cannot invoke these commands from IDE agents. Even when scripts are implemented, the commands are invisible until their stubs are published.
+`complete` is labeled `finalizeplan-complete` but the new-codebase source has only `references/finalize-feature.md` — no SKILL.md, no `complete-ops.py`, no tests. Additionally, `complete` delegates to `bmad-lens-retrospective` and `bmad-lens-document-project`, neither of which exists in the new-codebase source. The prerequisite handling strategy (graceful degradation vs. hard prerequisite) has not been decided, which blocks dev from starting.
 
 ---
 
 ## 3. Target Audience
 
-**Primary:** The agent team implementing new-codebase Lens features.  
-They are blocked right now — not by lack of plans for individual commands, but by missing shared infrastructure that every command needs.
+**Primary:** Governance and compliance reviewers.  
+True Up produces the evidence base — parity audit report, corrected governance phase labels, and verified SKILL.md packages — that justifies calling the 5 non-preplan commands actually complete.
 
-**Secondary:** Any Lens user who wants to run a planning phase in the new codebase.  
-Currently, all planning phases fall back to the RELEASE module (old codebase). After True Up, the new codebase can host its first planning phase feature.
+**Secondary:** The agent team implementing new-codebase Lens features.  
+The `complete` prerequisite design decision and the parity checklist define the acceptance criteria they need before `complete` dev can start.
 
-**Tertiary:** Governance and compliance reviewers.  
-The parity audit and verification checklist created by True Up will be the evidence base for declaring each retained command fully migrated.
+**Tertiary:** Any Lens user invoking `switch` or `new-feature` from an IDE agent session.  
+They are currently invisible to IDE prompt discovery due to missing `.github/prompts/` stubs.
 
 ---
 
@@ -82,34 +77,36 @@ The parity audit and verification checklist created by True Up will be the evide
 
 ### 4.1 In Scope
 
-**Tier 1 — Shared infrastructure (required for any planning phase to complete):**
-- [ ] `bmad-lens-adversarial-review` — new-codebase skill package with SKILL.md and functional script
-- [ ] `git-orchestration-ops.py publish-to-governance` — subcommand for publishing phase artifacts to governance
-- [ ] `bmad-lens-feature-yaml` update operations — `phase-transition`, `update-field`, and `add-entry` subcommands for all phase skills
+**Tier 1 — Parity audit (all 5 non-preplan features):**
+- [ ] Behavioral parity validation for `new-domain`: verify `init-feature-ops.py create-domain` outputs match old-codebase domain.yaml and constitution.md schemas field-for-field
+- [ ] Behavioral parity validation for `new-service`: verify `init-feature-ops.py create-service` outputs match old-codebase service.yaml and service constitution schemas
+- [ ] Governance phase label audit for `new-feature`: confirm whether `init-feature-ops.py create` is fully implemented or partially implemented; update governance phase label to match actual state
+- [ ] `fetch-context` parity investigation for `new-feature`: determine whether the subcommand is implemented, stubbed, or absent
+- [ ] Parity audit report — a single artifact documenting findings for all 5 features with actionable issues
 
-**Tier 2 — Audit and parity verification:**
-- [ ] Parity audit of 5 delivered commands (new-domain, new-service, switch, new-feature, complete)
-  - Verify governance phase labels reflect actual implementation state
-  - Identify observable behavioral gaps vs. old-codebase baseline
-  - Document findings as actionable issues for each affected feature
-- [ ] Parity checklist — a documented gate specification for declaring a retained command fully migrated
-
-**Tier 3 — Prompt publishing and SKILL.md gap closure for delivered commands:**
+**Tier 2 — Prompt publishing gap closure:**
 - [ ] `lens-switch.prompt.md` mirrored to `.github/prompts/`
-- [ ] `lens-new-feature.prompt.md` published
-- [ ] `bmad-lens-preflight` — SKILL.md and tests added
-- [ ] `bmad-lens-complete` — SKILL.md and tests scaffolded (even if implementation is not started, the SKILL.md should capture the contract)
+- [ ] `lens-new-feature.prompt.md` published to both `_bmad/lens-work/prompts/` and `.github/prompts/`
+- [ ] `lens-complete.prompt.md` stub published (even if backing SKILL.md has no implementation yet)
+
+**Tier 3 — SKILL.md and test gap closure for partially-delivered commands:**
+- [ ] `bmad-lens-complete` — SKILL.md authored to capture the command contract; `references/finalize-feature.md` reviewed and incorporated
+- [ ] `bmad-lens-complete` — test stubs scaffolded covering the happy path and prerequisite-missing degradation path
 
 **Tier 4 — `complete` prerequisite design decision:**
-- [ ] Document graceful-degradation vs. hard-prerequisite decision for `complete` command
-- [ ] Define the acceptance criteria for `bmad-lens-retrospective` and `bmad-lens-document-project` as blockers for `complete` dev
+- [ ] ADR: graceful-degradation vs. hard-prerequisite for `bmad-lens-retrospective` and `bmad-lens-document-project` delegation
+- [ ] ADR outcome published to `complete` feature governance docs as a blocker annotation before its dev activates
+
+**Tier 5 — Parity checklist:**
+- [ ] Published gate specification: what constitutes "fully migrated" for a retained command (SKILL.md present, script present, tests present, prompt published, `.github` mirror present, governance phase label correct, behavioral parity validated)
 
 ### 4.2 Out of Scope
 
-- Implementing any of the 12 unimplemented retained commands (they own their own features)
-- Rewriting or replacing the RELEASE module (`lens.core/`) — True Up targets the new-codebase source
-- Full `complete-ops.py` implementation (that belongs to the complete feature's dev phase)
-- Any source-code parity analysis (all analysis is governance-docs and filesystem-structure only)
+- All 12 preplan-phase features — they are not in scope; they activate on their own cadence after their own planning cycles
+- Shared infrastructure (adversarial-review, publish-to-governance, feature-yaml updates) — deferred to individual preplan feature planning
+- Full `complete-ops.py` implementation — belongs to the complete feature's dev phase
+- `bmad-lens-preflight` SKILL.md and tests — preflight is in preplan and out of scope for this feature
+- Any source-code behavioral analysis beyond schema/output contract verification
 
 ---
 
@@ -117,44 +114,37 @@ The parity audit and verification checklist created by True Up will be the evide
 
 True Up is complete when ALL of the following are verifiable:
 
-### SC-1: Shared Infrastructure Live
+### SC-1: Parity Audit Published
 
 ```
-[ ] bmad-lens-adversarial-review: SKILL.md + script + tests committed to new-codebase source
-[ ] git-orchestration-ops.py: 'publish-to-governance' subcommand present and tested
-[ ] bmad-lens-feature-yaml: update operations (phase-transition, update-field) present and tested
+[ ] Parity audit report artifact committed to docs/lens-dev/new-codebase/lens-dev-new-codebase-trueup/
+[ ] Report covers all 5 non-preplan features with per-feature findings
+[ ] Governance phase label for new-feature corrected to reflect actual implementation state
+[ ] All parity gaps logged as actionable issues in the affected feature governance docs
 ```
 
-### SC-2: Parity Audit Complete
-
-```
-[ ] Parity audit report published for all 5 delivered commands
-[ ] Governance phase labels for new-feature updated to reflect actual delivery state
-[ ] All parity gaps (behavioral, prompt, SKILL.md) logged as actionable issues in feature governance docs
-```
-
-### SC-3: Parity Checklist Published
-
-```
-[ ] Parity checklist artifact committed to docs/lens-dev/new-codebase/lens-dev-new-codebase-trueup/
-[ ] Checklist covers: SKILL.md present, script present, tests present, prompt published, .github mirror present, governance phase label correct
-[ ] Checklist is runnable (validate-phase-artifacts.py can be extended to check against it or it can be verified manually)
-```
-
-### SC-4: Prompt Gaps Closed for Delivered Commands
+### SC-2: Prompt Stubs Correct
 
 ```
 [ ] lens-switch.prompt.md present in .github/prompts/
-[ ] lens-new-feature.prompt.md published to both locations
-[ ] lens-complete.prompt.md scaffold published (even if SKILL.md-only, no implementation)
+[ ] lens-new-feature.prompt.md present in both _bmad/lens-work/prompts/ and .github/prompts/
+[ ] lens-complete.prompt.md stub present in both locations
 ```
 
-### SC-5: Next Command Can Be Activated
+### SC-3: complete Delivery Package Scaffolded
 
 ```
-[ ] At least one of the 12 unimplemented commands (ideally 'next' or 'preflight') can start dev phase
-    without hitting an infrastructure blocker
-[ ] The Tier 1 infrastructure passes integration smoke tests against a test feature
+[ ] bmad-lens-complete/SKILL.md authored and committed to new-codebase source
+[ ] bmad-lens-complete test stubs scaffolded (happy path + prerequisite-missing path)
+[ ] ADR for prerequisite handling committed and referenced in complete feature governance docs
+```
+
+### SC-4: Parity Checklist Published
+
+```
+[ ] Parity checklist artifact committed to docs/lens-dev/new-codebase/lens-dev-new-codebase-trueup/
+[ ] Checklist covers: SKILL.md present, script present, tests present, prompt published,
+    .github mirror present, governance phase label correct, behavioral parity validated
 ```
 
 ---
@@ -163,11 +153,11 @@ True Up is complete when ALL of the following are verifiable:
 
 | Risk | Likelihood | Impact | Mitigation |
 |------|-----------|--------|-----------|
-| `publish-to-governance` is more complex than expected (requires governance-main commit + push semantics) | Medium | HIGH | Research RELEASE module's current implementation before writing new version |
-| `bmad-lens-adversarial-review` requires significant BMAD skill-wrapping complexity | Medium | HIGH | Scope to the minimal review-gate contract; defer full adversarial features |
-| `bmad-lens-feature-yaml` update operations touch governance-main — risky if not isolated | Low | HIGH | All feature-yaml updates must be wrapped in pull-then-commit-then-push sequence |
-| Governance phase audit reveals `new-feature` phase label is actually correct and `create` has untested gaps | Medium | MEDIUM | Treat any fetch-context gap as a separate issue ticket, not a blocker for True Up |
-| `complete`'s prerequisite design decision (graceful degradation vs. hard prerequisite) becomes a long debate | Medium | MEDIUM | Time-box the decision; default to graceful degradation with a clear warning log |
+| Behavioral parity validation for new-domain/new-service requires inspecting script output, which may surface unexpected schema mismatches | Medium | MEDIUM | Scope to field presence and type validation against the frozen schema spec in the tech plans; do not chase edge-case value equality |
+| `fetch-context` investigation for new-feature may reveal the subcommand is absent, triggering a scope question about whether True Up should fix it | Medium | MEDIUM | True Up documents the gap as an issue; it does not implement fetch-context — that belongs to the new-feature dev phase |
+| Governance phase label for new-feature may be correct (create has untested gaps), requiring no label change and a different audit finding | Low | LOW | Either outcome (label correct or stale) is a valid audit result; document the finding, not the expected answer |
+| `complete` prerequisite design decision takes multiple review rounds to resolve | Medium | MEDIUM | Time-box at two rounds; default to graceful-degradation with a structured warning log if no consensus |
+| `bmad-lens-complete` SKILL.md authorship requires reading `references/finalize-feature.md` plus the old-codebase SKILL.md — scope may expand | Low | LOW | Timebox SKILL.md authorship; it is a contract capture document, not a full implementation spec |
 
 ---
 
@@ -175,44 +165,38 @@ True Up is complete when ALL of the following are verifiable:
 
 ### 7.1 What True Up Needs
 
-- Access to RELEASE module (`lens.core/`) to inspect `git-orchestration-ops.py` and validate `publish-to-governance` contract
-- Governance access to the 5 delivered features' tech plans (already loaded in this session)
-- Old-codebase reference implementations for adversarial-review, feature-yaml, and git-orchestration
+- Governance tech plans for all 5 non-preplan features (already loaded; available via governance fetch-context)
+- Old-codebase SKILL.md for `bmad-lens-complete` (available in RELEASE module `lens.core/`) to inform SKILL.md authorship
+- Filesystem access to new-codebase source for behavioral parity spot-checks (non-invasive reads only)
 
 ### 7.2 What Depends on True Up
 
-Every one of the 12 unimplemented retained-command features depends on Tier 1 outputs:
+| True Up Output | Who Needs It |
+|----------------|-------------|
+| Corrected governance phase label for new-feature | The new-feature dev team — they need an accurate planning state before activating dev |
+| ADR for complete prerequisite handling | The complete dev phase — must not start dev until this decision is published |
+| Parity checklist | All future command features — it defines the acceptance gate for declaring a command fully migrated |
+| Prompt stubs for switch, new-feature, complete | Any IDE agent user invoking these commands |
 
-| Tier 1 Output | Features Unblocked |
-|---------------|-------------------|
-| `bmad-lens-adversarial-review` | preplan, businessplan, techplan, finalizeplan, expressplan, dev |
-| `publish-to-governance` | businessplan, techplan, finalizeplan, dev |
-| `bmad-lens-feature-yaml` updates | all 12 |
-
-True Up must complete Tier 1 before ANY of those 12 features can advance beyond planning.
+True Up has no dependency on — and does not produce — any shared infrastructure (adversarial-review, publish-to-governance, feature-yaml updates). Those are preplan-feature concerns.
 
 ---
 
 ## 8. Relationship to the Rewrite Roadmap
 
-The new-codebase rewrite is tracking individual retained commands as separate governance features. True Up is intentionally **orthogonal** to that structure — it is the shared foundation layer that makes the per-command feature sprint cadence possible.
-
-The appropriate mental model:
+True Up is a **retrospective verification pass** over the features that have already moved through planning. It does not sequence the remaining 12 preplan features or provide infrastructure for them.
 
 ```
-OLD CODEBASE (reference)
-         │
-         ▼
-True Up (Audit + Shared Infrastructure)
-   ├── SC-1: Tier 1 infrastructure ─────────────────────────┐
-   ├── SC-2: Parity audit                                   │
-   ├── SC-3: Parity checklist                               │
-   ├── SC-4: Prompt gaps (delivered commands)               │
-   └── SC-5: First downstream command unblocked             │
-                                                            ▼
-NEW CODEBASE COMMAND FEATURES (in dependency order)
-   preflight → next → constitution → preplan → businessplan → techplan → finalizeplan → expressplan → dev
-   split-feature, discover, upgrade (independently deliverable after Tier 1)
+NON-PREPLAN FEATURES (True Up scope)
+   new-domain ──── complete? ──── parity audit ──┐
+   new-service ─── complete? ──── parity audit ──┤
+   switch ───────── complete? ──── prompt fix ────┤──► Parity Checklist (SC-4)
+   new-feature ─── label correct? + prompt fix ──┤
+   complete ─────── SKILL.md + ADR ───────────────┘
+
+PREPLAN FEATURES (out of scope — activate on their own cadence)
+   preflight, next, constitution, preplan, businessplan, techplan,
+   finalizeplan, expressplan, dev, split-feature, discover, upgrade
 ```
 
-True Up runs once, then the per-command features run in priority order. Without True Up, the per-command features will each independently re-discover the same infrastructure gaps and be blocked.
+After True Up, the 5 non-preplan features are verifiably in the state their governance labels claim. The 12 preplan features proceed independently without dependency on True Up outputs.
