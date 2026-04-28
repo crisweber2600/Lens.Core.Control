@@ -79,6 +79,11 @@ Branch:   feature/businessplan-conductor in lens.core.src
 Test target:  wrapper-equivalence + governance-audit regression categories (see tech-plan.md §5)
 ```
 
+> **FP-2 (FinalizePlan Review):** Preflight must confirm target-repo _merge_ state for baseline
+> stories 1.4, 3.1, and 4.1 — not just feature-index phase status — before BP-1 begins.
+> Run `#prompt:lens-preflight.prompt.md` against `lens-dev-new-codebase-businessplan` and
+> verify all three stories show merged in `lens.core.src/develop`.
+
 ---
 
 ### BP-2 — Rewrite techplan command as thin conductor
@@ -157,6 +162,14 @@ On fail:   Block merge; return to BP-1 or BP-2 for fix
 ```
 
 **Note:** Wrapper-equivalence tests must explicitly cover the `/next` auto-delegation path for both commands — verify that when businessplan or techplan is invoked via `/next`, no redundant run-confirmation prompt appears and phase entry proceeds immediately.
+
+> **FP-4 (FinalizePlan Review):** Architecture-reference regression applies to full-track
+> techplan invocations only. Express-track does not produce `prd.md`; this test category
+> is skipped for express-track test scenarios.
+
+> **FP-5 (FinalizePlan Review):** On BP-3 green, this unblocks baseline stories 4.4
+> (finalizeplan rewrite) and 4.5 (expressplan rewrite) in `lens.core.src`. Signal the
+> baseline feature lead when BP-3 passes.
 
 ---
 
