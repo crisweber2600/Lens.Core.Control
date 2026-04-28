@@ -1,0 +1,36 @@
+# generated: 2026-04-27T22:55:00Z
+# last_updated: 2026-04-27T22:55:00Z
+# project: Lens Workbench
+# project_key: NOKEY
+# tracking_system: file-system
+# story_location: docs/lens-dev/new-codebase/lens-dev-new-codebase-complete/stories
+
+generated: 2026-04-27T22:55:00Z
+last_updated: 2026-04-27T22:55:00Z
+project: Lens Workbench
+project_key: NOKEY
+tracking_system: file-system
+story_location: docs/lens-dev/new-codebase/lens-dev-new-codebase-complete/stories
+
+development_status:
+  epic-1: not-started
+  CP-1-define-complete-cli-contract-tests: ready-for-dev
+  CP-2-assert-archive-boundary: ready-for-dev
+  CP-3-prompt-and-help-surface-checks: ready-for-dev
+  epic-1-retrospective: optional
+  epic-2: not-started
+  CP-4-preserve-completable-phase-checks: ready-for-dev
+  CP-5-preserve-atomic-archive-writes: blocked-by-CP-7
+  CP-6-preserve-archive-status-query: ready-for-dev
+  CP-7-lock-summary-artifact-naming: ready-for-dev
+  epic-2-retrospective: optional
+  epic-3: not-started
+  CP-8-preserve-retrospective-first-orchestration: ready-for-dev
+  CP-9-preserve-document-before-archive-ordering: ready-for-dev
+  CP-10-preserve-explicit-confirmation-gate: ready-for-dev
+  epic-3-retrospective: optional
+  epic-4: not-started
+  CP-11-run-focused-complete-regressions: ready-for-dev
+  CP-12-run-adjacent-command-checks: ready-for-dev
+  CP-13-prepare-implementation-handoff-notes: ready-for-dev
+  epic-4-retrospective: optional
