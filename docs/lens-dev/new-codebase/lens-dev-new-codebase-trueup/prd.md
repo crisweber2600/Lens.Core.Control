@@ -28,7 +28,7 @@ updated_at: 2026-04-27T00:00:00Z
 
 ## 1. Executive Summary
 
-True Up closes the verified delivery gaps in the 5 non-preplan new-codebase features. These features have advanced through planning phases but their implementation state has not been validated against the old-codebase baseline. Deep code analysis (April 2026) has now produced a complete gap map: two features have critical script gaps (new-feature and complete are missing their primary commands), one feature has a prompt publishing gap visible to all IDE users (switch), two features have behavioral parity assumptions that remain unverified (new-domain and new-service), and all five features share cross-cutting schema drift (constitution permitted_tracks, Python version, identifier validation rules).
+True Up closes the verified delivery gaps in the 5 non-preplan new-codebase features. These features have advanced through planning phases but their implementation state has not been validated against the old-codebase baseline. Deep code analysis (April 2026) plus the old-codebase discovery artifact set now produce a complete gap map: two features have critical script gaps (new-feature and complete are missing their primary commands), one of those gaps also removes the old init-feature context-loading contract (`fetch-context` and `read-context`), one feature has a prompt publishing gap visible to all IDE users (switch), two features have behavioral parity assumptions that remain unverified (new-domain and new-service), and all five features share cross-cutting schema drift (constitution permitted_tracks, Python version, identifier validation rules).
 
 True Up produces four categories of output: (1) a behavioral parity audit report with evidence for all 5 features, (2) closed prompt publishing gaps so switch, new-feature, and complete are discoverable by IDE agents, (3) a SKILL.md package for `bmad-lens-complete` with prerequisite ADR, and (4) design decisions that unblock subsequent dev phases.
 
@@ -50,7 +50,7 @@ Governance phase labels track **planning status**, not verified implementation. 
 
 ### 2.2 Critical Gaps Found by Code Analysis
 
-**new-feature (init-feature-ops.py):** The new-codebase script (798 lines) exposes only `create-domain` and `create-service`. The `create` subcommand — which performs canonical featureId construction, lifecycle track resolution, feature.yaml authoring, feature-index.yaml registration, control-repo 2-branch creation, and planning PR creation — is entirely absent. The following are also absent: `fetch-context`, `read-context`, and all supporting functions (`resolve_feature_identity`, `make_feature_yaml`, `load_lifecycle`, `resolve_start_phase`, etc.).
+**new-feature (init-feature-ops.py):** The old-codebase discovery docs and source both describe `bmad-lens-init-feature` as a first-class planning surface with `create`, `fetch-context`, `read-context`, published prompts, and the `references/auto-context-pull.md` and `references/init-feature.md` guidance files. The new-codebase script (798 lines) exposes only `create-domain` and `create-service`. The `create` subcommand — which performs canonical featureId construction, lifecycle track resolution, feature.yaml authoring, feature-index.yaml registration, control-repo 2-branch creation, and planning PR creation — is entirely absent. The following are also absent: `fetch-context`, `read-context`, and all supporting functions (`resolve_feature_identity`, `make_feature_yaml`, `load_lifecycle`, `resolve_start_phase`, etc.). Because BusinessPlan and other planning flows rely on Auto-Context Pull, absence of `fetch-context` and `read-context` is a functional regression, not just a missing convenience command.
 
 **complete (complete-ops.py):** The new-codebase `bmad-lens-complete` skill folder contains only `references/finalize-feature.md`. There is no `complete-ops.py`, no SKILL.md, no tests. The old-codebase implementation is 450 lines covering `check-preconditions`, `finalize`, and `archive-status`, all with dry-run support.
 
@@ -81,6 +81,7 @@ Governance phase labels track **planning status**, not verified implementation. 
 6. Publish ADR for constitution `permitted_tracks` divergence
 7. Document Python 3.12 and `SAFE_ID_PATTERN` design decisions
 8. Produce a "fully migrated" gate specification for all future retained command migrations
+9. Explicitly classify the missing init-feature context-loading surface as a blocker for `lens-dev-new-codebase-new-feature` until restored or formally deferred
 
 ### 3.2 Non-Goals
 
@@ -213,6 +214,7 @@ Governance phase labels track **planning status**, not verified implementation. 
 
 **FR-5:** Scaffold `bmad-lens-complete` test stubs
 
+- Create `bmad-lens-complete/scripts/` and `bmad-lens-complete/scripts/tests/` if absent
 - Create `bmad-lens-complete/scripts/tests/test-complete-ops.py` with stub functions (not implemented)
 - Required test function signatures:
   - `test_check_preconditions_pass()` — feature in dev phase, retrospective.md present
@@ -236,6 +238,7 @@ Governance phase labels track **planning status**, not verified implementation. 
 - Evidence: `complete-ops.py check-preconditions` returns `status: warn` (not fail) when `retrospective.md` is absent; finalize proceeds with `retrospective_skipped=True`. This implies the old-codebase already chose graceful-degradation.
 - Recommendation: Document "graceful-degradation is the canonical behavior" based on old-codebase evidence.
 - Output: `adr-complete-prerequisite.md` committed to trueup docs path
+- Companion governance action: update `TargetProjects/lens/lens-governance/features/lens-dev/new-codebase/lens-dev-new-codebase-complete/feature.yaml` with a blocker note referencing this ADR until complete dev activates
 - Priority: **High** — blocks complete dev activation
 
 **FR-7:** ADR — constitution `permitted_tracks` divergence
@@ -243,6 +246,7 @@ Governance phase labels track **planning status**, not verified implementation. 
 - Decision: which `permitted_tracks` template is canonical for new domains/services
 - Options: (a) keep new-codebase template (`express, expressplan` included), (b) revert to old-codebase template, (c) parameterize from lifecycle.yaml
 - Evidence: new-codebase added tracks in commit history; old-codebase did not have them; whether `express` and `expressplan` are active phases in `lifecycle.yaml` should determine whether they belong in constitutions
+- Required validation step: read `lifecycle.yaml` track and phase definitions before choosing the ADR outcome
 - Output: `adr-constitution-tracks.md` committed to trueup docs path
 - Priority: **Medium**
 
@@ -258,7 +262,7 @@ Governance phase labels track **planning status**, not verified implementation. 
 
 - Old pattern: `^[a-z0-9][a-z0-9._-]{0,63}$` (dots, underscores allowed)
 - New pattern: `^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$` (hyphens only, must not start/end with hyphen)
-- Required action: scan all feature IDs in `feature-index.yaml` and all `feature.yaml` files in governance for IDs containing dots or underscores
+- Required action: scan all feature IDs in `TargetProjects/lens/lens-governance/feature-index.yaml` and all `feature.yaml` files under `TargetProjects/lens/lens-governance/features/` for IDs containing dots or underscores
 - If any found: document as a breaking change requiring migration; add to parity report
 - If none found: document as safe tightening
 - Output: section in parity audit report
@@ -298,12 +302,14 @@ Special: Confirm `domain_must_exist` guard behavior matches old-codebase; docume
 
 Priority: **High**
 
-**FR-12:** Governance phase label audit — `new-feature` and `complete`
+**FR-12:** Governance phase and init-feature contract audit — `new-feature` and `complete`
 
-- For `new-feature`: verify whether `init-feature-ops.py create` is present, absent, or partial in the new-codebase source. **Evidence from code analysis: `create` command is ABSENT.** Governance phase label `finalizeplan-complete` is consistent with "planning done, dev not started" — which appears correct given the absence.
-- Confirm `fetch-context` and `read-context` commands are also absent (they are — code analysis confirmed).
-- For `complete`: verify governance phase label against implementation state. `finalizeplan-complete` is consistent with "planning done, dev not started" — correct given the absence of `complete-ops.py`.
-- Output: governance label verification table in parity audit report; no label corrections needed (labels are correct per code analysis)
+- For `new-feature`: verify the old-codebase canonical init-feature contract using both discovery docs and source. Minimum expected surface: `create`, `fetch-context`, `read-context`, `references/auto-context-pull.md`, and `references/init-feature.md`.
+- For `new-feature`: compare that contract to the new-codebase source and classify each missing item as structural gap, behavioral gap, or functional regression.
+- Treat missing `fetch-context` and `read-context` as a required finding in the parity audit report. They are part of the old Auto-Context Pull planning flow and therefore count as a functional regression, not merely missing helper commands.
+- Output must include a blocker recommendation for `TargetProjects/lens/lens-governance/features/lens-dev/new-codebase/lens-dev-new-codebase-new-feature/feature.yaml` until the init-feature context-loading contract is restored or explicitly deferred.
+- For `complete`: verify governance phase label against implementation state. `finalizeplan-complete` is consistent with "planning done, dev not started" given the absence of `complete-ops.py`.
+- Output: governance label verification table in parity audit report; the report must formalize the current label verdicts rather than assume them implicitly
 - Priority: **Medium**
 
 ---
@@ -335,6 +341,7 @@ Define the required checklist for a retained command to be declared fully migrat
 - [ ] Test file present in `_bmad/lens-work/skills/{skill}/scripts/tests/`
 - [ ] Prompt stub present in `_bmad/lens-work/prompts/lens-{command}.prompt.md`
 - [ ] Prompt mirrored to `.github/prompts/lens-{command}.prompt.md`
+- [ ] Required review artifact published for the phase gate (`businessplan-adversarial-review.md`, etc.)
 - [ ] Governance phase label consistent with implementation state
 
 **Behavioral (verifiable by dry-run comparison):**
@@ -364,7 +371,7 @@ Required sections:
 - **new-domain findings** — schema comparison results, constitution track divergence, Python version note
 - **new-service findings** — schema comparison results, auto-domain behavior note
 - **switch findings** — prompt publishing gap (closed by FR-1), SAFE_ID_PATTERN note, context_paths shape change note
-- **new-feature findings** — create command absent (confirmed), governance label correct, fetch-context absent, list of missing functions
+- **new-feature findings** — create command absent (confirmed), governance label formally verified, `fetch-context`/`read-context` absence treated as functional regression, blocker recommendation, list of missing functions and references
 - **complete findings** — skill entirely absent (confirmed), governance label correct, prerequisite decision (from ADR)
 - **Cross-cutting findings** — Python 3.12, SAFE_ID_PATTERN, constitution tracks, build_context_paths return shape
 
@@ -376,9 +383,9 @@ Priority: **High** — primary deliverable of this feature
 
 ## 6. Non-Functional Requirements
 
-### NFR-1 — No Governance Mutations
+### NFR-1 — Audit Evidence Collection Is Read-Only
 
-All parity audit work is read-only. No `feature.yaml`, `feature-index.yaml`, or governance file may be written as part of the audit itself. Governance phase label corrections (if any) require a separate intentional commit via the normal `bmad-lens-feature-yaml` write path after audit is complete.
+All parity audit evidence collection is read-only. No `feature.yaml`, `feature-index.yaml`, or governance file may be mutated while gathering parity findings. Any blocker annotations or governance phase label corrections required by this PRD must be executed as separate intentional follow-up commits after the audit artifacts land.
 
 ### NFR-2 — Prompt Stubs Are Delegation-Only
 
@@ -390,7 +397,7 @@ All new files must be committed to the `lens-dev-new-codebase-trueup-plan` branc
 
 ### NFR-4 — SKILL.md Package Completeness
 
-Every SKILL.md authored by this feature must be a complete, usable agent-discovery document — not a placeholder. Agents load SKILL.md at runtime. A partial SKILL.md is worse than no SKILL.md because it provides false confidence.
+Every SKILL.md authored by this feature must be a complete, usable agent-discovery document — not a placeholder. Agents load SKILL.md at runtime. A partial SKILL.md is worse than no SKILL.md because it provides false confidence. For `bmad-lens-complete`, SKILL.md completeness is contingent on FR-6 resolving the prerequisite ADR first; do not commit a partial contract before the ADR outcome is written.
 
 ### NFR-5 — ADR Permanence
 
@@ -398,7 +405,7 @@ ADR artifacts authored by this feature must be treated as permanent governance d
 
 ### NFR-6 — Context_paths Shape Change Documentation
 
-The breaking change in `build_context_paths` return type between old and new `switch-ops.py` must be documented in the parity audit report. Any downstream callers (prompts, SKILL.md invocation patterns) that reference the old `{summaries, full_docs}` shape must be updated to use `context_to_load` (the backward-compat adapter field).
+The breaking change in `build_context_paths` return type between old and new `switch-ops.py` must be documented in the parity audit report. Any downstream callers (prompts, SKILL.md invocation patterns) that reference the old `{summaries, full_docs}` shape must be updated to use `context_to_load` (the backward-compat adapter field). If no current callers exist in new-codebase, the parity audit report must state that explicitly rather than imply follow-up work exists.
 
 ---
 
@@ -415,11 +422,11 @@ The breaking change in `build_context_paths` return type between old and new `sw
 ### SC-2 — Governance Phase Labels Verified
 
 ```
-[ ] new-domain: confirmed as correctly labeled complete (script present, parity verified)
-[ ] new-service: confirmed as correctly labeled complete (script present, parity verified)
-[ ] switch: confirmed as correctly labeled complete (script present, prompt gap closed)
-[ ] new-feature: confirmed as correctly labeled finalizeplan-complete (create command absent)
-[ ] complete: confirmed as correctly labeled finalizeplan-complete (skill entirely absent)
+[ ] new-domain: formally documented as correctly labeled complete (script present, parity verified)
+[ ] new-service: formally documented as correctly labeled complete (script present, parity verified)
+[ ] switch: formally documented as correctly labeled complete (script present, prompt gap closed)
+[ ] new-feature: formally documented as correctly labeled finalizeplan-complete, with init-feature context-loading blocker recorded
+[ ] complete: formally documented as correctly labeled finalizeplan-complete, with ADR blocker annotation recorded
 ```
 
 ### SC-3 — Structural Parity Gate Closed (all 3 prompt gaps)
@@ -463,7 +470,7 @@ The breaking change in `build_context_paths` return type between old and new `sw
 
 - Implementing `complete-ops.py` — belongs to `lens-dev-new-codebase-complete` dev phase
 - Implementing `init-feature-ops.py create` — belongs to `lens-dev-new-codebase-new-feature` dev phase
-- Implementing `fetch-context` or `read-context` — same
+- Implementing `fetch-context` or `read-context` — same; only documenting the regression and blocker state is in scope here
 - All 12 preplan-phase features (adversarial-review, publish-to-governance, feature-yaml, next, preflight, etc.)
 - Full behavioral test automation — manual parity audit report is sufficient
 - Operational monitoring for governance publish failures (deferred to individual skills' own dev phases)
@@ -479,9 +486,11 @@ The breaking change in `build_context_paths` return type between old and new `sw
 | Dependency | Type | Notes |
 |-----------|------|-------|
 | Old-codebase `init-feature-ops.py` (1832 lines) | Context only | Already read in full; available for parity comparison |
+| Old-codebase discovery docs (`source-tree-analysis.md`, `deep-dive-lens-work-module.md`) | Context only | Establish canonical old prompt surface and Auto-Context Pull contract |
 | Old-codebase `switch-ops.py` (732 lines) | Context only | Already read in full |
 | Old-codebase `complete-ops.py` (450 lines) | Context only | Already read in full; source of truth for complete contract |
 | `lens-dev-new-codebase-complete` feature.yaml | Governance write | ADR blocker annotation must be written before complete dev activates |
+| `lens-dev-new-codebase-new-feature` feature.yaml | Governance write | Init-feature context-loading blocker must be written until `fetch-context` / `read-context` are restored or deferred |
 | `_bmad/lens-work/lifecycle.yaml` | Read only | Needed to validate `express`/`expressplan` phase existence for constitution ADR |
 
 ### Risks
@@ -490,6 +499,7 @@ The breaking change in `build_context_paths` return type between old and new `sw
 |------|-----------|--------|-----------|
 | Existing feature IDs use dots/underscores — break on new `SAFE_ID_PATTERN` | Low | High | Scan governance `feature-index.yaml` before any switch rollout |
 | `context_paths` shape change breaks downstream callers relying on `{summaries, full_docs}` | Medium | Medium | `context_to_load` backward-compat adapter is present in new switch-ops.py; callers must be updated to use it |
+| Missing `fetch-context` / `read-context` blocks old Auto-Context Pull behavior in planning sessions | Medium | High | Treat as functional regression in parity audit report and record blocker on `lens-dev-new-codebase-new-feature` |
 | `complete` dev activates before ADR is published | Low | High | Add explicit `blocks` annotation to `lens-dev-new-codebase-complete` feature.yaml |
 | Python 3.12 requirement silently breaks users on 3.10/3.11 | Medium | Medium | Document explicitly; revert if no 3.12-specific features are actually used |
 | Constitution template divergence creates governance state where old and new domains have different tracks | Medium | Low | ADR pins canonical template; migration guide for existing domains if needed |
