@@ -28,7 +28,7 @@ updated_at: 2026-04-28T00:00:00Z
 **Phase:** finalizeplan
 **Verdict:** pass-with-warnings
 **Findings:** 5 (1 high, 2 medium, 2 low)
-**Expressplan open warnings addressed:** F-1, F-2 (still open — surfaced in this review)
+**Expressplan open warnings carried forward:** F-1, F-2 (still open — surfaced in this review)
 
 ---
 

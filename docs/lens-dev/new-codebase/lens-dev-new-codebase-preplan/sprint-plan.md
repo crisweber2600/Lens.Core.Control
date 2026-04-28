@@ -5,7 +5,7 @@ status: draft
 goal: "Sequence clean-room implementation of preplan command parity using shared utilities"
 key_decisions:
   - Deliver command surface and parity test skeletons before implementation begins (fail-first discipline).
-  - Keep baseline shared-utility prerequisites (stories 1-2, 1-3, 3-1) as explicit external blockers; do not start Sprint 2 until they are confirmed green in the new codebase.
+  - Keep baseline shared-utility prerequisites (stories 1-2, 1-3, 3-1) as explicit external blockers; do not start Sprint 3 until they are confirmed green in the new codebase.
   - Implement brainstorm-first orchestration before wiring the shared utilities, to lock in the ordering contract independently of the utility wiring.
   - Validate the no-governance-write invariant as a dedicated test, not as a by-product of other tests.
 open_questions:
@@ -55,7 +55,7 @@ The following baseline stories must be complete in `TargetProjects/lens-dev/new-
 |---|---|---:|---|---|
 | PP-2.1 | Implement conductor activation and constitution load | M | Conductor resolves feature context, docs path, and governance mirror path; loads domain constitution via `bmad-lens-constitution`; handles partial hierarchy gracefully (relies on baseline story 3-1 being done) | Story 3-1 must be confirmed green before this story closes |
 | PP-2.2 | Implement brainstorm-first interactive flow | M | Interactive mode asks brainstorming setup questions before any authoring wrapper is invoked; brainstorm.md must exist before research or product-brief wrappers are offered; invokes `bmad-lens-bmad-skill` with `bmad-brainstorming` as first authoring step | Ordering invariant must be tested, not assumed |
-| PP-2.3 | Implement research and product-brief delegation | S | After brainstorm.md exists, the conductor offers research and product-brief; routes research through the narrowest applicable wrapper (`bmad-domain-research`, `bmad-market-research`, or `bmad-technical-research`); routes product brief through `bmad-product-brief`; does not author artifacts directly | Research mode inference must not skip user clarification when ambiguous |
+| PP-2.3 | Implement research and product-brief delegation | S | After brainstorm.md exists, the conductor offers research and product-brief; routes research through the narrowest applicable canonical wrapper identifier (`bmad-domain-research`, `bmad-market-research`, or `bmad-technical-research`) and uses those exact names consistently in implementation and tests rather than shorthand aliases; routes product brief through `bmad-product-brief`; does not author artifacts directly | Research mode inference must not skip user clarification when ambiguous |
 
 ## Sprint 3
 

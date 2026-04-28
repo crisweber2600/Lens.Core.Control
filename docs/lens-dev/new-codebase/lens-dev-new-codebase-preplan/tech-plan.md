@@ -64,7 +64,7 @@ TargetProjects/lens-dev/new-codebase/lens.core.src/
 
 ### ADR 1 — No Owned Script Layer
 
-**Decision:** `bmad-lens-preplan` has no owned `scripts/` directory or `preplan-ops.py` script.
+**Decision:** `bmad-lens-preplan` has no owned implementation scripts (no `preplan-ops.py` or equivalent). A `scripts/tests/` subdirectory for parity test fixtures is permitted and does not constitute an owned script layer; the "no scripts" constraint applies exclusively to implementation scripts.
 
 **Rationale:** Preplan produces artifacts via BMAD analyst and brainstorming agents, not file-writing scripts. Every non-authoring operation — review-ready checking, batch intake, phase completion review, and phase state mutation — is owned by a shared utility that preplan delegates to. Adding a proprietary script layer would duplicate logic that the shared utilities own and maintain.
 
@@ -127,7 +127,7 @@ TargetProjects/lens-dev/new-codebase/lens.core.src/
 | `bmad-lens-feature-yaml` | Read feature.yaml at activation; write phase update at completion | On Activation step 3; Phase Completion step 2 |
 | `bmad-lens-init-feature` (fetch-context) | Cross-feature context loading (related summaries, optional named-service docs) | On Activation step 7 |
 | `bmad-lens-bmad-skill` → `bmad-brainstorming` | Brainstorm artifact authoring | On Activation step 11.4 |
-| `bmad-lens-bmad-skill` → `bmad-domain/market/technical-research` | Research artifact authoring | On Activation step 11.8 |
+| `bmad-lens-bmad-skill` → `bmad-domain-research` / `bmad-market-research` / `bmad-technical-research` | Research artifact authoring (narrowest applicable wrapper selected at runtime) | On Activation step 11.8 |
 | `bmad-lens-bmad-skill` → `bmad-product-brief` | Product brief artifact authoring | On Activation step 11.8 |
 | `bmad-lens-adversarial-review` | Phase completion gate (party mode, `--phase preplan --source phase-complete`) | Phase Completion step 1 |
 | `bmad-lens-git-orchestration` | Control-repo staging commits for preplan artifacts | Phase Completion (before or after review) |

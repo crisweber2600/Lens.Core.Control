@@ -1,6 +1,6 @@
 ---
 feature: lens-dev-new-codebase-preplan
-doc_type: expressplan-adversarial-review
+doc_type: adversarial-review
 phase: expressplan
 source: phase-complete
 review_format: abc-choice-v1
