@@ -2,7 +2,7 @@
 review_format: abc-choice-v1
 feature: lens-dev-new-codebase-discover
 doc_type: finalizeplan-review
-status: in-review
+status: approved
 goal: "Final cross-artifact review of the discover command expressplan bundle before PR handoff and downstream bundle generation"
 key_decisions:
   - Express track artifact set (business-plan, tech-plan, sprint-plan) is accepted as the complete planning set for FinalizePlan entry
@@ -14,7 +14,7 @@ open_questions:
   - No-remote edge case behavior for untracked repos — resolve before Story 5.4.1 AC finalization
 depends_on: [business-plan, tech-plan, sprint-plan, expressplan-adversarial-review]
 blocks: []
-updated_at: 2026-04-28T00:00:00Z
+updated_at: 2026-04-29T00:00:00Z
 ---
 
 # FinalizePlan Review: lens-dev-new-codebase-discover
@@ -111,12 +111,11 @@ All five medium findings and one high finding from `expressplan-adversarial-revi
 
 **Question:** Should Story 5.4.1 add a test case for config key resolution? Or should this be tracked as a dependency note against `lens-dev-new-codebase-upgrade`?
 
-**Response (choose A–E):**
-- [ ] A — Accept finding and implement exactly as recommended.
-- [ ] B — Accept finding and implement an alternative remediation with equivalent control.
-- [ ] C — Partially accept finding; narrow scope and document deferred work.
-- [ ] D — Dispute finding; provide evidence the risk is already controlled.
-- [ ] E — Defer/no action for this phase; record rationale and owner.
+**Response:** E — Defer/no action for this phase.
+
+**Rationale:** Track as a dependency note against `lens-dev-new-codebase-upgrade`. When that feature reaches TechPlan the discover team reviews `bmadconfig.yaml` key conventions for stability. No story change in this sprint.
+
+**Owner:** `lens-dev-new-codebase-upgrade` TechPlan reviewer.
 
 ---
 
@@ -124,12 +123,11 @@ All five medium findings and one high finding from `expressplan-adversarial-revi
 
 **Question:** Should the no-remote edge case be resolved in Story 5.4.1 (SKILL.md spec) or in a new Story 5.4.0 that runs before all others?
 
-**Response (choose A–E):**
-- [ ] A — Accept finding and implement exactly as recommended.
-- [ ] B — Accept finding and implement an alternative remediation with equivalent control.
-- [ ] C — Partially accept finding; narrow scope and document deferred work.
-- [ ] D — Dispute finding; provide evidence the risk is already controlled.
-- [ ] E — Defer/no action for this phase; record rationale and owner.
+**Response:** E — Defer to follow-on feature.
+
+**Rationale:** The no-remote edge case is a known gap but not a blocker for this feature's core behavioral contracts. It will be addressed in a follow-on feature or as part of the broader discover command post-MVP hardening pass.
+
+**Owner:** Follow-on feature backlog.
 
 ---
 
@@ -137,12 +135,11 @@ All five medium findings and one high finding from `expressplan-adversarial-revi
 
 **Question:** Is a skill-level integration test (covering the full agent → script → git chain) required for `dev-complete`, or is the T-series script-level test coverage sufficient?
 
-**Response (choose A–E):**
-- [ ] A — Accept finding and implement exactly as recommended.
-- [ ] B — Accept finding and implement an alternative remediation with equivalent control.
-- [ ] C — Partially accept finding; narrow scope and document deferred work.
-- [ ] D — Dispute finding; provide evidence the risk is already controlled.
-- [ ] E — Defer/no action for this phase; record rationale and owner.
+**Response:** A — Accept finding and implement exactly as recommended.
+
+**Rationale:** The auto-commit exception is a governance-critical behavior. A skill-level integration test that exercises the full SKILL.md → `discover-ops.py` → governance-main commit chain is a hard gate for `dev-complete`. Added as Story 5.4.9.
+
+**Owner:** Story 5.4.9 — Integration smoke test.
 
 ---
 
