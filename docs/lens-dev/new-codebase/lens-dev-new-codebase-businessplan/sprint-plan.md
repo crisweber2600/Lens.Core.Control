@@ -142,20 +142,22 @@ On fail:   Block merge; return to BP-1 for fix
 
 #### Goal
 
-Commit all planning artifacts to the control repo plan branch, update governance with the feature phase transition, and advance to `expressplan-complete`.
+Commit all planning artifacts (QuickPlan + review artifacts) to the control repo plan branch, update governance with the feature phase transition, and advance to `finalizeplan-complete`.
+
+> **Note:** The expressplan-complete phase advance was completed as part of the expressplan milestone. BP-4 now covers the finalizeplan closeout: merging the full planning bundle (business-plan, tech-plan, sprint-plan, expressplan-review, finalizeplan-review) and advancing the feature to `finalizeplan-complete`.
 
 #### Scope
 
 - Commit `docs/lens-dev/new-codebase/lens-dev-new-codebase-businessplan/` artifacts to `lens-dev-new-codebase-businessplan-plan`
-- Update `feature.yaml` phase to `expressplan-complete` with phase transition record
+- Update `feature.yaml` phase to `finalizeplan-complete` with phase transition record
 - Commit governance changes to `lens-governance/main`
 - Mirror docs artifacts to governance docs path
-- Report: ready for finalizeplan
+- Report: planning PR ready to merge
 
 #### Acceptance Criteria
 
-1. Control repo `lens-dev-new-codebase-businessplan-plan` branch contains all three QuickPlan artifacts: `business-plan.md`, `tech-plan.md`, `sprint-plan.md`
-2. `feature.yaml` phase is `expressplan-complete`
+1. Control repo `lens-dev-new-codebase-businessplan-plan` branch contains all five planning artifacts: `business-plan.md`, `tech-plan.md`, `sprint-plan.md`, `expressplan-review.md`, `finalizeplan-review.md`
+2. `feature.yaml` phase is `finalizeplan-complete`
 3. Governance mirror `features/lens-dev/new-codebase/lens-dev-new-codebase-businessplan/docs/` matches control repo docs path
 4. Both commits pushed (control repo plan branch + governance main)
 

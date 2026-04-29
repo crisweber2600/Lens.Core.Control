@@ -1,7 +1,7 @@
 ---
 feature: lens-dev-new-codebase-businessplan
 doc_type: finalizeplan-review
-status: in-review
+status: complete
 review_format: abc-choice-v1
 phase: finalizeplan
 verdict: pass-with-warnings
@@ -165,10 +165,10 @@ The following challenge questions were posed in the party-mode round. No new fin
 
 ---
 
-## Required Actions Before Planning PR
+## Completed Actions
 
 1. ~~Mark `lens-dev-new-codebase-techplan` as superseded in governance (FP-1)~~ — *Reversed by Correct Course: techplan reactivated to preplan, BP-2 removed from this feature*
-2. Update this feature's `feature-index.yaml` and `feature.yaml` to `finalizeplan`/`express` (FP-3)
+2. ~~Update this feature's `feature-index.yaml` and `feature.yaml` to `finalizeplan`/`express` (FP-3)~~ — *Applied: governance updated to `finalizeplan`, track `express` before planning PR*
 
 ## Required Actions Before Dev-Ready
 

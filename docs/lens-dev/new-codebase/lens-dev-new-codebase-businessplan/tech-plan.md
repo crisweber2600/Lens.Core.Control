@@ -23,7 +23,7 @@ updated_at: 2026-04-28T00:00:00Z
 **Feature:** lens-dev-new-codebase-businessplan  
 **Author:** crisweber2600  
 **Date:** 2026-04-28  
-**References:** [Business Plan](./business-plan.md), [Baseline Architecture](../../lens-dev-new-codebase-baseline/docs/architecture.md)
+**References:** [Business Plan](./business-plan.md), [Baseline Architecture](../../lens-dev-new-codebase-baseline/architecture.md)
 
 ---
 
@@ -157,7 +157,7 @@ Verifies each command routes authoring to the same skill as the old codebase:
 | UX authoring via bmad-create-ux-design | ✓ | n/a |
 | Architecture authoring via bmad-create-architecture | n/a | ✓ |
 | Review-ready fast path invokes validate-phase-artifacts.py | ✓ | ✓ |
-| Batch pass 1 writes batch-input.md and stops | ✓ | ✓ |
+| Batch pass 1 writes {phase}-batch-input.md and stops | ✓ | ✓ |
 | Batch pass 2 resumes with pre-approved context | ✓ | ✓ |
 
 ### 5.2 Governance-Audit
@@ -191,7 +191,7 @@ Per the `lens-dev/new-codebase` service constitution:
 **Implementation sequence:**
 1. Use `bmad-module-builder` to generate / rewrite `bmad-lens-businessplan/SKILL.md`
 2. Use `bmad-workflow-builder` to generate / rewrite `lens-businessplan.prompt.md`
-3. Verify stub chain integrity (`lens-preflight.py` still called at stub level)
+3. Verify stub chain integrity (the `.github/prompts/` stub still runs `uv run ./lens.core/_bmad/lens-work/scripts/light-preflight.py` before handing off)
 4. Run regression coverage
 5. Commit to `develop` in `lens.core.src` via the standard per-commit workflow
 
