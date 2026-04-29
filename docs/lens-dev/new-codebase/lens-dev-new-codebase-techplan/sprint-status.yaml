@@ -1,0 +1,89 @@
+feature: lens-dev-new-codebase-techplan
+doc_type: sprint-status
+status: approved
+updated_at: 2026-04-29T00:00:00Z
+
+sprint_1:
+  sprint_number: 1
+  name: "Express Alignment and Command Surface"
+  objective: "Complete planning artifacts and deliver the missing lens-techplan command surface in the target project."
+  status: in-progress
+  stories:
+    - story_id: TK-1.1
+      title: "Express Path and Governance Alignment"
+      status: complete
+      story_points: 2
+      notes: "Planning artifacts staged and review-complete. Governance track aligned."
+
+    - story_id: TK-2.1
+      title: "Pre-Slice Assessment: Confirm Discovery File and Test Path"
+      status: ready
+      story_points: 1
+      notes: "Resolve OQ-1 (discovery file) and OQ-2 (test file path) before TK-2.2 begins. No code changes."
+
+    - story_id: TK-2.2
+      title: "Implement lens-techplan Public Stub"
+      status: ready
+      story_points: 2
+      depends_on: [TK-2.1]
+      notes: "Implement .github/prompts/lens-techplan.prompt.md following existing stub pattern."
+
+    - story_id: TK-2.3
+      title: "Implement Release Prompt and Conductor Skill"
+      status: ready
+      story_points: 3
+      depends_on: [TK-2.2]
+      notes: "Release prompt + bmad-lens-techplan/SKILL.md. Document publish hook and BMAD wrapper dependencies without creating local workarounds."
+
+    - story_id: TK-2.4
+      title: "Wire Discovery Surface for lens-techplan"
+      status: ready
+      story_points: 1
+      depends_on: [TK-2.3]
+      notes: "Update discovery file identified in TK-2.1."
+
+    - story_id: TK-2.5
+      title: "Create Focused Test-Harness Foundation"
+      status: ready
+      story_points: 2
+      depends_on: [TK-2.4]
+      notes: "Placeholder tests for prompt-start and wrapper-equivalence. Mark tests requiring Epic 3 explicitly."
+
+  sprint_points_total: 11
+  sprint_points_complete: 2
+  risks:
+    - "OQ-1 and OQ-2 must be resolved before TK-2.2 begins. If the target project structure differs from assumptions, TK-2.2-TK-2.5 may need scope adjustment."
+
+sprint_2:
+  sprint_number: 2
+  name: "Shared Utility Delivery and Parity Hardening"
+  objective: "Land the four absorbed shared utility surfaces and confirm all parity regressions pass."
+  status: planned
+  stories:
+    - story_id: TK-3.1
+      title: "Land Shared Utility Surfaces"
+      status: blocked
+      story_points: 5
+      depends_on: [TK-2.1]
+      notes: "Starts after TK-2.1 is in-progress. Abandon condition: if all four surfaces arrive from another feature, reduce to documenting consumption pattern."
+
+    - story_id: TK-3.2
+      title: "Parity Regressions, Handoff, and Dev-Complete Gate"
+      status: blocked
+      story_points: 3
+      depends_on: [TK-3.1]
+      notes: "All six parity regressions must pass. Clean-room validation. feature.yaml updated to dev-complete."
+
+  sprint_points_total: 8
+  sprint_points_complete: 0
+  risks:
+    - "Sibling features (expressplan, finalizeplan) must not re-implement shared surfaces. Monitor governance docs for concurrent landing."
+    - "If all four shared surfaces arrive from another feature first, TK-3.1 scope reduces to consumption documentation only."
+
+overall:
+  total_story_points: 19
+  completed_story_points: 2
+  remaining_story_points: 17
+  dev_ready: true
+  dev_complete: false
+  feature_phase: expressplan-complete
