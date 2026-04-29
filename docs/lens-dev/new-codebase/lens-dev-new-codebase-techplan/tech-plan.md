@@ -127,8 +127,8 @@ The implementation goal remains the same: land these as shared surfaces in the t
 1. Treat parity as reproducing `business-plan.md`, `tech-plan.md`, `sprint-plan.md`, and `expressplan-adversarial-review.md` with equivalent routing, gates, and delivery slices.
 2. Add focused regressions for prompt-start routing, publish ordering, PRD reference enforcement, and wrapper equivalence.
 3. Verify the retained command remains discoverable from the chosen installer/help surface.
-2. Audit for direct governance writes from `techplan`.
-4. Treat the packet as review-complete now that governance track alignment is closed; finalizeplan readiness is a separate handoff decision after this widened implementation slice is accepted.
+4. Audit for direct governance writes from `techplan`.
+5. Treat the packet as review-complete now that governance track alignment is closed; finalizeplan readiness is a separate handoff decision after this widened implementation slice is accepted.
 
 ## Validation Plan
 

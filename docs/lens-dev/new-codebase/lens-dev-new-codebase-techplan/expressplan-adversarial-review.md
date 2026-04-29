@@ -59,7 +59,7 @@ The following responses were recorded and applied to the planning packet:
 **Location:** governance `feature.yaml` for `lens-dev-new-codebase-techplan`  
 **Gate:** Before any lifecycle automation rerun
 
-The docs now describe an expressplan path, but the governance feature record still says `track: full`. That means the packet is valid as staged planning, but invalid as a literal expressplan execution path until the sanctioned metadata update is applied.
+The docs now describe an expressplan path, but before the sanctioned metadata update was applied, the governance feature record still said `track: full`. That meant the packet was valid as staged planning, but invalid as a literal expressplan execution path until the sanctioned metadata update was applied.
 
 **Recorded response:** **A**  
 **Applied adjustment:** The sanctioned `feature-yaml` update has been run and the governance feature record now carries `track: express`.

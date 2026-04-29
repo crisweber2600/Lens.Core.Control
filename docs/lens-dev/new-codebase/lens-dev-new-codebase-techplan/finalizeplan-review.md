@@ -4,7 +4,7 @@ doc_type: finalizeplan-review
 phase: finalizeplan
 source: phase-complete
 verdict: pass-with-warnings
-status: approved
+status: responses-recorded
 critical_count: 0
 high_count: 0
 medium_count: 2
@@ -12,7 +12,7 @@ low_count: 2
 carry_forward_blockers: []
 resolved_blockers:
   - F1-base-branch-missing
-  - F2-stale-phase-state
+  - F2-stale-governance-phase-state
 updated_at: 2026-04-29T10:30:00Z
 review_format: abc-choice-v1
 ---
