@@ -37,11 +37,11 @@ Turn this feature folder into a complete expressplan packet, then hand implement
 
 ## Delivery Slices
 
-| Slice | Objective | Exit Criteria |
-| --- | --- | --- |
-| Slice 1 | Express path and governance alignment | Business, tech, sprint, and review artifacts are coherent; governance track alignment is applied through `feature-yaml` |
-| Slice 2 | Target-project command surface | The missing `lens-techplan` stub, release prompt, owning skill, discovery wiring, and focused test-harness acceptance items are fully specified |
-| Slice 3 | Shared utility delivery, parity hardening, and handoff | Absorbed shared utility surfaces, focused regressions, and handoff conditions are defined |
+| Story ID | Slice | Objective | Exit Criteria |
+| --- | --- | --- | --- |
+| TK-1.1-express-alignment | Slice 1 | Express path and governance alignment | Business, tech, sprint, and review artifacts are coherent; governance track alignment is applied through `feature-yaml` |
+| TK-2.1-command-surface | Slice 2 | Target-project command surface | The missing `lens-techplan` stub, release prompt, owning skill, discovery wiring, and focused test-harness acceptance items are fully specified |
+| TK-3.1-shared-utility-delivery | Slice 3 | Shared utility delivery, parity hardening, and handoff | Absorbed shared utility surfaces, focused regressions, and handoff conditions are defined |
 
 ## Slice 1 — Express Path Alignment
 

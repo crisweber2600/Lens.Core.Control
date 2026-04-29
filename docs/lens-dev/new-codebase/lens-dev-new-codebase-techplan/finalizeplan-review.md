@@ -4,14 +4,16 @@ doc_type: finalizeplan-review
 phase: finalizeplan
 source: phase-complete
 verdict: pass-with-warnings
-status: in-review
+status: approved
 critical_count: 0
-high_count: 2
-medium_count: 3
+high_count: 0
+medium_count: 2
 low_count: 2
-carry_forward_blockers:
+carry_forward_blockers: []
+resolved_blockers:
   - F1-base-branch-missing
-updated_at: 2026-04-28T04:15:00Z
+  - F2-stale-phase-state
+updated_at: 2026-04-29T10:30:00Z
 review_format: abc-choice-v1
 ---
 
@@ -73,6 +75,8 @@ All prior responses are durably embedded in the planning packet. No regression o
 - **D** — Custom resolution (provide after `D:`).
 - **E** — Accept this as a known gap and address it before Step 2 executes; note here for the carry-forward blocker list.
 
+**Response recorded:** A — Resolved. Base branch `lens-dev-new-codebase-techplan` created from `main` and pushed to origin. Planning PR #25 opened successfully.
+
 ---
 
 ### F2 (High) — Stale Phase State in feature.yaml and feature-index.yaml
@@ -88,6 +92,8 @@ All prior responses are durably embedded in the planning packet. No regression o
 - **C** — Accept `preplan` as a known stale state, document it in this review as a non-blocking annotation, and update both records as part of the Step 2 readiness verification.
 - **D** — Custom resolution.
 - **E** — Accept with no action; rely on artifact presence to signal phase state instead of the phase field.
+
+**Response recorded:** A — Resolved. `feature.yaml` phase advanced to `expressplan-complete` via `feature-yaml-ops.py`; `feature-index.yaml` updated to `status: expressplan-complete, track: express`. Committed and pushed to governance.
 
 ---
 
@@ -105,6 +111,8 @@ All prior responses are durably embedded in the planning packet. No regression o
 - **D** — Custom resolution.
 - **E** — Accept with no action; track the risk on the governance issue tracker rather than in plan artifacts.
 
+**Response recorded:** A — Accept; `techplan`-owned shared utilities are authoritative over sibling consumers. A sequencing note will be added to epics in Step 3: `lens-dev-new-codebase-expressplan` and `lens-dev-new-codebase-finalizeplan` are expected to consume, not re-implement, the shared utility surfaces delivered by this feature.
+
 ---
 
 ### F4 (Medium) — Sprint-Plan Slices Lack Explicit Story-File Identifiers
@@ -120,6 +128,8 @@ All prior responses are durably embedded in the planning packet. No regression o
 - **C** — Use the three slices directly as epic boundaries and let the story wrapper derive story numbers within each epic.
 - **D** — Custom resolution.
 - **E** — Accept with no action.
+
+**Response recorded:** B — Pre-assigned story identifiers (`TK-1.1-express-alignment`, `TK-2.1-command-surface`, `TK-3.1-shared-utility-delivery`) added to `sprint-plan.md` delivery slices table before Step 3 runs.
 
 ---
 
@@ -137,6 +147,8 @@ All prior responses are durably embedded in the planning packet. No regression o
 - **D** — Custom resolution.
 - **E** — Accept with no action.
 
+**Response recorded:** A — Accept; clean-room validation item ("No old-codebase skill prose reproduced; implementation derived from baseline PRD and architecture only") will be added to Definition of Done in epics/story acceptance criteria during Step 3.
+
 ---
 
 ### F6 (Low) — No Explicit Rollback / Abandon Condition Defined
@@ -152,6 +164,8 @@ All prior responses are durably embedded in the planning packet. No regression o
 - **C** — Capture this as a constitution-level concern rather than a per-feature concern.
 - **D** — Custom resolution.
 - **E** — Accept with no action.
+
+**Response recorded:** A — Accept; abandon governed by standard constitution gate (`gate_mode: informational`). If all four shared utility surfaces are delivered by another feature before Slice 3 completes, implementation scope reduces to command surface only.
 
 ---
 
