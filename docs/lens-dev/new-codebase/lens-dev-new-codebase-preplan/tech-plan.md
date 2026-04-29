@@ -65,7 +65,7 @@ TargetProjects/lens-dev/new-codebase/lens.core.src/
 
 ### ADR 1 — No Owned Script Layer
 
-**Decision:** `bmad-lens-preplan` has no owned implementation scripts (no `preplan-ops.py` or equivalent). A `scripts/tests/` subdirectory for parity test fixtures is permitted and does not constitute an owned script layer; the "no scripts" constraint applies exclusively to implementation scripts.
+**Decision:** `bmad-lens-preplan` has no owned implementation scripts (no `preplan-ops.py` or equivalent). A `scripts/tests/` subdirectory for parity test fixtures is permitted and does not constitute an owned script layer; the "no scripts" constraint applies exclusively to implementation scripts. This `scripts/tests/` pattern follows the established convention of peer skills: `bmad-lens-switch` places tests at `skills/bmad-lens-switch/scripts/tests/test-switch-ops.py` and `bmad-lens-init-feature` at `skills/bmad-lens-init-feature/scripts/tests/test-init-feature-ops.py`; the preplan test file follows the same `test-{skill}-ops.py` naming scheme.
 
 **Rationale:** Preplan produces artifacts via BMAD analyst and brainstorming agents, not file-writing scripts. Every non-authoring operation — review-ready checking, batch intake, phase completion review, and phase state mutation — is owned by a shared utility that preplan delegates to. Adding a proprietary script layer would duplicate logic that the shared utilities own and maintain.
 
@@ -163,15 +163,17 @@ TargetProjects/lens-dev/new-codebase/lens.core.src/
 | Phase gate — pass verdict | When adversarial review returns `pass` or `pass-with-warnings`, `feature.yaml` is updated to `preplan-complete` | Gate false-block |
 | No governance writes | After a full preplan run (including phase completion), `publish-to-governance` has NOT been called | Accidental governance publish |
 | Constitution prerequisite | Preplan activation with a partial constitution hierarchy (org level missing) does not panic; constitution skill handles it gracefully | Regression without story 3-1 |
+| `/next` pre-confirmed handoff | When preplan is activated via `/next` delegation, no launch confirmation prompt is shown; the session begins immediately | `/next` handoff regression |
+| `fetch-context` availability | `bmad-lens-init-feature fetch-context` is callable from the new codebase; test starts failing red to surface any implementation gap early in Sprint 1 | Silent context-load skip |
 
 ### Test Location
 
-`TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/bmad-lens-preplan/scripts/tests/test-preplan-parity.py`
+`TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/bmad-lens-preplan/scripts/tests/test-preplan-ops.py`
 
-All tests use the same focused invocation pattern as other Lens parity tests:
+Filename follows the established `test-{skill}-ops.py` convention confirmed in peer skills (`bmad-lens-switch`, `bmad-lens-init-feature`). All tests use the same focused invocation pattern as other Lens parity tests:
 
 ```bash
-uv run --with pytest pytest _bmad/lens-work/skills/bmad-lens-preplan/scripts/tests/test-preplan-parity.py -q
+uv run --with pytest pytest _bmad/lens-work/skills/bmad-lens-preplan/scripts/tests/test-preplan-ops.py -q
 ```
 
 ## Technical Constraints
@@ -181,3 +183,5 @@ uv run --with pytest pytest _bmad/lens-work/skills/bmad-lens-preplan/scripts/tes
 - **Stub path invariant:** The stub at `.github/prompts/lens-preplan.prompt.md` must run `light-preflight.py` before delegating. This contract cannot change.
 - **Governance write boundary:** `publish-to-governance` may not be called from within preplan under any code path.
 - **Wrapper-only authoring:** Preplan must never write `brainstorm.md`, `research.md`, or `product-brief.md` directly; authoring is always routed through `bmad-lens-bmad-skill`.
+- **`/next` pre-confirmed handoff:** When `/next` routes to preplan, the conductor must not present a redundant launch confirmation prompt. This is a user-observable behavioral invariant documented in the research corpus and the `next` SKILL.md; failure produces a superfluous "would you like to start preplan?" prompt that contradicts the confirmed UX contract.
+- **Clean-room CI gate:** A CI workflow must verify that no old-codebase file paths or known source patterns from `lens.core/` or `TargetProjects/lens-dev/old-codebase/` appear in any implementation PR diff before merge. This makes the "clean-room assurance" success criterion mechanically enforceable rather than aspirational.
