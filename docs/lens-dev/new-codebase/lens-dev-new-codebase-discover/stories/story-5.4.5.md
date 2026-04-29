@@ -79,7 +79,8 @@ def test_noop_run_produces_unchanged_hash(tmp_path):
     target_dir = tmp_path / "TargetProjects"
     target_dir.mkdir()
     repo_dir = target_dir / "synced-repo"
-    repo_dir.mkdir()  # repo exists on disk
+    repo_dir.mkdir()
+    (repo_dir / ".git").mkdir()  # mark as a git repo so scan detects it as already-cloned
     inventory = tmp_path / "repo-inventory.yaml"
     inventory.write_text(
         "repos:\n"

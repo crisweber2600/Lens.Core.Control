@@ -67,8 +67,8 @@ def test_add_entry_creates_new_entry(tmp_path):
     )
     assert result["added"] is True
     content = yaml.safe_load(inventory.read_text())
-    assert len(content["repos"]) == 1
-    assert content["repos"][0]["name"] == "new-repo"
+    assert len(content["repositories"]) == 1
+    assert content["repositories"][0]["name"] == "new-repo"
 ```
 
 ### T5 — `test_add_entry_is_idempotent_by_remote_url`

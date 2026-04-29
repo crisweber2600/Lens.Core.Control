@@ -1,7 +1,7 @@
 ---
 feature: lens-dev-new-codebase-discover
 doc_type: business-plan
-status: draft
+status: approved
 goal: "Deliver a fully specified, regression-backed rewrite of the discover command that preserves bidirectional repo inventory sync and the governance-main auto-commit exception"
 key_decisions:
   - discover retains its explicit auto-commit-to-governance-main exception — this is not delegated to publish-to-governance CLI

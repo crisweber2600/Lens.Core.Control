@@ -29,7 +29,7 @@ updated_at: 2026-04-29T00:00:00Z
 |---|---|---|
 | `business-plan.md` | ✓ Approved | Goals, scope, stakeholders defined |
 | `tech-plan.md` | ✓ Approved | Architecture decisions, test matrix, script interface |
-| `sprint-plan.md` | ✓ Approved | 7 original stories; Story 5.4.9 added via OQ-FP3 |
+| `sprint-plan.md` | ✓ Approved | 8 stories (5.4.1–5.4.7 + 5.4.9); Story 5.4.9 added via OQ-FP3 |
 | `expressplan-adversarial-review.md` | ✓ Pass-with-warnings | 5 medium + 1 high finding; all mapped to pre-work |
 | `finalizeplan-review.md` | ✓ Approved | OQ-FP1/2 deferred; OQ-FP3 resolved as Story 5.4.9 |
 | `epics.md` | ✓ Complete | Single epic; 8 stories listed |

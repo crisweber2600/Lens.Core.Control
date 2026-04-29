@@ -1,16 +1,17 @@
 ---
 feature: lens-dev-new-codebase-discover
 doc_type: tech-plan
-status: draft
+status: approved
 goal: "Technical design for the discover command rewrite: component boundaries, script interface contract, auto-commit isolation, and regression coverage strategy"
 key_decisions:
   - discover-ops.py owns all file operations; the skill orchestrates git directly (not via a helper script)
-  - Conditional auto-commit uses a pre/post hash comparison to avoid empty commits
+  - Conditional auto-commit uses a pre/post hash comparison inline in the skill (not in discover-ops.py)
   - add-entry is idempotent by remote_url uniqueness, not name uniqueness
   - Path resolution uses Path.resolve() for all disk comparisons to avoid drive-letter / symlink mismatches
-open_questions:
-  - Which layer owns the pre/post hash comparison used to decide whether an auto-commit should be created: discover-ops.py, the orchestration skill, or shared contract logic between them?
-  - What is the required discover behavior when an inventory entry has no remote configured: skip cloning silently, emit a warning, or fail validation/headless execution?
+  - No-remote edge case is deferred to a follow-on feature (OQ-FP2 — E)
+deferred:
+  - "Hash comparison ownership: resolved — inline in skill orchestration section (not in discover-ops.py)"
+  - "No-remote edge case: deferred to follow-on feature (OQ-FP2 — E); note in SKILL.md out-of-scope section"
 depends_on: [business-plan]
 blocks: []
 updated_at: 2026-04-28T00:00:00Z
@@ -181,7 +182,7 @@ The conditional auto-commit is implemented inline in the skill's orchestration s
       Exit 0 (no commit)
 6. ELSE:
       git -C {governance_repo_path} add repo-inventory.yaml
-      git -C {governance_repo_path} commit -m "[discover] Sync repo inventory"
+      git -C {governance_repo_path} commit -m "[discover] Sync repo-inventory.yaml"
       git -C {governance_repo_path} push
       Print "[discover] Inventory updated and pushed to governance main."
 ```

@@ -1,16 +1,15 @@
 ---
 feature: lens-dev-new-codebase-discover
 doc_type: sprint-plan
-status: draft
+status: approved
 goal: "Single-sprint delivery of the discover command rewrite with full regression coverage and architecture isolation audit"
 key_decisions:
-  - One sprint; Story 5.4 scope from baseline is fully captured here
+  - One sprint; Story 5.4 scope from baseline is fully captured here (8 stories: 5.4.1–5.4.7 + 5.4.9)
   - BMB-first authoring applies to all lens-work file changes
   - Regression test pass is a hard gate before dev-complete milestone
-open_questions:
-  - Should a pre-assessment gate be required before implementation work begins or before specific stories can start?
-  - What is the required no-remote behavior for the discover command in interactive and headless flows?
-  - Is an integration-test requirement a hard gate for sprint completion, and if so which scenarios must be covered?
+  - Pre-assessment gate (Story 5.4.1 first AC) is required before coding begins on Story 5.4.2
+  - No-remote edge case deferred to follow-on feature (OQ-FP2 — E)
+  - Integration test (Story 5.4.9) is a hard dev-complete gate (OQ-FP3 — A)
 depends_on: [business-plan, tech-plan]
 blocks: []
 updated_at: 2026-04-28T00:00:00Z
@@ -44,6 +43,7 @@ Deliver the `discover` command rewrite to `dev-complete` status within a single 
 | 5.4.5 | Extend test suite: validate and no-op tests | not-started | P0 | T6–T8 from tech-plan test matrix |
 | 5.4.6 | Verify prompt stub and release prompt chain | not-started | P1 | Ensure lens-discover.prompt.md stub exists and chains to release prompt |
 | 5.4.7 | Architecture isolation audit | not-started | P0 | Confirm no other SKILL.md references governance-main direct commit; document in arch review note |
+| 5.4.9 | Integration smoke test: full chain end-to-end | not-started | P0 | Hard dev-complete gate; added per OQ-FP3 resolution |
 
 ---
 
@@ -183,9 +183,21 @@ Deliver the `discover` command rewrite to `dev-complete` status within a single 
 
 ---
 
-## Sprint Definition of Done
+### Story 5.4.9 — Integration Smoke Test: Full Chain End-to-End
 
-- [ ] All 7 stories are `dev-complete`
+**Goal:** The full SKILL.md → `discover-ops.py` → governance-main commit chain is validated end-to-end.
+
+> **Hard dev-complete gate** — this story must pass before the feature can reach `dev-complete`. Added per OQ-FP3 resolution.
+
+**Acceptance Criteria:**
+- [ ] Scenario 1 (`test_integration_auto_commit_fires_on_changed_inventory`) passes: untracked repo detected, `add-entry` called, commit+push to local bare remote, commit message is `[discover] Sync repo-inventory.yaml`
+- [ ] Scenario 2 (`test_integration_no_commit_on_noop`) passes: disk and inventory in sync, no `add-entry` calls, no commit, HEAD SHA unchanged
+- [ ] Both tests use local bare-git repos only (no network required)
+- [ ] Tests live in `lens.core/_bmad/lens-work/skills/bmad-lens-discover/scripts/tests/test-discover-integration.py`
+
+**Implementation:** Create `test-discover-integration.py`; untracked repo directories must be initialised with `git init` and a local `origin` remote so scan and `add-entry` work correctly.
+
+- [ ] All 8 stories are `dev-complete`
 - [ ] Full test suite passes: `uv run --with pytest pytest lens.core/_bmad/lens-work/skills/bmad-lens-discover/scripts/tests/ -q`
 - [ ] SKILL.md covers all modes with no gaps
 - [ ] Architecture isolation audit is documented
@@ -200,6 +212,7 @@ Deliver the `discover` command rewrite to `dev-complete` status within a single 
 5.4.1 (SKILL.md finalize) ──┐
 5.4.2 (conditional commit) ──┤──→ 5.4.5 (no-op test depends on T8 guard)
 5.4.3 (path resolve) ────────┤──→ 5.4.4 (path tests depend on resolve fix)
+                              ├──→ 5.4.9 (integration smoke — depends on 5.4.1 + 5.4.2, hard dev-complete gate)
                               └──→ 5.4.6 (prompt chain can be verified any time)
                               └──→ 5.4.7 (audit is independent, run last)
 ```

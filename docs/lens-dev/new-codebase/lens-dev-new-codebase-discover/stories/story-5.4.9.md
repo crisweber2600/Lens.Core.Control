@@ -47,7 +47,9 @@ The auto-commit exception is the governance-critical distinguishing behavior of 
 1. Create a local bare git repo (`governance-bare.git`) as the "governance remote"
 2. Clone it to a working directory as the governance repo working copy
 3. Write an initial `repo-inventory.yaml` with one registered repo entry
-4. Create a `TargetProjects/` directory with one subdirectory that is NOT in the inventory (untracked repo)
+4. Create a `TargetProjects/` directory with one subdirectory that is NOT in the inventory (untracked repo):
+   - Run `git init <untracked-repo-dir>` so scan detects it as a real git repo (`.git` present)
+   - Run `git -C <untracked-repo-dir> remote add origin <local-bare-url>` to configure a local `origin` remote (no network required) so the skill can resolve `remote_url` via `git remote get-url origin`
 5. Commit and push the initial inventory to the bare repo
 
 **Action:** Invoke the discover skill orchestration sequence:
