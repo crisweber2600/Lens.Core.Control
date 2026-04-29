@@ -1,4 +1,26 @@
+---
+phase: preplan
+verdict: B
+review_format: abc-choice-v1
+reviewed: 2026-04-28T01:15:00Z
+source: phase-complete
+---
+
 # Adversarial Review: lens-dev-new-codebase-trueup / preplan
+
+## Selected response
+
+**B — Pass with warnings**
+
+## Response options
+
+- **A — Pass:** Artifacts are complete and coherent; proceed with no material concerns.
+- **B — Pass with warnings:** Artifacts support proceeding, but specific risks or gaps must be carried forward and addressed explicitly.
+- **C — Needs revision:** Artifacts are directionally useful but require substantive revision before the next phase.
+- **D — Major rework required:** Artifacts have significant structural or evidence gaps that block reliable planning.
+- **E — Reject:** Artifacts are not sufficient to support phase progression.
+
+---
 
 **Reviewed:** 2026-04-28T01:15:00Z  
 **Source:** phase-complete  
@@ -28,9 +50,9 @@ However, the artifact set has two high-risk coverage gaps that must be acknowled
 
 | # | Dimension | Finding | Recommendation |
 |---|-----------|---------|----------------|
-| H1 | Coverage Gaps | The product-brief lists SC-5 ("Tier 1 infrastructure passes integration smoke tests against a test feature") with no specification of what the test framework is, what fixtures exist, or how smoke tests run. An unspecified test strategy for infrastructure that every planning-phase skill depends on is a high risk: implementation will stall when the test question surfaces mid-sprint. | Add "test harness strategy for Tier 1 infrastructure" as a required artifact or decision record in businessplan. At minimum: document whether existing `pytest` patterns (as used in init-feature and switch) are sufficient, or whether a new integration test harness is needed. |
-| H2 | Complexity and Risk | `publish-to-governance` touches `governance-main` via `git commit + push`. Research correctly flags this as high-risk but the product-brief mitigation is only "verify RELEASE module contract before writing." No safeguards are specified: no dry-run mode, no atomic rollback on partial failure, no test fixture that isolates from real governance. A single bad call in dev could corrupt real governance state. | BusinessPlan must include a safeguard specification for `publish-to-governance`: at minimum, a dry-run flag, a test-governance-repo fixture path, and a pre-write pull + conflict-abort sequence. |
-| H3 | Complexity and Risk | `bmad-lens-adversarial-review` is scoped to "minimal review-gate contract" in the product-brief, but the SKILL.md for this skill (RELEASE module) requires: lifecycle.yaml resolution, party-mode challenge, cross-feature context loading, predecessor artifact loading, and verdict-gated hard stops. The gap between "minimal" and the existing RELEASE-module behavior is never defined. This vagueness will cause scope debates during dev. | Define "minimal" explicitly in businessplan: either (a) the new-codebase version is a direct port of the RELEASE module implementation, or (b) specific features are deferred (e.g., defer party-mode, defer predecessor loading) with an explicit scope cut list. |
+| H1 | Coverage Gaps | SC-3 ("complete Delivery Package Scaffolded") requires test stubs for the happy path and the prerequisite-missing degradation path of `bmad-lens-complete`, but no specification of the test framework, fixtures, or how tests run is provided. An unspecified test strategy for a command with an irreversible finalization gate is a high risk: implementation will stall when the test question surfaces mid-sprint. | Add "test harness strategy for `bmad-lens-complete` test stubs" as a required artifact or decision record in businessplan. At minimum: document whether existing `pytest` patterns (as used in init-feature and switch) are sufficient, or whether a new integration test harness is needed. |
+| H2 | Complexity and Risk | `publish-to-governance` touches `governance-main` via `git commit + push`, but the product-brief explicitly places shared infrastructure (including `publish-to-governance`) **out of scope** for True Up. This finding is recorded for carry-forward: when `publish-to-governance` is scoped into an individual preplan feature planning cycle, safeguards must be specified — at minimum a dry-run flag, a test-governance-repo fixture path, and a pre-write pull + conflict-abort sequence. | Carry forward to the preplan feature that owns `publish-to-governance`. Not a True Up blocker. |
+| H3 | Complexity and Risk | `bmad-lens-adversarial-review` is also explicitly **out of scope** for True Up (shared infrastructure deferred to individual preplan feature planning cycles). The scope definition question ("minimal" vs. port-faithful) must be resolved when the feature owning `bmad-lens-adversarial-review` activates. | Carry forward to the preplan feature that owns `bmad-lens-adversarial-review`. Not a True Up blocker. |
 
 ---
 

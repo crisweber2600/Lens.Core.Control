@@ -8,7 +8,7 @@ key_decisions:
   - complete prerequisite handling: graceful-degradation is canonical — bmad-lens-complete proceeds with a warning when retrospective.md or document-project is absent (evidence: old-codebase complete-ops.py sets retrospective_skipped=True and returns status:warn, not fail)
   - constitution permitted_tracks: new-codebase template (express + expressplan included) is canonical — lifecycle.yaml v4 explicitly defines express and expressplan as supported phases; old-codebase omission was a documentation lag
   - Python 3.12 requirement: intentional — init-feature-ops.py uses tomllib (stdlib in 3.11+) and structural pattern matching syntax; documented as a deliberate language-feature dependency, not accidental drift
-| SAFE_ID_PATTERN tightening: safe to adopt — no existing feature IDs in governance use dots or underscores (verified by scanning feature-index.yaml and all feature.yaml files); the new pattern is a forward-compatible tightening; scan evidence documented in parity-audit-report.md FR-9 section
+  - SAFE_ID_PATTERN tightening: safe to adopt — no existing feature IDs in governance use dots or underscores (verified by scanning feature-index.yaml and all feature.yaml files); the new pattern is a forward-compatible tightening; scan evidence documented in parity-audit-report.md FR-9 section
   - BMB implementation channel: all story work touching lens.core/_bmad/lens-work/ must route through the bmb module per domain constitution (H1 warning from businessplan review)
   - feature.yaml.phase is authoritative for lifecycle state; feature-index.yaml.status is a registry summary only (M1 warning from businessplan review)
   - fetch-context and read-context absence in new-codebase init-feature-ops.py is a functional regression; old-codebase output contract is the restoration target for lens-dev-new-codebase-new-feature dev phase (M2 warning from businessplan review)
@@ -116,15 +116,14 @@ Each FR group in the PRD maps to a set of files. This section is the definitive 
 | FR | Artifact | Authoring Location | Target (after merge) |
 |----|----------|-------------------|----------------------|
 | FR-1 | `lens-switch.prompt.md` | Copied from `_bmad/lens-work/prompts/lens-switch.prompt.md` | `.github/prompts/lens-switch.prompt.md` |
-| FR-2 | `lens-new-feature.prompt.md` (source) | `_bmad/lens-work/prompts/lens-new-feature.prompt.md` | New file — delegation stub |
-| FR-2 | `lens-new-feature.prompt.md` (mirror) | `.github/prompts/lens-new-feature.prompt.md` | New file — mirrors source |
-| FR-3 | `lens-complete.prompt.md` (source) | `_bmad/lens-work/prompts/lens-complete.prompt.md` | New file — delegation stub |
-| FR-3 | `lens-complete.prompt.md` (mirror) | `.github/prompts/lens-complete.prompt.md` | New file — mirrors source |
+| FR-2 | `lens-new-feature.prompt.md` | `_bmad/lens-work/prompts/lens-new-feature.prompt.md` | New file — delegation stub at source location; any `.github/prompts/` mirror is a post-dev human action |
+| FR-3 | `lens-complete.prompt.md` | `_bmad/lens-work/prompts/lens-complete.prompt.md` | New file — delegation stub at source location; any `.github/prompts/` mirror is a post-dev human action |
 
 **Prompt stub contract (NFR-2 compliant):**
 - Must delegate to its backing skill via `lens.core/_bmad/lens-work/skills/bmad-lens-{command}/SKILL.md`
 - Must display a clear "not yet implemented" message if the backing script (`complete-ops.py`) is absent
 - Must not implement behavioral logic inline
+- Dev agents must not create or modify `.github/prompts/` files for FR-2/FR-3; mirroring into `.github/` is outside implementation scope and is performed manually by humans after development/merge
 
 **`lens-new-feature.prompt.md` stub note:** The `create` subcommand in `init-feature-ops.py` appears to be partially implemented (ran successfully in this session to create the trueup feature). The stub must note that full parity — including `fetch-context` and `read-context` — is pending, per the parity audit findings.
 
