@@ -2,14 +2,14 @@
 feature: lens-dev-new-codebase-businessplan
 doc_type: tech-plan
 status: draft
-goal: "Define the technical design for rewriting businessplan and techplan as thin conductors: shared utility delegation, publish-before-author entry hook, BMB-first authoring, and wrapper-equivalence regression coverage."
+goal: "Define the technical design for rewriting businessplan as a thin conductor: shared utility delegation, publish-before-author entry hook, BMB-first authoring, and wrapper-equivalence regression coverage. TechPlan rewrite deferred to lens-dev-new-codebase-techplan."
 key_decisions:
-  - Both commands follow an identical thin-conductor pattern; the same delegation chain is replicated for each
-  - No inline batch logic in either SKILL.md — delegate to bmad-lens-batch
-  - No inline review-ready logic in either SKILL.md — delegate to validate-phase-artifacts.py
-  - publish-to-governance is the sole governance write path for both commands
+  - Businessplan command follows the thin-conductor pattern; delegation chain authored from scratch
+  - No inline batch logic in SKILL.md — delegate to bmad-lens-batch
+  - No inline review-ready logic in SKILL.md — delegate to validate-phase-artifacts.py
+  - publish-to-governance is the sole governance write path for businessplan
   - SKILL.md changes authored via bmad-module-builder (BMB-first); release prompts via bmad-workflow-builder
-  - Regression coverage required before merge: wrapper-equivalence + governance-audit + architecture-reference
+  - Regression coverage required before merge: wrapper-equivalence + governance-audit
 open_questions: []
 depends_on:
   - business-plan.md (this feature)
@@ -18,7 +18,7 @@ blocks: []
 updated_at: 2026-04-28T00:00:00Z
 ---
 
-# Technical Plan — Rewrite businessplan and techplan Commands
+# Technical Plan — Rewrite businessplan Command
 
 **Feature:** lens-dev-new-codebase-businessplan  
 **Author:** crisweber2600  
@@ -29,7 +29,7 @@ updated_at: 2026-04-28T00:00:00Z
 
 ## 1. System Design
 
-Both commands follow the invariant 3-hop command resolution chain:
+The businessplan command follows the invariant 3-hop command resolution chain:
 
 ```
 .github/prompts/lens-{command}.prompt.md        (stub — user entry point)
@@ -44,17 +44,17 @@ Each SKILL.md is a **thin conductor** — it orchestrates shared utilities by de
 
 ## 2. Thin Conductor Pattern
 
-Both businessplan and techplan implement the same delegation chain with different phase-specific parameters:
+The businessplan command implements the delegation chain with the following phase-specific parameters:
 
 ### 2.1 Shared Delegation Points
 
 | Pattern | Old codebase | New codebase |
 |---------|-------------|--------------|
-| Batch 2-pass intake | Inline if/else in SKILL.md | `bmad-lens-batch --target {phase}` |
-| Review-ready fast path | Inline artifact existence checks in SKILL.md | `validate-phase-artifacts.py --phase {phase} --contract review-ready` |
-| Publish prior-phase artifacts to governance | Some direct writes (businessplan) / consistent CLI (techplan) | `git-orchestration-ops.py publish-to-governance --phase {prior-phase}` |
+| Batch 2-pass intake | Inline if/else in SKILL.md | `bmad-lens-batch --target businessplan` |
+| Review-ready fast path | Inline artifact existence checks in SKILL.md | `validate-phase-artifacts.py --phase businessplan --contract review-ready` |
+| Publish prior-phase artifacts to governance | Direct writes in some paths | `git-orchestration-ops.py publish-to-governance --phase preplan` |
 | Authoring delegation | Direct persona references in some paths | `bmad-lens-bmad-skill --skill {authoring-skill}` |
-| Adversarial review gate | Inline or direct call | `bmad-lens-adversarial-review --phase {phase} --source phase-complete` |
+| Adversarial review gate | Inline or direct call | `bmad-lens-adversarial-review --phase businessplan --source phase-complete` |
 
 ### 2.2 businessplan Conductor Flow
 
@@ -109,15 +109,7 @@ Both businessplan and techplan implement the same delegation chain with differen
 | `lens.core/_bmad/lens-work/prompts/lens-businessplan.prompt.md` | Rewrite | bmad-workflow-builder |
 | `.github/prompts/lens-businessplan.prompt.md` | Verify/update stub chain | Direct (stub only) |
 
-### 3.2 techplan
-
-| File | Action | Channel |
-|------|--------|---------|
-| `lens.core/_bmad/lens-work/skills/bmad-lens-techplan/SKILL.md` | Rewrite | bmad-module-builder (BMB-first) |
-| `lens.core/_bmad/lens-work/prompts/lens-techplan.prompt.md` | Rewrite | bmad-workflow-builder |
-| `.github/prompts/lens-techplan.prompt.md` | Verify/update stub chain | Direct (stub only) |
-
-### 3.3 Shared Dependencies (read-only references — not modified in this feature)
+### 3.2 Shared Dependencies (read-only references — not modified in this feature)
 
 | Dependency | Why Referenced |
 |-----------|----------------|
@@ -133,7 +125,7 @@ Both businessplan and techplan implement the same delegation chain with differen
 
 ## 4. SKILL.md Design Contract
 
-Both SKILL.md files follow this structural template (differing only in phase name, prior phase, and authoring skill):
+The businessplan SKILL.md follows this structural template:
 
 ```
 ## Overview        — 2-3 lines: what the command does, track constraint, args
@@ -197,9 +189,9 @@ Per the `lens-dev/new-codebase` service constitution:
 > Anytime `lens.core.src` is being modified, SKILL.md updates must be authored through `.github/skills/bmad-module-builder` and release prompt or workflow artifacts must be authored through `.github/skills/bmad-workflow-builder`.
 
 **Implementation sequence:**
-1. Use `bmad-module-builder` to generate / rewrite `bmad-lens-businessplan/SKILL.md` and `bmad-lens-techplan/SKILL.md`
-2. Use `bmad-workflow-builder` to generate / rewrite `lens-businessplan.prompt.md` and `lens-techplan.prompt.md`
-3. Verify stub chain integrity (`len(light-preflight.py)` still called at stub level)
+1. Use `bmad-module-builder` to generate / rewrite `bmad-lens-businessplan/SKILL.md`
+2. Use `bmad-workflow-builder` to generate / rewrite `lens-businessplan.prompt.md`
+3. Verify stub chain integrity (`lens-preflight.py` still called at stub level)
 4. Run regression coverage
 5. Commit to `develop` in `lens.core.src` via the standard per-commit workflow
 
@@ -211,10 +203,9 @@ Per the `lens-dev/new-codebase` service constitution:
 |------|-------------|
 | Pre-condition check | Confirm stories 1.4, 3.1, and 4.1 are `done` in `lens.core.src` before starting |
 | BP-1: businessplan rewrite | Rewrite SKILL.md + release prompt via BMB channels; verify stub chain |
-| BP-2: techplan rewrite | Rewrite SKILL.md + release prompt via BMB channels; verify stub chain |
-| BP-3: regression gate | Run all three regression categories; block merge if any fail |
-| BP-4: discovery surface verification | Confirm `module-help.csv` and `agents/lens.agent.md` entries unchanged (both commands remain in 17-command surface) |
-| Governance sync | Commit businessplan and techplan rewrites to `develop`; update feature.yaml via governance |
+| BP-3: regression gate | Run both regression categories; block merge if any fail |
+| BP-4: discovery surface verification | Confirm `module-help.csv` and `agents/lens.agent.md` entries unchanged (`businessplan` remains in 17-command surface) |
+| Governance sync | Commit businessplan rewrite to `develop`; update feature.yaml via governance |
 
 ---
 
@@ -226,4 +217,4 @@ From `lens-dev-new-codebase-baseline/docs/architecture.md`:
 
 > **techplan:** The architecture generator, publish-entry hook, and phase completion behavior are one dependency bundle and must be rewritten together.
 
-Both commands are therefore treated as a single coherent rewrite unit in this feature, even though they are separate SKILL.md files with different artifact targets. Rewriting businessplan without techplan would leave the planning pipeline in a partially governed state.
+Both commands are separate deliverables. Rewriting businessplan in this feature leaves the planning pipeline in a partially governed state for full-track features until `lens-dev-new-codebase-techplan` is delivered. This is an accepted known limitation of the scope split.

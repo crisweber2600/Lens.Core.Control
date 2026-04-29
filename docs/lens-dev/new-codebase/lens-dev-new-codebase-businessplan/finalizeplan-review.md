@@ -20,7 +20,7 @@ updated_at: 2026-04-28T00:00:00Z
 
 ## Context Summary
 
-This feature rewrites `bmad-lens-businessplan` and `bmad-lens-techplan` as thin conductors that delegate shared patterns (batch intake, review-ready fast path, publish-before-author) to canonical shared utilities. The expressplan review (`pass-with-warnings`) is incorporated as prior art; its findings (BP-1/BP-2 branching ambiguity, `/next` path, SKILL.md template, pre-sprint checklist) are all resolved or addressed. This FinalizePlan review examines the combined planning set with fresh adversarial eyes at higher altitude — scope completeness, governance entanglement, acceptance criteria strength, and sequencing risks.
+This feature rewrites `bmad-lens-businessplan` as a thin conductor that delegates shared patterns (batch intake, review-ready fast path, publish-before-author) to canonical shared utilities. TechPlan rewrite is deferred to `lens-dev-new-codebase-techplan` (Correct Course applied after finalizeplan review). The expressplan review (`pass-with-warnings`) is incorporated as prior art; its findings (BP-1/BP-2 branching ambiguity, `/next` path, SKILL.md template, pre-sprint checklist) are all resolved or addressed. This FinalizePlan review examines the combined planning set with fresh adversarial eyes at higher altitude — scope completeness, governance entanglement, acceptance criteria strength, and sequencing risks.
 
 ---
 
@@ -45,9 +45,9 @@ This feature rewrites `bmad-lens-businessplan` and `bmad-lens-techplan` as thin 
 - **D** — Split BP-2 out of this feature and move it to `lens-dev-new-codebase-techplan`. Preserves clean per-feature scope but breaks the hard dependency chain rationale from the business plan.
 - **E** — No action needed; the feature-index is considered a draft registry and risk is acceptable.
 
-**Decision: A** — Mark `lens-dev-new-codebase-techplan` as superseded by this feature. The business-plan rationale for co-scoping is sound (shared conductor pattern, tightly coupled dependency chain). The governance trail is more valuable than leaving an orphaned feature in `preplan` indefinitely.
+**Decision: D** *(updated by Correct Course 2026-04-28)* — Split BP-2 (techplan rewrite) out of this feature. Route it to `lens-dev-new-codebase-techplan`, which is the canonical scope owner. `lens-dev-new-codebase-techplan` has been reactivated to `preplan` in governance; `superseded_by` field removed.
 
-**Action Item:** Before committing finalizeplan artifacts, update `feature-index.yaml` and the `lens-dev-new-codebase-techplan` feature.yaml to `status: superseded` with `superseded_by: lens-dev-new-codebase-businessplan`.
+**Action Item:** ~~Before committing finalizeplan artifacts, update `feature-index.yaml` and the `lens-dev-new-codebase-techplan` feature.yaml to `status: superseded` with `superseded_by: lens-dev-new-codebase-businessplan`~~ — *Reversed by Correct Course. Governance already updated.*
 
 ---
 
@@ -159,7 +159,7 @@ The following challenge questions were posed in the party-mode round. No new fin
 
 | Impact | Severity | Decision |
 |--------|----------|----------|
-| `lens-dev-new-codebase-techplan` active with overlapping scope | High | A — Mark superseded before planning PR |
+| `lens-dev-new-codebase-techplan` active with overlapping scope | High | D — Split BP-2 to techplan feature; reactivate to preplan |
 | `feature-index.yaml` stale status for this feature | Low | A — Update to `finalizeplan`/`express` before planning PR |
 | Baseline dependency state not governance-visible | Medium | B — Clarify BP-1 notes; preflight confirms merge state |
 
@@ -167,7 +167,7 @@ The following challenge questions were posed in the party-mode round. No new fin
 
 ## Required Actions Before Planning PR
 
-1. Mark `lens-dev-new-codebase-techplan` as `superseded` in governance (FP-1)
+1. ~~Mark `lens-dev-new-codebase-techplan` as superseded in governance (FP-1)~~ — *Reversed by Correct Course: techplan reactivated to preplan, BP-2 removed from this feature*
 2. Update this feature's `feature-index.yaml` and `feature.yaml` to `finalizeplan`/`express` (FP-3)
 
 ## Required Actions Before Dev-Ready
@@ -182,7 +182,7 @@ The following challenge questions were posed in the party-mode round. No new fin
 
 | Finding | Severity | Decision | Action |
 |---------|----------|----------|--------|
-| FP-1 — lens-dev-new-codebase-techplan scope overlap | High | A | Mark superseded in governance before planning PR |
+| FP-1 — lens-dev-new-codebase-techplan scope overlap | High | D *(Correct Course)* | Split BP-2 to techplan feature; techplan reactivated to preplan |
 | FP-2 — Dependency verification gap | Medium | B | Update BP-1 notes re: preflight confirms merge state |
 | FP-3 — feature-index.yaml stale status | Low | A | Update feature.yaml + feature-index.yaml before planning PR |
 | FP-4 — Architecture-reference regression scope | Low | A | Add scope clarification to BP-3 notes |

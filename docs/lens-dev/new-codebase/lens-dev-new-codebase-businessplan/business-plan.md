@@ -2,10 +2,10 @@
 feature: lens-dev-new-codebase-businessplan
 doc_type: business-plan
 status: draft
-goal: "Rewrite businessplan and techplan commands as thin conductors using shared utilities, achieving output parity with the old codebase while eliminating direct governance writes and copy-pasted inline patterns."
+goal: "Rewrite businessplan command as a thin conductor using shared utilities, achieving output parity with the old codebase while eliminating direct governance writes and copy-pasted inline patterns. TechPlan rewrite deferred to lens-dev-new-codebase-techplan."
 key_decisions:
-  - Both businessplan and techplan rewrites are scoped in this feature given their hard dependency chain
-  - Shared utilities (publish-to-governance, validate-phase-artifacts.py, bmad-lens-batch) replace inline copy-pasted patterns in both skills
+  - Businessplan rewrite only — techplan deferred to lens-dev-new-codebase-techplan feature (dependency chain rationale does not require co-scoping)
+  - Shared utilities (publish-to-governance, validate-phase-artifacts.py, bmad-lens-batch) replace inline copy-pasted patterns in businessplan
   - BMB-first authoring channel enforced for all SKILL.md and release prompt changes
   - Clean-room re-implementation: old codebase consulted as behavioral reference only; new implementations authored from scratch against the architecture contract
 open_questions: []
@@ -19,7 +19,7 @@ blocks:
 updated_at: 2026-04-28T00:00:00Z
 ---
 
-# Business Plan — Rewrite businessplan and techplan Commands
+# Business Plan — Rewrite businessplan Command
 
 **Feature:** lens-dev-new-codebase-businessplan  
 **Author:** crisweber2600  
@@ -30,9 +30,11 @@ updated_at: 2026-04-28T00:00:00Z
 
 ## 1. Executive Summary
 
-The `businessplan` and `techplan` commands are the two middle phases of the full-track planning pipeline. They are currently implemented as monolithic conductors that embed copy-pasted shared logic for batch intake, review-ready gating, and governance publication. This feature rewrites both commands as thin conductors that delegate those shared patterns to the single canonical implementations introduced in the lens-work rewrite baseline.
+The `businessplan` command is the first of the two middle phases in the full-track planning pipeline. It is currently implemented as a monolithic conductor that embeds copy-pasted shared logic for batch intake, review-ready gating, and governance publication. This feature rewrites the businessplan command as a thin conductor that delegates those shared patterns to the single canonical implementations introduced in the lens-work rewrite baseline.
 
-The goal is behavioral preservation with structural simplification. Users running the full planning track should experience identical outcomes before and after this rewrite. Maintainers will see a dramatically reduced per-skill footprint — SKILL.md files that orchestrate via delegation calls rather than inline implementations.
+The techplan command rewrite is deferred to the `lens-dev-new-codebase-techplan` feature, which is the canonical scope owner for that deliverable.
+
+The goal is behavioral preservation with structural simplification. Users running the full planning track should experience identical businessplan outcomes before and after this rewrite. Maintainers will see a dramatically reduced per-skill footprint — a SKILL.md that orchestrates via delegation calls rather than inline implementations.
 
 This is a clean-room implementation. The old codebase is consulted as a behavioral reference to confirm what must be preserved, but no code or content is copied. The rewrite is authored fresh against the architecture contract defined in `lens-dev-new-codebase-baseline`.
 
@@ -40,12 +42,11 @@ This is a clean-room implementation. The old codebase is consulted as a behavior
 
 ## 2. Problem Statement
 
-The old-codebase businessplan and techplan skills each contain:
+The old-codebase businessplan skill contains:
 
 1. **Inline batch intake logic** — if/else blocks for pass 1 / pass 2 detection, duplicating the `bmad-lens-batch` contract that is now the canonical implementation.
 2. **Inline review-ready logic** — per-skill artifact existence checks that are now consolidated into `validate-phase-artifacts.py`.
 3. **Direct governance file writes** — `businessplan` in the old codebase writes governance artifacts directly in some paths, violating the publish-before-author boundary introduced by story 1.4.
-4. **Ad-hoc PRD-reference enforcement** — `techplan` enforces the PRD dependency rule via inline logic rather than a lifecycle-declared contract.
 
 These patterns increase maintenance surface, create silent-break risk when shared contracts change, and make governance write audits harder to enforce automatically.
 
@@ -55,7 +56,7 @@ These patterns increase maintenance surface, create silent-break risk when share
 
 | Stakeholder | Role | Interest |
 |---|---|---|
-| Lens users (full-track features) | Primary users | BusinessPlan and TechPlan phases work identically to the old codebase |
+| Lens users (full-track features) | Primary users | BusinessPlan phase works identically to the old codebase |
 | Lens maintainers | Internal | Reduced skill footprint, governance audit integrity, testable delegation |
 | Downstream phase skills (finalizeplan, expressplan) | Consumers | Clean artifact staging and governance publication handoffs |
 
@@ -74,17 +75,6 @@ These patterns increase maintenance surface, create silent-break risk when share
 | Adversarial review gate blocks phase completion on `fail` verdict | review-gate regression: fail blocks businessplan-complete transition |
 | `businessplan-complete` phase transition committed to feature.yaml | feature-yaml regression: phase field updated correctly |
 
-### TechPlan Command
-
-| Criterion | Acceptance Test |
-|---|---|
-| Publish-before-author hook runs before architecture authoring | governance-audit regression: no techplan direct writes |
-| PRD reference enforced in architecture generation | architecture-reference regression: architecture.md references prd.md |
-| Shared batch and review-ready patterns delegated | wrapper-equivalence regression: no inline duplication in SKILL.md |
-| Architecture delegation via `bmad-create-architecture` through `bmad-lens-bmad-skill` | wrapper-equivalence regression: architecture output matches old codebase |
-| Adversarial review gate blocks phase completion on `fail` verdict | review-gate regression: fail blocks techplan-complete transition |
-| `techplan-complete` phase transition committed to feature.yaml | feature-yaml regression: phase field updated correctly |
-
 ---
 
 ## 5. Scope
@@ -92,19 +82,17 @@ These patterns increase maintenance surface, create silent-break risk when share
 ### In Scope
 
 - Rewrite `skills/bmad-lens-businessplan/SKILL.md` — thin conductor
-- Rewrite `skills/bmad-lens-techplan/SKILL.md` — thin conductor
 - Rewrite `lens.core/_bmad/lens-work/prompts/lens-businessplan.prompt.md` — release prompt
-- Rewrite `lens.core/_bmad/lens-work/prompts/lens-techplan.prompt.md` — release prompt
 - Update `.github/prompts/lens-businessplan.prompt.md` — stub (verify chain integrity)
-- Update `.github/prompts/lens-techplan.prompt.md` — stub (verify chain integrity)
-- Regression coverage: wrapper-equivalence, governance-audit, architecture-reference tests
+- Regression coverage: wrapper-equivalence, governance-audit tests
 
 ### Out of Scope
 
+- TechPlan command rewrite — deferred to `lens-dev-new-codebase-techplan` feature
 - Changes to `bmad-lens-batch`, `validate-phase-artifacts.py`, or `git-orchestration-ops.py` — those shared implementations are already delivered by dependent stories
 - Changes to `bmad-create-prd`, `bmad-create-ux-design`, or `bmad-create-architecture` — those are authoring skills, not conductors
 - FinalizePlan or ExpressPlan rewrites — those are separate features (4.4, 4.5)
-- New businessplan or techplan capabilities beyond parity
+- New businessplan capabilities beyond parity
 
 ---
 
@@ -112,19 +100,17 @@ These patterns increase maintenance surface, create silent-break risk when share
 
 ### Value
 
-- Eliminates governance write audit gaps in two of the most-used planning commands
-- Reduces per-skill maintenance surface from ~150+ lines of inline logic to ~30-line conductor delegation chains
-- Makes the shared utility contract changes (batch, review-ready, publish-hook) effective across the full planning pipeline
-- Produces a reuse proof-point: two skills that independently demonstrate the same conductor pattern can be updated atomically when shared contracts evolve
+- Eliminates governance write audit gaps in the businessplan command
+- Reduces businessplan's per-skill maintenance surface from ~150+ lines of inline logic to a ~30-line conductor delegation chain
+- Makes the shared utility contract changes (batch, review-ready, publish-hook) effective for the businessplan phase of the planning pipeline
+- Produces a reuse proof-point: a skill that demonstrates the conductor pattern and can be updated atomically when shared contracts evolve
 
 ### Risks
 
 | Risk | Likelihood | Mitigation |
 |---|---|---|
-| Regression in PRD reference enforcement during clean-room rewrite | Medium | Architecture-reference regression check required before merge |
 | Batch 2-pass context loss if delegation boundary is placed incorrectly | Medium | Explicit pass 1 / pass 2 equivalence test against old codebase behavior |
 | Publish-before-author hook not triggered when phase is invoked via `/next` | Low | Wrapper-equivalence test covers the `/next` delegated-invocation path |
-| techplan skips publish hook when businessplan artifacts are partial | Low | Publish-to-governance contract validates source artifact presence before writing |
 
 ---
 
@@ -142,5 +128,5 @@ These patterns increase maintenance surface, create silent-break risk when share
 
 | Story | Description |
 |---|---|
-| 4.4 — rewrite finalizeplan | Requires businessplan and techplan to produce correctly staged and governed artifacts |
-| 4.5 — rewrite expressplan | Requires stable businessplan and techplan rewrite contracts as reference |
+| 4.4 — rewrite finalizeplan | Requires businessplan to produce correctly staged and governed artifacts (techplan tracked separately in `lens-dev-new-codebase-techplan`) |
+| 4.5 — rewrite expressplan | Requires stable businessplan rewrite contract as reference (techplan planned separately) |
