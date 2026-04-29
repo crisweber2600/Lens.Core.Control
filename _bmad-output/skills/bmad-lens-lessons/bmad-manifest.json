@@ -1,0 +1,21 @@
+{
+  "module-code": "lens-work",
+  "capabilities": [
+    {
+      "name": "log-lessons",
+      "menu-code": "LL",
+      "description": "Extracts and persists a task-level micro-lesson after task completion.",
+      "supports-autonomous": true,
+      "prompt": "log-lesson.md",
+      "phase-name": "anytime"
+    },
+    {
+      "name": "recall-lessons",
+      "menu-code": "RL",
+      "description": "Retrieves lessons relevant to an upcoming task by type and keyword.",
+      "supports-autonomous": true,
+      "prompt": "recall-lessons.md",
+      "phase-name": "anytime"
+    }
+  ]
+}
