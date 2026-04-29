@@ -2,282 +2,185 @@
 feature: lens-dev-new-codebase-techplan
 doc_type: tech-plan
 status: draft
-goal: "Define the implementation plan for adding the governed techplan command surface to the new codebase target project."
+goal: "Define the implementation and validation plan for the techplan rewrite while aligning this feature folder to the expressplan artifact contract."
 key_decisions:
-  - Implement the full prompt chain in the target project: public stub, release prompt, and owning skill.
-  - Reuse the shared publish-before-author, adversarial-review, and BMAD delegation contracts instead of inventing techplan-specific mutations.
-  - Preserve the PRD reference rule as a hard validation requirement for architecture output.
-  - Treat missing upstream shared utilities as prerequisites rather than re-solving them inside techplan.
-  - Keep governance publication inside bmad-lens-git-orchestration only.
+  - Keep the implementation target focused on `lens-techplan`; expressplan is the planning wrapper for this feature, not the runtime behavior being rebuilt.
+  - Complete the artifact set with `sprint-plan.md` and a refreshed review rather than leaving the folder in a partial express state.
+  - Preserve the target-project implementation slice: public stub, release prompt, owning skill, discovery wiring, and a focused parity/test harness foundation.
+  - Absorb the missing shared utility surfaces into this feature instead of leaving end-to-end execution behind external prerequisites.
+  - Define parity as reproducing the same four staged artifacts with equivalent routing, gates, and delivery slices.
 open_questions:
-  - "Does publish-to-governance --phase businessplan produce the right artifact set when businessplan is express-track? Which file satisfies the architecture must_reference check?"
-  - "Is bmad-lens-techplan intended only for track:full features, or should it also serve track:tech-change and track:feature?"
-  - "When will lens-dev-new-codebase-constitution advance from preplan? Does any story gate on it?"
-  - "Where do focused regression tests live in the target project, and which CI step runs them?"
-  - "Does the new codebase require a module-help.csv or manifest update to expose techplan as a discoverable command?"
+  - Which exact target-project discovery file should register `lens-techplan` first?
+  - Which exact focused test file should own prompt-start and wrapper-equivalence regressions?
+  - What sequence best lands publish orchestration, BMAD wrapper routing, adversarial review, and constitution loading inside this feature without obscuring the command-surface work?
 depends_on:
-  - business-plan
-  - lens-dev-new-codebase-businessplan
-  - lens-dev-new-codebase-constitution
-  - TargetProjects/lens/lens-governance/features/lens-dev/new-codebase/lens-dev-new-codebase-baseline/docs/architecture.md
+  - business-plan.md
   - TargetProjects/lens/lens-governance/features/lens-dev/new-codebase/lens-dev-new-codebase-baseline/docs/4-3-rewrite-techplan.md
+  - TargetProjects/lens/lens-governance/features/lens-dev/new-codebase/lens-dev-new-codebase-baseline/docs/4-5-rewrite-expressplan.md
+  - TargetProjects/lens/lens-governance/features/lens-dev/new-codebase/lens-dev-new-codebase-baseline/docs/architecture.md
 blocks:
-  - Shared target-project dependencies such as bmad-lens-git-orchestration, bmad-lens-bmad-skill, and bmad-lens-adversarial-review must exist before end-to-end execution can pass.
-updated_at: 2026-04-28T00:00:00Z
+  - End-to-end execution remains incomplete until this feature lands the shared publication, wrapper, review, and constitution surfaces now included in scope.
+updated_at: 2026-04-29T02:08:41Z
 ---
 
 # Tech Plan — Techplan Command
 
 ## Overview
 
-The new codebase target project currently lacks the entire `techplan` execution surface. There is no public stub for `techplan`, no release prompt, and no owning `bmad-lens-techplan` skill under `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/`. This plan adds that missing vertical slice while preserving the retained-command behavior defined by the rewrite baseline.
+The implementation target remains the missing `techplan` execution surface in `TargetProjects/lens-dev/new-codebase/lens.core.src`. The planning packet around it, however, now follows the expressplan contract so the feature folder can act as a parity target for the future `bmad-lens-expressplan` rewrite. The practical consequence is simple: the code slice still rebuilds `lens-techplan`, while the staged docs must look like a complete expressplan output set that a future automation path can reproduce.
 
-The implementation target is the target project source tree:
+## Planning Path Versus Implementation Target
 
-- `TargetProjects/lens-dev/new-codebase/lens.core.src/.github/prompts/`
-- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/prompts/`
-- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/`
+| Concern | Required behavior |
+| --- | --- |
+| Planning path | Stage `business-plan.md`, `tech-plan.md`, `sprint-plan.md`, and `expressplan-adversarial-review.md` as a complete expressplan packet |
+| Runtime contract under rewrite | Restore governed `techplan` behavior: publish-before-author, PRD reference enforcement, conductor-only delegation |
+| Governance state gap | Resolved via the sanctioned `feature-yaml` flow; the feature record now carries `track: express` |
+| Code delivery target | Add the missing `lens-techplan` prompt chain and owning skill in `TargetProjects/lens-dev/new-codebase/lens.core.src` |
 
-The docs in this feature folder remain the staging authority for planning. The code changes themselves belong in the target project.
+This split is the core technical decision for the feature. The express path changes how the plan is packaged. It does not change what the rewritten command must do.
 
 ## Clean-Room Interpretation Rule
 
-The old-codebase prompt input available in this workspace is a stub. Its only actionable information is that `lens-techplan` resolves to an owning `bmad-lens-techplan` skill. Functional behavior is therefore derived from the baseline rewrite PRD, architecture, research, and rewrite stories, not from copied old skill text. Any implementer should treat those baseline docs as the normative clean-room contract and use the old prompt only to verify the public chain shape.
+The old-codebase prompt input available in this workspace is a stub. Its only actionable information is the public chain shape: `lens-techplan` resolves to an owning `bmad-lens-techplan` skill. Functional behavior therefore comes from the baseline rewrite PRD, architecture, research, and stories 4.3 and 4.5. No old skill prose is reused.
 
 ## Target Implementation Surface
 
-The implementation should create or update these files in the target project:
+The eventual implementation should create or update these files in the target project:
 
 1. `TargetProjects/lens-dev/new-codebase/lens.core.src/.github/prompts/lens-techplan.prompt.md`
 2. `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/prompts/lens-techplan.prompt.md`
 3. `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/bmad-lens-techplan/SKILL.md`
-4. `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/bmad-lens-techplan/scripts/` for any phase-specific ops or focused tests
-5. Any registry, installer, or discovery surfaces required to expose `techplan` as part of the retained public command set
+4. `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/bmad-lens-techplan/scripts/` for any focused ops or validation helpers that are truly phase-specific
+5. Any discovery surface needed to expose `techplan` as part of the retained command set
 
-The command should live beside the existing target-project skill directories under `_bmad/lens-work/skills/` and follow the same prompt-chain topology used by the retained Lens commands.
+The planning artifacts remain staged under `docs/lens-dev/new-codebase/lens-dev-new-codebase-techplan`. The code changes themselves belong in the target project.
 
-## Required Runtime Flow
+## Required Runtime Behavior
 
-### 1. Entry Stub
+The rewritten `techplan` command must preserve the baseline 4.3 contract even though this feature is planned through expressplan:
 
-The public stub must run the shared prompt-start preflight before loading the release prompt. This keeps prompt-start behavior aligned with the stable Lens command surface.
+1. The public stub runs the shared prompt-start preflight before loading the release prompt.
+2. The release prompt stays a thin redirect to `bmad-lens-techplan/SKILL.md`.
+3. The owning skill resolves feature context and staged docs without writing governance files directly.
+4. Reviewed `businessplan` artifacts are published before architecture authoring begins.
+5. Architecture generation fails if the authoritative PRD cannot be located or referenced.
+6. Architecture authoring is delegated through the Lens BMAD wrapper rather than implemented inline.
+7. Adversarial review remains the gate before the feature can move toward finalizeplan.
 
-### 2. Release Prompt Redirect
+The express planning route adds packaging and gating from story 4.5. It does not loosen any of the `techplan` runtime obligations above.
 
-The target-project release prompt should be a thin redirect that loads `bmad-lens-techplan/SKILL.md`. It should not embed orchestration logic directly.
+## Expressplan Alignment Tasks
 
-### 3. Owning Skill Activation
+### 1. Artifact Completeness
 
-`bmad-lens-techplan` should:
+This folder must contain the full expressplan artifact set. Before this patch, the sprint plan was missing and the business and technical plans were internally contradictory about track usage. That gap is now part of the technical scope because parity cannot be measured against a partial packet.
 
-1. Resolve feature context and the staged docs root for `lens-dev-new-codebase-techplan`.
-2. Validate that the feature is on the full planning path.
-3. Confirm or inherit mode according to the shared batch and next-handoff contracts.
-4. Run the shared review-ready fast path check before authoring.
-5. Publish reviewed `businessplan` artifacts through `bmad-lens-git-orchestration publish-to-governance --phase businessplan`.
-6. Validate that the authoritative PRD is present and must be referenced by architecture output.
-7. Delegate architecture authoring through `bmad-lens-bmad-skill` to the architecture generator.
-8. Run adversarial review and write the staged review artifact.
-9. Return control without performing direct governance writes outside the publish hook.
+### 2. Governance Alignment
 
-### 4. Output Rules
+The feature record has been aligned to `track: express` through the sanctioned `feature-yaml` flow. That closes the specific governance-track mismatch that originally prevented this packet from being replayed as a literal expressplan path.
 
-The command's staged outputs remain local to the feature docs path until the next lifecycle handoff. For parity with the baseline rewrite contract, the technical authoring surface must preserve:
+### 3. Review Gate
 
-- local staging as the default write mode
-- governance mirror publication only through `publish-to-governance`
-- PRD dependency enforcement before architecture generation
-- review-gated completion rather than silent promotion
+The adversarial review remains part of the expressplan packet. A future automation path should be able to recreate the staged review findings from these artifacts and stop on a fail verdict.
 
-## Data Contracts And Preconditions
+## Shared Utility Surfaces Now Owned By This Feature
 
-### Feature State
+The review response for H1 moves the missing shared surfaces into this feature’s implementation scope. That does not mean creating `techplan`-local forks of shared behavior. It means this feature now owns landing the canonical shared surfaces in the target project so `techplan` can execute end to end.
 
-- Feature id remains `lens-dev-new-codebase-techplan`.
-- The feature docs root is the authoritative staging location for these planning artifacts.
-- The `bmad-lens-techplan` skill being built targets full-track and tech-change features; the current feature's own lifecycle track is separate from the tracks the skill supports.
-
-### Shared Dependencies
-
-The target-project implementation should rely on, not re-clone, these shared contracts:
+The absorbed utility work includes:
 
 - `bmad-lens-git-orchestration` for publish-before-author governance publication
 - `bmad-lens-bmad-skill` for architecture-authoring delegation
 - `bmad-lens-adversarial-review` for the lifecycle review gate
-- the shared review-ready validation path rather than phase-local copies
-- the constitution resolver for gating and context loading
+- `scripts/validate-phase-artifacts.py` for the shared review-ready fast path
+- constitution resolution needed for gating and context loading
 
-If those dependencies are not yet present in the target project, the implementation should scaffold compatibility surfaces or sequence this feature behind the prerequisite work rather than duplicating their behavior inside `bmad-lens-techplan`.
+The implementation goal remains the same: land these as shared surfaces in the target project, not as phase-local clones embedded inside `bmad-lens-techplan`.
 
 ## Implementation Sequence
 
-1. Add the prompt stub and release prompt redirect in the target project.
-2. Scaffold `bmad-lens-techplan` as a conductor-only skill.
-3. Wire feature-context loading and staged-docs resolution.
-4. Add the publish-before-author entry hook for `businessplan` artifacts.
-5. Add PRD presence and reference enforcement for architecture generation.
-6. Delegate to the architecture BMAD skill with Lens context passed through.
-7. Add adversarial-review handoff and result handling.
-8. Add focused tests and parity checks.
+### Workstream 1 — Planning Packet Alignment
 
-This sequence keeps the command surface installable early while leaving risky shared behavior in the shared utilities where it belongs.
+1. Normalize the business and technical plans for the express path.
+2. Add `sprint-plan.md` so the artifact set is complete.
+3. Refresh the adversarial review against the completed packet.
+
+### Workstream 2 — Target-Project Command Surface
+
+1. Add the public `lens-techplan` prompt stub.
+2. Add the release prompt redirect.
+3. Scaffold `bmad-lens-techplan` as a conductor-only skill.
+4. Wire the retained command discovery surface for `lens-techplan`.
+5. Create the focused test-harness foundation for prompt-start and wrapper-equivalence checks.
+
+### Workstream 3 — Shared Utility Delivery Owned By This Feature
+
+1. Land the publish-before-author entry hook for reviewed `businessplan` artifacts.
+2. Land BMAD wrapper routing needed for delegated architecture authoring.
+3. Land the adversarial review gate in the target project.
+4. Land the constitution-loading path needed for gated execution.
+5. Enforce PRD presence and explicit reference in architecture output once those shared surfaces are present.
+
+### Workstream 4 — Validation And Handoff
+
+1. Treat parity as reproducing `business-plan.md`, `tech-plan.md`, `sprint-plan.md`, and `expressplan-adversarial-review.md` with equivalent routing, gates, and delivery slices.
+2. Add focused regressions for prompt-start routing, publish ordering, PRD reference enforcement, and wrapper equivalence.
+3. Verify the retained command remains discoverable from the chosen installer/help surface.
+2. Audit for direct governance writes from `techplan`.
+4. Treat the packet as review-complete now that governance track alignment is closed; finalizeplan readiness is a separate handoff decision after this widened implementation slice is accepted.
 
 ## Validation Plan
 
 ### Contract Checks
 
-- Stub invokes the shared prompt-start preflight before redirecting.
-- Release prompt loads the owning skill and nothing else.
-- Owning skill stays conductor-only and does not author governance files directly.
+- The folder now contains the full expressplan artifact set.
+- The future prompt chain still follows stub -> prompt -> skill separation.
+- The future owning skill remains conductor-only.
+- Parity means reproducing the same four staged artifacts with equivalent routing, gates, and delivery slices.
 
 ### Behavior Checks
 
-- `publish-to-governance --phase businessplan` runs before architecture authoring starts.
-- Architecture generation fails when the authoritative PRD is absent.
-- Generated architecture content is required to reference the PRD.
-- Review-ready fast path behaves consistently with the shared validator contract.
+- `publish-to-governance --phase businessplan` runs before architecture authoring.
+- Architecture generation fails when the PRD reference is missing.
+- Review-ready behavior stays delegated to the shared validator.
+- The express planning packet remains reproducible without direct governance writes.
 
 ### Regression Checks
 
-- Wrapper-equivalence checks stay green for architecture delegation.
-- Governance-write audit shows no direct governance writes from `techplan`.
-- Architecture-reference regression remains green.
+- Prompt-start regression: the stub runs preflight and stops on failure.
+- Publish-before-author regression: reviewed predecessor artifacts publish before authoring.
+- PRD reference regression: architecture output must reference the authoritative PRD.
+- Wrapper-equivalence regression: delegation stays routed through the Lens BMAD wrapper.
+- Discovery regression: the command is exposed through the chosen retained discovery surface.
+- Governance-write audit: `techplan` never writes governance files directly.
 
 ## Current State
 
-### Present in the Target Project
+### Present In The Target Project
 
 - `_bmad/lens-work/skills/bmad-lens-preflight/`
 - `_bmad/lens-work/skills/bmad-lens-init-feature/`
 - `_bmad/lens-work/skills/bmad-lens-complete/`
 - `.github/prompts/lens-new-domain.prompt.md`
 
-### Missing for This Feature
+### Missing For This Feature
 
 - `.github/prompts/lens-techplan.prompt.md`
 - `_bmad/lens-work/prompts/lens-techplan.prompt.md`
 - `_bmad/lens-work/skills/bmad-lens-techplan/SKILL.md`
-- Any `techplan`-specific focused regression coverage in the target project
+- `techplan`-specific focused regression coverage in the target project
 
-This confirms that the feature is not an incremental tweak. It is the introduction of a missing retained-command conductor that must integrate with shared Lens lifecycle contracts.
-
-## Architecture Constraints
-
-1. `techplan` remains a conductor. It does not author architecture directly.
-2. Phase entry must publish reviewed `businessplan` artifacts before authoring starts.
-3. Architecture generation must remain delegated through the Lens BMAD wrapper to `bmad-create-architecture`.
-4. The architecture artifact must reference the authoritative PRD.
-5. Governance writes are prohibited except through the shared `publish-to-governance` path.
-6. The feature docs path remains the authoritative staging root for locally staged planning artifacts.
-
-## Proposed Implementation
-
-### 1. Public Prompt Stub
-
-Create `TargetProjects/lens-dev/new-codebase/lens.core.src/.github/prompts/lens-techplan.prompt.md`.
-
-Responsibilities:
-
-- Run `light-preflight.py` from the target project root before loading the release prompt.
-- Stop immediately on a non-zero preflight result.
-- Redirect to the release prompt only after prompt-start sync succeeds.
-
-This keeps the public command surface aligned with the retained-command prompt contract.
-
-### 2. Release Prompt
-
-Create `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/prompts/lens-techplan.prompt.md`.
-
-Responsibilities:
-
-- Act as a thin redirect to `bmad-lens-techplan/SKILL.md`.
-- Avoid embedding orchestration logic directly in the prompt file.
-- Preserve the same separation used throughout the retained command surface: stub -> prompt -> skill.
-
-### 3. Owning Skill
-
-Create `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/bmad-lens-techplan/SKILL.md`.
-
-Responsibilities:
-
-1. Resolve the active feature and governance context.
-2. Confirm the feature is on the full planning path, not the express path.
-3. Resolve the staged docs path from feature context and treat it as authoritative.
-4. Run the publish-before-author entry hook for `businessplan` artifacts.
-5. Delegate architecture authoring through the Lens BMAD wrapper rather than inlining authoring logic.
-6. Enforce the architecture reference contract so the output explicitly names the PRD it is implementing.
-7. Invoke the adversarial review gate before allowing phase completion.
-
-This skill should stay thin. The point of the rewrite is to centralize shared contracts, not to recreate them phase by phase.
-
-### 4. Shared Dependencies Assumed, Not Reimplemented Here
-
-The feature should treat the following as prerequisites owned by other rewrite work:
-
-- shared publish hook from git orchestration
-- shared constitution resolution that tolerates partial hierarchy
-- shared adversarial-review gate
-- shared BMAD wrapper routing
-- businessplan command rewrite that produces the reviewed predecessor set
-
-If any prerequisite is absent in the target project at implementation time, the correct response is to wire to the shared dependency or block on it, not to build a local duplicate inside `bmad-lens-techplan`.
-
-## Execution Flow
-
-1. User invokes `techplan` from the published prompt surface.
-2. Public stub runs `light-preflight.py`.
-3. Release prompt loads `bmad-lens-techplan/SKILL.md`.
-4. Skill resolves feature context and validates that full-track techplan is appropriate.
-5. Skill publishes reviewed `businessplan` artifacts through the shared publish hook.
-6. Skill delegates architecture generation through `bmad-lens-bmad-skill` to `bmad-create-architecture`.
-7. Generated architecture is checked for explicit PRD reference.
-8. Skill runs the adversarial review gate for `techplan`.
-9. Only after a passing or warning-level verdict can the lifecycle continue toward finalizeplan.
-
-## Validation Strategy
-
-### Required Focused Checks
-
-- Prompt-start regression: stub runs preflight and stops on failure.
-- Publish-before-author regression: `businessplan` artifacts publish before architecture generation begins.
-- PRD reference regression: architecture output fails validation when the PRD reference is missing.
-- Governance write audit: direct governance writes from `techplan` are rejected.
-- Wrapper-equivalence regression: delegation still routes through the Lens BMAD wrapper rather than bypassing it.
-
-### Review Expectations
-
-- `techplan` output remains reviewable through the shared adversarial-review contract.
-- Any new tests should stay narrow and behavior-scoped, matching the retained-command parity model.
-
-## Implementation File Plan
-
-| Path | Purpose |
-| --- | --- |
-| `TargetProjects/lens-dev/new-codebase/lens.core.src/.github/prompts/lens-techplan.prompt.md` | public entry stub |
-| `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/prompts/lens-techplan.prompt.md` | release prompt redirect |
-| `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/bmad-lens-techplan/SKILL.md` | owning conductor contract |
-| `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/bmad-lens-techplan/scripts/` | optional focused ops or validation helpers only if the skill truly needs them |
-| `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/bmad-lens-techplan/scripts/tests/` | focused regressions for parity obligations |
-
-## Risks and Controls
-
-| Risk | Control |
-| --- | --- |
-| Upstream shared utilities are missing in the target project | Keep them as explicit prerequisites in the implementation plan instead of duplicating behavior in `techplan` |
-| The target project adds `techplan` but skips PRD traceability | Make PRD reference validation a mandatory acceptance check |
-| The command surface is added without the release prompt indirection | Require the full three-hop prompt chain in implementation review |
-| Businessplan publication is treated as optional | Wire the shared publish hook at skill entry and cover ordering with regression tests |
-
-## Clean-Room Boundary
-
-All functional behavior is derived from the baseline rewrite PRD, architecture, research, and rewrite stories. The old-codebase prompt available in this workspace is a stub whose only actionable information is the public chain shape (`lens-techplan` → `bmad-lens-techplan`). No implementation text may be copied from it.
-
-## Delivery Boundaries
-
-This feature should not attempt to solve FinalizePlan, ExpressPlan, or unrelated prompt-surface gaps as part of the same implementation slice. Its job is to restore the `techplan` conductor with the right contracts so that later planning and delivery stages can depend on it safely.
+That still makes the code slice a missing retained-command conductor. The difference now is that the planning packet no longer contradicts the requested express route.
 
 ## Definition Of Done
 
-The feature is technically complete when the target project contains a working `techplan` prompt chain, the command honors publish-before-author and PRD reference rules, and the focused regressions named above pass without requiring direct governance writes or clean-room exceptions.
+This feature is technically ready for implementation when:
 
-The old-codebase prompt supplied to this task is a stub and provides only the existence of the command surface. The normative behavior for the rewrite comes from the approved baseline artifacts, especially story 4.3, the rewrite architecture, the PRD retained-command matrix, and the research record. Implementation work should use those documents as the source of truth and use old-codebase material only to verify externally observable parity.
+1. The feature folder contains a clean expressplan-compatible artifact set.
+2. The target-project implementation slice is fully enumerated, including discovery wiring and the focused test-harness foundation.
+3. The governance track switch is applied through the sanctioned `feature-yaml` flow.
+4. The widened shared-utility delivery work is named explicitly as part of this feature.
+5. Focused regressions are named before code work starts.
+
+The feature is technically complete only after the target project contains a working `techplan` prompt chain, the absorbed shared utility surfaces are landed, and the parity checks above pass.

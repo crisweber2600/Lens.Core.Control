@@ -1,84 +1,214 @@
 ---
 feature: lens-dev-new-codebase-techplan
-doc_type: expressplan-adversarial-review
-status: pass-with-warnings
+doc_type: adversarial-review
+phase: expressplan
+source: phase-complete
+verdict: pass-with-warnings
+status: responses-recorded
+critical_count: 1
+high_count: 2
+medium_count: 2
+low_count: 0
+carry_forward_blockers: []
+updated_at: 2026-04-29T02:08:41Z
 review_format: abc-choice-v1
-goal: "Adversarial review of business-plan.md and tech-plan.md before expressplan phase completion."
-updated_at: 2026-04-28T00:00:00Z
 ---
 
-# Adversarial Review: lens-dev-new-codebase-techplan / expressplan
+# ExpressPlan Adversarial Review — lens-dev-new-codebase-techplan
 
-**Reviewed:** 2026-04-28T00:00:00Z  
 **Source:** phase-complete  
-**Overall Rating:** pass-with-warnings
-
-## Summary
-
-The business plan is coherent and well-scoped. It correctly identifies the continuity goal, preserves the publish-before-author contract, and stays within clean-room bounds. `tech-plan.md` had a critical structural defect at review time — two YAML frontmatter blocks producing two separate documents — which has since been corrected: the file now has a single unified frontmatter and body. The stale `Track remains \`full\`` statement in the Data Contracts section has also been removed. Five medium/high-severity findings remain documented and should be reflected in implementation planning. The phase can proceed with warnings.
-
-**Recommended next action:** Ensure the open questions surfaced by H2 and H3 (PRD-substitute artifact for express-track businessplan; constitution dependency timeline) are tracked before implementation starts.
+**Artifacts reviewed:** business-plan.md, tech-plan.md, sprint-plan.md  
+**Format:** Responses have been recorded. Each finding retains its A/B/C, D, and E options so the chosen resolution remains auditable.
 
 ---
 
-## Findings
+## Verdict: `pass-with-warnings`
 
-### Critical
+The staged packet remains coherent and usable as a clean-room expressplan artifact set for the `techplan` rewrite. The selected responses have now been folded into the planning packet: the governance feature record has been updated to `track: express`, the feature now absorbs the missing shared utility surfaces into scope, discovery and test-harness acceptance items have moved into the first implementation slice, parity has been defined explicitly, and the packet is treated as review-complete. Remaining work is implementation scope, not unresolved review intake.
 
-| # | Dimension | Finding | Recommendation |
-|---|-----------|---------|----------------|
-| C1 | Logic Flaws | ~~`tech-plan.md` contained two YAML frontmatter blocks, producing two separate documents. Second document `depends_on` and `key_decisions` were invisible to standard tooling.~~ **RESOLVED** — documents merged, single frontmatter, best content from both retained. |  |
+---
 
-### High
+## Response Record
 
-| # | Dimension | Finding | Recommendation |
-|---|-----------|---------|----------------|
-| H1 | Logic Flaws | ~~Doc 1 stated "Track remains `full`; this feature does not use the express path." The feature was re-declared `track: express` during this session.~~ **RESOLVED** \u2014 stale statement replaced with accurate language scoping the feature lifecycle separate from the tracks the skill supports. |  |
-| H2 | Cross-Feature Dependencies | Document 2's `depends_on` lists `constitution-partial-hierarchy-fix`. The constitution feature (`lens-dev-new-codebase-constitution`) is at `phase: preplan` — early in the pipeline. If the constitution fix is not available at runtime, the new techplan skill's constitution-loading path will fail silently or with an unhelpful error. The business plan also calls this out as a prerequisite blocker but references it only in `blocks` prose, not as a tracked feature ID. | Reference `lens-dev-new-codebase-constitution` explicitly as a feature dependency in the merged frontmatter's `depends_on`. Add an open question noting the constitution is at `preplan` and must advance before end-to-end testing can pass. |
-| H3 | Cross-Feature Dependencies | The `lens-dev-new-codebase-businessplan` sibling feature — which provides the businessplan command that users run before techplan — is at `expressplan-complete` on the `express` track. Expressplan produces `business-plan.md` and `tech-plan.md`, not the full-track `prd.md` and `ux-design.md` set. The tech-plan describes a `publish-to-governance --phase businessplan` hook that assumes the predecessor artifacts are the full businessplan set. This assumption may not hold if businessplan is also express-track. | Add an open question: does `publish-to-governance --phase businessplan` produce the right artifact set when businessplan is express-track? Clarify which predecessor artifact the architecture authoring must reference — the express `business-plan.md` or a full-track `prd.md`. |
+The following responses were recorded and applied to the planning packet:
 
-### Medium / Low
+| Option | Meaning |
+| --- | --- |
+| A / B / C | Accept the proposed resolution with its stated trade-offs |
+| D | Provide a custom resolution after `D:` |
+| E | Explicitly accept the finding with no action |
 
-| # | Severity | Dimension | Finding | Recommendation |
-|---|----------|-----------|---------|----------------|
-| M1 | Medium | Coverage Gaps | No error path is documented for when a user invokes `techplan` and upstream businessplan artifacts are absent. The "PRD presence and reference enforcement" check is mentioned but what happens on failure (which error, which state) is not specified. | Add a short "Error Paths" section or note in the Validation Plan. |
-| M2 | Medium | Complexity and Risk | "Any registry, installer, or discovery surfaces required to expose `techplan` as part of the retained public command set" is mentioned without specifying whether a manifest update is needed. If the new codebase uses a command manifest or module-help.csv, a missing entry would leave the command undiscoverable. | Explicitly state whether `module-help.csv`, `manifest.yaml`, or any installer-hook updates are in scope; if out of scope, say so. |
-| M3 | Medium | Coverage Gaps | No rollout or incremental activation strategy. The tech-plan assumes all shared dependencies exist before the feature can be tested, but does not describe what a partial installation looks like or whether the command can be installed without the full dependency chain. | Add a "Deployment Boundaries" note — can the stub be installed even if `bmad-lens-bmad-skill` is absent? If not, sequence the dependency explicitly. |
-| L1 | Low | Assumptions | The business plan's `open_questions` is empty, but M1–M3 are discoverable gaps that should be tracked there. | Populate `open_questions` in the merged business-plan frontmatter. |
-| L2 | Low | Coverage Gaps | The business plan's `blocks` prose references "constitution-fix prerequisites" without a feature ID. Future automation cannot query this relationship. | Replace prose with a structured feature ID reference: `lens-dev-new-codebase-constitution`. |
+---
+
+## Finding Summary
+
+| ID | Severity | Title | Your Response |
+| --- | --- | --- | --- |
+| C1 | Critical | Governance track still blocks literal expressplan execution | **A** |
+| H1 | High | Shared dependencies remain prerequisite-only, not executable | **C** |
+| H2 | High | Discovery and test harness ownership are still undefined | **A** |
+| M1 | Medium | The packet needs an explicit parity check against the future skill output | **A** |
+| M2 | Medium | FinalizePlan handoff criteria depend on the governance switch being closed | **A** |
+
+---
+
+## Critical Findings
+
+### C1 — Governance track still blocks literal expressplan execution
+
+**Location:** governance `feature.yaml` for `lens-dev-new-codebase-techplan`  
+**Gate:** Before any lifecycle automation rerun
+
+The docs now describe an expressplan path, but the governance feature record still says `track: full`. That means the packet is valid as staged planning, but invalid as a literal expressplan execution path until the sanctioned metadata update is applied.
+
+**Recorded response:** **A**  
+**Applied adjustment:** The sanctioned `feature-yaml` update has been run and the governance feature record now carries `track: express`.
+
+**Choose one:**
+
+- **A.** Run the sanctioned `feature-yaml` update to set `track=express` before any further lifecycle automation.  
+	**Why pick this:** Aligns governance state with the staged packet; removes the main operational blocker cleanly.  
+	**Why not:** Requires an intentional governance write and review discipline.
+
+- **B.** Keep governance state unchanged and treat this packet as planning-only input for now.  
+	**Why pick this:** Avoids an immediate governance mutation while preserving the packet for review.  
+	**Why not:** Leaves the user’s requested express path unusable in automation.
+
+- **C.** Split the planning route onto a separate express-track feature instead of switching this feature.  
+	**Why pick this:** Preserves the existing feature record untouched and makes track semantics explicit.  
+	**Why not:** Introduces new feature-management overhead and was not requested.
+
+- **D.** Write your own response.
+- **E.** Keep as-is.
+
+---
+
+## High Findings
+
+### H1 — Shared dependencies remain prerequisite-only, not executable
+
+**Location:** tech-plan.md, Shared Dependencies and Implementation Sequence sections  
+**Gate:** Before target-project code work is declared end-to-end complete
+
+The plan correctly refuses to duplicate shared utilities, but that means the implementation cannot finish until `bmad-lens-git-orchestration`, `bmad-lens-bmad-skill`, `bmad-lens-adversarial-review`, and constitution loading are available in the target project.
+
+**Recorded response:** **C**  
+**Applied adjustment:** The technical and sprint plans now absorb these missing shared utility surfaces into this feature’s scope instead of treating them as external prerequisites.
+
+**Choose one:**
+
+- **A.** Keep these as explicit prerequisites and sequence implementation behind them.  
+	**Why pick this:** Preserves architectural integrity and avoids local clones of shared behavior.  
+	**Why not:** Delivery may wait on outside teams or sibling features.
+
+- **B.** Allow narrow compatibility shims only at the prompt and skill layer, but still block any local governance or review logic forks.  
+	**Why pick this:** Lets early slices land without pretending the runtime is complete.  
+	**Why not:** Adds temporary surfaces that must be cleaned up later.
+
+- **C.** Fold the missing shared utilities into this feature.  
+	**Why pick this:** Reduces external waiting.  
+	**Why not:** Breaks the stated rewrite architecture and widens the feature beyond control.
+
+- **D.** Write your own response.
+- **E.** Keep as-is.
+
+### H2 — Discovery and test harness ownership are still undefined
+
+**Location:** business-plan.md open questions; tech-plan.md open questions  
+**Gate:** Before implementation slice scoping closes
+
+The packet now names the missing target-project files, but it still does not assign ownership for command discovery updates or for the focused regression harness that should verify prompt-start and wrapper-equivalence behavior.
+
+**Recorded response:** **A**  
+**Applied adjustment:** Discovery wiring and focused test-harness acceptance items now belong to the first implementation slice in the business, technical, and sprint plans.
+
+**Choose one:**
+
+- **A.** Add discovery and test-harness acceptance items to the first implementation slice.  
+	**Why pick this:** Makes the landing path executable and testable from the start.  
+	**Why not:** Slightly broadens the first coding slice.
+
+- **B.** Defer discovery updates to the release or discovery feature, but require the test harness path now.  
+	**Why pick this:** Keeps the implementation slice narrow while still closing the riskiest ambiguity.  
+	**Why not:** Leaves some usability wiring for later.
+
+- **C.** Defer both discovery and test ownership until after the prompt chain exists.  
+	**Why pick this:** Minimizes planning effort upfront.  
+	**Why not:** Increases the chance of ad hoc, inconsistent follow-up work.
+
+- **D.** Write your own response.
+- **E.** Keep as-is.
+
+---
+
+## Medium Findings
+
+### M1 — The packet needs an explicit parity check against the future skill output
+
+**Location:** business-plan.md goals; tech-plan.md validation plan  
+**Gate:** Before implementation is called parity-complete
+
+The packet states that future skill work should be measured against these docs, but it does not yet define the exact comparison point. Without that, “output parity” can devolve into a subjective review.
+
+**Recorded response:** **A**  
+**Applied adjustment:** Parity is now defined as reproducing `business-plan.md`, `tech-plan.md`, `sprint-plan.md`, and `expressplan-adversarial-review.md` with equivalent routing, gates, and delivery slices.
+
+**Choose one:**
+
+- **A.** Define parity as reproducing the same four staged artifacts with equivalent routing, gates, and delivery slices.  
+	**Why pick this:** Gives the future skill a concrete acceptance target.  
+	**Why not:** Requires reviewers to compare structure as well as content.
+
+- **B.** Define parity only at the behavior level: same gates, same downstream files, no content comparison.  
+	**Why pick this:** Easier to validate in automation.  
+	**Why not:** Risks content drift that still passes behavior checks.
+
+- **C.** Treat this packet as illustrative and skip parity enforcement.  
+	**Why pick this:** Lowest process overhead.  
+	**Why not:** Conflicts with the user’s requirement for output parity in the new skill.
+
+- **D.** Write your own response.
+- **E.** Keep as-is.
+
+### M2 — FinalizePlan handoff still depends on the governance switch being closed
+
+**Location:** sprint-plan.md critical path  
+**Gate:** Before the packet is treated as finalizeplan-ready
+
+The sprint plan correctly names the governance switch as step 2 on the critical path. That means the packet is ready for planning review, but not yet ready for an automatic handoff into finalizeplan.
+
+**Recorded response:** **A**  
+**Applied adjustment:** The sprint plan now records the packet as review-complete, notes that governance track alignment is already applied, and separates finalizeplan readiness from the earlier track-switch blocker.
+
+**Choose one:**
+
+- **A.** Treat the packet as review-complete but not finalizeplan-ready until the track switch is applied.  
+	**Why pick this:** Matches the actual state without overstating readiness.  
+	**Why not:** Requires one more explicit milestone check.
+
+- **B.** Manually hand the packet to finalizeplan review while the governance update is queued.  
+	**Why pick this:** Keeps momentum.  
+	**Why not:** Risks reviewers assuming the lifecycle state is already aligned.
+
+- **C.** Pause after expressplan review until governance metadata is updated.  
+	**Why pick this:** Safest operationally.  
+	**Why not:** Adds waiting time even though the packet itself is now coherent.
+
+- **D.** Write your own response.
+- **E.** Keep as-is.
 
 ---
 
 ## Accepted Risks
 
-None at this time — no risks have been explicitly accepted by the user.
+None recorded yet.
 
 ---
 
 ## Party-Mode Challenge
 
-**Winston (Architect):** The tech-plan describes `bmad-lens-techplan` as a pure conductor that delegates architecture authoring through `bmad-lens-bmad-skill`. But the businessplan sibling is express-track, meaning its governance mirror will contain `business-plan.md` and `tech-plan.md`, not `prd.md`. When the techplan conductor runs `publish-to-governance --phase businessplan` and then validates the PRD reference, what file satisfies that reference check? If `prd.md` is the hard requirement and the express track never produces one, this feature's entry gate can never pass — even when businessplan is expressplan-complete.
+**Winston (Architect):** If the governance feature record stays `track: full`, the packet is structurally correct but operationally dead. Close that gap before anyone mistakes documentation completeness for lifecycle completeness.
 
-**John (PM):** You're building a full-track conductor but users will approach it from an express-track businessplan. Has anyone confirmed that the `express` track experience actually leads users to `lens-techplan` as the next step, or does expressplan already produce a combined business + tech plan that makes `lens-techplan` redundant for express-track users? If the command only runs for `track: full` features and most users are on express, you might be building something that very few users will ever invoke.
+**John (PM):** The packet now distinguishes the planning route from the runtime command under rewrite. Keep that distinction visible in the implementation story so no one rewrites `techplan` as an express-only shortcut.
 
-**Mary (Analyst):** The clean-room constraint is met. But the test plan says "Stub invokes the shared prompt-start preflight" — where does that test live and who runs it? The focused regression model used elsewhere in this codebase (`uv run --script ...tests/test-*.py`) requires a test file to exist at the path described. If the story files don't specify test locations, the developer will invent them ad hoc and break the established test-discovery pattern.
-
----
-
-## Gaps You May Not Have Considered
-
-1. **Express-track business-plan as PRD substitute** — Has the express track's `business-plan.md` been formally designated as the PRD reference for downstream phases? If not, the `architecture.must_reference(prd)` validation contract will have no satisfying file when businessplan is express-track.
-2. **Module-help.csv / command discovery** — The new codebase command surface may require an entry in the module or skill manifest for the command to appear in help output. Is that in scope or deferred?
-3. **Shared-dependency availability window** — `bmad-lens-bmad-skill`, `bmad-lens-git-orchestration`, and `bmad-lens-adversarial-review` are listed as dependencies, but none of them appear as Lens features with a committed delivery date. When is each expected to be available in the target project, and who owns that sequencing?
-4. **Test harness location** — The tech-plan mentions validation and regression checks but doesn't name the test file paths. This leaves the implementation agent to guess, risking inconsistency with the established `tests/test-*.py` pattern.
-5. **Track-mismatch user confusion** — If this feature is now `track: express` but the SKILL.md being built is described as a full-track conductor, a user of the new codebase running `lens-techplan` on an express-track feature will hit the track gate and be confused. The skill should explicitly document which tracks it supports and what it does on a mismatch.
-
----
-
-## Open Questions Surfaced
-
-1. Does `publish-to-governance --phase businessplan` produce the right artifact set when businessplan is express-track (produces `business-plan.md` not `prd.md`)? Which file satisfies the architecture `must_reference(prd)` check?
-2. Is the `bmad-lens-techplan` conductor intended only for `track: full` features, or should it also serve `track: tech-change` and `track: feature` tracks?
-3. When will `lens-dev-new-codebase-constitution` (currently at `preplan`) be advanced? Does any story in the delivery sequence gate on it?
-4. Where do the focused regression tests live in the target project, and which CI step runs them?
-5. Does the new codebase require a `module-help.csv` or manifest update to expose `techplan` as a discoverable command?
+**Mary (Analyst):** Output parity is now plausible, but only if the future skill is judged against these exact staged artifacts rather than against memory or a looser summary.
