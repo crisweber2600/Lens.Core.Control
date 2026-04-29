@@ -162,7 +162,7 @@ updated_at: 2026-04-29T00:00:00Z
 **Acceptance Criteria:**
 - [ ] `docs/lens-dev/new-codebase/lens-dev-new-codebase-trueup/parity-audit-report.md` created and committed
 - [ ] Per-feature sections for: `switch`, `new-domain`, `new-service`, `new-feature`, `complete`
-- [ ] Each per-feature section includes: verdict (pass/fail/gap), specific gaps identified (file, function, or schema field), governance classification (structural/behavioral/governance gap)
+- [ ] Each per-feature section includes: verdict (pass/gap/regression), specific gaps identified (file, function, or schema field), governance classification (structural/behavioral/governance gap)
 - [ ] FR-8 section: Python 3.12 requirement documented as intentional (reasons: `tomllib`, structural pattern matching); classified as "reviewed decision, not a gap"
 - [ ] FR-9 section: SAFE_ID_PATTERN tightening documented; scan scope stated (all `feature.yaml` and `feature-index.yaml` in `TargetProjects/lens/lens-governance/`); scan date stated; scan result stated (pass/fail) (CF-2)
 - [ ] `new-feature` findings include: `create` subcommand absent (regression), `fetch-context` absent (regression), `read-context` absent (regression)

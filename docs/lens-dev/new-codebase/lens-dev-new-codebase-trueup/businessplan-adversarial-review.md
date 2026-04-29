@@ -1,9 +1,11 @@
 ---
+feature: lens-dev-new-codebase-trueup
+doc_type: adversarial-review
 phase: businessplan
-verdict: B
-review_format: abc-choice-v1
-reviewed: 2026-04-28T01:46:22Z
 source: phase-complete
+verdict: pass-with-warnings
+review_format: abc-choice-v1
+reviewed_at: 2026-04-28T01:46:22Z
 ---
 
 # Adversarial Review: lens-dev-new-codebase-trueup / businessplan
@@ -40,24 +42,121 @@ The remaining issues are no longer phase-blocking. They are governance and execu
 
 ### High
 
-| # | Dimension | Finding | Recommendation |
-|---|-----------|---------|----------------|
-| H1 | Coverage Gaps | The PRD scopes multiple edits under the Lens source surface: prompt stubs, `SKILL.md` files, reference docs, and test scaffolds. The active constitutions for `lens-dev` and `lens-dev/new-codebase` require two things for this kind of work: agents must consult the BMad Builder reference index in governance external docs, and lens-work source changes must use the BMB implementation channel. The BusinessPlan does not currently mention either requirement, which creates a direct compliance gap for the very work it proposes. | Add an explicit implementation-channel requirement before TechPlan begins: any work on `lens.core/_bmad/lens-work/` or the new-codebase `lens.core.src` equivalent must load the BMad Builder reference index and route through the appropriate BMB workflow/skill. Treat this as a TechPlan constraint, not an optional note. |
+---
+
+#### H1 — BMB Implementation Channel Not Named in BusinessPlan
+
+**Dimension:** Coverage Gaps  
+**Severity:** High  
+**Finding:** The PRD scopes multiple edits under the Lens source surface: prompt stubs, `SKILL.md` files, reference docs, and test scaffolds. The active constitutions for `lens-dev` and `lens-dev/new-codebase` require two things for this kind of work: agents must consult the BMad Builder reference index in governance external docs, and lens-work source changes must use the BMB implementation channel. The BusinessPlan does not currently mention either requirement, which creates a direct compliance gap for the very work it proposes.  
+**Recommendation:** Add an explicit implementation-channel requirement before TechPlan begins: any work on `lens.core/_bmad/lens-work/` or the new-codebase `lens.core.src` equivalent must load the BMad Builder reference index and route through the appropriate BMB workflow/skill. Treat this as a TechPlan constraint, not an optional note.
+
+**Finding response options:**
+- A) Add BMB implementation-channel requirement before TechPlan begins; treat as hard constraint ✅
+- B) Document as advisory; rely on developer judgment
+- C) Carry forward to TechPlan as an implementation constraint
+- D) Write your own response
+- E) Keep as-is — accept finding without action
+
+**Selected: A — TechPlan implementation channel constraint documented in architecture.md §2.3.**
+
+---
 
 ### Medium
 
-| # | Dimension | Finding | Recommendation |
-|---|-----------|---------|----------------|
-| M1 | Logic Flaws | The review packet surfaced a live governance nuance: the same new-codebase features show `status` values like `preplan` or `archived` in `feature-index.yaml`, while their per-feature `feature.yaml` files carry lifecycle `phase` values such as `finalizeplan-complete`. The PRD now correctly focuses on governance label verification, but it still does not state which document is authoritative when those two disagree. That ambiguity matters because the parity audit and later blocker annotations could update the wrong record. | Add a short source-of-truth note in TechPlan or the parity audit report: `feature.yaml.phase` is authoritative for lifecycle state; `feature-index.yaml.status` is a registry summary and must not be treated as the phase gate source of truth. |
-| M2 | Cross-Feature Dependencies | The PRD correctly elevates the missing `fetch-context` and `read-context` commands into a required finding, but the acceptance target is still mostly narrative. The old codebase defines a concrete CLI contract for `fetch-context` (`related`, `depends_on`, `blocks`, `context_paths`, service-ref support) and `read-context` (`domain`, `service`, `updated_at`, `updated_by`). Without naming that output contract as the restoration target, TechPlan could still produce an underspecified replacement and call the regression closed. | Extend the parity audit report or TechPlan acceptance criteria with the old `fetch-context` / `read-context` output contract as the measurable restoration target. Presence/absence alone is not enough for parity. |
-| M3 | Assumptions and Blind Spots | FR-7 frames the constitution `permitted_tracks` divergence as a fresh ADR decision, but the active org, domain, and service constitutions already permit `express` and `expressplan`. The real question is not whether the tracks exist in the abstract; it is whether the current constitutions should be confirmed as canonical or superseded by a tighter template. As written, the ADR framing risks ignoring current governance reality and re-litigating a decision that is already live. | Reframe the ADR in TechPlan as “confirm or supersede the currently active constitution state,” using the current org/domain/service constitutions as the starting point. |
-| M4 | Complexity and Risk | The review itself had to bypass the intended Auto-Context Pull route because the new-codebase surface does not implement `fetch-context`. This did not block the current feature because `trueup` has no explicit dependencies and nearby feature context was recoverable from governance reads, but the same workaround will not scale to all future planning features. | Record in TechPlan that direct governance reads are only a temporary review-time fallback. Restoring `fetch-context` is still required for the general planning workflow, not just for `new-feature` parity on paper. |
+---
+
+#### M1 — `feature.yaml` vs `feature-index.yaml` Source of Truth Undefined
+
+**Dimension:** Logic Flaws  
+**Severity:** Medium  
+**Finding:** The review packet surfaced a live governance nuance: the same new-codebase features show `status` values like `preplan` or `archived` in `feature-index.yaml`, while their per-feature `feature.yaml` files carry lifecycle `phase` values such as `finalizeplan-complete`. The PRD now correctly focuses on governance label verification, but it still does not state which document is authoritative when those two disagree. That ambiguity matters because the parity audit and later blocker annotations could update the wrong record.  
+**Recommendation:** Add a short source-of-truth note in TechPlan or the parity audit report: `feature.yaml.phase` is authoritative for lifecycle state; `feature-index.yaml.status` is a registry summary and must not be treated as the phase gate source of truth.
+
+**Finding response options:**
+- A) Add source-of-truth clarification: `feature.yaml.phase` is authoritative for lifecycle state ✅
+- B) Define governance hierarchy in the ADR for constitution tracks (FR-7)
+- C) Carry forward to TU-4.1 parity audit as an explicit implementation note
+- D) Write your own response
+- E) Keep as-is — accept finding without action
+
+**Selected: A — Documented in architecture.md §5.2 and parity-audit acceptance criteria.**
+
+---
+
+#### M2 — `fetch-context` / `read-context` Restoration Lacks Output Contract
+
+**Dimension:** Cross-Feature Dependencies  
+**Severity:** Medium  
+**Finding:** The PRD correctly elevates the missing `fetch-context` and `read-context` commands into a required finding, but the acceptance target is still mostly narrative. The old codebase defines a concrete CLI contract for `fetch-context` (`related`, `depends_on`, `blocks`, `context_paths`, service-ref support) and `read-context` (`domain`, `service`, `updated_at`, `updated_by`). Without naming that output contract as the restoration target, TechPlan could still produce an underspecified replacement and call the regression closed.  
+**Recommendation:** Extend the parity audit report or TechPlan acceptance criteria with the old `fetch-context` / `read-context` output contract as the measurable restoration target. Presence/absence alone is not enough for parity.
+
+**Finding response options:**
+- A) Extend parity audit AC / TechPlan with the old `fetch-context`/`read-context` output contract as restoration target ✅
+- B) Add as a TechPlan architecture section on old-contract restoration targets
+- C) Accept as-is; rely on parity audit to surface specifics
+- D) Write your own response
+- E) Keep as-is — accept finding without action
+
+**Selected: A — Output contracts documented in architecture.md §6.**
+
+---
+
+#### M3 — ADR Framing for Constitution Tracks Ignores Live Governance State
+
+**Dimension:** Assumptions and Blind Spots  
+**Severity:** Medium  
+**Finding:** FR-7 frames the constitution `permitted_tracks` divergence as a fresh ADR decision, but the active org, domain, and service constitutions already permit `express` and `expressplan`. The real question is not whether the tracks exist in the abstract; it is whether the current constitutions should be confirmed as canonical or superseded by a tighter template. As written, the ADR framing risks ignoring current governance reality and re-litigating a decision that is already live.  
+**Recommendation:** Reframe the ADR in TechPlan as "confirm or supersede the currently active constitution state," using the current org/domain/service constitutions as the starting point.
+
+**Finding response options:**
+- A) Reframe ADR-2 (FR-7) as "confirm or supersede current constitution state" ✅
+- B) Remove FR-7 and treat current constitution state as final
+- C) Accept as-is; ADR can reference current state as starting point
+- D) Write your own response
+- E) Keep as-is — accept finding without action
+
+**Selected: A — ADR-2 framed as confirm/supersede in architecture.md §5.**
+
+---
+
+#### M4 — `fetch-context` Absence Treated as Parity-Only, Not General Workflow Requirement
+
+**Dimension:** Complexity and Risk  
+**Severity:** Medium  
+**Finding:** The review itself had to bypass the intended Auto-Context Pull route because the new-codebase surface does not implement `fetch-context`. This did not block the current feature because `trueup` has no explicit dependencies and nearby feature context was recoverable from governance reads, but the same workaround will not scale to all future planning features.  
+**Recommendation:** Record in TechPlan that direct governance reads are only a temporary review-time fallback. Restoring `fetch-context` is still required for the general planning workflow, not just for `new-feature` parity on paper.
+
+**Finding response options:**
+- A) Record in TechPlan that direct governance reads are a temporary fallback; restore `fetch-context` for general workflow ✅
+- B) Accept as-is; treat `fetch-context` restoration as a new-feature parity item only
+- C) Defer to new-feature dev phase entirely
+- D) Write your own response
+- E) Keep as-is — accept finding without action
+
+**Selected: A — Documented as architectural constraint in architecture.md §6.**
+
+---
 
 ### Low
 
-| # | Dimension | Finding | Recommendation |
-|---|-----------|---------|----------------|
-| L1 | Assumptions and Blind Spots | The governance mirror path for `lens-dev-new-codebase-trueup` currently contains only the preplan artifacts, while the businessplan artifacts exist only in the staged control-repo docs path. This is consistent with the lifecycle contract, but it means anyone reading governance alone will not yet see the updated PRD, UX declaration, or this review artifact. | Keep the parity audit and subsequent TechPlan documents explicit about whether they are staged-only or governance-published. Do not assume the governance mirror reflects BusinessPlan until the publish step actually occurs. |
+---
+
+#### L1 — Governance Mirror Path Reflects Only Preplan Stage
+
+**Dimension:** Assumptions and Blind Spots  
+**Severity:** Low  
+**Finding:** The governance mirror path for `lens-dev-new-codebase-trueup` currently contains only the preplan artifacts, while the businessplan artifacts exist only in the staged control-repo docs path. This is consistent with the lifecycle contract, but it means anyone reading governance alone will not yet see the updated PRD, UX declaration, or this review artifact.  
+**Recommendation:** Keep the parity audit and subsequent TechPlan documents explicit about whether they are staged-only or governance-published. Do not assume the governance mirror reflects BusinessPlan until the publish step actually occurs.
+
+**Finding response options:**
+- A) Keep explicit staged-vs-governance-mirror distinction in TechPlan and parity audit artifacts ✅
+- B) Accept as-is; governance mirror reflects lifecycle contract
+- C) Publish businessplan artifacts to governance now
+- D) Write your own response
+- E) Keep as-is — accept finding without action
+
+**Selected: A — Stage-vs-governance-mirror distinction documented in architecture.md §7.**
 
 ## Accepted Risks
 

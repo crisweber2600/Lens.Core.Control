@@ -8,7 +8,7 @@ sprints:
   - id: sprint-1
     name: "True Up Sprint 1 — EP-1/EP-2/EP-3 (Parallel)"
     goal: "Close prompt publishing gaps, deliver bmad-lens-complete package, and commit ADR artifacts"
-    total_points: 18
+    total_points: 17
     notes: >
       EP-1, EP-2, and EP-3 are fully parallelizable. All three epics can be executed in parallel
       by a single dev agent or split across two contributors. The sprint does not depend on EP-4.
@@ -143,5 +143,5 @@ totals:
   total_stories: 11
   total_points: 33
   sprint_count: 2
-  sprint_1_points: 18
+  sprint_1_points: 17
   sprint_2_points: 16

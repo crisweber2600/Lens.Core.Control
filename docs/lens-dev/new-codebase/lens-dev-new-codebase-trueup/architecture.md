@@ -44,7 +44,7 @@ inputDocuments:
 True Up is a **planning and tooling infrastructure feature**, not an application. It delivers four categories of artifacts, all authored in the control repo and committed to the plan branch:
 
 1. **Behavioral parity audit report** — evidence-backed gap map for the 5 non-preplan features
-2. **Prompt publishing closure** — three missing prompt stubs (`lens-switch`, `lens-new-feature`, `lens-complete`) published to both `_bmad/lens-work/prompts/` and `.github/prompts/`
+2. **Prompt publishing closure** — three missing prompt stubs (`lens-switch`, `lens-new-feature`, `lens-complete`) published to `_bmad/lens-work/prompts/`; mirroring to `.github/prompts/` is a post-dev human action
 3. **`bmad-lens-complete` SKILL.md package** — complete command contract for 3 operations plus scaffolded test stubs
 4. **Design decisions (ADRs)** — four binding decisions that unblock subsequent dev phases
 
@@ -417,7 +417,7 @@ lens.core.src/_bmad/lens-work/
   prompts/
     lens-new-feature.prompt.md             ← FR-2 (new)
     lens-complete.prompt.md                ← FR-3 (new)
-    [lens-switch.prompt.md already exists] ← FR-1 (exists, mirror only needed)
+    [lens-switch.prompt.md already exists] ← FR-1 (exists, verify only)
 
   skills/
     bmad-lens-init-feature/
@@ -430,11 +430,6 @@ lens.core.src/_bmad/lens-work/
       scripts/
         tests/
           test-complete-ops.py             ← FR-5 (new — scaffolded stubs)
-
-lens.core.src/.github/prompts/
-  lens-switch.prompt.md                    ← FR-1 (copy of source prompt)
-  lens-new-feature.prompt.md               ← FR-2 (mirror)
-  lens-complete.prompt.md                  ← FR-3 (mirror)
 
 ── SCOPE: control-repo planning artifacts ───────────────────────────────────
 docs/lens-dev/new-codebase/lens-dev-new-codebase-trueup/
@@ -454,7 +449,7 @@ Execution order for dev phase follows NFR-3 (atomic commits per logical group, a
 1. **ADRs first** — `adr-complete-prerequisite.md` and `adr-constitution-tracks.md`; these unblock all downstream artifacts that depend on resolved decisions
 2. **Parity gate spec** — `parity-gate-spec.md`; establishes the measurement framework
 3. **Parity audit report** — evidence collection (read-only per NFR-1); runs FR-9, FR-10–FR-12; documents FR-8 Python decision
-4. **Prompt stubs** — `lens-new-feature.prompt.md`, `lens-complete.prompt.md` (source and mirror); `lens-switch.prompt.md` mirror to `.github/prompts/`
+4. **Prompt stubs** — `lens-new-feature.prompt.md` and `lens-complete.prompt.md` authored at `_bmad/lens-work/prompts/` (dev scope ends here); `lens-switch.prompt.md` exists — verify only; any `.github/prompts/` mirroring is a post-dev human action outside dev scope
 5. **`bmad-lens-complete` SKILL.md** — load `lens.core/_bmad/bmb/bmadconfig.yaml` and invoke the `bmad-module-builder` skill; load the BMad Builder reference index at `TargetProjects/lens/lens-governance/externaldocs/bmad-builder-docs/llms-full/index.md` before authoring begins; ADR-1 must be resolved before authoring starts
 6. **`bmad-lens-complete` test stubs** — scaffolded after SKILL.md is accepted
 7. **Reference documents** — `auto-context-pull.md` and `init-feature.md` in `bmad-lens-init-feature/references/`

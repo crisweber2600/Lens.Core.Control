@@ -1,6 +1,7 @@
 ---
 feature: lens-dev-new-codebase-trueup
 phase: techplan
+doc_type: techplan-adversarial-review
 source: phase-complete
 verdict: pass-with-warnings
 review_format: abc-choice-v1
