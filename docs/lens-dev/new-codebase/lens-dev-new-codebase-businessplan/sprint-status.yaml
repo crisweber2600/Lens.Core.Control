@@ -1,0 +1,66 @@
+sprint_number: 1
+feature: lens-dev-new-codebase-businessplan
+epic: EP-1 — Businessplan Conductor Rewrite
+status: not-started
+track: express
+created_at: 2026-04-28T02:00:00Z
+updated_at: 2026-04-28T02:00:00Z
+
+pre_sprint_gate:
+  status: not-started
+  required_stories:
+    - repo: lens.core.src
+      branch: develop
+      story: "1.4 — publish-to-governance entry hook"
+      status: unverified
+    - repo: lens.core.src
+      branch: develop
+      story: "3.1 — constitution partial hierarchy fix"
+      status: unverified
+    - repo: lens.core.src
+      branch: develop
+      story: "4.1 — preplan rewrite"
+      status: unverified
+  verification: "Run #prompt:lens-preflight.prompt.md and confirm merge state, not just feature-index phase status"
+
+stories:
+  - id: BP-1
+    title: "Rewrite businessplan command as thin conductor"
+    points: 5
+    priority: P0
+    status: not-started
+    branch: feature/businessplan-conductor
+    depends_on: []
+    blocks: [BP-3]
+    target_repo: TargetProjects/lens-dev/new-codebase/lens.core.src
+
+  - id: BP-3
+    title: "Regression gate and discovery surface verification"
+    points: 2
+    priority: P0
+    status: not-started
+    branch: feature/businessplan-conductor
+    depends_on: [BP-1]
+    blocks: [BP-4]
+    target_repo: TargetProjects/lens-dev/new-codebase/lens.core.src
+    test_command: "uv run --with pytest pytest lens.core/_bmad/lens-work/skills/bmad-lens-businessplan/ -q"
+
+  - id: BP-4
+    title: "Feature closeout and governance phase advance"
+    points: 1
+    priority: P0
+    status: not-started
+    branch: feature/businessplan-conductor
+    depends_on: [BP-3]
+    blocks: []
+    target_repo: TargetProjects/lens-dev/new-codebase/lens.core.src
+
+total_points: 8
+completed_points: 0
+
+unblocking_signals:
+  - trigger: "BP-3 green"
+    unblocks:
+      - feature: lens-dev-new-codebase-baseline
+        stories: ["4.4 — finalizeplan rewrite", "4.5 — expressplan rewrite"]
+    action: "Signal the baseline feature lead when BP-3 passes"
