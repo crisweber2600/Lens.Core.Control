@@ -53,7 +53,8 @@ The broader importance: this is the dogfooding proof point the baseline rewrite 
 | No governance writes during preplan | Preplan stages artifacts in the control-repo docs path only; `publish-to-governance` is NOT called during preplan; BusinessPlan publishes the reviewed preplan set at phase handoff |
 | Constitution prerequisite enforced | Preplan validates that `bmad-lens-constitution` resolves the service hierarchy without hard-failing on missing org-level entries (baseline story 3-1 must be in place) |
 | Clean-room assurance | Implementation and docs are authored from the behavioral specification; no old-codebase files are copied into the new codebase |
-| Regression coverage | Focused parity tests pass for brainstorm-first ordering, batch pass semantics, review-ready routing, phase completion gate, and no-governance-write invariant |
+| `/next` pre-confirmed handoff | When `/next` delegates to preplan, the conductor does not present a redundant launch confirmation prompt; the preplan session begins immediately without asking the user to confirm they want to start preplan |
+| Regression coverage | Focused parity tests pass for brainstorm-first ordering, batch pass semantics, review-ready routing, phase completion gate, no-governance-write invariant, and `/next` pre-confirmed handoff |
 
 ## Scope
 

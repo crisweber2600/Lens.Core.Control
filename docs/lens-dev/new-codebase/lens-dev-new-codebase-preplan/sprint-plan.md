@@ -45,7 +45,7 @@ The following baseline stories must be complete in `TargetProjects/lens-dev/new-
 |---|---|---:|---|---|
 | PP-1.1 | Add command prompt surfaces | S | Installed stub runs light preflight and redirects to release prompt; release prompt loads `bmad-lens-preplan` and names the preplan phase outcomes | Path must stay relative to `lens.core/` in the stub redirect |
 | PP-1.2 | Write SKILL.md thin conductor contract | M | SKILL.md documents analyst activation before brainstorm mode selection, user choice between `bmad-brainstorming` and `bmad-cis` modes, brainstorm-first ordering, batch delegation, review-ready delegation, no-governance-write invariant, phase completion gate, and all integration points | Contract must match the release SKILL.md behavioral specification without copying it verbatim |
-| PP-1.3 | Add parity test skeletons | S | Tests fail red for analyst activation ordering, brainstorm mode choice (bmad-brainstorming path), brainstorm mode choice (bmad-cis path), brainstorm-first ordering, batch pass 1 stop, batch pass 2 resume, review-ready delegation, phase gate on fail, phase gate on pass, and no-governance-write invariant | Existing create-domain and init-feature tests must remain unchanged |
+| PP-1.3 | Add parity test skeletons | S | Tests fail red for analyst activation ordering, brainstorm mode choice (bmad-brainstorming path), brainstorm mode choice (bmad-cis path), brainstorm-first ordering, batch pass 1 stop, batch pass 2 resume, review-ready delegation, phase gate on fail, phase gate on pass, no-governance-write invariant, `/next` pre-confirmed handoff (no confirmation prompt on `/next` → `/preplan` activation), and `fetch-context` availability (failing test confirms `bmad-lens-init-feature fetch-context` callability in the new codebase, surfacing any implementation gap at the start of Sprint 1) | Existing create-domain and init-feature tests must remain unchanged |
 
 ## Sprint 2
 
@@ -53,7 +53,7 @@ The following baseline stories must be complete in `TargetProjects/lens-dev/new-
 
 | Story | Title | Estimate | Acceptance Criteria Summary | Risks |
 |---|---|---:|---|---|
-| PP-2.1 | Implement conductor activation and constitution load | M | Conductor resolves feature context, docs path, and governance mirror path; loads domain constitution via `bmad-lens-constitution`; handles partial hierarchy gracefully (relies on baseline story 3-1 being done) | Story 3-1 must be confirmed green before this story closes |
+| PP-2.1 | Implement conductor activation and constitution load | M | Conductor resolves feature context, docs path, and governance mirror path; loads domain constitution via `bmad-lens-constitution`; handles partial hierarchy gracefully (relies on baseline story 3-1 being done); when activated via `/next` delegation, no launch confirmation prompt is presented — preplan begins immediately per the pre-confirmed handoff invariant | Story 3-1 must be confirmed green before this story closes |
 | PP-2.2 | Implement analyst activation and brainstorm mode selection | M | Interactive mode activates `bmad-agent-analyst` to frame requirements context before any authoring wrapper is invoked; after analyst framing, the conductor presents the user with a choice between `bmad-brainstorming` (divergent ideation) and `bmad-cis` (structured innovation); selected mode routes through `bmad-lens-bmad-skill`; brainstorm.md must exist regardless of mode before research or product-brief wrappers are offered | Both brainstorm modes must be tested; ordering invariant must be tested, not assumed |
 | PP-2.3 | Implement research and product-brief delegation | S | After brainstorm.md exists, the conductor offers research and product-brief; routes research through the narrowest applicable canonical wrapper identifier (`bmad-domain-research`, `bmad-market-research`, or `bmad-technical-research`) and uses those exact names consistently in implementation and tests rather than shorthand aliases; routes product brief through `bmad-product-brief`; does not author artifacts directly | Research mode inference must not skip user clarification when ambiguous |
 
@@ -63,11 +63,21 @@ The following baseline stories must be complete in `TargetProjects/lens-dev/new-
 
 > **Prerequisite gate:** Baseline stories 1-2, 1-3, and 3-1 must pass in `TargetProjects/lens-dev/new-codebase/lens.core.src` before this sprint starts.
 
+> **Gate verification command:** From `TargetProjects/lens-dev/new-codebase/lens.core.src`, run the baseline story targeted tests and confirm all pass before starting any Sprint 3 story:
+> ```bash
+> uv run --with pytest pytest \
+>   _bmad/lens-work/skills/bmad-lens-validate-phase-artifacts/scripts/tests/ \
+>   _bmad/lens-work/skills/bmad-lens-batch/scripts/tests/ \
+>   _bmad/lens-work/skills/bmad-lens-constitution/scripts/tests/ \
+>   -q
+> ```
+> Exact test targets are authoritative in the baseline sprint plan; use the above paths as a starting point and confirm against the baseline feature's Definition of Done.
+
 | Story | Title | Estimate | Acceptance Criteria Summary | Risks |
 |---|---|---:|---|---|
 | PP-3.1 | Wire validate-phase-artifacts.py for review-ready | M | Conductor calls `validate-phase-artifacts.py --phase preplan --contract review-ready` on activation; `status=pass` triggers fast path to adversarial review; `status=fail` triggers normal authoring flow; no inline artifact checks remain | validate-phase-artifacts.py must be callable from the new codebase before this story can close |
 | PP-3.2 | Wire bmad-lens-batch for batch mode | M | On batch pass 1, conductor calls `bmad-lens-batch --target preplan`, stops without writing lifecycle artifacts; on pass 2, pre-approved answers are loaded as context and authoring resumes; no inline `if mode == batch` logic in conductor | bmad-lens-batch (baseline story 1-3) must be callable from the new codebase before this story can close |
-| PP-3.3 | Wire bmad-lens-adversarial-review for phase completion | M | At phase completion, conductor calls `bmad-lens-adversarial-review --phase preplan --source phase-complete`; `fail` verdict blocks `feature.yaml` update; `pass` or `pass-with-warnings` allows phase transition; review must run in party mode as specified by lifecycle.yaml | Constitution must be resolved before review can run (story 3-1 dependency) |
+| PP-3.3 | Wire bmad-lens-adversarial-review for phase completion | M | At phase completion, conductor calls `bmad-lens-adversarial-review --phase preplan --source phase-complete`; `fail` verdict blocks `feature.yaml` update; `pass` or `pass-with-warnings` allows phase transition; review must run in party mode as specified by lifecycle.yaml; no-governance-write invariant test still passes after adversarial review wiring (confirms the review wiring does not introduce any governance write path) | Constitution must be resolved before review can run (story 3-1 dependency) |
 
 ## Sprint 4
 
@@ -75,7 +85,7 @@ The following baseline stories must be complete in `TargetProjects/lens-dev/new-
 
 | Story | Title | Estimate | Acceptance Criteria Summary | Risks |
 |---|---|---:|---|---|
-| PP-4.1 | Implement phase completion and feature.yaml update | M | After adversarial review passes, conductor updates `feature.yaml` phase to `preplan-complete` via `bmad-lens-feature-yaml`; no `publish-to-governance` call occurs; conductor reports "advance to `/businessplan`"; no-governance-write parity test passes | Phase update must not trigger any governance publication |
+| PP-4.1 | Implement phase completion and feature.yaml update | M | After adversarial review passes, conductor updates `feature.yaml` phase to `preplan-complete` via `bmad-lens-feature-yaml`; no `publish-to-governance` call occurs; conductor emits a completion message naming `/businessplan` as the expected next command (message only — no live routing call is made; businessplan command integration is deferred to a later story; actual routing is the user's action); no-governance-write parity test passes | Phase update must not trigger any governance publication |
 | PP-4.2 | Align help surfaces and resolve target-repo scope | S | `module-help.csv` and `lens.agent.md` include `preplan` in the 17-command surface; scope decision on `bmad-lens-target-repo` interruption-and-resume (in scope or deferred with a documented rationale) | Broader 17-command surface alignment sweep may own module-help.csv update instead |
 
 ## Cross-Sprint Dependencies
@@ -99,5 +109,7 @@ The following baseline stories must be complete in `TargetProjects/lens-dev/new-
 - Review-ready fast path delegates to `validate-phase-artifacts.py` with a passing parity test.
 - Phase completion gate enforces adversarial review (party mode) with a passing parity test.
 - No governance writes during preplan — the invariant test passes.
+- `/next` pre-confirmed handoff parity test passes — no redundant confirmation prompt on `/next` → `/preplan` activation.
+- CI gate passes: no old-codebase file paths or source patterns from `lens.core/` or `TargetProjects/lens-dev/old-codebase/` appear in any implementation PR diff.
 - `module-help.csv` and `lens.agent.md` list `preplan` as one of the 17 retained commands.
 - All existing init-feature, create-domain, and create-service parity tests remain green.
