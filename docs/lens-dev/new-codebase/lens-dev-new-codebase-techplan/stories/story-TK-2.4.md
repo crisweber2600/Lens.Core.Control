@@ -2,7 +2,7 @@
 feature: lens-dev-new-codebase-techplan
 story_id: "TK-2.4"
 doc_type: story
-status: not-started
+status: complete
 title: "Wire lens-techplan to Discovery and Preflight"
 priority: P1
 story_points: 1

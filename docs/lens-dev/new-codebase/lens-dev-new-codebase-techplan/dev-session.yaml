@@ -1,0 +1,20 @@
+feature_id: lens-dev-new-codebase-techplan
+status: complete
+target_repo: TargetProjects/lens-dev/new-codebase/lens.core.src
+working_branch: feature/lens-dev-new-codebase-techplan
+base_branch: develop
+branch_mode: feature-id
+epic: 1
+final_review_status: pass
+final_party_mode_status: pass
+final_pr_url: https://github.com/crisweber2600/Lens.Core.Src/pull/new/feature/lens-dev-new-codebase-techplan
+completed_stories:
+  - TK-1.1
+  - TK-2.1
+  - TK-2.2
+  - TK-2.3
+  - TK-2.4
+  - TK-2.5
+  - TK-3.1
+  - TK-3.2
+completed_at: '2026-04-29T18:30:00Z'

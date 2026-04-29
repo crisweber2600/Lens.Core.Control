@@ -2,7 +2,7 @@
 feature: lens-dev-new-codebase-techplan
 story_id: "TK-2.3"
 doc_type: story
-status: not-started
+status: complete
 title: "Implement Release Prompt and Conductor Skill"
 priority: P0
 story_points: 3

@@ -2,7 +2,7 @@
 feature: lens-dev-new-codebase-techplan
 story_id: "TK-3.1"
 doc_type: story
-status: not-started
+status: complete
 title: "Deliver Shared Utility Surfaces"
 priority: P0
 story_points: 5

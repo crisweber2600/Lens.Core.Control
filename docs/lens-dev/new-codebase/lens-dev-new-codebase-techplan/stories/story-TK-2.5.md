@@ -2,7 +2,7 @@
 feature: lens-dev-new-codebase-techplan
 story_id: "TK-2.5"
 doc_type: story
-status: not-started
+status: complete
 title: "Test Harness Foundation for lens-techplan"
 priority: P1
 story_points: 2

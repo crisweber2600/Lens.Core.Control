@@ -2,7 +2,7 @@
 feature: lens-dev-new-codebase-techplan
 story_id: "TK-2.2"
 doc_type: story
-status: not-started
+status: complete
 title: "Implement lens-techplan Public Stub"
 priority: P0
 story_points: 2

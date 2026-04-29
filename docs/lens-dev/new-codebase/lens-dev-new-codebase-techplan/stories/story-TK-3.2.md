@@ -2,7 +2,7 @@
 feature: lens-dev-new-codebase-techplan
 story_id: "TK-3.2"
 doc_type: story
-status: not-started
+status: complete
 title: "Parity Regressions and Dev-Complete Gate"
 priority: P1
 story_points: 3

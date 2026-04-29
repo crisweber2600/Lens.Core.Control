@@ -2,7 +2,7 @@
 feature: lens-dev-new-codebase-techplan
 story_id: "TK-2.1"
 doc_type: story
-status: not-started
+status: complete
 title: "Pre-Slice Assessment: Confirm Discovery File and Test Path"
 priority: P0
 story_points: 1
