@@ -1,4 +1,14 @@
-# Adversarial Review: lens-dev-new-codebase-discover / expressplan
+---
+review_format: abc-choice-v1
+artifact_type: expressplan-review
+project: lens-dev-new-codebase-discover
+subject: expressplan
+reviewed: 2026-04-28T00:00:00Z
+source: phase-complete
+overall_rating: pass-with-warnings
+---
+
+# Expressplan Review: lens-dev-new-codebase-discover
 
 **Reviewed:** 2026-04-28T00:00:00Z
 **Source:** phase-complete
@@ -22,33 +32,194 @@ The three expressplan artifacts — `business-plan.md`, `tech-plan.md`, and `spr
 
 ### High
 
-| # | Dimension | Finding | Recommendation |
-|---|---|---|---|
-| H1 | Coverage Gaps | Stories 5.4.1–5.4.3 assume the existing `bmad-lens-discover/SKILL.md` and `discover-ops.py` are substantially complete and require only review and minor patching. No pre-sprint assessment story or completeness gate exists to confirm this assumption. If the existing SKILL.md has large structural gaps (e.g., the auto-commit section is absent, headless mode is undocumented, config resolution is missing), Story 5.4.1 could expand significantly beyond the estimated 2–3 sessions. | Add a bounded pre-assessment step at the start of Story 5.4.1: read the full current `SKILL.md` and `discover-ops.py`, document any missing sections against the tech-plan spec, and explicitly scope the story to match findings. If gaps are large enough to require a new story, surface that before the sprint begins. |
+#### H1 — Coverage Gaps
+
+**Finding:** Stories 5.4.1–5.4.3 assume the existing `bmad-lens-discover/SKILL.md` and `discover-ops.py` are substantially complete and require only review and minor patching. No pre-sprint assessment story or completeness gate exists to confirm this assumption. If the existing SKILL.md has large structural gaps (e.g., the auto-commit section is absent, headless mode is undocumented, config resolution is missing), Story 5.4.1 could expand significantly beyond the estimated 2–3 sessions.
+
+**Severity:** High
+
+**Recommendation:** Add a bounded pre-assessment step at the start of Story 5.4.1: read the full current `SKILL.md` and `discover-ops.py`, document any missing sections against the tech-plan spec, and explicitly scope the story to match findings. If gaps are large enough to require a new story, surface that before the sprint begins.
+
+**Response (choose A–E):**
+- [ ] A — Accept finding and implement exactly as recommended.
+- [ ] B — Accept finding and implement an alternative remediation with equivalent control.
+- [ ] C — Partially accept finding; narrow scope and document deferred work.
+- [ ] D — Dispute finding; provide evidence the risk is already controlled.
+- [ ] E — Defer/no action for this phase; record rationale and owner.
 
 ---
 
 ### Medium
 
-| # | Dimension | Finding | Recommendation |
-|---|---|---|---|
-| M1 | Logic Flaws | The tech-plan specifies the conditional auto-commit hash comparison as "inline in the skill," but a SKILL.md is a behavioral specification document, not executable code. The actual hash comparison must be implemented by the orchestrating agent or as a callable script expression. The tech-plan does not clarify who owns the hash computation at execution time, creating ambiguity for Story 5.4.2. | Add a clarifying sentence to tech-plan ADR-3 or Story 5.4.2: specify whether the hash comparison is expressed as Python inline in the skill's agent invocation sequence, or whether `discover-ops.py` exposes a `hash-inventory` utility subcommand. Either approach is valid, but the decision must be explicit before Story 5.4.2 begins. |
-| M2 | Logic Flaws | Business-plan SC-5 states "no other command in the 17-command surface acquires or references the governance-main direct-commit path" as a hard success criterion. Story 5.4.7 (Architecture Isolation Audit) states that violations found in other commands are "surfaced as findings (not fixed here)." These are in direct conflict: if SC-5 is a hard criterion, finding violations in other commands would fail the criterion without remediation. | Resolve the tension by reframing SC-5: either narrow its scope to "no spread is introduced BY THIS FEATURE'S rewrite" (the audit confirms this feature didn't propagate the pattern), or split Story 5.4.7 into audit + conditional remediation for any incidental spread found. The current framing leaves SC-5 unverifiable within this feature's scope. |
-| M3 | Coverage Gaps | The tech-plan's Story 5.4.4 and the T2 test case (`test_scan_reports_untracked_repo_with_targetprojects_prefix`) surface untracked repos for `add-entry`. ADR-2 states that `add-entry` requires `--remote-url`, and the skill must resolve this via `git remote get-url origin`. Neither the SKILL.md behavioral spec review (Story 5.4.1) nor the test suite explicitly handles the case where a local repo has no remote configured — a realistic state for locally-initialised repos. | Add an acceptance criterion to Story 5.4.1: document the no-remote case in SKILL.md (either skip the repo with a warning, or prompt the user for a URL in interactive mode). Add a test case (T2b) that verifies the script handles a local repo with no remote gracefully (does not crash; returns appropriate status in the untracked entry or a separate `untracked_no_remote` list). |
-| M4 | Coverage Gaps | Business-plan SC-6 requires dry-run mode to produce no file mutations and no git commits. The sprint plan has no regression test for dry-run behavior. Story 5.4.6 mentions "a manual smoke test confirms the chain executes without errors" but this refers to the prompt chain, not dry-run. The T1–T8 test matrix has no dry-run test case. | Add T9 (`test_dry_run_produces_no_mutations`) to the test matrix in the tech-plan: run `scan` against a state that would trigger both clone and add-entry actions, but pass `--dry-run`; assert inventory file is byte-for-byte unchanged and that git commit count (by checking git log) is zero. Add Story 5.4.4b or extend Story 5.4.4 to include this test. |
-| M5 | Coverage Gaps | T8 (no-op test) as designed validates that `scan` returns zero `missing_from_disk` and zero `untracked`, then infers no `add-entry` was triggered. However, it does not validate the absence of a git commit. Since the conditional auto-commit is inline in the skill (not in `discover-ops.py`), the script-level test cannot directly assert that no commit was made. SC-4 ("no commit on no-op") therefore cannot be fully validated by the T-series test suite alone. | Resolve by one of: (a) add a `hash-inventory` or `check-hash` subcommand to `discover-ops.py` so the test can compare pre/post file hashes programmatically, making the no-commit path unit-testable; or (b) document explicitly that SC-4 validation requires a skill-level integration test (outside T-series) and accept that the T-series test covers only the scan-level no-op. Either resolution is acceptable; the gap must be acknowledged in Story 5.4.5. |
+#### M1 — Logic Flaws
+
+**Finding:** The tech-plan specifies the conditional auto-commit hash comparison as "inline in the skill," but a SKILL.md is a behavioral specification document, not executable code. The actual hash comparison must be implemented by the orchestrating agent or as a callable script expression. The tech-plan does not clarify who owns the hash computation at execution time, creating ambiguity for Story 5.4.2.
+
+**Severity:** Medium
+
+**Recommendation:** Add a clarifying sentence to tech-plan ADR-3 or Story 5.4.2: specify whether the hash comparison is expressed as Python inline in the skill's agent invocation sequence, or whether `discover-ops.py` exposes a `hash-inventory` utility subcommand. Either approach is valid, but the decision must be explicit before Story 5.4.2 begins.
+
+**Response (choose A–E):**
+- [ ] A — Accept finding and implement exactly as recommended.
+- [ ] B — Accept finding and implement an alternative remediation with equivalent control.
+- [ ] C — Partially accept finding; narrow scope and document deferred work.
+- [ ] D — Dispute finding; provide evidence the risk is already controlled.
+- [ ] E — Defer/no action for this phase; record rationale and owner.
+
+---
+
+#### M2 — Logic Flaws
+
+**Finding:** Business-plan SC-5 states "no other command in the 17-command surface acquires or references the governance-main direct-commit path" as a hard success criterion. Story 5.4.7 (Architecture Isolation Audit) states that violations found in other commands are "surfaced as findings (not fixed here)." These are in direct conflict: if SC-5 is a hard criterion, finding violations in other commands would fail the criterion without remediation.
+
+**Severity:** Medium
+
+**Recommendation:** Resolve the tension by reframing SC-5: either narrow its scope to "no spread is introduced BY THIS FEATURE'S rewrite" (the audit confirms this feature didn't propagate the pattern), or split Story 5.4.7 into audit + conditional remediation for any incidental spread found. The current framing leaves SC-5 unverifiable within this feature's scope.
+
+**Response (choose A–E):**
+- [ ] A — Accept finding and implement exactly as recommended.
+- [ ] B — Accept finding and implement an alternative remediation with equivalent control.
+- [ ] C — Partially accept finding; narrow scope and document deferred work.
+- [ ] D — Dispute finding; provide evidence the risk is already controlled.
+- [ ] E — Defer/no action for this phase; record rationale and owner.
+
+---
+
+#### M3 — Coverage Gaps
+
+**Finding:** The tech-plan's Story 5.4.4 and the T2 test case (`test_scan_reports_untracked_repo_with_targetprojects_prefix`) surface untracked repos for `add-entry`. ADR-2 states that `add-entry` requires `--remote-url`, and the skill must resolve this via `git remote get-url origin`. Neither the SKILL.md behavioral spec review (Story 5.4.1) nor the test suite explicitly handles the case where a local repo has no remote configured — a realistic state for locally-initialised repos.
+
+**Severity:** Medium
+
+**Recommendation:** Add an acceptance criterion to Story 5.4.1: document the no-remote case in SKILL.md (either skip the repo with a warning, or prompt the user for a URL in interactive mode). Add a test case (T2b) that verifies the script handles a local repo with no remote gracefully (does not crash; returns appropriate status in the untracked entry or a separate `untracked_no_remote` list).
+
+**Response (choose A–E):**
+- [ ] A — Accept finding and implement exactly as recommended.
+- [ ] B — Accept finding and implement an alternative remediation with equivalent control.
+- [ ] C — Partially accept finding; narrow scope and document deferred work.
+- [ ] D — Dispute finding; provide evidence the risk is already controlled.
+- [ ] E — Defer/no action for this phase; record rationale and owner.
+
+---
+
+#### M4 — Coverage Gaps
+
+**Finding:** Business-plan SC-6 requires dry-run mode to produce no file mutations and no git commits. The sprint plan has no regression test for dry-run behavior. Story 5.4.6 mentions "a manual smoke test confirms the chain executes without errors" but this refers to the prompt chain, not dry-run. The T1–T8 test matrix has no dry-run test case.
+
+**Severity:** Medium
+
+**Recommendation:** Add T9 (`test_dry_run_produces_no_mutations`) to the test matrix in the tech-plan: run `scan` against a state that would trigger both clone and add-entry actions, but pass `--dry-run`; assert inventory file is byte-for-byte unchanged and that git commit count (by checking git log) is zero. Add Story 5.4.4b or extend Story 5.4.4 to include this test.
+
+**Response (choose A–E):**
+- [ ] A — Accept finding and implement exactly as recommended.
+- [ ] B — Accept finding and implement an alternative remediation with equivalent control.
+- [ ] C — Partially accept finding; narrow scope and document deferred work.
+- [ ] D — Dispute finding; provide evidence the risk is already controlled.
+- [ ] E — Defer/no action for this phase; record rationale and owner.
+
+---
+
+#### M5 — Coverage Gaps
+
+**Finding:** T8 (no-op test) as designed validates that `scan` returns zero `missing_from_disk` and zero `untracked`, then infers no `add-entry` was triggered. However, it does not validate the absence of a git commit. Since the conditional auto-commit is inline in the skill (not in `discover-ops.py`), the script-level test cannot directly assert that no commit was made. SC-4 ("no commit on no-op") therefore cannot be fully validated by the T-series test suite alone.
+
+**Severity:** Medium
+
+**Recommendation:** Resolve by one of: (a) add a `hash-inventory` or `check-hash` subcommand to `discover-ops.py` so the test can compare pre/post file hashes programmatically, making the no-commit path unit-testable; or (b) document explicitly that SC-4 validation requires a skill-level integration test (outside T-series) and accept that the T-series test covers only the scan-level no-op. Either resolution is acceptable; the gap must be acknowledged in Story 5.4.5.
+
+**Response (choose A–E):**
+- [ ] A — Accept finding and implement exactly as recommended.
+- [ ] B — Accept finding and implement an alternative remediation with equivalent control.
+- [ ] C — Partially accept finding; narrow scope and document deferred work.
+- [ ] D — Dispute finding; provide evidence the risk is already controlled.
+- [ ] E — Defer/no action for this phase; record rationale and owner.
 
 ---
 
 ### Low
 
-| # | Dimension | Finding | Recommendation |
-|---|---|---|---|
-| L1 | Coverage Gaps | The feature.yaml milestones block has `businessplan`, `techplan`, `finalizeplan`, `dev-ready`, and `dev-complete` fields all set to null. On the express track, the expressplan phase collapses businessplan and techplan into one phase — it is unclear whether the expressplan conductor sets these milestone timestamps or leaves them null. | Add a note to business-plan.md or feature.yaml metadata: on the express track, `businessplan` and `techplan` milestones are not separately timestamped; only `dev-ready` and `dev-complete` are set during implementation. This keeps the governance record clean. |
-| L2 | Complexity and Risk | The sprint plan references "EW/OW via BMB" for all SKILL.md edits but does not specify which BMB command applies when editing an existing SKILL.md that was authored by a prior baseline session. CW (Create Workflow) would be incorrect; EW or OW depends on whether the SKILL.md is considered a workflow or a skill asset. | Add a one-line process note to Story 5.4.1 specifying the correct BMB command for editing an existing skill file (likely OW or the skill's native edit path). Consult `lens.core/_bmad/bmb/` docs before starting. |
-| L3 | Cross-Feature Dependencies | The `depends_on: [lens-dev-new-codebase-baseline]` reference is correct but the plans do not confirm that the baseline feature is in `dev-complete` state. If it is still in a mid-flight state, concurrent edits to shared lens-work assets could conflict. | Verify baseline feature.yaml `phase` is `dev-complete` or `complete` before Story 5.4.1 begins. No action needed if baseline is confirmed closed. |
-| L4 | Assumptions and Blind Spots | The tech-plan and business-plan describe the `publish-to-governance` CLI as the alternative path that must not be used for discover. But neither document explains that the expressplan planning artifacts (business-plan.md, tech-plan.md) WILL be published via `publish-to-governance` after the expressplan phase completes — this is separate from the discover auto-commit. The distinction between "what discover does at runtime" vs. "what the expressplan conductor does to publish these planning docs" is implicit. | Minor — no change required to the plans. Add a note to the sprint plan's Definition of Done acknowledging that the expressplan conductor will use `publish-to-governance` to push the planning docs to governance after `expressplan-complete` is set. |
-| L5 | Assumptions and Blind Spots | The Definition of Done in the sprint plan gates on `uv run --with pytest` passing in CI, but does not verify that the CI configuration for this repo includes the `--with pytest` inline dependency resolution for the discover test script. | Verify CI runs at least once against the discover test file before the dev-complete milestone. No structural change needed given the established baseline test pattern. |
+#### L1 — Coverage Gaps
+
+**Finding:** The feature.yaml milestones block has `businessplan`, `techplan`, `finalizeplan`, `dev-ready`, and `dev-complete` fields all set to null. On the express track, the expressplan phase collapses businessplan and techplan into one phase — it is unclear whether the expressplan conductor sets these milestone timestamps or leaves them null.
+
+**Severity:** Low
+
+**Recommendation:** Add a note to business-plan.md or feature.yaml metadata: on the express track, `businessplan` and `techplan` milestones are not separately timestamped; only `dev-ready` and `dev-complete` are set during implementation. This keeps the governance record clean.
+
+**Response (choose A–E):**
+- [ ] A — Accept finding and implement exactly as recommended.
+- [ ] B — Accept finding and implement an alternative remediation with equivalent control.
+- [ ] C — Partially accept finding; narrow scope and document deferred work.
+- [ ] D — Dispute finding; provide evidence the risk is already controlled.
+- [ ] E — Defer/no action for this phase; record rationale and owner.
+
+---
+
+#### L2 — Complexity and Risk
+
+**Finding:** The sprint plan references "EW/OW via BMB" for all SKILL.md edits but does not specify which BMB command applies when editing an existing SKILL.md that was authored by a prior baseline session. CW (Create Workflow) would be incorrect; EW or OW depends on whether the SKILL.md is considered a workflow or a skill asset.
+
+**Severity:** Low
+
+**Recommendation:** Add a one-line process note to Story 5.4.1 specifying the correct BMB command for editing an existing skill file (likely OW or the skill's native edit path). Consult `lens.core/_bmad/bmb/` docs before starting.
+
+**Response (choose A–E):**
+- [ ] A — Accept finding and implement exactly as recommended.
+- [ ] B — Accept finding and implement an alternative remediation with equivalent control.
+- [ ] C — Partially accept finding; narrow scope and document deferred work.
+- [ ] D — Dispute finding; provide evidence the risk is already controlled.
+- [ ] E — Defer/no action for this phase; record rationale and owner.
+
+---
+
+#### L3 — Cross-Feature Dependencies
+
+**Finding:** The `depends_on: [lens-dev-new-codebase-baseline]` reference is correct but the plans do not confirm that the baseline feature is in `dev-complete` state. If it is still in a mid-flight state, concurrent edits to shared lens-work assets could conflict.
+
+**Severity:** Low
+
+**Recommendation:** Verify baseline feature.yaml `phase` is `dev-complete` or `complete` before Story 5.4.1 begins. No action needed if baseline is confirmed closed.
+
+**Response (choose A–E):**
+- [ ] A — Accept finding and implement exactly as recommended.
+- [ ] B — Accept finding and implement an alternative remediation with equivalent control.
+- [ ] C — Partially accept finding; narrow scope and document deferred work.
+- [ ] D — Dispute finding; provide evidence the risk is already controlled.
+- [ ] E — Defer/no action for this phase; record rationale and owner.
+
+---
+
+#### L4 — Assumptions and Blind Spots
+
+**Finding:** The tech-plan and business-plan describe the `publish-to-governance` CLI as the alternative path that must not be used for discover. But neither document explains that the expressplan planning artifacts (business-plan.md, tech-plan.md) WILL be published via `publish-to-governance` after the expressplan phase completes — this is separate from the discover auto-commit. The distinction between "what discover does at runtime" vs. "what the expressplan conductor does to publish these planning docs" is implicit.
+
+**Severity:** Low
+
+**Recommendation:** Minor — no change required to the plans. Add a note to the sprint plan's Definition of Done acknowledging that the expressplan conductor will use `publish-to-governance` to push the planning docs to governance after `expressplan-complete` is set.
+
+**Response (choose A–E):**
+- [ ] A — Accept finding and implement exactly as recommended.
+- [ ] B — Accept finding and implement an alternative remediation with equivalent control.
+- [ ] C — Partially accept finding; narrow scope and document deferred work.
+- [ ] D — Dispute finding; provide evidence the risk is already controlled.
+- [ ] E — Defer/no action for this phase; record rationale and owner.
+
+---
+
+#### L5 — Assumptions and Blind Spots
+
+**Finding:** The Definition of Done in the sprint plan gates on `uv run --with pytest` passing in CI, but does not verify that the CI configuration for this repo includes the `--with pytest` inline dependency resolution for the discover test script.
+
+**Severity:** Low
+
+**Recommendation:** Verify CI runs at least once against the discover test file before the dev-complete milestone. No structural change needed given the established baseline test pattern.
+
+**Response (choose A–E):**
+- [ ] A — Accept finding and implement exactly as recommended.
+- [ ] B — Accept finding and implement an alternative remediation with equivalent control.
+- [ ] C — Partially accept finding; narrow scope and document deferred work.
+- [ ] D — Dispute finding; provide evidence the risk is already controlled.
+- [ ] E — Defer/no action for this phase; record rationale and owner.
 
 ---
 

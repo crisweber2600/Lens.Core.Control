@@ -1,4 +1,5 @@
 ---
+review_format: abc-choice-v1
 feature: lens-dev-new-codebase-discover
 doc_type: finalizeplan-review
 status: in-review
@@ -106,9 +107,42 @@ All five medium findings and one high finding from `expressplan-adversarial-revi
 
 ## Open Questions Surfaced
 
-1. **Config key stability risk:** Should Story 5.4.1 add a test case for config key resolution? Or should this be tracked as a dependency note against `lens-dev-new-codebase-upgrade`?
-2. **No-remote case priority:** Should the no-remote edge case be resolved in Story 5.4.1 (SKILL.md spec) or in a new Story 5.4.0 that runs before all others?
-3. **Integration test layer:** Is a skill-level integration test (covering the full agent → script → git chain) required for `dev-complete`, or is the T-series script-level test coverage sufficient?
+### OQ-FP1 — Config Key Stability Risk
+
+**Question:** Should Story 5.4.1 add a test case for config key resolution? Or should this be tracked as a dependency note against `lens-dev-new-codebase-upgrade`?
+
+**Response (choose A–E):**
+- [ ] A — Accept finding and implement exactly as recommended.
+- [ ] B — Accept finding and implement an alternative remediation with equivalent control.
+- [ ] C — Partially accept finding; narrow scope and document deferred work.
+- [ ] D — Dispute finding; provide evidence the risk is already controlled.
+- [ ] E — Defer/no action for this phase; record rationale and owner.
+
+---
+
+### OQ-FP2 — No-Remote Case Priority
+
+**Question:** Should the no-remote edge case be resolved in Story 5.4.1 (SKILL.md spec) or in a new Story 5.4.0 that runs before all others?
+
+**Response (choose A–E):**
+- [ ] A — Accept finding and implement exactly as recommended.
+- [ ] B — Accept finding and implement an alternative remediation with equivalent control.
+- [ ] C — Partially accept finding; narrow scope and document deferred work.
+- [ ] D — Dispute finding; provide evidence the risk is already controlled.
+- [ ] E — Defer/no action for this phase; record rationale and owner.
+
+---
+
+### OQ-FP3 — Integration Test Layer
+
+**Question:** Is a skill-level integration test (covering the full agent → script → git chain) required for `dev-complete`, or is the T-series script-level test coverage sufficient?
+
+**Response (choose A–E):**
+- [ ] A — Accept finding and implement exactly as recommended.
+- [ ] B — Accept finding and implement an alternative remediation with equivalent control.
+- [ ] C — Partially accept finding; narrow scope and document deferred work.
+- [ ] D — Dispute finding; provide evidence the risk is already controlled.
+- [ ] E — Defer/no action for this phase; record rationale and owner.
 
 ---
 

@@ -8,7 +8,9 @@ key_decisions:
   - Conditional auto-commit uses a pre/post hash comparison to avoid empty commits
   - add-entry is idempotent by remote_url uniqueness, not name uniqueness
   - Path resolution uses Path.resolve() for all disk comparisons to avoid drive-letter / symlink mismatches
-open_questions: []
+open_questions:
+  - Which layer owns the pre/post hash comparison used to decide whether an auto-commit should be created: discover-ops.py, the orchestration skill, or shared contract logic between them?
+  - What is the required discover behavior when an inventory entry has no remote configured: skip cloning silently, emit a warning, or fail validation/headless execution?
 depends_on: [business-plan]
 blocks: []
 updated_at: 2026-04-28T00:00:00Z

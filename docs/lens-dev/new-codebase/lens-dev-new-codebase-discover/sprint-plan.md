@@ -7,7 +7,10 @@ key_decisions:
   - One sprint; Story 5.4 scope from baseline is fully captured here
   - BMB-first authoring applies to all lens-work file changes
   - Regression test pass is a hard gate before dev-complete milestone
-open_questions: []
+open_questions:
+  - Should a pre-assessment gate be required before implementation work begins or before specific stories can start?
+  - What is the required no-remote behavior for the discover command in interactive and headless flows?
+  - Is an integration-test requirement a hard gate for sprint completion, and if so which scenarios must be covered?
 depends_on: [business-plan, tech-plan]
 blocks: []
 updated_at: 2026-04-28T00:00:00Z
@@ -35,7 +38,7 @@ Deliver the `discover` command rewrite to `dev-complete` status within a single 
 | Story | Title | Status | Priority | Notes |
 |---|---|---|---|---|
 | 5.4.1 | Finalize SKILL.md behavioral spec | not-started | P0 | Review and complete the existing SKILL.md: auto-commit section, headless, dry-run, no-op, config resolution |
-| 5.4.2 | Patch discover-ops.py: conditional auto-commit guard | not-started | P0 | Add pre/post hash comparison guard to ensure no empty commits |
+| 5.4.2 | Patch SKILL.md: conditional auto-commit guard | not-started | P0 | Add pre/post hash comparison guard in SKILL.md to ensure no empty commits |
 | 5.4.3 | Patch discover-ops.py: path resolution via resolve() | not-started | P1 | Verify all path comparisons use Path.resolve() for Windows safety |
 | 5.4.4 | Extend test suite: missing-from-disk and add-entry tests | not-started | P0 | T3–T5 from tech-plan test matrix |
 | 5.4.5 | Extend test suite: validate and no-op tests | not-started | P0 | T6–T8 from tech-plan test matrix |
@@ -63,11 +66,11 @@ Deliver the `discover` command rewrite to `dev-complete` status within a single 
 
 ---
 
-### Story 5.4.2 — Patch discover-ops.py: Conditional Auto-Commit Guard
+### Story 5.4.2 — Patch SKILL.md: Conditional Auto-Commit Guard
 
 **Goal:** The skill's auto-commit logic fires only when `repo-inventory.yaml` has actually changed.
 
-**Context:** The conditional auto-commit is implemented inline in the skill (not in the script), but `discover-ops.py` may expose a hash utility or the skill can use Python's `hashlib` inline. The guard must be in place before regression tests cover it.
+**Context:** The conditional auto-commit is implemented inline in the skill's orchestration section (not in `discover-ops.py`). The skill captures a SHA-256 hash of the inventory file before and after `add-entry` calls, and only executes `git add / commit / push` when the hashes differ. The guard must be in place before regression tests cover it.
 
 **Acceptance Criteria:**
 - [ ] Pre-mutation SHA-256 hash of `repo-inventory.yaml` is captured before any `add-entry` calls
@@ -76,7 +79,7 @@ Deliver the `discover` command rewrite to `dev-complete` status within a single 
 - [ ] No empty commit is produced on a no-op run
 - [ ] SKILL.md documents the hash comparison approach
 
-**Implementation:** Edit SKILL.md auto-commit section; use EW via BMB.
+**Implementation:** Edit SKILL.md auto-commit section to add the pre/post hash guard; use EW via BMB.
 
 ---
 

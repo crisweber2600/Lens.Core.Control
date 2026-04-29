@@ -105,13 +105,13 @@ The old codebase established both behaviors. The new codebase must preserve them
 
 | # | Criterion | Validation |
 |---|---|---|
-| SC-1 | `discover` clones any repo listed in `repo-inventory.yaml` that is absent from `TargetProjects/` on disk | Regression test: populate inventory with a mock repo entry, assert clone is triggered |
+| SC-1 | `discover` identifies any repo listed in `repo-inventory.yaml` that is absent from `TargetProjects/` on disk and routes it into the clone path | Script-level regression test (`test-discover-ops.py`): populate inventory with a mock repo entry, assert the missing repo is detected and the clone action is requested/emitted |
 | SC-2 | `discover` adds any repo found on disk to `repo-inventory.yaml` when it is not already registered | Regression test: create an untracked local git repo, assert add-entry is triggered and inventory is updated |
-| SC-3 | Inventory changes are committed and pushed to governance `main` exactly once after reconciliation | Regression test: assert commit is produced when inventory is modified |
-| SC-4 | A run with no drift produces no commit and reports `[discover] Nothing to do` | Regression test: run with disk and inventory in sync; assert no commit and correct output |
+| SC-3 | Inventory changes are committed and pushed to governance `main` exactly once after reconciliation | Script-level regression test (`test-discover-ops.py`): assert an inventory-modified run emits the commit-required / commit-path behavior exactly once |
+| SC-4 | A run with no drift produces no commit and reports `[discover] Nothing to do` | Script-level regression test (`test-discover-ops.py`): run with disk and inventory in sync; assert no commit-path is requested and correct output is emitted |
 | SC-5 | No other command in the 17-command surface acquires or references the governance-main direct-commit path | Architecture review: audit `publish-to-governance` call sites in all other command SKILL.md files |
 | SC-6 | The SKILL.md headless and dry-run modes function correctly | Regression test: verify `--dry-run` produces no file mutations and no git commits |
-| SC-7 | All regression tests pass in the control repo CI before `dev-complete` milestone | CI gate: `uv run --with pytest pytest lens.core/_bmad/lens-work/skills/bmad-lens-discover/scripts/tests/ -q` |
+| SC-7 | All script-level regression tests in `test-discover-ops.py` pass in the control repo CI before `dev-complete` milestone | CI gate: `uv run --with pytest pytest lens.core/_bmad/lens-work/skills/bmad-lens-discover/scripts/tests/ -q` |
 
 ---
 
