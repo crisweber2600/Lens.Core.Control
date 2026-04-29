@@ -10,8 +10,8 @@ key_decisions:
   - techplan-owned shared utilities are authoritative; lens-dev-new-codebase-expressplan and lens-dev-new-codebase-finalizeplan are expected to consume, not re-implement, the shared surfaces delivered by this feature.
   - Clean-room rule: no old-codebase skill prose reproduced; implementation derived from baseline PRD and architecture only.
 open_questions:
-  - Which exact discovery file registers `lens-techplan` in the target project? (Must resolve before TK-2.1 begins.)
-  - Which focused test file owns prompt-start and wrapper-equivalence regressions? (Must resolve before TK-2.1 begins.)
+  - Which exact discovery file registers `lens-techplan` in the target project? (Must resolve before TK-2.2 begins.)
+  - Which focused test file owns prompt-start and wrapper-equivalence regressions? (Must resolve before TK-2.2 begins.)
 depends_on:
   - business-plan.md
   - tech-plan.md

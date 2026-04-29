@@ -2,7 +2,7 @@
 feature: lens-dev-new-codebase-techplan
 doc_type: stories
 status: approved
-goal: "Story list for the techplan rewrite — three delivery slices, seven stories."
+goal: "Story list for the techplan rewrite — three delivery slices, eight stories."
 key_decisions:
   - Story TK-1.1 is already complete (planning artifacts).
   - Stories TK-2.1 through TK-2.5 implement the command surface in the target project.
@@ -30,7 +30,7 @@ updated_at: 2026-04-29T00:00:00Z
 | TK-3.1 | Land Shared Utility Surfaces | 5 | 🟡 Blocked (starts after TK-2.1 in-progress) | TK-2.1 |
 | TK-3.2 | Parity Regressions, Handoff, and Dev-Complete Gate | 3 | 🟡 Blocked | TK-3.1 |
 
-**Total story points:** 19 (excluding TK-1.1 already complete)
+**Total story points:** 19 (17 remaining — TK-1.1 already complete)
 
 ---
 

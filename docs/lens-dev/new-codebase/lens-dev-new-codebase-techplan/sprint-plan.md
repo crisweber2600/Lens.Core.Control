@@ -37,7 +37,7 @@ Turn this feature folder into a complete expressplan packet, then hand implement
 
 ## Delivery Slices
 
-| Story ID | Slice | Objective | Exit Criteria |
+| Slice ID | Slice | Objective | Exit Criteria |
 | --- | --- | --- | --- |
 | TK-1.1-express-alignment | Slice 1 | Express path and governance alignment | Business, tech, sprint, and review artifacts are coherent; governance track alignment is applied through `feature-yaml` |
 | TK-2.1-command-surface | Slice 2 | Target-project command surface | The missing `lens-techplan` stub, release prompt, owning skill, discovery wiring, and focused test-harness acceptance items are fully specified |
