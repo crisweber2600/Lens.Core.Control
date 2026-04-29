@@ -46,7 +46,7 @@ The broader importance: this is the dogfooding proof point the baseline rewrite 
 |---|---|
 | Published command availability | `lens-preplan.prompt.md` exists in the new-codebase installed prompt surface and delegates through light preflight to the release prompt |
 | Release prompt parity | The release prompt loads `bmad-lens-preplan` and describes the same preplan phase outcomes as the release SKILL.md |
-| Brainstorm-first ordering | Non-batch interactive runs always start with BMAD brainstorming setup questions before any research or product-brief authoring begins; a brainstorm.md must exist before downstream synthesis is invoked |
+| Brainstorm-first ordering | Non-batch interactive runs always activate `bmad-agent-analyst` first to frame requirements context; the conductor then presents the user with a choice of brainstorm mode (`bmad-brainstorming` or `bmad-cis`) before any research or product-brief authoring begins; a brainstorm.md must exist before downstream synthesis is invoked |
 | Batch delegation parity | Batch mode delegates to `bmad-lens-batch --target preplan` with no inline batch logic in the conductor; pass 1 stops after writing `preplan-batch-input.md`; pass 2 resumes with approved context |
 | Review-ready delegation parity | Review-ready check calls `validate-phase-artifacts.py --phase preplan --contract review-ready` with no inline artifact detection logic in the conductor |
 | Phase completion gate parity | Adversarial review (party mode) runs before `feature.yaml` is updated; a `fail` verdict blocks the phase transition |
@@ -64,7 +64,9 @@ The broader importance: this is the dogfooding proof point the baseline rewrite 
 - Implement `bmad-lens-preplan` as a thin conductor SKILL.md in `TargetProjects/lens-dev/new-codebase/lens.core.src` with no owned script layer.
 - Wire the review-ready fast path through `validate-phase-artifacts.py` with no inline logic in the conductor.
 - Wire the batch 2-pass contract through `bmad-lens-batch` with no inline batch logic.
-- Wire brainstorming, research, and product-brief authoring through `bmad-lens-bmad-skill`.
+- Activate `bmad-agent-analyst` at the start of the interactive flow to frame requirements context before any brainstorm mode is selected.
+- Wire the brainstorm mode choice — present the user with options for `bmad-brainstorming` (divergent ideation) and `bmad-cis` (structured creative innovation) — through `bmad-lens-bmad-skill` after analyst framing completes.
+- Wire research and product-brief authoring through `bmad-lens-bmad-skill`.
 - Wire the phase completion adversarial review gate through `bmad-lens-adversarial-review`.
 - Add focused parity tests for brainstorm-first ordering, batch pass semantics, review-ready routing, phase gate, and governance-write invariant.
 - Confirm module-help.csv and lens.agent.md include `preplan` as a retained command.

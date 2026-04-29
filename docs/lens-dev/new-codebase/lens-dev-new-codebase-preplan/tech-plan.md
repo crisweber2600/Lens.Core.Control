@@ -35,7 +35,8 @@ The command follows the invariant 3-hop chain used by all 17 retained commands:
       -> validate-phase-artifacts.py                (review-ready fast path)
       -> bmad-lens-batch                            (batch 2-pass contract)
       -> bmad-lens-constitution                     (domain constitution loading)
-      -> bmad-lens-bmad-skill (bmad-brainstorming)  (brainstorm authoring)
+      -> bmad-agent-analyst                         (requirements framing before brainstorm mode selection)
+      -> bmad-lens-bmad-skill (bmad-brainstorming | bmad-cis)  (brainstorm authoring — user-selected mode)
       -> bmad-lens-bmad-skill (research wrappers)   (research authoring)
       -> bmad-lens-bmad-skill (bmad-product-brief)  (product-brief authoring)
       -> bmad-lens-adversarial-review               (phase completion gate)
@@ -80,6 +81,16 @@ TargetProjects/lens-dev/new-codebase/lens.core.src/
 **Alternatives Rejected:**
 - Let the user choose the order: rejected because it allows skipping brainstorming, breaking the phase's behavioral contract with the next phase (businessplan).
 - Enforce ordering inside the BMAD brainstorming skill: rejected because it would push a preplan-specific ordering rule into a general-purpose skill.
+
+### ADR 7 — Analyst Activation and Brainstorm Mode Choice
+
+**Decision:** Before invoking any brainstorm authoring wrapper, the conductor activates `bmad-agent-analyst` to frame requirements context (goals, constraints, and known assumptions for the feature). After analyst framing completes, the conductor presents the user with a choice between `bmad-brainstorming` (divergent creative ideation) and `bmad-cis` (structured creative innovation suite). Both modes route through `bmad-lens-bmad-skill`. The `brainstorm.md` existence gate applies regardless of which mode is selected.
+
+**Rationale:** Analyst framing prevents the brainstorming session from starting without a grounded understanding of the feature's purpose, reducing artifact rework in the research and product-brief steps. Offering `bmad-cis` as an alternative to `bmad-brainstorming` serves users who prefer a structured innovation methodology over open divergent ideation; both paths produce a `brainstorm.md` that satisfies the preplan ordering contract.
+
+**Alternatives Rejected:**
+- Hard-wire `bmad-brainstorming` only: rejected because it removes the structured innovation option that `bmad-cis` provides for more complex or ambiguous feature spaces.
+- Skip analyst framing and go directly to brainstorm mode selection: rejected because it allows sessions to begin without grounding context, which increases downstream rework in research and product-brief phases.
 
 ### ADR 3 — Batch Mode Delegates Entirely to `bmad-lens-batch`
 
@@ -126,7 +137,9 @@ TargetProjects/lens-dev/new-codebase/lens.core.src/
 | `bmad-lens-constitution` | Domain constitution loading and partial hierarchy resolution | On Activation step 8 |
 | `bmad-lens-feature-yaml` | Read feature.yaml at activation; write phase update at completion | On Activation step 3; Phase Completion step 2 |
 | `bmad-lens-init-feature` (fetch-context) | Cross-feature context loading (related summaries, optional named-service docs) | On Activation step 7 |
-| `bmad-lens-bmad-skill` → `bmad-brainstorming` | Brainstorm artifact authoring | On Activation step 11.4 |
+| `bmad-agent-analyst` | Requirements framing — activated before brainstorm mode is selected to establish feature context and scope constraints | On Activation step 11.3 |
+| `bmad-lens-bmad-skill` → `bmad-brainstorming` | Brainstorm artifact authoring (divergent ideation mode — user choice) | On Activation step 11.4 |
+| `bmad-lens-bmad-skill` → `bmad-cis` | Brainstorm artifact authoring (structured creative innovation mode — user choice) | On Activation step 11.4 |
 | `bmad-lens-bmad-skill` → `bmad-domain-research` / `bmad-market-research` / `bmad-technical-research` | Research artifact authoring (narrowest applicable wrapper selected at runtime) | On Activation step 11.8 |
 | `bmad-lens-bmad-skill` → `bmad-product-brief` | Product brief artifact authoring | On Activation step 11.8 |
 | `bmad-lens-adversarial-review` | Phase completion gate (party mode, `--phase preplan --source phase-complete`) | Phase Completion step 1 |
@@ -138,7 +151,10 @@ TargetProjects/lens-dev/new-codebase/lens.core.src/
 
 | Category | Test Assertion | Risk Mitigated |
 |---|---|---|
-| Brainstorm-first ordering | No research or product-brief BMAD wrapper is invoked before `brainstorm.md` exists in the staged docs path | Brainstorm-skip regression |
+| Analyst activation ordering | `bmad-agent-analyst` is invoked before any brainstorm mode wrapper is called | Analyst-skip regression |
+| Brainstorm mode choice — bmad-brainstorming | When user selects `bmad-brainstorming`, `bmad-lens-bmad-skill` is called with `bmad-brainstorming`; `bmad-cis` is not invoked | Mode routing error |
+| Brainstorm mode choice — bmad-cis | When user selects `bmad-cis`, `bmad-lens-bmad-skill` is called with `bmad-cis`; `bmad-brainstorming` is not invoked | Mode routing error |
+| Brainstorm-first ordering | No research or product-brief BMAD wrapper is invoked before `brainstorm.md` exists in the staged docs path (applies to both modes) | Brainstorm-skip regression |
 | Batch delegation — pass 1 | On batch pass 1, `bmad-lens-batch --target preplan` is called; no lifecycle artifacts are written; the conductor stops | Inline batch re-introduction |
 | Batch delegation — pass 2 | On batch pass 2 with `batch_resume_context` loaded, the conductor resumes without re-asking setup questions | Pass 2 loop regression |
 | Review-ready delegation | `validate-phase-artifacts.py` is called with `--phase preplan --contract review-ready` args; no inline file-check logic | Inline review-ready re-introduction |
