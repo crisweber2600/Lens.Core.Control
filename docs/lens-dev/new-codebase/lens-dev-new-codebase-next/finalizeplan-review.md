@@ -4,7 +4,7 @@ doc_type: finalizeplan-review
 phase: finalizeplan
 source: manual-rerun
 verdict: pass-with-warnings
-status: in-review
+status: complete
 goal: "Final cross-artifact review of the Next command express planning packet before downstream bundle execution."
 critical_count: 0
 high_count: 1
@@ -12,7 +12,7 @@ medium_count: 2
 low_count: 1
 carry_forward_blockers: []
 key_decisions:
-  - Carry forward H2 (constitution resolver express-track filtering) as a named implementation dependency before automated express validation is declared usable.
+  - Carry forward ExpressPlan H2 (constitution resolver express-track filtering) as a named implementation dependency before automated express validation is declared usable.
   - Paused-state route decision must be closed before Slice 4 exit criteria can be met.
   - Target-project file overlap with lens-dev-new-codebase-trueup must be declared or resolved before Next dev begins.
 open_questions:
