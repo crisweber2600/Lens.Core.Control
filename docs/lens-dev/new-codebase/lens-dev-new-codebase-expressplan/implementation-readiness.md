@@ -20,7 +20,7 @@ updated_at: '2026-04-30T00:00:00Z'
 | FinalizePlan Review | ✅ `pass-with-warnings` — 0 critical, 0 high, 3 medium (accepted) |
 | Epics | ✅ `epics.md` — 3 epics defined |
 | Stories | ✅ `stories.md` — 9 stories defined |
-| Governance Feature.yaml | ✅ `expressplan-complete` |
+| Governance Feature.yaml | ✅ `finalizeplan-complete` |
 | Planning PR | ✅ PR #30 created |
 
 ## Open Items for Dev

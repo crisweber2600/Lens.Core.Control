@@ -22,15 +22,14 @@ to `finalizeplan-complete`, and the dev handoff signalled.
 2. Confirm no unresolved fail-level findings in any review artifact.
 3. Merge planning PR #30 (`lens-dev-new-codebase-expressplan-plan` →
    `lens-dev-new-codebase-expressplan`) on GitHub.
-4. Run:
+4. From the control repo root, run:
    ```bash
-   cd "d:/Lens.Core.Control - Copy" && \
    uv run lens.core/_bmad/lens-work/skills/bmad-lens-feature-yaml/scripts/feature-yaml-ops.py \
      update \
-     --governance-repo "TargetProjects/lens/lens-governance" \
+     --governance-repo "$GOV_REPO" \
      --feature-id lens-dev-new-codebase-expressplan \
      --set phase=finalizeplan-complete \
-     --username crisweber2600
+     --username "$USERNAME"
    ```
 5. Commit and push governance repo changes.
 6. Open the final PR (`lens-dev-new-codebase-expressplan` → `main`) via:
