@@ -1,7 +1,7 @@
 ---
 feature: lens-dev-new-codebase-next
 doc_type: implementation-readiness
-status: draft
+status: approved
 goal: "Assess readiness for dev handoff of the Next command clean-room rewrite."
 key_decisions:
   - Ready for dev once the three gated conditions below are confirmed.

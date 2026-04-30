@@ -1,7 +1,7 @@
 ---
 feature: lens-dev-new-codebase-next
 doc_type: business-plan
-status: draft
+status: approved
 goal: "Define the business outcomes and parity guardrails for rewriting the next command through an express planning path."
 key_decisions:
   - Use the express track for this feature so the Next command rewrite can move through one compact planning packet.

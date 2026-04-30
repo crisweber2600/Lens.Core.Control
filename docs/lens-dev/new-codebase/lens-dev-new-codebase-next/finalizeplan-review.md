@@ -144,7 +144,7 @@ At finalizeplan close, this decision is still only a named gate — not a select
 - **E.** Explicitly accept with no action.
 
 **Recorded response:** A  
-**Applied adjustment:** The paused-state route decision is carried forward as a Slice 4 entry gate. The Slice 4 story file must document the selected behavior (internal skill route, blocker message, or retained public command) before any Slice 4 implementation work begins.
+**Applied adjustment:** The paused-state route decision is carried forward as a Slice 3 entry gate. E2-S1 must document the selected paused-state behavior (internal skill route, blocker message, or fail with descriptive message) before the E2-S4 paused-state fixture is written. No paused-state fixture may be committed without this decision being recorded in E2-S1 Dev Notes.
 
 ### M2 — Shared Target-Project Surface Overlap Not Declared
 

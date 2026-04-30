@@ -1,7 +1,7 @@
 ---
 feature: lens-dev-new-codebase-next
 doc_type: epics
-status: draft
+status: approved
 goal: "Decompose the Next command rewrite into reviewable epics aligned with the three implementation slices."
 key_decisions:
   - Slice 1 (express planning alignment) is complete — epics start at Slice 2.
@@ -65,8 +65,8 @@ coverage including express-track and edge cases.
   - Warnings only → delegation with warning surfaced
   - Unknown state → fail clearly
 
-**Paused-state gate (M1):** Before writing Slice 3 fixtures, the Slice 2 story file
-(E2-S1) must document the selected paused-state behavior. No fixture for paused state
+**Paused-state gate (M1):** Before writing Slice 3 fixtures, E2-S1 must document
+the selected paused-state behavior. No fixture for paused state
 until the behavior is chosen.
 
 **Express-track parity (H1 note):** Parity fixtures for express routing must load the

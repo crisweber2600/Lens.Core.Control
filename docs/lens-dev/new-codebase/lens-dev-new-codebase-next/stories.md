@@ -1,11 +1,11 @@
 ---
 feature: lens-dev-new-codebase-next
 doc_type: stories
-status: draft
+status: approved
 goal: "Dev-ready story list for Next command rewrite across Slices 2, 3, and 4."
 key_decisions:
   - Slice 2 stories carry the M2 precondition — trueup-complete must be confirmed before E1-S4.
-  - Paused-state behavior must be documented in E2-S1 before E2-S2 parity fixtures are written.
+  - Paused-state behavior must be documented in E2-S1 before E2-S4 paused-state fixtures are written.
   - Constitution resolver dependency tracked in E3-S3, not left as an implicit note.
 open_questions:
   - Will lens-dev-new-codebase-constitution reach expressplan-complete before Slice 4 begins?
@@ -165,8 +165,9 @@ conductor has a deterministic, script-testable routing engine.
 - [ ] Produces no side effects — no file writes, no git operations
 
 **Paused-state gate (M1):** Before this story is marked done, document the selected
-paused-state behavior in the Dev Notes below (options: treat as blocked, treat as unknown
-phase, or carry through as warning). This decision must be recorded here before E2-S2
+paused-state behavior in the Dev Notes below (options: report as blocker with instructions,
+load internal pause-resume skill route, or fail with descriptive message). This decision
+must be recorded here before E2-S4
 fixture for paused state is written. No paused-state fixture is written without this
 decision being committed to the story file.
 

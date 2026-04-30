@@ -1,7 +1,7 @@
 ---
 feature: lens-dev-new-codebase-next
 doc_type: tech-plan
-status: draft
+status: approved
 goal: "Define the clean-room implementation and validation plan for the next command rewrite, including express-track routing parity."
 key_decisions:
   - Implement Next as a thin conductor over a script-backed routing engine; no downstream phase logic belongs inside the skill.
@@ -60,7 +60,11 @@ The public stub must run the light preflight script from the workspace root. If 
 
 ### 3. Routing Engine
 
-`next-ops.py` should remain deterministic and script-testable. It reads feature.yaml and lifecycle.yaml, then returns JSON with the current phase, track, recommendation, blockers, and warnings.
+`next-ops.py` should remain deterministic and script-testable. It reads feature.yaml and lifecycle.yaml, then returns JSON with the current phase, track, recommendation, blockers, warnings, and an error message when status is fail.
+
+JSON output schema: `{ "status": "unblocked"|"blocked"|"fail", "recommendation": "/phase", "blockers": [], "warnings": [], "phase": "...", "track": "...", "error": "..." }`
+
+The `error` field must be populated with a descriptive message whenever `status=fail`. For `status=unblocked` or `status=blocked`, `error` is an empty string or omitted. This gives `SKILL.md` a consistent contract for reporting failures.
 
 Required routing logic:
 

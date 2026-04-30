@@ -1,7 +1,7 @@
 ---
 feature: lens-dev-new-codebase-next
 doc_type: sprint-plan
-status: draft
+status: approved
 goal: "Sequence the Next command rewrite into implementation-ready slices with express routing and parity validation."
 key_decisions:
   - Use four delivery slices: express alignment, prompt chain, routing engine parity, and handoff/regression hardening.

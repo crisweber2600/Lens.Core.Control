@@ -15,7 +15,8 @@ without manual inspection.
 
 ## Acceptance Criteria
 
-1. Fixture file at `_bmad/lens-work/skills/bmad-lens-next/tests/fixtures/next-routing-full-track.yaml`
+1. Fixture file at `_bmad/lens-work/skills/bmad-lens-next/scripts/tests/next-routing-full-track.yaml`
+   (canonical regression-fixture path — consistent with tech-plan target surface table)
 2. Covers: `preplan` → `/preplan`, `preplan-complete` → next phase, all full-track phase
    transitions, final phase → complete message or blocked
 3. Each fixture entry specifies: `phase`, `track`, `expected_recommendation`,

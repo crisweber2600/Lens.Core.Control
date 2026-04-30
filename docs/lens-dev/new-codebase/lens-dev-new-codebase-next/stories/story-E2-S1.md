@@ -23,7 +23,9 @@ so that the `next` conductor has a deterministic, script-testable routing engine
 5. Resolves `auto_advance_to` from lifecycle.yaml for the current phase; uses that as the
    recommendation if set
 6. Returns JSON: `{ "status": "unblocked"|"blocked"|"fail", "recommendation": "/phase",
-   "blockers": [], "warnings": [], "phase": "...", "track": "..." }`
+   "blockers": [], "warnings": [], "phase": "...", "track": "...", "error": "..." }`
+   — `error` must be populated with a descriptive message when `status=fail`; empty string
+   or omitted for `status=unblocked` or `status=blocked`
 7. On unknown phase or track: `status=fail` with descriptive message
 8. On missing `feature.yaml`: `status=fail` with descriptive message
 9. Produces no side effects — no file writes, no git operations
@@ -33,9 +35,9 @@ so that the `next` conductor has a deterministic, script-testable routing engine
 Before this story is marked **done**, the selected paused-state behavior must be documented
 in the **Paused-State Decision** section below. Options:
 
-- **Option A:** Treat paused state as blocked — `status=blocked, blockers=["feature is paused"]`
-- **Option B:** Treat paused state as unknown phase — `status=fail`
-- **Option C:** Carry through as warning — `status=unblocked, warnings=["feature is paused; routing to last known phase"]`
+- **Option A:** Report paused state as a blocker — `status=blocked, blockers=["feature is paused; use the internal pause-resume skill or the retained recovery path"]`
+- **Option B:** Load an internal pause-resume skill route — `status=unblocked, recommendation=/pause-resume` (only valid if an internal skill is retained and loaded intentionally; do not expose a public stub)
+- **Option C:** Fail with a descriptive message if no retained recovery path exists — `status=fail, error="feature is paused and no recovery path is available"`
 
 The E2-S4 paused-state fixture **must not be written** until this decision is recorded and
 committed in this story file.
@@ -73,7 +75,7 @@ committed in this story file.
 
 ### References
 - [tech-plan.md — §3 Routing engine contract](../tech-plan.md)
-- [lifecycle.yaml — express track definition](../../../lens.core/_bmad/lens-work/lifecycle.yaml)
+- [lifecycle.yaml — express track definition](`TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/lifecycle.yaml` — target-project path, not present in this repo)
 - [finalizeplan-review.md — M1 (paused-state decision gate), Blind Spot 2 (live lifecycle.yaml)](../finalizeplan-review.md)
 - [epics.md — Epic 2 scope](../epics.md)
 

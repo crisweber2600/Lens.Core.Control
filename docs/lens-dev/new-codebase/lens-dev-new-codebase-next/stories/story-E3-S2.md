@@ -47,7 +47,7 @@ so that `next` remains a strictly read-only routing surface.
 
 ### References
 - [finalizeplan-review.md — Blind Spot 1 (no-write regression test missing)](../finalizeplan-review.md)
-- [tech-plan.md — §6 No-write invariant](../tech-plan.md)
+- [tech-plan.md — §Governance And Write-Boundary Tests](../tech-plan.md)
 - [epics.md — Epic 3 no-write verification scope](../epics.md)
 
 ## Dev Agent Record

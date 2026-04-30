@@ -42,7 +42,8 @@ filled in and committed. The paused-state fixture must match the recorded decisi
 - **Gate check:** Before writing paused-state fixture, run:
   `grep -A5 "Paused-State Decision" story-E2-S1.md`
   If the decision is not filled in, stop and alert.
-- **Fixture path:** `_bmad/lens-work/skills/bmad-lens-next/tests/fixtures/next-routing-edge-cases.yaml`
+- **Fixture path:** `_bmad/lens-work/skills/bmad-lens-next/scripts/tests/next-routing-edge-cases.yaml`
+  (canonical regression-fixture path — consistent with tech-plan target surface table)
 
 ### References
 - [story-E2-S1.md — Paused-State Decision (required fill-in)](./story-E2-S1.md)
