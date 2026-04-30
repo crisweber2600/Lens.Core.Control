@@ -1,99 +1,99 @@
 sprint_number: 1
 feature: lens-dev-new-codebase-discover
 sprint_goal: "Deliver the discover command rewrite to dev-complete: full behavioral spec, targeted script patches, regression tests, prompt chain verification, isolation audit, and integration smoke test"
-status: not-started
-start_date: null
-end_date: null
-updated_at: "2026-04-29T00:00:00Z"
+status: complete
+start_date: "2026-04-30"
+end_date: "2026-04-30"
+updated_at: "2026-04-30T00:00:00Z"
 
 stories:
   - id: "5.4.1"
     title: "Finalize SKILL.md behavioral spec"
-    status: not-started
+    status: complete
     priority: P0
     story_points: 3
-    assignee: null
+    assignee: crisweber2600
     depends_on: []
     blocks: ["5.4.2", "5.4.5", "5.4.9"]
-    notes: "First story to start; unblocks all downstream. Review existing SKILL.md against tech-plan spec."
+    notes: "Complete. SKILL.md covers interactive, headless, dry-run, no-op, config resolution, script subcommands, orchestration, and auto-commit guard behavior."
 
   - id: "5.4.2"
     title: "Patch SKILL.md: conditional auto-commit guard"
-    status: not-started
+    status: complete
     priority: P0
     story_points: 2
-    assignee: null
+    assignee: crisweber2600
     depends_on: ["5.4.1"]
     blocks: ["5.4.5", "5.4.9"]
-    notes: "Hash comparison inline in skill orchestration. Resolve M1 (ownership) before coding."
+    notes: "Complete. Hash comparison is documented inline in the skill orchestration and covered by integration tests."
 
   - id: "5.4.3"
     title: "Patch discover-ops.py: path resolution via resolve()"
-    status: not-started
+    status: complete
     priority: P1
     story_points: 2
-    assignee: null
+    assignee: crisweber2600
     depends_on: []
     blocks: ["5.4.4"]
-    notes: "Parallel with 5.4.2. All path comparisons use Path.resolve() on both sides."
+    notes: "Complete. Path comparison goes through resolved canonical paths with explicit Windows-style inventory path coverage."
 
   - id: "5.4.4"
     title: "Extend test suite: missing-from-disk and add-entry tests"
-    status: not-started
+    status: complete
     priority: P0
     story_points: 3
-    assignee: null
+    assignee: crisweber2600
     depends_on: ["5.4.3"]
     blocks: []
-    notes: "T3, T4, T5 from tech-plan test matrix. Tests use tempfile.TemporaryDirectory."
+    notes: "Complete. T3, T4, T5 plus path and no-remote scan hardening tests pass."
 
   - id: "5.4.5"
     title: "Extend test suite: validate and no-op tests"
-    status: not-started
+    status: complete
     priority: P0
     story_points: 3
-    assignee: null
+    assignee: crisweber2600
     depends_on: ["5.4.1", "5.4.2"]
     blocks: []
-    notes: "T6, T7, T8 from tech-plan test matrix. T8 explicitly verifies no-commit path via hash equality."
+    notes: "Complete. T6, T7, and T8 pass; T8 verifies unchanged inventory hash on no-op scan."
 
   - id: "5.4.6"
     title: "Verify prompt stub and release prompt chain"
-    status: not-started
+    status: complete
     priority: P1
     story_points: 1
-    assignee: null
+    assignee: crisweber2600
     depends_on: []
     blocks: []
-    notes: "Independent. Verify stub → release prompt → SKILL.md chain. Manual smoke test."
+    notes: "Complete. Stub points at the installed release prompt path after preflight; release prompt delegates to SKILL.md."
 
   - id: "5.4.7"
     title: "Architecture isolation audit"
-    status: not-started
+    status: complete
     priority: P0
     story_points: 2
-    assignee: null
+    assignee: crisweber2600
     depends_on: []
     blocks: []
-    notes: "Run last. Audit-only — no remediation here. Document in arch-review-note.md."
+    notes: "Complete. Refreshed audit covers 11 Lens-work SKILL.md files after the develop merge."
 
   - id: "5.4.9"
     title: "Integration smoke test: full chain end-to-end"
-    status: not-started
+    status: complete
     priority: P0
     story_points: 3
-    assignee: null
+    assignee: crisweber2600
     depends_on: ["5.4.1", "5.4.2"]
     blocks: []
-    notes: "Hard dev-complete gate (OQ-FP3 A). Two scenarios: auto-commit fires on change, no commit on no-op. Local bare-git repos only."
+    notes: "Complete. Both local bare-git integration scenarios pass in the discover regression suite."
 
 totals:
   total_stories: 8
   total_points: 19
-  completed_points: 0
-  not_started: 8
+  completed_points: 19
+  not_started: 0
   in_progress: 0
-  completed: 0
+  completed: 8
 
 definition_of_done:
   - All 8 stories are dev-complete
