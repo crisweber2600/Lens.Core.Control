@@ -2,189 +2,165 @@
 feature: lens-dev-new-codebase-expressplan
 doc_type: tech-plan
 status: draft
-goal: "Implement clean-room /expressplan parity through a retained prompt, the bmad-lens-expressplan conductor, wrapper-based QuickPlan delegation, and explicit FinalizePlan reuse"
+goal: "Define the implementation and validation plan for the expressplan rewrite while aligning this feature folder to the expressplan artifact contract."
 key_decisions:
-  - Keep expressplan as a dedicated conductor rather than embedding express logic into businessplan or techplan.
-  - Preserve QuickPlan as an internal Lens-wrapped dependency instead of a public top-level workflow.
-  - Treat adversarial review as a hard stop on fail, not as advisory output.
-  - Reuse FinalizePlan for downstream bundle generation and final PR topology.
-  - Keep governance publication and phase mutation behind existing Lens scripts rather than direct file writes.
+  - Keep the implementation target focused on lens-expressplan; expressplan is both the planning wrapper for this feature and the runtime behavior being rebuilt.
+  - The conductor-only constraint applies: the rewritten skill delegates all planning and review work; it does not implement planning logic inline.
+  - Treat the previous-session infrastructure (prompt stubs, SKILL.md, test file, module.yaml) as a complete foundation layer that must be validated, not reworked.
+  - Absorb discovery wiring into this feature's scope rather than treating it as a future follow-up.
+  - Define parity as reproducing the same four staged artifacts with equivalent routing, gates, and delivery slices as a future automation pass would expect.
 open_questions:
-  - Whether older references to expressplan-review.md need a temporary compatibility alias in validators or docs.
+  - Which exact target-project discovery file should register lens-expressplan first?
+  - Does the bmad-lens-expressplan/SKILL.md need any script-level ops beyond validate-phase-artifacts.py, or is the conductor fully self-contained?
+  - What sequence best lands express-eligibility gating, QuickPlan delegation, adversarial review, and phase-advance without obscuring the command-surface work?
 depends_on:
-  - lens-dev-new-codebase-baseline
-blocks: []
-updated_at: 2026-04-27T22:50:00Z
+  - business-plan.md
+  - TargetProjects/lens/lens-governance/features/lens-dev/new-codebase/lens-dev-new-codebase-baseline/docs/4-5-rewrite-expressplan.md
+  - TargetProjects/lens/lens-governance/features/lens-dev/new-codebase/lens-dev-new-codebase-techplan/docs/tech-plan.md
+blocks:
+  - End-to-end expressplan execution remains incomplete until discovery wiring and integration-level regressions are in place.
+updated_at: '2026-04-30T00:00:00Z'
 ---
 
-# Technical Plan - ExpressPlan Command
+# Tech Plan — Expressplan Command
 
-## Technical Summary
+## Overview
 
-Implement `expressplan` as a clean-room retained command that preserves the existing observable chain:
+The implementation target is the expressplan command surface in
+`TargetProjects/lens-dev/new-codebase/lens.core.src`. The previous session landed the skill
+infrastructure. This tech plan validates that foundation and defines the remaining delivery:
+discovery wiring, focused regression expectations, and the expressplan packet needed for
+FinalizePlan handoff.
 
-```text
-published stub prompt
-  -> release prompt
-  -> bmad-lens-expressplan
-  -> bmad-lens-bmad-skill --skill bmad-lens-quickplan
-  -> bmad-lens-adversarial-review --phase expressplan
-  -> bmad-lens-finalizeplan bundle reuse
-```
+The expressplan command is both the feature planning route and the runtime behavior being
+rebuilt. That dual role is this plan's core distinction from `lens-dev-new-codebase-techplan`.
+There, express planning was used to plan a different command. Here, the feature is literally
+building the expressplan command using expressplan as its own planning path.
 
-The command should stay narrow. Its job is to compress the front half of planning safely. It is not a second planning architecture. It validates eligibility, runs QuickPlan through the Lens wrapper, enforces a hard review gate, and then hands off to FinalizePlan for the downstream bundle.
+## Implementation Surface
 
-## Architecture Overview
+The following files in the target project constitute the expressplan command surface:
 
-### Published Surface
+| File | Role | Status |
+| --- | --- | --- |
+| `TargetProjects/lens-dev/new-codebase/lens.core.src/.github/prompts/lens-expressplan.prompt.md` | Public VS Code stub | Created in previous session |
+| `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/prompts/lens-expressplan.prompt.md` | Release prompt redirect | Created in previous session |
+| `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/bmad-lens-expressplan/SKILL.md` | Conductor skill | Created in previous session |
+| `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/bmad-lens-expressplan/scripts/tests/test-expressplan-ops.py` | Focused contract tests | Created in previous session |
+| `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/module.yaml` | Module registration | Updated in previous session |
+| Discovery surface registration | Retained command visibility | Not yet wired |
 
-The public entry chain should remain:
+## Planning Path vs. Implementation Target
 
-```text
-.github/prompts/lens-expressplan.prompt.md
-  -> lens.core/_bmad/lens-work/prompts/lens-expressplan.prompt.md
-  -> lens.core/_bmad/lens-work/skills/bmad-lens-expressplan/SKILL.md
-```
+| Concern | Required behavior |
+| --- | --- |
+| Planning path | Stage `business-plan.md`, `tech-plan.md`, `sprint-plan.md`, and `expressplan-review.md` as a complete expressplan packet |
+| Runtime contract under rewrite | Enforce express-only eligibility, delegate to QuickPlan via Lens wrapper, enforce hard-stop adversarial review, auto-advance to FinalizePlan on pass |
+| Governance state | Already aligned: `track: express`, `phase: expressplan` via sanctioned `feature-yaml` flow |
+| Code delivery target | Complete the expressplan command surface, wire discovery, and define regression coverage |
 
-The stub prompt owns only light preflight and delegation. No lifecycle logic belongs there.
+## Clean-Room Interpretation Rule
 
-### Orchestration Layers
+The old-codebase prompt stub's only actionable information is the public chain shape:
+`lens-expressplan` resolves through a release prompt to `bmad-lens-expressplan/SKILL.md`.
+Functional behavior is defined by baseline story 4.5. No old prompt prose is reused in the
+conductor skill.
 
-| Layer | Responsibility |
-|---|---|
-| Prompt stub | Run light preflight, stop on failure, load release prompt |
-| Release prompt | Load the skill and no more |
-| `bmad-lens-expressplan` | Feature resolution, express-track gating, step ordering, and handoff decisions |
-| `bmad-lens-bmad-skill` | Lens-aware context injection and write-boundary enforcement for QuickPlan |
-| `bmad-lens-adversarial-review` | Hard-gate review packet generation and review artifact write |
-| `bmad-lens-finalizeplan` | Downstream bundle generation, PR topology, and `/dev` handoff |
+## Required Runtime Behavior
 
-### Data Flow
+The rewritten expressplan command must preserve the baseline 4.5 contract:
 
-1. Resolve feature context and track.
-2. Validate the feature can legally use expressplan.
-3. Write staged planning docs to the control-repo docs path.
-4. Review the staged docs and write the expressplan review artifact.
-5. On pass or pass-with-warnings, signal FinalizePlan bundle execution.
+1. Non-express features are blocked before QuickPlan delegation begins.
+2. Express-eligible features delegate planning to `bmad-lens-quickplan` via `bmad-lens-bmad-skill`.
+3. The adversarial review with party-mode blind-spot challenge is a hard gate; a fail verdict
+   blocks auto-advance to FinalizePlan.
+4. On a pass or pass-with-warnings verdict, the phase is updated to `expressplan-complete` and
+   FinalizePlan is signalled.
+5. The public stub runs the shared prompt-start preflight before loading the release prompt.
+6. The release prompt stays a thin redirect to `bmad-lens-expressplan/SKILL.md`.
 
-## Design Decisions (ADRs)
+## Foundation Layer Validation
 
-### ADR 1 - Keep ExpressPlan as a Dedicated Conductor
+The previous session landed the skill infrastructure. Validation confirms:
 
-**Decision:** Preserve `bmad-lens-expressplan` as its own workflow skill.
+- Public stub follows the shared prompt-start preflight pattern (analogous to `lens-techplan`).
+- Release prompt redirects to `bmad-lens-expressplan/SKILL.md` without inline logic.
+- SKILL.md implements the three-step conductor contract: QuickPlan delegation → adversarial
+  review gate → phase advance.
+- SKILL.md enforces the express-only eligibility gate before delegation.
+- `module.yaml` registers `lens-expressplan.prompt.md` in the prompts list.
+- `test-expressplan-ops.py` covers prompt-start routing and wrapper equivalence.
 
-**Rationale:** The retained command surface exposes `expressplan` as a first-class command with its own gating and handoff behavior. Folding it into `businessplan` or `techplan` would erase an observable entrypoint and blur where the express-only eligibility check belongs.
+## Remaining Implementation Scope
 
-### ADR 2 - Keep QuickPlan Internal but Mandatory
+### 1. Discovery Wiring
 
-**Decision:** Continue to invoke QuickPlan through `bmad-lens-bmad-skill --skill bmad-lens-quickplan`.
+The `lens-expressplan` command must be registered in the new-codebase discovery surface.
+The discovery surface is the same retained command manifest that other express-track commands
+use. The exact file (skill manifest, module help CSV, or agent manifest) is to be confirmed
+as part of the first implementation slice.
 
-**Rationale:** Research explicitly flags QuickPlan retention as load-bearing. It should not remain a published user command, but deleting the internal capability would silently break expressplan.
+### 2. Focused Regression Expectations
 
-### ADR 3 - Review Failure Is a Hard Stop
+Beyond the existing `test-expressplan-ops.py`, the following regression checks must be defined:
 
-**Decision:** A `fail` verdict from `bmad-lens-adversarial-review --phase expressplan` blocks progression.
+- Express-eligibility gate blocks non-express features before QuickPlan delegation.
+- QuickPlan delegation route resolves to `bmad-lens-bmad-skill --skill bmad-lens-quickplan`.
+- Adversarial review invocation passes `--phase expressplan --source phase-complete`.
+- Phase-advance invocation updates `feature.yaml` phase to `expressplan-complete`.
+- Public stub chain: prompt-start → release prompt → SKILL.md (no inline logic at stub level).
 
-**Rationale:** ExpressPlan trades time for compression, not quality for convenience. If review becomes advisory, the command stops being a governed planning path.
+### 3. Module Registration Confirmation
 
-### ADR 4 - Downstream Bundle Is Reused, Not Reimplemented
+Confirm `module.yaml` now lists `lens-expressplan.prompt.md` and the entry follows the same
+shape as other retained-command registrations in the file.
 
-**Decision:** FinalizePlan owns epics, stories, readiness, sprint status, story files, and final PR topology.
+## Implementation Sequence
 
-**Rationale:** The downstream bundle is already the most complex planning stage. Duplicating it under expressplan would create parity drift and double the regression surface.
+### Workstream 1 — Foundation Validation
 
-### ADR 5 - Write Boundaries Stay Scripted
+1. Read and confirm the created public stub follows prompt-start preflight pattern.
+2. Read and confirm the release prompt is a thin redirect.
+3. Read and confirm the SKILL.md conductor implements the three-step contract and eligibility gate.
+4. Confirm `module.yaml` registration shape is correct.
 
-**Decision:** ExpressPlan writes staged docs in the control repo and relies on existing Lens script boundaries for governance publication and phase mutation.
+### Workstream 2 — Discovery Wiring
 
-**Rationale:** Current Lens rules treat the feature docs path in the control repo as authoritative and governance as a mirror. That boundary should remain explicit.
+1. Identify the retained command discovery file in the target project.
+2. Register `lens-expressplan` in that file following the existing pattern.
+3. Verify the command appears in the expected help or manifest output.
 
-### ADR 6 - Standardize Current Review Artifact Naming
+### Workstream 3 — Regression and Validation
 
-**Decision:** Stage `expressplan-adversarial-review.md` as the review artifact and treat older `expressplan-review.md` references as compatibility debt.
+1. Confirm `test-expressplan-ops.py` covers prompt-start and wrapper-equivalence.
+2. Add or document regression expectations for eligibility gate, delegation route, and phase advance.
+3. Verify all regression expectations pass.
 
-**Rationale:** Current lifecycle metadata and recent planning work both point to the `-adversarial-review` filename. Standardizing there avoids guesswork during implementation.
+### Workstream 4 — Packet Completion and Handoff
 
-## Contracts
+1. Produce the full expressplan planning packet (this document set).
+2. Run the expressplan adversarial review gate.
+3. On pass: advance phase to `expressplan-complete`, commit artifacts, signal FinalizePlan.
 
-### Prompt Contract
+## Validation Plan
 
-Expected stub behavior:
+### Contract Checks
 
-```bash
-uv run ./lens.core/_bmad/lens-work/scripts/light-preflight.py
-```
+- The public stub, release prompt, and conductor skill each remain in their respective
+  separated files (chain separation is preserved).
+- The conductor is gate-only: no inline planning logic.
+- Express-only eligibility is checked before QuickPlan delegation.
 
-- On non-zero exit: stop and surface the error.
-- On success: read and follow the release prompt.
+### Behavior Checks
 
-### Skill Contract
+- `bmad-lens-bmad-skill --skill bmad-lens-quickplan` is the QuickPlan delegation route.
+- `bmad-lens-adversarial-review --phase expressplan --source phase-complete` is the review invocation.
+- Phase-advance succeeds when the review verdict is `pass` or `pass-with-warnings`.
+- Phase-advance does not run when the verdict is `fail`.
 
-The skill should preserve this three-step sequence:
+### Regression Checks
 
-1. **QuickPlan via Lens wrapper**
-   - delegate to `bmad-lens-bmad-skill --skill bmad-lens-quickplan`
-   - write `business-plan.md`, `tech-plan.md`, and `sprint-plan.md`
-2. **Adversarial review hard gate**
-   - run `bmad-lens-adversarial-review --phase expressplan --source phase-complete`
-   - halt on `fail`
-3. **Advance to FinalizePlan**
-   - mark the expressplan step complete through existing feature-state tooling
-   - auto-advance into FinalizePlan bundle reuse
-
-Breaking change: false.
-
-### File Contract
-
-Staged expressplan artifacts:
-
-- `business-plan.md`
-- `tech-plan.md`
-- `sprint-plan.md`
-- `expressplan-adversarial-review.md`
-
-Staged FinalizePlan bundle after handoff:
-
-- `finalizeplan-review.md`
-- `epics.md`
-- `stories.md`
-- `implementation-readiness.md`
-- `sprint-status.yaml`
-- `stories/*.md`
-
-## Impacted Files and Surfaces
-
-| Surface | Purpose |
-|---|---|
-| `.github/prompts/lens-expressplan.prompt.md` | Public command stub |
-| `lens.core/_bmad/lens-work/prompts/lens-expressplan.prompt.md` | Release prompt |
-| `lens.core/_bmad/lens-work/skills/bmad-lens-expressplan/SKILL.md` | ExpressPlan orchestration contract |
-| `lens.core/_bmad/lens-work/skills/bmad-lens-bmad-skill/SKILL.md` | Wrapper-based QuickPlan delegation |
-| `lens.core/_bmad/lens-work/skills/bmad-lens-adversarial-review/SKILL.md` | Hard-gate review |
-| `lens.core/_bmad/lens-work/skills/bmad-lens-finalizeplan/SKILL.md` | Downstream bundle reuse |
-| `lens.core/_bmad/lens-work/lifecycle.yaml` | Phase metadata, artifact names, and auto-advance contract |
-| `lens.core/_bmad/lens-work/module-help.csv` | Help/discoverability surface |
-
-## Testing Strategy
-
-Focused verification should prove:
-
-1. `/expressplan` remains discoverable and routes through light preflight.
-2. Unsupported track usage fails with a clear explanation.
-3. QuickPlan is still invoked through the Lens wrapper.
-4. Review fail halts before FinalizePlan handoff.
-5. Review pass or pass-with-warnings produces the expected review artifact name.
-6. ExpressPlan reuses FinalizePlan for downstream bundle generation instead of duplicating it.
-7. Help/module surfaces continue to list expressplan.
-
-## Rollout Notes
-
-Implementation can be delivered incrementally:
-
-1. Preserve prompt and help surfaces.
-2. Restore or refine the expressplan skill contract.
-3. Verify wrapper-based QuickPlan delegation.
-4. Wire the hard review gate.
-5. Prove FinalizePlan bundle reuse through narrow tests.
-
-These planning artifacts are staged only. Live governance publication, branch validation, and phase mutation should happen through the existing Lens operational scripts once the worktree is clean and the implementation exists.
+- Eligibility gate behavior (non-express features are blocked).
+- Delegation route integrity (no inline QuickPlan bypass).
+- Review-gate enforcement (no advance on fail verdict).
+- Discovery surface registration (command appears in the retained manifest).

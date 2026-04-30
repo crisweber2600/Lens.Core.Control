@@ -1,27 +1,58 @@
-# generated: 2026-04-27T22:50:00Z
-# last_updated: 2026-04-27T22:50:00Z
-# project: Lens Workbench
-# project_key: NOKEY
-# tracking_system: file-system
-# story_location: docs/lens-dev/new-codebase/lens-dev-new-codebase-expressplan/stories
+---
+feature: lens-dev-new-codebase-expressplan
+doc_type: sprint-status
+status: ready
+updated_at: '2026-04-30T00:00:00Z'
+---
 
-generated: 2026-04-27T22:50:00Z
-last_updated: 2026-04-27T22:50:00Z
-project: Lens Workbench
-project_key: NOKEY
-tracking_system: file-system
-story_location: docs/lens-dev/new-codebase/lens-dev-new-codebase-expressplan/stories
+sprints:
+  - id: sprint-1
+    name: "Foundation Validation"
+    epic: E1
+    stories:
+      - id: E1-S1
+        title: Validate Prompt Stubs
+        status: not-started
+      - id: E1-S2
+        title: Validate SKILL.md Three-Step Contract
+        status: not-started
+      - id: E1-S3
+        title: Validate module.yaml Registration
+        status: not-started
+      - id: E1-S4
+        title: Audit Test Coverage Gaps
+        status: not-started
 
-development_status:
-  epic-1: in-progress
-  1-1-prompt-routing-and-preflight: ready-for-dev
-  1-2-express-track-gating-and-state-checks: ready-for-dev
-  epic-1-retrospective: optional
-  epic-2: in-progress
-  2-1-quickplan-wrapper-delegation: ready-for-dev
-  2-2-adversarial-review-hard-gate: ready-for-dev
-  epic-2-retrospective: optional
-  epic-3: in-progress
-  3-1-finalizeplan-handoff-and-phase-advance: ready-for-dev
-  3-2-regression-net-and-help-surface: ready-for-dev
-  epic-3-retrospective: optional
+  - id: sprint-2
+    name: "Discovery and Regressions"
+    epic: E2
+    stories:
+      - id: E2-S1
+        title: Register Command in Discovery Surface
+        status: not-started
+      - id: E2-S2
+        title: Regression — Eligibility Gate
+        status: not-started
+      - id: E2-S3
+        title: Regression — QuickPlan Delegation
+        status: not-started
+      - id: E2-S4
+        title: Regression — Phase Advance Logic
+        status: not-started
+      - id: E2-S5
+        title: Confirm Shared Skill Prerequisites
+        status: not-started
+
+  - id: sprint-3
+    name: "Handoff Readiness"
+    epic: E3
+    stories:
+      - id: E3-S1
+        title: Merge Planning PR and Signal Handoff
+        status: not-started
+
+metrics:
+  total_stories: 9
+  completed: 0
+  in-progress: 0
+  not-started: 9
