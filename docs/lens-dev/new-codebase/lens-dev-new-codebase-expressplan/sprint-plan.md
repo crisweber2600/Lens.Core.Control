@@ -101,7 +101,7 @@ These files are untracked in the target source repo and need validation and comm
 
 - Complete the expressplan planning packet (`business-plan.md`, `tech-plan.md`, `sprint-plan.md`).
 - Run expressplan adversarial review gate.
-- On pass: write `expressplan-adversarial-review.md`.
+- On pass: write `expressplan-review.md`.
 - Advance `feature.yaml` phase to `expressplan-complete`.
 - Commit planning artifacts to the `-plan` branch and push.
 - Signal FinalizePlan.
@@ -109,7 +109,7 @@ These files are untracked in the target source repo and need validation and comm
 ### Deliverables
 
 - Complete expressplan planning packet in `docs/lens-dev/new-codebase/lens-dev-new-codebase-expressplan/`.
-- `expressplan-adversarial-review.md` with a pass or pass-with-warnings verdict.
+- `expressplan-review.md` with a pass or pass-with-warnings verdict.
 - `feature.yaml` phase updated to `expressplan-complete`.
 - Artifacts committed and pushed on `lens-dev-new-codebase-expressplan-plan`.
 

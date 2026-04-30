@@ -71,7 +71,7 @@ regression coverage.
 **Scope:**
 - Confirm planning PR #30 (`lens-dev-new-codebase-expressplan-plan` →
   `lens-dev-new-codebase-expressplan`) is ready to merge.
-- Confirm no unresolved fail-level findings remain in `expressplan-adversarial-review.md`
+- Confirm no unresolved fail-level findings remain in `expressplan-review.md`
   or `finalizeplan-review.md`.
 - Confirm all sprint plan exit criteria for Epics 1 and 2 are met.
 - Signal `/dev` handoff.

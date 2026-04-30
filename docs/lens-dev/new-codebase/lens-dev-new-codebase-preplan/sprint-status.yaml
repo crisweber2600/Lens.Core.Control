@@ -1,0 +1,151 @@
+feature: lens-dev-new-codebase-preplan
+doc_type: sprint-status
+status: draft
+goal: Sequence clean-room implementation of preplan command parity using shared utilities
+updated_at: "2026-04-28T00:00:00Z"
+
+sprints:
+  - id: sprint-1
+    name: "Sprint 1 — Command Surface & Parity Test Expectations"
+    goal: Make preplan visible in the new codebase as a planned command surface and lock down parity expectations before any implementation begins.
+    status: not-started
+    stories:
+      - id: PP-1.1
+        title: Add command prompt surfaces
+        estimate: S
+        status: not-started
+        assignee: null
+        notes: null
+      - id: PP-1.2
+        title: Write SKILL.md thin conductor contract
+        estimate: M
+        status: not-started
+        assignee: null
+        notes: "Depends on PP-1.1"
+      - id: PP-1.3
+        title: Add parity test skeletons
+        estimate: S
+        status: not-started
+        assignee: null
+        notes: "Depends on PP-1.2; test file path: _bmad/lens-work/skills/bmad-lens-preplan/scripts/tests/test-preplan-ops.py"
+    definition_of_done:
+      - All PP-1.x stories closed
+      - Parity test skeletons fail red (no implementation code merged yet)
+      - No old-codebase file patterns in any Sprint 1 diff
+
+  - id: sprint-2
+    name: "Sprint 2 — Brainstorm-First Conductor & Artifact Delegation"
+    goal: Implement the brainstorm-first conductor orchestration and artifact delegation wiring.
+    status: not-started
+    prerequisite_gate: null
+    stories:
+      - id: PP-2.1
+        title: Implement conductor activation and constitution load
+        estimate: M
+        status: not-started
+        assignee: null
+        notes: "Requires baseline story 3-1 confirmed green before closing"
+      - id: PP-2.2
+        title: Implement analyst activation and brainstorm mode selection
+        estimate: M
+        status: not-started
+        assignee: null
+        notes: "Depends on PP-2.1"
+      - id: PP-2.3
+        title: Implement research and product-brief delegation
+        estimate: S
+        status: not-started
+        assignee: null
+        notes: "Depends on PP-2.2"
+    definition_of_done:
+      - All PP-2.x stories closed
+      - Brainstorm-first ordering, analyst-first ordering, and /next pre-confirmed handoff parity tests green
+      - Sprint 3 gate verification command passes in lens.core.src before Sprint 2 closes
+      - Gate command: "uv run --with pytest pytest _bmad/lens-work/skills/bmad-lens-validate-phase-artifacts/scripts/tests/ _bmad/lens-work/skills/bmad-lens-batch/scripts/tests/ _bmad/lens-work/skills/bmad-lens-constitution/scripts/tests/ -q"
+
+  - id: sprint-3
+    name: "Sprint 3 — Shared Utility Wiring"
+    goal: Wire the three shared utilities so the conductor uses no inline logic for review-ready, batch, or adversarial review operations.
+    status: blocked
+    blocker: "Sprint 3 gate must pass — baseline stories 1-2, 1-3, and 3-1 must pass in lens.core.src"
+    sprint_gate:
+      description: "Run from TargetProjects/lens-dev/new-codebase/lens.core.src before starting any Sprint 3 story"
+      command: "uv run --with pytest pytest _bmad/lens-work/skills/bmad-lens-validate-phase-artifacts/scripts/tests/ _bmad/lens-work/skills/bmad-lens-batch/scripts/tests/ _bmad/lens-work/skills/bmad-lens-constitution/scripts/tests/ -q"
+    stories:
+      - id: PP-3.1
+        title: Wire validate-phase-artifacts.py for review-ready
+        estimate: M
+        status: not-started
+        assignee: null
+        notes: "Hard prerequisite: baseline story 1-2 confirmed callable; Sprint 3 gate must pass first"
+      - id: PP-3.2
+        title: Wire bmad-lens-batch for batch mode
+        estimate: M
+        status: not-started
+        assignee: null
+        notes: "Hard prerequisite: baseline story 1-3 confirmed callable; Sprint 3 gate must pass first"
+      - id: PP-3.3
+        title: Wire bmad-lens-adversarial-review for phase completion
+        estimate: M
+        status: not-started
+        assignee: null
+        notes: "Hard prerequisite: baseline story 3-1 confirmed green; Sprint 3 gate must pass first; no-governance-write invariant test must still pass after wiring"
+    definition_of_done:
+      - All PP-3.x stories closed
+      - Sprint 3 gate passes
+      - No inline batch or review-ready logic remains in conductor
+      - No-governance-write invariant test passes
+
+  - id: sprint-4
+    name: "Sprint 4 — Phase Completion, Hardening & Release Alignment"
+    goal: Complete phase transition, harden the release surface, and verify the no-governance-write invariant end to end.
+    status: not-started
+    stories:
+      - id: PP-4.1
+        title: Implement phase completion and feature.yaml update
+        estimate: M
+        status: not-started
+        assignee: null
+        notes: "Depends on PP-3.1, PP-3.2, PP-3.3 all green; message-only advance (no live routing call); independent end-to-end run required before closure"
+      - id: PP-4.2
+        title: Align help surfaces and resolve target-repo scope
+        estimate: S
+        status: not-started
+        assignee: null
+        notes: "Depends on PP-4.1; documents interruption-and-resume scope decision"
+    definition_of_done:
+      - All PP-4.x stories closed
+      - No-governance-write end-to-end parity test passes
+      - Feature-level Definition of Done met (see implementation-readiness.md)
+      - Feature.yaml updated to finalizeplan-complete (by FinalizePlan conductor)
+
+external_prerequisites:
+  - id: baseline-1-2
+    title: "validate-phase-artifacts shared utility"
+    feature: lens-dev-new-codebase-baseline
+    status: unknown
+    blocks: PP-3.1
+    sprint_gate: sprint-2-dod
+  - id: baseline-1-3
+    title: "batch 2-pass contract"
+    feature: lens-dev-new-codebase-baseline
+    status: unknown
+    blocks: PP-3.2
+    sprint_gate: sprint-2-dod
+  - id: baseline-3-1
+    title: "fix-constitution-partial-hierarchy"
+    feature: lens-dev-new-codebase-baseline
+    status: unknown
+    blocks: "PP-2.1, PP-3.3"
+    sprint_gate: sprint-2-dod
+
+complexity_summary:
+  total_stories: 11
+  by_estimate:
+    S: 4
+    M: 7
+  by_epic:
+    PP-E1: 3
+    PP-E2: 3
+    PP-E3: 3
+    PP-E4: 2

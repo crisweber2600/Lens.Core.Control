@@ -1,6 +1,6 @@
 ---
 feature: lens-dev-new-codebase-expressplan
-doc_type: adversarial-review
+doc_type: expressplan-review
 phase: expressplan
 source: phase-complete
 verdict: pass-with-warnings
@@ -14,7 +14,7 @@ updated_at: '2026-04-30T00:00:00Z'
 review_format: abc-choice-v1
 ---
 
-# ExpressPlan Adversarial Review — lens-dev-new-codebase-expressplan
+# ExpressPlan Review — lens-dev-new-codebase-expressplan
 
 **Source:** phase-complete  
 **Artifacts reviewed:** business-plan.md, tech-plan.md, sprint-plan.md (supplementary)  

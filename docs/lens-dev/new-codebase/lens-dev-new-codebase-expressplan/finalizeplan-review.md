@@ -18,7 +18,7 @@ review_format: abc-choice-v1
 # FinalizePlan Review — lens-dev-new-codebase-expressplan
 
 **Source:** manual-rerun  
-**Artifacts reviewed:** business-plan.md, tech-plan.md, sprint-plan.md, expressplan-adversarial-review.md  
+**Artifacts reviewed:** business-plan.md, tech-plan.md, sprint-plan.md, expressplan-review.md  
 **Format:** abc-choice-v1. Response options A–E are presented per finding.
 
 ---

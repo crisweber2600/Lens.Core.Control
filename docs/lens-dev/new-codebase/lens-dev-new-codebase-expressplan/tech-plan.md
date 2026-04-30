@@ -54,7 +54,7 @@ The following files in the target project constitute the expressplan command sur
 
 | Concern | Required behavior |
 | --- | --- |
-| Planning path | Stage `business-plan.md`, `tech-plan.md`, `sprint-plan.md`, and `expressplan-adversarial-review.md` as a complete expressplan packet |
+| Planning path | Stage `business-plan.md`, `tech-plan.md`, `sprint-plan.md`, and `expressplan-review.md` as a complete expressplan packet |
 | Runtime contract under rewrite | Enforce express-only eligibility, delegate to QuickPlan via Lens wrapper, enforce hard-stop adversarial review, auto-advance to FinalizePlan on pass |
 | Governance state | Already aligned: `track: express`, `phase: expressplan` via sanctioned `feature-yaml` flow |
 | Code delivery target | Complete the expressplan command surface, wire discovery, and define regression coverage |

@@ -6,7 +6,7 @@ goal: "Define the business outcomes and delivery guardrails for rewriting the ex
 key_decisions:
   - Use the express track to plan this feature, consistent with the same pattern used for lens-dev-new-codebase-techplan.
   - Treat the old-codebase lens-expressplan prompt as a chain-shape reference only; baseline story 4.5 defines behavior.
-  - Stage business-plan.md, tech-plan.md, sprint-plan.md, and expressplan-adversarial-review.md as the authoritative planning set.
+  - Stage business-plan.md, tech-plan.md, sprint-plan.md, and expressplan-review.md as the authoritative planning set.
   - Record governance state changes only through the sanctioned feature-yaml flow; the express track switch has already been applied.
   - The previous session landed the skill infrastructure; this feature's implementation scope is the remaining completion, wiring, and validation.
 open_questions:
@@ -75,7 +75,7 @@ baseline story 4.5 and the techplan express packet. What remains is:
 3. Keep the clean-room boundary explicit: baseline 4.5 and the techplan packet define behavior;
    the old prompt stub only confirms the public chain shape.
 4. Define output parity explicitly: the new skill must reproduce the same four staged artifacts —
-   `business-plan.md`, `tech-plan.md`, `sprint-plan.md`, `expressplan-adversarial-review.md` —
+   `business-plan.md`, `tech-plan.md`, `sprint-plan.md`, `expressplan-review.md` —
    with equivalent routing, gates, and delivery slices.
 
 ## Non-Goals
