@@ -4,7 +4,7 @@ doc_type: finalizeplan-review
 phase: finalizeplan
 source: manual-rerun
 verdict: pass-with-warnings
-status: complete
+status: responses-recorded
 goal: "Final cross-artifact review of the Next command express planning packet before downstream bundle execution."
 critical_count: 0
 high_count: 1
@@ -24,7 +24,7 @@ depends_on:
   - docs/lens-dev/new-codebase/lens-dev-new-codebase-next/sprint-plan.md
   - docs/lens-dev/new-codebase/lens-dev-new-codebase-next/expressplan-adversarial-review.md
 blocks: []
-updated_at: 2026-04-30T22:00:00Z
+updated_at: 2026-04-30T22:15:00Z
 review_format: abc-choice-v1
 ---
 
@@ -61,10 +61,10 @@ Three risks require governance-impact follow-through before dev completion. None
 
 | ID | Severity | Title | Recorded Response |
 |----|----------|-------|-------------------|
-| H1 | High | Constitution resolver dependency has no assigned owner | — |
-| M1 | Medium | Paused-state decision remains open at planning close | — |
-| M2 | Medium | Shared target-project surface overlap not declared | — |
-| L1 | Low | next-ops.py test file is undecided | — |
+| H1 | High | Constitution resolver dependency has no assigned owner | A |
+| M1 | Medium | Paused-state decision remains open at planning close | A |
+| M2 | Medium | Shared target-project surface overlap not declared | C |
+| L1 | Low | next-ops.py test file is undecided | A |
 
 ---
 
@@ -113,6 +113,9 @@ This is the most significant carry-forward from ExpressPlan. Without a resolutio
 - **D.** Write your own response.
 - **E.** Explicitly accept with no action.
 
+**Recorded response:** A  
+**Applied adjustment:** `lens-dev-new-codebase-constitution` is recorded as a formal dependency. The Slice 4 story file must confirm that the constitution feature has reached at least `expressplan-complete` before Next's Slice 4 can close. The dependency will be added to `feature.yaml` before dev begins.
+
 ---
 
 ## Medium Findings
@@ -140,6 +143,9 @@ At finalizeplan close, this decision is still only a named gate — not a select
 - **D.** Write your own response.
 - **E.** Explicitly accept with no action.
 
+**Recorded response:** A  
+**Applied adjustment:** The paused-state route decision is carried forward as a Slice 4 entry gate. The Slice 4 story file must document the selected behavior (internal skill route, blocker message, or retained public command) before any Slice 4 implementation work begins.
+
 ### M2 — Shared Target-Project Surface Overlap Not Declared
 
 **Dimension:** Cross-feature dependencies  
@@ -162,6 +168,9 @@ No overlap check was performed during expressplan; this is a governance sensing 
   **Why not:** May require waiting on trueup's progress.
 - **D.** Write your own response.
 - **E.** Explicitly accept with no action.
+
+**Recorded response:** C  
+**Applied adjustment:** Discovery-surface writes are serialized with the trueup dev agent. Next's Slice 2 begins only after `lens-dev-new-codebase-trueup` confirms its discovery-surface work is complete. The Slice 2 story file must include a precondition check confirming trueup's discovery writes are done before Next appends its entries.
 
 ---
 
@@ -187,6 +196,9 @@ The sprint plan open question "Which test file should become the canonical next-
   **Why not:** Does not match the tech plan's co-located test directory convention.
 - **D.** Write your own response.
 - **E.** Explicitly accept with no action.
+
+**Recorded response:** A  
+**Applied adjustment:** The Slice 3 story file must name the canonical test file path before implementation begins. The implementing agent selects from the options above and documents the choice as a story entry condition.
 
 ---
 
