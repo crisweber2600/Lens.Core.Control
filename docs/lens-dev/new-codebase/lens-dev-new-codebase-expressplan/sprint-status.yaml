@@ -1,0 +1,58 @@
+---
+feature: lens-dev-new-codebase-expressplan
+doc_type: sprint-status
+status: ready
+updated_at: '2026-04-30T00:00:00Z'
+---
+
+sprints:
+  - id: sprint-1
+    name: "Foundation Validation"
+    epic: E1
+    stories:
+      - id: E1-S1
+        title: Validate Prompt Stubs
+        status: not-started
+      - id: E1-S2
+        title: Validate SKILL.md Three-Step Contract
+        status: not-started
+      - id: E1-S3
+        title: Validate module.yaml Registration
+        status: not-started
+      - id: E1-S4
+        title: Audit Test Coverage Gaps
+        status: not-started
+
+  - id: sprint-2
+    name: "Discovery and Regressions"
+    epic: E2
+    stories:
+      - id: E2-S1
+        title: Register Command in Discovery Surface
+        status: not-started
+      - id: E2-S2
+        title: Regression — Eligibility Gate
+        status: not-started
+      - id: E2-S3
+        title: Regression — QuickPlan Delegation
+        status: not-started
+      - id: E2-S4
+        title: Regression — Phase Advance Logic
+        status: not-started
+      - id: E2-S5
+        title: Confirm Shared Skill Prerequisites
+        status: not-started
+
+  - id: sprint-3
+    name: "Handoff Readiness"
+    epic: E3
+    stories:
+      - id: E3-S1
+        title: Merge Planning PR and Signal Handoff
+        status: not-started
+
+metrics:
+  total_stories: 9
+  completed: 0
+  in-progress: 0
+  not-started: 9
