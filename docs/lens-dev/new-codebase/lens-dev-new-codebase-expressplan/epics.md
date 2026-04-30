@@ -2,69 +2,81 @@
 feature: lens-dev-new-codebase-expressplan
 doc_type: epics
 status: draft
-goal: "Break expressplan parity work into implementation epics that preserve express-only gating, QuickPlan compression, review hard-stop behavior, and FinalizePlan bundle reuse"
-key_decisions:
-  - Organize work around the public command surface, the compressed planning core, and the FinalizePlan handoff seam.
-  - Keep regressions close to the highest-risk compatibility points.
-open_questions: []
-depends_on:
-  - lens-dev-new-codebase-baseline
-blocks: []
-updated_at: 2026-04-27T22:50:00Z
+goal: "Decompose expressplan command delivery into reviewable epics aligned with the three sprint slices."
+updated_at: '2026-04-30T00:00:00Z'
 ---
 
-# Epics - ExpressPlan Command
+# Epics — Expressplan Command
 
-## Epic 1 - Command Surface and Eligibility
+## Epic 1 — Foundation Validation
 
-**Goal:** Keep `/expressplan` discoverable, preflight-gated, and legally bounded to express-track usage.
+**Goal:** Confirm the expressplan infrastructure created in the previous session is complete
+and correct.
 
-| Story | Outcome | Estimate | Dependencies |
-|---|---|---:|---|
-| Story 1.1 - Prompt routing and preflight | Public stub prompt runs light preflight and delegates cleanly into the release prompt | 2 | None |
-| Story 1.2 - Express-track gating and state checks | Skill blocks unsupported track or phase combinations with explicit guidance | 2 | 1.1 |
+**Scope:**
+- Read and validate `.github/prompts/lens-expressplan.prompt.md` against the shared
+  prompt-start preflight pattern.
+- Read and validate `_bmad/lens-work/prompts/lens-expressplan.prompt.md` as a thin redirect.
+- Read and validate `_bmad/lens-work/skills/bmad-lens-expressplan/SKILL.md` for:
+  - Express-only eligibility gate
+  - QuickPlan delegation via `bmad-lens-bmad-skill --skill bmad-lens-quickplan`
+  - Adversarial review invocation `--phase expressplan --source phase-complete`
+  - Phase-advance to `expressplan-complete` on pass verdict
+  - Party-mode enforcement
+- Confirm `_bmad/lens-work/module.yaml` lists `lens-expressplan.prompt.md` in the `prompts:`
+  section following the same shape as other retained-command entries.
+- Read `test-expressplan-ops.py` and confirm which regression expectations are already
+  covered and which are missing.
+- Commit all untracked infrastructure files to the target source repo.
 
-**Definition of Done**
+**Exit Criteria:**
+- All infrastructure files are read and confirmed valid.
+- `module.yaml` registration shape is correct.
+- Test file coverage gaps are documented.
+- All infrastructure files are committed.
 
-- `/expressplan` appears in the expected prompt/help surfaces.
-- Preflight failure stops before skill logic loads.
-- Unsupported tracks do not progress into QuickPlan.
+---
 
-## Epic 2 - Compressed Planning Core
+## Epic 2 — Discovery and Regressions
 
-**Goal:** Preserve one-session planning compression without losing governance or review quality.
+**Goal:** Register `lens-expressplan` in the new-codebase discovery surface and harden
+regression coverage.
 
-| Story | Outcome | Estimate | Dependencies |
-|---|---|---:|---|
-| Story 2.1 - QuickPlan wrapper delegation | ExpressPlan invokes QuickPlan through the Lens wrapper and writes the three staged planning docs to the feature docs path | 3 | 1.2 |
-| Story 2.2 - Adversarial-review hard gate | Review writes the expressplan review artifact and blocks progression on fail | 3 | 2.1 |
+**Scope:**
+- Identify the retained command discovery file used by `lens-techplan` and other retained
+  commands in the new-codebase target project.
+- Register `lens-expressplan` following the same pattern.
+- Define and verify regression expectations for:
+  - Express-only eligibility gate (non-express features blocked before QuickPlan delegation)
+  - QuickPlan delegation route (`bmad-lens-bmad-skill --skill bmad-lens-quickplan`)
+  - Adversarial review invocation (`--phase expressplan --source phase-complete`)
+  - Phase-advance on `pass`/`pass-with-warnings` verdict
+  - Phase-advance blocked on `fail` verdict
+- Confirm shared skill prerequisites (`bmad-lens-quickplan`, `bmad-lens-bmad-skill`,
+  `bmad-lens-adversarial-review`) exist in the target project; if absent, flag as a
+  dependency gap.
+- Verify `validate-phase-artifacts.py` is present for the review-ready fast path.
 
-**Definition of Done**
+**Exit Criteria:**
+- `lens-expressplan` registered in the discovery surface.
+- All defined regression expectations pass.
+- Prerequisite gaps are either confirmed present or flagged as tracked items.
 
-- `business-plan.md`, `tech-plan.md`, and `sprint-plan.md` are produced through the wrapper.
-- `expressplan-adversarial-review.md` is written to the staged docs path.
-- Fail verdicts prevent FinalizePlan handoff.
+---
 
-## Epic 3 - FinalizePlan Handoff and Regression Safety
+## Epic 3 — Handoff Readiness
 
-**Goal:** Reuse FinalizePlan for downstream bundle generation and prove that reuse with narrow, durable tests.
+**Goal:** Confirm the feature is dev-ready and the planning PR can be merged.
 
-| Story | Outcome | Estimate | Dependencies |
-|---|---|---:|---|
-| Story 3.1 - FinalizePlan handoff and phase advance | ExpressPlan signals FinalizePlan completion boundaries instead of duplicating bundle logic | 3 | 2.2 |
-| Story 3.2 - Regression net and help-surface consistency | Focused regressions cover gating, review naming, bundle reuse, and surface discoverability | 3 | 3.1 |
+**Scope:**
+- Confirm planning PR #30 (`lens-dev-new-codebase-expressplan-plan` →
+  `lens-dev-new-codebase-expressplan`) is ready to merge.
+- Confirm no unresolved fail-level findings remain in `expressplan-review.md`
+  or `finalizeplan-review.md`.
+- Confirm all sprint plan exit criteria for Epics 1 and 2 are met.
+- Signal `/dev` handoff.
 
-**Definition of Done**
-
-- ExpressPlan stops owning downstream bundle generation.
-- Focused tests cover the retained high-risk seams.
-- Help and lifecycle metadata remain aligned with the implemented behavior.
-
-## Cross-Epic Risks
-
-| Risk | Affected epics | Handling |
-|---|---|---|
-| Review filename drift | 2, 3 | Lock the chosen filename in tests and docs |
-| QuickPlan deletion risk | 2 | Cover wrapper delegation explicitly |
-| Silent full-track bypass | 1 | Fail fast with guidance |
-| Bundle duplication | 3 | Treat FinalizePlan reuse as a test-backed contract |
+**Exit Criteria:**
+- Planning PR is merged.
+- Feature phase is `finalizeplan-complete`.
+- Dev handoff is signalled.

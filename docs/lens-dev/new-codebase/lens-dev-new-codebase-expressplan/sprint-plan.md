@@ -2,73 +2,135 @@
 feature: lens-dev-new-codebase-expressplan
 doc_type: sprint-plan
 status: draft
-goal: "Sequence clean-room /expressplan parity work into testable slices that preserve express-only gating, QuickPlan retention, review hard-stop behavior, and FinalizePlan bundle reuse"
+goal: "Sequence the expressplan-scoped delivery work for the expressplan command rewrite into implementation-ready slices."
 key_decisions:
-  - Start with command-surface and gating checks before implementing the compressed workflow.
-  - Keep QuickPlan and FinalizePlan integration work in separate sprints so regressions stay attributable.
-  - End with focused regressions and help-surface verification rather than broad rewrite testing.
-open_questions: []
+  - Use three delivery slices: foundation validation, discovery and regressions, and packet completion with FinalizePlan handoff.
+  - Treat the previous-session infrastructure (prompt stubs, SKILL.md, tests, module.yaml) as Slice 1 already-complete work to be validated rather than re-done.
+  - Expand Slice 2 to include discovery wiring, regression hardening, and any missing integration tests.
+  - Slice 3 is the planning packet completion and FinalizePlan handoff — distinct from code implementation.
+  - Defer unrelated retained-command work to their own features.
+open_questions:
+  - Which discovery file in the target project should register lens-expressplan?
+  - Are there focused test-harness items from baseline 4.5 not yet covered by test-expressplan-ops.py?
 depends_on:
-  - lens-dev-new-codebase-baseline
-blocks: []
-updated_at: 2026-04-27T22:50:00Z
+  - business-plan.md
+  - tech-plan.md
+  - TargetProjects/lens/lens-governance/features/lens-dev/new-codebase/lens-dev-new-codebase-baseline/docs/4-5-rewrite-expressplan.md
+blocks:
+  - FinalizePlan handoff is blocked until this sprint plan and the adversarial review are accepted.
+updated_at: '2026-04-30T00:00:00Z'
 ---
 
-# Sprint Plan - ExpressPlan Command
+# Sprint Plan — Expressplan Command
 
-## Sprint Goal
+## Sprint Objective
 
-Restore `/expressplan` as a retained express-track planning conductor that stages the compressed planning docs, enforces a hard review gate, and hands off into FinalizePlan without inventing a second downstream bundle.
+Validate the already-landed expressplan infrastructure, complete discovery wiring and regression
+coverage, then advance the expressplan planning packet through the adversarial review gate and
+into FinalizePlan.
 
-## Sprint 1 - Surface and Eligibility
+## Current Packet Status
 
-| Story | Outcome | Estimate | Dependencies |
-|---|---|---:|---|
-| EX-1: Preserve prompt routing and preflight | `/expressplan` stays discoverable and stops cleanly on preflight failure | 2 | business-plan.md, tech-plan.md |
-| EX-2: Enforce express-track gating | The skill rejects unsupported track/phase combinations with actionable errors | 2 | EX-1 |
+The previous session created:
+- `.github/prompts/lens-expressplan.prompt.md` (public stub)
+- `_bmad/lens-work/prompts/lens-expressplan.prompt.md` (release prompt)
+- `_bmad/lens-work/skills/bmad-lens-expressplan/SKILL.md` (conductor)
+- `_bmad/lens-work/skills/bmad-lens-expressplan/scripts/tests/test-expressplan-ops.py` (tests)
+- `_bmad/lens-work/module.yaml` updated with `lens-expressplan.prompt.md`
 
-## Sprint 2 - Compressed Planning Core
+These files are untracked in the target source repo and need validation and commit.
 
-| Story | Outcome | Estimate | Dependencies |
-|---|---|---:|---|
-| EX-3: Delegate QuickPlan through the Lens wrapper | QuickPlan receives resolved feature context and writes only to the staged docs path | 3 | EX-2 |
-| EX-4: Enforce adversarial-review hard stop | Review fail blocks progression and review pass writes the expected artifact | 3 | EX-3 |
+## Delivery Slices
 
-## Sprint 3 - FinalizePlan Handoff
+| Slice | Objective | Exit Criteria |
+| --- | --- | --- |
+| Slice 1 | Foundation validation | Prompt stubs, conductor skill, tests, and module.yaml confirmed correct; artifacts committed |
+| Slice 2 | Discovery and regressions | lens-expressplan registered in discovery; regression expectations defined and passing |
+| Slice 3 | Packet completion and FinalizePlan handoff | Expressplan planning packet complete; review passed; phase advanced to expressplan-complete |
 
-| Story | Outcome | Estimate | Dependencies |
-|---|---|---:|---|
-| EX-5: Reuse FinalizePlan bundle | ExpressPlan hands off to FinalizePlan instead of generating epics/readiness/story files itself | 3 | EX-4 |
-| EX-6: Preserve phase and help-surface consistency | Phase completion, auto-advance messaging, and help/module surfaces stay aligned | 2 | EX-5 |
+## Slice 1 — Foundation Validation
 
-## Sprint 4 - Verification and Handoff
+### Scope
 
-| Story | Outcome | Estimate | Dependencies |
-|---|---|---:|---|
-| EX-7: Add focused expressplan regressions | Narrow tests cover gating, file naming, hard-stop review behavior, and bundle reuse | 3 | EX-6 |
-| EX-8: Prepare implementation handoff notes | Dev gets file targets, non-goals, and known compatibility risks | 1 | EX-7 |
+- Validate `lens-expressplan.prompt.md` (public) follows shared prompt-start preflight pattern.
+- Validate release prompt is a thin redirect to SKILL.md.
+- Validate `bmad-lens-expressplan/SKILL.md` implements the three-step conductor contract with
+  express-only eligibility gate.
+- Confirm `module.yaml` registration shape matches existing patterns.
+- Commit the untracked files to the target source repo.
 
-## Sequencing Notes
+### Deliverables
 
-- EX-1 and EX-2 lock the public contract before deeper orchestration work starts.
-- EX-3 and EX-4 stabilize the compressed planning core.
-- EX-5 is the most important parity seam because it prevents bundle duplication.
-- EX-6 through EX-8 make the feature safe to hand off into implementation.
+- All four infrastructure files confirmed valid.
+- `module.yaml` registration confirmed.
+- Files committed under the target project.
 
-## Risks To Track During Execution
+### Risks
 
-| Risk | Mitigation |
-|---|---|
-| QuickPlan wrapper writes outside the feature docs path | Keep wrapper tests focused on resolved write scope |
-| Review filename drift breaks validators | Standardize on the lifecycle contract and add a focused regression |
-| ExpressPlan starts mutating governance directly | Preserve script-based publish/update boundaries and keep direct governance writes out of the conductor |
-| FinalizePlan reuse silently diverges from standalone flow | Cover the handoff with direct contract tests rather than prose only |
+- The previous-session infrastructure may have gaps relative to baseline 4.5 obligations
+  (e.g., missing eligibility gate or incomplete party-mode enforcement).
 
-## Definition of Done
+## Slice 2 — Discovery and Regressions
 
-- Prompt/help routing is stable.
-- Express-only gating is enforced.
-- QuickPlan delegation is preserved.
-- Review failure halts progression.
-- FinalizePlan reuse is proven with focused regressions.
-- Dev handoff notes identify remaining compatibility debt clearly.
+### Scope
+
+- Identify the retained command discovery file in the new-codebase target project.
+- Register `lens-expressplan` in that discovery surface.
+- Define regression expectations for:
+  - Express-eligibility gate (non-express features blocked before delegation)
+  - QuickPlan delegation route (`bmad-lens-bmad-skill --skill bmad-lens-quickplan`)
+  - Adversarial review invocation (`--phase expressplan --source phase-complete`)
+  - Phase-advance success on `pass`/`pass-with-warnings`
+  - Phase-advance blocked on `fail`
+- Verify all regression expectations pass against the landed implementation.
+
+### Deliverables
+
+- `lens-expressplan` registered in the discovery surface.
+- Regression expectations documented or covered in test files.
+- All defined regressions passing.
+
+### Dependencies
+
+- Slice 1 complete and infrastructure confirmed.
+- The existing `test-expressplan-ops.py` covers prompt-start and wrapper-equivalence.
+
+## Slice 3 — Packet Completion and FinalizePlan Handoff
+
+### Scope
+
+- Complete the expressplan planning packet (`business-plan.md`, `tech-plan.md`, `sprint-plan.md`).
+- Run expressplan adversarial review gate.
+- On pass: write `expressplan-review.md`.
+- Advance `feature.yaml` phase to `expressplan-complete`.
+- Commit planning artifacts to the `-plan` branch and push.
+- Signal FinalizePlan.
+
+### Deliverables
+
+- Complete expressplan planning packet in `docs/lens-dev/new-codebase/lens-dev-new-codebase-expressplan/`.
+- `expressplan-review.md` with a pass or pass-with-warnings verdict.
+- `feature.yaml` phase updated to `expressplan-complete`.
+- Artifacts committed and pushed on `lens-dev-new-codebase-expressplan-plan`.
+
+### Exit Gate
+
+- Adversarial review carries no unresolved fail-level findings.
+- All four planned artifacts are staged and committed.
+- Phase is advanced to `expressplan-complete`.
+- FinalizePlan is signalled as the next step.
+
+## Critical Path
+
+1. Validate the previous-session infrastructure and commit it (Slice 1).
+2. Wire discovery and harden regressions (Slice 2).
+3. Complete the planning packet, pass the review gate, and hand off to FinalizePlan (Slice 3).
+
+## Definition of Ready for Implementation
+
+The feature is ready for code work when:
+
+1. The expressplan artifact set is complete and the adversarial review has no fail findings.
+2. Discovery wiring is confirmed in the target project.
+3. Regression expectations are defined and passing.
+4. Phase is `expressplan-complete` and FinalizePlan is signalled.

@@ -2,82 +2,170 @@
 feature: lens-dev-new-codebase-expressplan
 doc_type: stories
 status: draft
-goal: "Define implementation-ready stories for restoring expressplan parity in the new codebase"
-key_decisions:
-  - Stories stay aligned to the three retained expressplan seams: entry, compressed planning, and FinalizePlan reuse.
-  - Acceptance criteria stay observable and testable at the command boundary.
-open_questions: []
-depends_on:
-  - lens-dev-new-codebase-baseline
-blocks: []
-updated_at: 2026-04-27T22:50:00Z
+updated_at: '2026-04-30T00:00:00Z'
 ---
 
-# Stories - ExpressPlan Command
+# Stories — Expressplan Command
 
-## Story 1.1 - Prompt Routing and Light Preflight
+## Story E1-S1 — Validate Prompt Stubs
 
-**User story:** As a Lens operator, I want `/expressplan` to fail fast on bootstrap issues so I never begin a compressed planning session from stale or invalid state.
+**Epic:** 1 — Foundation Validation
+**Priority:** High
+**Size:** XS
 
-**Acceptance criteria**
+As a Lens contributor, I want the two expressplan prompt stubs to be confirmed as valid
+and committed, so that the retained command surface is verifiably complete.
 
-- Given `/expressplan` is invoked, when light preflight fails, then the command stops and surfaces the failure clearly.
-- Given light preflight succeeds, when the release prompt loads, then the prompt does not embed workflow logic itself and instead delegates to `bmad-lens-expressplan`.
-- The prompt/help surface remains discoverable after the rewrite.
+**Acceptance Criteria:**
+- [ ] `.github/prompts/lens-expressplan.prompt.md` exists in the target source tree.
+- [ ] Content matches the shared prompt-start preflight pattern from other retained commands.
+- [ ] `_bmad/lens-work/prompts/lens-expressplan.prompt.md` exists and delegates correctly.
+- [ ] Both files are tracked by git in the target source repo.
 
-## Story 1.2 - Express-Track Gating and State Checks
+---
 
-**User story:** As a governance owner, I want expressplan to reject unsupported feature state so the express path never becomes a hidden full-track bypass.
+## Story E1-S2 — Validate SKILL.md Three-Step Contract
 
-**Acceptance criteria**
+**Epic:** 1 — Foundation Validation
+**Priority:** High
+**Size:** S
 
-- Given a feature is not eligible for the express track, when `/expressplan` runs, then the skill stops before QuickPlan.
-- The failure message tells the operator what to do next instead of implying the command is broken.
-- No feature track conversion happens implicitly inside the command.
+As a Lens contributor, I want the `bmad-lens-expressplan` SKILL.md to be confirmed as
+implementing the three-step conductor contract (eligibility gate, QuickPlan delegation,
+adversarial review + phase advance), so that the command is behaviorally correct.
 
-## Story 2.1 - QuickPlan Wrapper Delegation
+**Acceptance Criteria:**
+- [ ] SKILL.md opens with an express-only eligibility gate that blocks non-express features.
+- [ ] SKILL.md delegates to `bmad-lens-bmad-skill --skill bmad-lens-quickplan`.
+- [ ] SKILL.md invokes adversarial review with `--phase expressplan --source phase-complete`.
+- [ ] SKILL.md advances phase to `expressplan-complete` on `pass` or `pass-with-warnings`.
+- [ ] SKILL.md does NOT advance phase on `fail` verdict.
+- [ ] Party-mode usage is correctly enforced (if applicable to this skill pattern).
 
-**User story:** As a feature author, I want expressplan to generate the three compressed planning docs in one session so I can move quickly without losing structured planning output.
+---
 
-**Acceptance criteria**
+## Story E1-S3 — Validate module.yaml Registration
 
-- The skill delegates to `bmad-lens-bmad-skill --skill bmad-lens-quickplan`.
-- The wrapper resolves feature context and writes only to the staged docs path for the active feature.
-- `business-plan.md`, `tech-plan.md`, and `sprint-plan.md` are produced in the staged docs path.
+**Epic:** 1 — Foundation Validation
+**Priority:** High
+**Size:** XS
 
-## Story 2.2 - Adversarial-Review Hard Gate
+As a Lens contributor, I want `lens-expressplan.prompt.md` registered in `module.yaml`,
+so that the command is discoverable via the retained module manifest.
 
-**User story:** As a release owner, I want a failed expressplan review to halt progression so the compressed path cannot bypass planning quality.
+**Acceptance Criteria:**
+- [ ] `_bmad/lens-work/module.yaml` `prompts:` section includes `lens-expressplan.prompt.md`.
+- [ ] The entry shape matches other retained-command entries in the same file.
 
-**Acceptance criteria**
+---
 
-- ExpressPlan invokes `bmad-lens-adversarial-review --phase expressplan --source phase-complete` after QuickPlan artifacts exist.
-- A `fail` verdict blocks FinalizePlan handoff.
-- A pass or pass-with-warnings verdict writes the chosen review artifact filename consistently.
+## Story E1-S4 — Audit Test Coverage Gaps
 
-## Story 3.1 - FinalizePlan Handoff and Phase Advance
+**Epic:** 1 — Foundation Validation
+**Priority:** Medium
+**Size:** S
 
-**User story:** As a maintainer, I want expressplan to reuse FinalizePlan rather than clone it so downstream planning behavior stays in one place.
+As a Lens contributor, I want the existing `test-expressplan-ops.py` to be read and its
+coverage gaps documented, so that Epic 2 regression work has a baseline.
 
-**Acceptance criteria**
+**Acceptance Criteria:**
+- [ ] `test-expressplan-ops.py` is read and each test case is listed.
+- [ ] Coverage gaps vs. the three-step contract are listed in a dev note or comment.
+- [ ] Any test file not yet tracked by git is committed.
 
-- ExpressPlan signals completion and hands off into FinalizePlan-owned bundle generation.
-- ExpressPlan does not generate epics, stories, readiness, sprint status, or story files itself.
-- Auto-advance messaging remains aligned with lifecycle metadata.
+---
 
-## Story 3.2 - Regression Net and Help-Surface Consistency
+## Story E2-S1 — Register Command in Discovery Surface
 
-**User story:** As a maintainer, I want focused regressions around the highest-risk seams so future refactors cannot quietly break the express path.
+**Epic:** 2 — Discovery and Regressions
+**Priority:** High
+**Size:** S
 
-**Acceptance criteria**
+As a Lens contributor, I want `lens-expressplan` registered in the retained command
+discovery surface, so that lifecycle tooling and agents can find the command.
 
-- Tests cover express-only gating, QuickPlan retention, review hard-stop behavior, and FinalizePlan bundle reuse.
-- Prompt/help/module surfaces still list expressplan after implementation.
-- Review filename expectations are checked directly to prevent drift.
+**Acceptance Criteria:**
+- [ ] The discovery file (same one used by `lens-techplan` and other retained commands) is
+  identified.
+- [ ] `lens-expressplan` is registered following the identical pattern.
+- [ ] Registration change is committed to the target source repo.
 
-## Dependency Summary
+---
 
-- Stories 1.1 and 1.2 must land before compressed planning logic is trustworthy.
-- Story 2.1 must precede Story 2.2 because review depends on staged docs.
-- Story 3.1 depends on the review hard gate being stable.
-- Story 3.2 closes the loop and makes the feature safe to hand off into implementation.
+## Story E2-S2 — Regression Expectations: Eligibility Gate
+
+**Epic:** 2 — Discovery and Regressions
+**Priority:** High
+**Size:** S
+
+As a Lens contributor, I want regression expectations for the express-only eligibility
+gate to pass, so that non-express feature calls are correctly blocked.
+
+**Acceptance Criteria:**
+- [ ] Test verifies that a non-express feature triggers the eligibility guard.
+- [ ] Test verifies that an express-track feature passes the gate and proceeds.
+- [ ] Both tests pass (or clearly document a skip reason if infra not yet available).
+
+---
+
+## Story E2-S3 — Regression Expectations: QuickPlan Delegation
+
+**Epic:** 2 — Discovery and Regressions
+**Priority:** High
+**Size:** S
+
+As a Lens contributor, I want regression expectations for the QuickPlan delegation route
+to pass, so that plan artifacts are correctly produced via `bmad-lens-bmad-skill`.
+
+**Acceptance Criteria:**
+- [ ] Test confirms invocation route calls `bmad-lens-bmad-skill --skill bmad-lens-quickplan`.
+- [ ] Test passes (or clearly documents a skip reason).
+
+---
+
+## Story E2-S4 — Regression Expectations: Phase Advance Logic
+
+**Epic:** 2 — Discovery and Regressions
+**Priority:** High
+**Size:** S
+
+As a Lens contributor, I want regression expectations for the phase-advance decision to
+pass, so that verdict-gated advancement is reliable.
+
+**Acceptance Criteria:**
+- [ ] Test: `pass` verdict → phase advances to `expressplan-complete`.
+- [ ] Test: `pass-with-warnings` verdict → phase advances to `expressplan-complete`.
+- [ ] Test: `fail` verdict → phase does NOT advance.
+- [ ] All three tests pass (or clearly document skip reasons).
+
+---
+
+## Story E2-S5 — Confirm Shared Skill Prerequisites
+
+**Epic:** 2 — Discovery and Regressions
+**Priority:** Medium
+**Size:** XS
+
+As a Lens contributor, I want the shared skill prerequisites
+(`bmad-lens-quickplan`, `bmad-lens-bmad-skill`, `bmad-lens-adversarial-review`) confirmed
+as present in the target project, so that runtime dependencies are known.
+
+**Acceptance Criteria:**
+- [ ] Each prerequisite skill folder is confirmed to exist (or noted as absent + tracked).
+- [ ] `validate-phase-artifacts.py` presence is confirmed.
+
+---
+
+## Story E3-S1 — Merge Planning PR and Signal Handoff
+
+**Epic:** 3 — Handoff Readiness
+**Priority:** High
+**Size:** XS
+
+As a Lens contributor, I want the planning PR merged and `finalizeplan-complete` reached,
+so that `/dev` can begin.
+
+**Acceptance Criteria:**
+- [ ] Planning PR #30 is merged into `lens-dev-new-codebase-expressplan`.
+- [ ] `feature.yaml` phase is `finalizeplan-complete`.
+- [ ] Dev handoff is signalled with a summary of the three epics and entry story.
