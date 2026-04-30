@@ -41,8 +41,10 @@ The four findings from the expressplan review are confirmed resolved as recorded
 `expressplan-review.md`. No expressplan findings are re-opened.
 
 The selected responses are recorded here: the carry-forward blockers (H1, H2) are listed
-above, and M1/M2 remain required sprint-plan follow-ups to add an explicit SKILL.md
-authoring story and surface the constitution note before Step 2 proceeds.
+above. M1 has been applied: story E1-S5 (Author bmad-lens-dev SKILL.md) was inserted as the
+final Slice 1 story, with E1-S2 re-scoped to validate the contract after authoring. M2 remains
+a carry-forward reminder: the domain constitution (BMB-first rule) is binding on all agents
+working SKILL.md stories and must be loaded via bmad-lens-constitution before any authoring begins.
 
 ---
 

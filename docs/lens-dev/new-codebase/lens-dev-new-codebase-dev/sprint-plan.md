@@ -18,10 +18,11 @@ updated_at: '2026-04-30T00:00:00Z'
 
 # Sprint Plan — Dev Command Rewrite
 
-## Slice 1 — Foundation Validation
+## Slice 1 — Foundation Authoring and Validation
 
-**Goal:** Confirm the dev prompt chain, SKILL.md conductor contract, module.yaml registration,
-and all six internal dependency slots are present and correct before any behavioral work begins.
+**Goal:** Author the `bmad-lens-dev` SKILL.md conductor, then confirm the dev prompt chain,
+SKILL.md conductor contract, module.yaml registration, and all six internal dependency slots
+are present and correct before any behavioral work begins.
 
 **Stories:**
 
@@ -30,14 +31,12 @@ and all six internal dependency slots are present and correct before any behavio
   - Confirm `lens.core/_bmad/lens-work/prompts/lens-dev.prompt.md` exists as a thin redirect.
   - Confirm both files are tracked in git in the target source repo.
 
-- **E1-S2 — Validate `bmad-lens-dev` SKILL.md conductor contract** *(post-authoring validation; requires E2-S0 to complete first)*
+- **E1-S2 — Validate `bmad-lens-dev` SKILL.md conductor contract** *(runs after E1-S5 authors the SKILL.md)*
   - Confirm publish-before-author entry hook is present.
   - Confirm conductor chain covers: entry hook → dev-session load/create → branch prep →
     constitution load → task loop → per-task commit → final PR.
   - Confirm dev-session.yaml is read and written (not bypassed).
   - Confirm write isolation: no direct file writes outside bmad-lens-git-orchestration.
-  - Note: This story validates the SKILL.md shape produced by E2-S0. It must not run until
-    E2-S0 has authored the SKILL.md.
 
 - **E1-S3 — Validate `module.yaml` registration**
   - Confirm `lens-dev.prompt.md` is listed in `module.yaml` prompts section.
@@ -51,9 +50,20 @@ and all six internal dependency slots are present and correct before any behavio
   - Confirm sprint-status and story file discovery paths are operational.
   - Document any gaps as blocking items; do not proceed to Slice 2 if gaps exist.
 
+- **E1-S5 — Author `bmad-lens-dev` SKILL.md conductor**
+  - Author the full conductor SKILL.md from scratch (new-codebase rewrite; no direct copy).
+  - Load BMad Builder docs index (`externaldocs/bmad-builder-docs/llms-full/index.md`) and the
+    domain constitution via `bmad-lens-constitution` before authoring begins (BMB-first rule).
+  - Implement the full conductor chain: entry hook → dev-session load/create → branch prep →
+    constitution load → task loop → per-task commit → final PR.
+  - Implement write isolation: all writes routed exclusively through `bmad-lens-git-orchestration`.
+  - Commit the authored SKILL.md to the target source repo.
+  - Note: E1-S2 must run after this story to validate the SKILL.md contract shape.
+
 **Exit Criteria:**
+- `bmad-lens-dev` SKILL.md authored and committed (E1-S5).
 - All prompt chain files present and valid.
-- SKILL.md conductor contract confirmed against all behavioral requirements.
+- SKILL.md conductor contract confirmed against all behavioral requirements (E1-S2, run after E1-S5).
 - `module.yaml` registration confirmed correct.
 - All six internal dependency slots confirmed present or gaps explicitly flagged as blockers.
 - No Slice 2 work begins until all Slice 1 exit criteria are met.
@@ -66,15 +76,6 @@ and all six internal dependency slots are present and correct before any behavio
 dev-session.yaml backward compatibility, and register the command in the discovery surface.
 
 **Stories:**
-
-- **E2-S0 — Author `bmad-lens-dev` SKILL.md conductor**
-  - Author the full conductor SKILL.md from scratch (new-codebase rewrite; no direct copy).
-  - Load BMad Builder docs index (`externaldocs/bmad-builder-docs/llms-full/index.md`) and the
-    domain constitution via `bmad-lens-constitution` before authoring begins (BMB-first rule).
-  - Implement the full conductor chain: entry hook → dev-session load/create → branch prep →
-    constitution load → task loop → per-task commit → final PR.
-  - Implement write isolation: all writes routed exclusively through `bmad-lens-git-orchestration`.
-  - Commit the authored SKILL.md to the target source repo.
 
 - **E2-S1 — Register `lens-dev` in the retained command discovery surface**
   - Identify the discovery file used by other retained commands (same file as `lens-techplan`,
@@ -111,7 +112,6 @@ dev-session.yaml backward compatibility, and register the command in the discove
   - Verify that a valid finalizeplan-complete feature passes the gate and enters the task loop.
 
 **Exit Criteria:**
-- `bmad-lens-dev` SKILL.md authored and committed (E2-S0).
 - `lens-dev` registered in discovery surface (E2-S1), or gap flagged if discovery surface absent.
 - All three acceptance criteria have passing regression tests (E2-S2, E2-S3, E2-S4).
 - Publish-before-author hook confirmed via E2-S5.
