@@ -1,0 +1,32 @@
+epic_number: 5
+feature_id: lens-dev-new-codebase-discover
+started_at: "2026-04-30T00:00:00Z"
+last_checkpoint: "2026-04-30T00:00:00Z"
+special_instructions: "Execute all stories; use BMB workflow-builder guidance; clean-room implementation in TargetProjects; target branch from develop."
+target_repo_name: lens.core.src.discover
+target_repo_path: TargetProjects/lens-dev/new-codebase/lens.core.src.discover
+dev_branch_mode: feature-id
+working_branch: feature/lens-dev-new-codebase-discover
+base_branch: develop
+requires_final_pr: true
+total_stories: 8
+stories_completed:
+  - "5.4.1"
+  - "5.4.2"
+  - "5.4.3"
+  - "5.4.4"
+  - "5.4.5"
+  - "5.4.6"
+  - "5.4.7"
+  - "5.4.9"
+stories_failed: []
+current_story_index: 8
+final_pr_url: https://github.com/crisweber2600/Lens.Core.Src/pull/8
+final_review_status: pass-with-notes
+final_party_mode_status: pass-with-notes
+validation:
+  discover_tests: "uv run --with pytest python -m pytest _bmad/lens-work/skills/bmad-lens-discover/scripts/tests/ -q -> 12 passed"
+  bmb_path_standards: pass
+  bmb_script_scan: pass
+  broad_lens_work_suite: "253 passed, 12 failed; failures are inherited/non-discover: missing lifecycle.yaml in validate-phase-artifacts tests plus unrelated git-orchestration/init-feature expectations"
+status: complete
