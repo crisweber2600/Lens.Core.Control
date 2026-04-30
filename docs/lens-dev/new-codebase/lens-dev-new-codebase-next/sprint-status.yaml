@@ -1,0 +1,113 @@
+feature: lens-dev-new-codebase-next
+doc_type: sprint-status
+status: approved
+goal: "Sprint delivery sequence for the Next command clean-room rewrite across Slices 2, 3, and 4."
+updated_at: '2026-04-30T22:15:00Z'
+
+sprints:
+  - id: sprint-1
+    sprint_number: 1
+    name: "Sprint 1 — Slice 2: Prompt Chain and Discovery"
+    status: not-started
+    notes: >
+      Slice 2 — Prompt Chain and Discovery. Precondition: confirm trueup discovery-surface
+      writes complete before E1-S4.
+    stories:
+      - id: E1-S1
+        title: Create public prompt stub
+        type: new
+        points: 2
+        status: not-started
+        epic: 1
+      - id: E1-S2
+        title: Create release prompt redirect
+        type: new
+        points: 1
+        status: not-started
+        epic: 1
+      - id: E1-S3
+        title: Scaffold bmad-lens-next/SKILL.md conductor shell
+        type: new
+        points: 3
+        status: not-started
+        epic: 1
+      - id: E1-S4
+        title: Register next in discovery surfaces
+        type: new
+        points: 2
+        status: not-started
+        epic: 1
+
+  - id: sprint-2
+    sprint_number: 2
+    name: "Sprint 2 — Slice 3: Routing Engine Parity"
+    status: not-started
+    notes: >
+      Slice 3 — Routing Engine Parity. Gate: E2-S1 must document paused-state decision
+      before E2-S4 begins. Fixtures must load live lifecycle.yaml.
+    stories:
+      - id: E2-S1
+        title: Implement next-ops.py core routing logic
+        type: new
+        points: 5
+        status: not-started
+        epic: 2
+      - id: E2-S2
+        title: Write full-track routing parity fixtures
+        type: new
+        points: 3
+        status: not-started
+        epic: 2
+      - id: E2-S3
+        title: Write express-track routing parity fixtures
+        type: new
+        points: 3
+        status: not-started
+        epic: 2
+      - id: E2-S4
+        title: Write paused-state and edge-case fixtures
+        type: new
+        points: 2
+        status: not-started
+        epic: 2
+
+  - id: sprint-3
+    sprint_number: 3
+    name: "Sprint 3 — Slice 4: Delegation and Release Hardening"
+    status: not-started
+    notes: >
+      Slice 4 — Delegation and Release Hardening. Gate: E3-S3 must confirm constitution
+      resolver dependency before release (H1). E3-S2 no-write negative test required.
+    stories:
+      - id: E3-S1
+        title: Implement pre-confirmed handoff in SKILL.md
+        type: new
+        points: 3
+        status: not-started
+        epic: 3
+      - id: E3-S2
+        title: Add negative test for no-write behavior
+        type: new
+        points: 2
+        status: not-started
+        epic: 3
+      - id: E3-S3
+        title: Document and resolve constitution resolver dependency
+        type: confirm/new
+        points: 2
+        status: not-started
+        epic: 3
+      - id: E3-S4
+        title: Confirm release readiness and update target_repos
+        type: confirm
+        points: 1
+        status: not-started
+        epic: 3
+
+totals:
+  total_stories: 12
+  total_points: 28
+  sprint_count: 3
+  sprint_1_points: 8
+  sprint_2_points: 13
+  sprint_3_points: 8
