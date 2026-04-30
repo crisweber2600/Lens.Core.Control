@@ -1,0 +1,75 @@
+sprint_number: 1
+feature: lens-dev-new-codebase-finalizeplan
+status: not-started
+updated_at: '2026-04-30T00:00:00Z'
+stories:
+  - id: E1-S1
+    title: Validate all conductor infrastructure
+    type: confirm
+    points: 5
+    status: not-started
+    epic: 1
+  - id: E1-S2
+    title: Confirm express-track constitution permission
+    type: new
+    points: 2
+    status: not-started
+    epic: 1
+  - id: E1-S3
+    title: Confirm publish CLI handles hyphenated artifact names
+    type: confirm
+    points: 1
+    status: not-started
+    epic: 1
+  - id: E1-S4
+    title: Run all tests, confirm no regressions
+    type: confirm
+    points: 2
+    status: not-started
+    epic: 1
+  - id: E1-S5
+    title: Commit untracked infrastructure files to target source repo
+    type: confirm
+    points: 2
+    status: not-started
+    epic: 1
+
+---
+sprint_number: 2
+status: not-started
+stories:
+  - id: E2-S1
+    title: Register commands in discovery surface
+    type: new
+    points: 3
+    status: not-started
+    epic: 2
+  - id: E2-S2
+    title: Document test coverage gaps
+    type: new
+    points: 2
+    status: not-started
+    epic: 2
+  - id: E2-S3
+    title: Confirm prerequisite skills in target project
+    type: confirm
+    points: 2
+    status: not-started
+    epic: 2
+  - id: E2-S4
+    title: Update feature.yaml target_repos
+    type: new
+    points: 1
+    status: not-started
+    epic: 2
+
+---
+sprint_number: 3
+status: not-started
+stories:
+  - id: E3-S1
+    title: Verify review findings resolved, open final PR
+    type: new
+    points: 3
+    status: not-started
+    epic: 3
