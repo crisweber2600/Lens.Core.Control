@@ -23,21 +23,19 @@ and committed to the target source repo.
 
 **Stories:**
 
-| ID | Story | Points |
-|----|-------|--------|
-| S1.1 | Read and validate `bmad-lens-finalizeplan/SKILL.md` — confirm three-step contract, review-first ordering, bundle delegation, governance-write boundary | 2 |
-| S1.2 | Read and validate `bmad-lens-expressplan/SKILL.md` — confirm express-only gate, QuickPlan delegation route, adversarial review invocation, party-mode enforcement | 2 |
-| S1.3 | Read and validate `bmad-lens-quickplan/SKILL.md` — confirm business→tech→sprint pipeline, internal-only designation | 1 |
-| S1.4 | Validate prompt stubs and thin redirects for both commands | 1 |
-| S1.5 | Validate `module.yaml` registers both prompt entries correctly | 1 |
-| S1.6 | Confirm `bmad-lens-bmad-skill` registers QuickPlan as internal wrapper target | 1 |
-| S1.7 | Run all 34 tests — confirm no regressions | 2 |
-| S1.8 | Commit all untracked infrastructure files to target source repo `develop` branch | 2 |
+| ID | Story | Type | Points |
+|----|-------|------|--------|
+| S1.1 | Validate all conductor infrastructure: read `bmad-lens-finalizeplan/SKILL.md` (confirm three-step contract, predecessor gate handles both `techplan` and `expressplan-complete`), `bmad-lens-expressplan/SKILL.md` (confirm express-only gate, QuickPlan delegation, adversarial review invocation, party-mode enforcement), `bmad-lens-quickplan/SKILL.md` (confirm business→tech→sprint pipeline, internal-only designation), prompt stubs + thin redirects, `module.yaml` registration (no duplicate entries with `lens-dev-new-codebase-expressplan`), `bmad-lens-bmad-skill` QuickPlan registration | [confirm] | 5 |
+| S1.2 | Confirm express-track constitution permission is set for `lens-dev/new-codebase`. If absent, add it. Document location. | [new] | 2 |
+| S1.3 | Confirm `publish-to-governance` CLI handles hyphenated express-track artifact names (`tech-plan.md`, `business-plan.md`). Document result. | [confirm] | 1 |
+| S1.4 | Run all 34+ tests — confirm no regressions | [confirm] | 2 |
+| S1.5 | Commit all untracked infrastructure files to target source repo `develop` branch | [confirm] | 2 |
 
 **Sprint Exit Criteria:**
-- All 8 stories done
+- All 5 stories done
 - Tests passing (≥ 34)
 - All new files committed to target source repo
+- No open fail-level findings from Sprint 1 validation
 
 ---
 
