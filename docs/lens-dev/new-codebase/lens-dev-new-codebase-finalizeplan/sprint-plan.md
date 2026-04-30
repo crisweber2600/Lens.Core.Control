@@ -2,7 +2,7 @@
 feature: lens-dev-new-codebase-finalizeplan
 doc_type: sprint-plan
 status: draft
-goal: "Organise FinalizePlan, ExpressPlan, and QuickPlan delivery into reviewable sprints."
+goal: "Organize FinalizePlan, ExpressPlan, and QuickPlan delivery into reviewable sprints."
 key_decisions:
   - Three sprints: Foundation Validation → Discovery and Regressions → Handoff Readiness
   - Sprint 1 focuses on confirming implementation correctness (already done) and committing

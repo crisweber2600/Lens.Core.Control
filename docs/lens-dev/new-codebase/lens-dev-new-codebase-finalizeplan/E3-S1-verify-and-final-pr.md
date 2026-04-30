@@ -42,7 +42,7 @@ opens the final PR from the feature base branch to `main` in the control repo, u
 ### 3. Open final PR
 
 ```bash
-cd "d:\Lens.Core.Control - Copy - Copy"
+cd "<control-repo-root>"
 gh pr create \
   --base main \
   --head lens-dev-new-codebase-finalizeplan \
@@ -53,7 +53,7 @@ gh pr create \
 ### 4. Update feature.yaml and feature-index.yaml
 
 ```bash
-cd "D:\Lens.Core.Control\TargetProjects\lens\Lens.Core.Governance"
+cd "<governance-repo-root>"
 # Update feature.yaml: phase → finalizeplan-complete, milestones.finalizeplan → timestamp
 # Update feature-index.yaml summary for lens-dev-new-codebase-finalizeplan
 git add features/lens-dev/new-codebase/lens-dev-new-codebase-finalizeplan/feature.yaml

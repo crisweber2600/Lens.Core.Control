@@ -3,6 +3,13 @@ feature: lens-dev-new-codebase-finalizeplan
 doc_type: epics
 status: draft
 goal: "Decompose FinalizePlan + ExpressPlan + QuickPlan conductor delivery into reviewable epics aligned with the three sprint slices."
+key_decisions:
+  - Organize work around Foundation Validation, Discovery and Regressions, and Handoff Readiness epics.
+  - Keep regressions close to the highest-risk predecessor-gate and constitution-permission compatibility points.
+open_questions: []
+depends_on:
+  - lens-dev-new-codebase-expressplan
+blocks: []
 updated_at: '2026-04-30T00:00:00Z'
 ---
 
@@ -28,7 +35,7 @@ inconsistency flagged in the adversarial review.
   follow the shared prompt-start preflight pattern.
 - Validate both thin redirects in `_bmad/lens-work/prompts/`.
 - Confirm `_bmad/lens-work/module.yaml` lists both prompt entries with no duplicates.
-- Confirm `_bmad/lens-bmad-skill/SKILL.md` registers QuickPlan as an internal wrapper target.
+- Confirm `_bmad/lens-work/skills/bmad-lens-bmad-skill/SKILL.md` registers QuickPlan as an internal wrapper target.
 - Confirm express-track constitution permission is set for `lens-dev/new-codebase`.
 - Confirm `publish-to-governance` CLI handles hyphenated artifact names for express-track.
 - Run all 34+ tests — confirm no regressions.

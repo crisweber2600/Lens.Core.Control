@@ -3,6 +3,13 @@ feature: lens-dev-new-codebase-finalizeplan
 doc_type: stories
 status: draft
 goal: "Story list with acceptance criteria for FinalizePlan, ExpressPlan, QuickPlan conductor delivery."
+key_decisions:
+  - Stories stay aligned to the three sprint epics: Foundation Validation, Discovery and Regressions, and Handoff Readiness.
+  - Acceptance criteria stay observable and testable at the skill/command boundary.
+open_questions: []
+depends_on:
+  - lens-dev-new-codebase-expressplan
+blocks: []
 updated_at: '2026-04-30T00:00:00Z'
 ---
 

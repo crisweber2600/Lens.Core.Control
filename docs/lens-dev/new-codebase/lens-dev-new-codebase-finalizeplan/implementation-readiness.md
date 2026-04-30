@@ -3,6 +3,13 @@ feature: lens-dev-new-codebase-finalizeplan
 doc_type: implementation-readiness
 status: draft
 goal: "Assess implementation readiness for FinalizePlan, ExpressPlan, QuickPlan conductor delivery."
+key_decisions:
+  - Treat the feature as implementation-ready for code work while keeping predecessor-gate and constitution-permission risks as explicit tracked conditions.
+  - Carry publish CLI hyphenation drift and missing prerequisite skills as explicit warnings rather than hidden assumptions.
+open_questions: []
+depends_on:
+  - lens-dev-new-codebase-expressplan
+blocks: []
 updated_at: '2026-04-30T00:00:00Z'
 ---
 

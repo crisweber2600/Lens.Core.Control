@@ -50,7 +50,8 @@ _bmad/lens-work/prompts/lens-finalizeplan.prompt.md  (thin redirect)
 bmad-lens-finalizeplan/SKILL.md  (conductor)
         │
         ├── Step 1: bmad-lens-adversarial-review --phase finalizeplan
-        │           + governance cross-check
+        │           + publish-to-governance CLI (TechPlan artifacts → governance)
+        │           + governance cross-check (confirm publish succeeded)
         │           + commit/push via bmad-lens-git-orchestration
         │
         ├── Step 2: bmad-lens-git-orchestration merge-plan --strategy pr
