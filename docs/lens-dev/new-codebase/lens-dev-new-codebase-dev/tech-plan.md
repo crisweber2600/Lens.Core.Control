@@ -76,7 +76,7 @@ bmad-lens-dev (SKILL.md)
        c. Validate implementation (bmad-lens-adversarial-review code review gate)
        d. Per-task commit via bmad-lens-git-orchestration
        e. Update dev-session.yaml checkpoint (mark story complete, record commit ref)
-       f. Update sprint-status.yaml story status to complete
+       f. Do not modify sprint-status.yaml during dev; track story progress only in dev-session.yaml, and route any governance status updates through a separate governance-writing workflow
   8. Open final target-repo PR via bmad-lens-git-orchestration
   9. Write dev-session.yaml status: complete with final PR reference
 ```

@@ -19,7 +19,7 @@ review_format: abc-choice-v1
 # FinalizePlan Adversarial Review — lens-dev-new-codebase-dev
 
 **Source:** manual-rerun
-**Artifacts reviewed:** business-plan.md, tech-plan.md, sprint-plan.md, expressplan-adversarial-review.md
+**Artifacts reviewed:** business-plan.md, tech-plan.md, sprint-plan.md, expressplan-review.md
 **Format:** abc-choice-v1. Response options A–E are presented per finding. Chosen responses are recorded below.
 
 ---
@@ -38,11 +38,11 @@ SKILL.md-level work in this feature. One low finding notes a minor terminology i
 in the Slice 3 exit criteria.
 
 The four findings from the expressplan review are confirmed resolved as recorded in
-`expressplan-adversarial-review.md`. No expressplan findings are re-opened.
+`expressplan-review.md`. No expressplan findings are re-opened.
 
-The selected responses have been applied: the carry-forward blockers (H1, H2) are recorded
-above, M1 gets an explicit SKILL.md authoring story inserted as the first Slice 2 story,
-and M2 is flagged as a mandatory constitution note at the top of the sprint plan.
+The selected responses are recorded here: the carry-forward blockers (H1, H2) are listed
+above, and M1/M2 remain required sprint-plan follow-ups to add an explicit SKILL.md
+authoring story and surface the constitution note before Step 2 proceeds.
 
 ---
 

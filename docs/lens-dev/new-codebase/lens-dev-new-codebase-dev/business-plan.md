@@ -100,4 +100,4 @@ the rewrite, the governance model breaks down at exactly the phase where users d
 - `lens-dev.prompt.md` (release module redirect) routes correctly to the SKILL.md.
 - `.github/prompts/lens-dev.prompt.md` (stub) runs preflight and delegates.
 - Regression tests confirm all three acceptance criteria from Story 5.1 pass.
-- Feature phase advances to `expressplan-complete` after the adversarial review passes.
+- Feature phase advances to `finalizeplan-complete` after the adversarial review passes.

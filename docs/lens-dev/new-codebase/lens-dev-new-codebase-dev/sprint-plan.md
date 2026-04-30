@@ -30,12 +30,14 @@ and all six internal dependency slots are present and correct before any behavio
   - Confirm `lens.core/_bmad/lens-work/prompts/lens-dev.prompt.md` exists as a thin redirect.
   - Confirm both files are tracked in git in the target source repo.
 
-- **E1-S2 — Validate `bmad-lens-dev` SKILL.md conductor contract**
+- **E1-S2 — Validate `bmad-lens-dev` SKILL.md conductor contract** *(post-authoring validation; requires E2-S0 to complete first)*
   - Confirm publish-before-author entry hook is present.
   - Confirm conductor chain covers: entry hook → dev-session load/create → branch prep →
     constitution load → task loop → per-task commit → final PR.
   - Confirm dev-session.yaml is read and written (not bypassed).
   - Confirm write isolation: no direct file writes outside bmad-lens-git-orchestration.
+  - Note: This story validates the SKILL.md shape produced by E2-S0. It must not run until
+    E2-S0 has authored the SKILL.md.
 
 - **E1-S3 — Validate `module.yaml` registration**
   - Confirm `lens-dev.prompt.md` is listed in `module.yaml` prompts section.
@@ -65,13 +67,26 @@ dev-session.yaml backward compatibility, and register the command in the discove
 
 **Stories:**
 
+- **E2-S0 — Author `bmad-lens-dev` SKILL.md conductor**
+  - Author the full conductor SKILL.md from scratch (new-codebase rewrite; no direct copy).
+  - Load BMad Builder docs index (`externaldocs/bmad-builder-docs/llms-full/index.md`) and the
+    domain constitution via `bmad-lens-constitution` before authoring begins (BMB-first rule).
+  - Implement the full conductor chain: entry hook → dev-session load/create → branch prep →
+    constitution load → task loop → per-task commit → final PR.
+  - Implement write isolation: all writes routed exclusively through `bmad-lens-git-orchestration`.
+  - Commit the authored SKILL.md to the target source repo.
+
 - **E2-S1 — Register `lens-dev` in the retained command discovery surface**
   - Identify the discovery file used by other retained commands (same file as `lens-techplan`,
     `lens-expressplan`, etc.).
   - Register `lens-dev` following the identical pattern.
   - Commit the registration to the target source repo.
-  - Note: This story is the first in Slice 2 because discovery registration may be a
-    prerequisite for regression tooling to locate the command.
+  - Note: This story is the first registration story in Slice 2 because discovery registration
+    may be a prerequisite for regression tooling to locate the command.
+  - **Dependency rule:** If E2-S1 fails because the discovery surface does not yet exist,
+    E2-S2 through E2-S5 may proceed independently provided the regression tests do not require
+    discovery to locate the command. E2-S1 failure is flagged as a dependency gap, not a
+    Slice 2 blocker. The implementation agent must confirm this at the start of Slice 2.
 
 - **E2-S2 — Regression: Target-repo-only write isolation (AC1)**
   - Verify that code changes during a dev session land only in the target repo.
@@ -96,7 +111,8 @@ dev-session.yaml backward compatibility, and register the command in the discove
   - Verify that a valid finalizeplan-complete feature passes the gate and enters the task loop.
 
 **Exit Criteria:**
-- `lens-dev` registered in discovery surface.
+- `bmad-lens-dev` SKILL.md authored and committed (E2-S0).
+- `lens-dev` registered in discovery surface (E2-S1), or gap flagged if discovery surface absent.
 - All three acceptance criteria have passing regression tests (E2-S2, E2-S3, E2-S4).
 - Publish-before-author hook confirmed via E2-S5.
 - No unresolved fail-level gaps remain from Slice 1 foundation validation.
@@ -110,7 +126,7 @@ dev-session.yaml backward compatibility, and register the command in the discove
 **Stories:**
 
 - **E3-S1 — Merge planning PR and signal /dev handoff**
-  - Confirm no unresolved fail-level findings in `expressplan-adversarial-review.md`.
+  - Confirm no unresolved fail-level findings in `expressplan-review.md`.
   - Confirm all Slice 1 and Slice 2 exit criteria are met.
   - Merge planning PR.
   - Signal `/dev` handoff.
