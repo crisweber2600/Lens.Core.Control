@@ -1,0 +1,247 @@
+feature: lens-dev-new-codebase-dogfood
+doc_type: sprint-status
+status: not-started
+updated_at: '2026-05-01T14:30:00Z'
+accepted_risks:
+  - id: AR1
+    description: "ADR-5 express review filename compatibility debt (expressplan-adversarial-review.md vs expressplan-review.md). Accepted tech debt; E5-S6 documents the mapping. (M3 response A)"
+  - id: AR2
+    description: "Sprint 4 Dev stories partially overlap lens-dev-new-codebase-dev scope. Accepted as parity-only scope; coordination notes in all E4 story files. (M2 response A)"
+sprints:
+  sprint_1:
+    sprint: 1
+    status: not-started
+    stories:
+      - id: E1-S1
+        title: Build retained-command parity map
+        type: new
+        points: S
+        status: not-started
+        epic: 1
+        sprint: 1
+        story_id: S1.1
+      - id: E1-S2
+        title: Restore v4-compatible lifecycle contract
+        type: new
+        points: M
+        status: not-started
+        epic: 1
+        sprint: 1
+        story_id: S1.2
+      - id: E1-S3
+        title: Add target module config and user config contract
+        type: new
+        points: M
+        status: not-started
+        epic: 1
+        sprint: 1
+        story_id: S1.3
+      - id: E1-S4
+        title: Implement feature-yaml state operations
+        type: new
+        points: L
+        status: not-started
+        epic: 1
+        sprint: 1
+        story_id: S1.4
+      - id: E1-S5
+        title: Implement read-only git-state operations
+        type: new
+        points: M
+        status: not-started
+        epic: 1
+        sprint: 1
+        story_id: S1.5
+  sprint_2:
+    sprint: 2
+    status: not-started
+    stories:
+      - id: E2-S1
+        title: Implement 3-branch control topology
+        type: fix
+        points: L
+        status: not-started
+        epic: 2
+        sprint: 2
+        story_id: S2.1
+      - id: E2-S2
+        title: Route phase artifacts to the correct control branch
+        type: fix
+        points: M
+        status: not-started
+        epic: 2
+        sprint: 2
+        story_id: S2.2
+      - id: E2-S3
+        title: Resolve BF-3 feature-index synchronization
+        type: fix
+        points: M
+        status: not-started
+        epic: 2
+        sprint: 2
+        story_id: S2.3
+      - id: E2-S4
+        title: Resolve BF-4 and BF-5 phase-start and base-branch validation
+        type: fix
+        points: M
+        status: not-started
+        epic: 2
+        sprint: 2
+        story_id: S2.4
+      - id: E2-S5
+        title: Add branch cleanup and branch-switch discipline
+        type: fix
+        points: M
+        status: not-started
+        epic: 2
+        sprint: 2
+        story_id: S2.5
+      - id: E2-S6
+        title: Add express publish artifact mapping
+        type: fix
+        points: M
+        status: not-started
+        epic: 2
+        sprint: 2
+        story_id: S2.6
+  sprint_3:
+    sprint: 3
+    status: not-started
+    stories:
+      - id: E3-S1
+        title: Reconcile public prompt stubs and release prompts
+        type: new
+        points: M
+        status: not-started
+        epic: 3
+        sprint: 3
+        story_id: S3.1
+      - id: E3-S2
+        title: Reconcile module.yaml, help CSVs, manifests, and discovery
+        type: fix
+        points: M
+        status: not-started
+        epic: 3
+        sprint: 3
+        story_id: S3.2
+      - id: E3-S3
+        title: Restore missing command skills and internal dependencies
+        type: new
+        points: L
+        status: not-started
+        epic: 3
+        sprint: 3
+        story_id: S3.3
+      - id: E3-S4
+        title: Normalize Lens wrapper output-path precedence
+        type: fix
+        points: L
+        status: not-started
+        epic: 3
+        sprint: 3
+        story_id: S3.4
+      - id: E3-S5
+        title: Decide and implement QuickPlan parity shape
+        type: new
+        points: M
+        status: not-started
+        epic: 3
+        sprint: 3
+        story_id: S3.5
+  sprint_4:
+    sprint: 4
+    status: not-started
+    notes: "All Sprint 4 stories are parity-implementation work against the existing reference module. First-class Dev command authoring belongs to lens-dev-new-codebase-dev."
+    stories:
+      - id: E4-S1
+        title: Implement Dev phase conductor
+        type: new
+        points: XL
+        status: not-started
+        epic: 4
+        sprint: 4
+        story_id: S4.1
+      - id: E4-S2
+        title: Preserve dev-session.yaml compatibility
+        type: new
+        points: M
+        status: not-started
+        epic: 4
+        sprint: 4
+        story_id: S4.2
+      - id: E4-S3
+        title: Implement target-repo branch preparation
+        type: new
+        points: M
+        status: not-started
+        epic: 4
+        sprint: 4
+        story_id: S4.3
+      - id: E4-S4
+        title: Complete retrospective-first closeout automation
+        type: fix
+        points: L
+        status: not-started
+        epic: 4
+        sprint: 4
+        story_id: S4.4
+      - id: E4-S5
+        title: Fill document-project and discover retrospective gaps
+        type: fix
+        points: M
+        status: not-started
+        epic: 4
+        sprint: 4
+        story_id: S4.5
+  sprint_5:
+    sprint: 5
+    status: not-started
+    stories:
+      - id: E5-S1
+        title: Run focused tests for touched skills
+        type: confirm
+        points: M
+        status: not-started
+        epic: 5
+        sprint: 5
+        story_id: S5.1
+      - id: E5-S2
+        title: Run command trace validation for all 17 retained commands
+        type: confirm
+        points: M
+        status: not-started
+        epic: 5
+        sprint: 5
+        story_id: S5.2
+      - id: E5-S3
+        title: Run ExpressPlan-to-FinalizePlan dry run
+        type: confirm
+        points: M
+        status: not-started
+        epic: 5
+        sprint: 5
+        story_id: S5.3
+      - id: E5-S4
+        title: Run FinalizePlan-to-Dev dry run
+        type: confirm
+        points: M
+        status: not-started
+        epic: 5
+        sprint: 5
+        story_id: S5.4
+      - id: E5-S5
+        title: Publish parity report and known compatibility debt
+        type: confirm
+        points: S
+        status: not-started
+        epic: 5
+        sprint: 5
+        story_id: S5.5
+      - id: E5-S6
+        title: Document express review filename compatibility mapping
+        type: confirm
+        points: S
+        status: not-started
+        epic: 5
+        sprint: 5
+        story_id: S5.6
