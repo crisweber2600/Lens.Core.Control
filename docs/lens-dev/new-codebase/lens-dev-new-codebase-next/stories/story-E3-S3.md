@@ -48,10 +48,23 @@ checks for future express-track features.
 > **Constitution state check:**
 > `cat TargetProjects/lens/lens-governance/features/lens-dev/new-codebase/lens-dev-new-codebase-constitution/feature.yaml`
 >
-> Phase found: _(fill in)_
-> Gate status: OPEN / CLOSED _(fill in)_
-> Owner decision: _(this feature / constitution feature / N/A)_
-> Rationale: _(fill in)_
+> Phase found: `preplan`
+> Track: `full`
+> Gate status: **OPEN**
+> Owner decision: **constitution feature** — keep dependency, do not scope the allow-list fix into this feature
+> Rationale: The constitution feature is at `preplan` (early analysis phase). Implementing the
+> express-track allow-list fix here would be out of scope and premature. The correct resolution
+> is for `lens-dev-new-codebase-constitution` to advance through its lifecycle. The existing
+> `depends_on: [lens-dev-new-codebase-constitution]` in this feature's `feature.yaml` correctly
+> blocks progression to `/dev` until the constitution feature is complete. No `next-ops.py`
+> code changes are required for this gate.
+>
+> **Risk:** Until `lens-dev-new-codebase-constitution` reaches `dev-complete` or later, `/next`
+> on this feature will return `status=blocked` with the constitution dependency as a blocker.
+> This is correct behavior — the blocker will clear when the constitution feature ships.
+>
+> **feature.yaml `depends_on` status:** `lens-dev-new-codebase-constitution` is already in
+> `depends_on`. No change needed.
 
 ### feature.yaml update instructions
 
@@ -73,10 +86,20 @@ If gate remains open AND fix scoped here:
 
 ### Agent Model Used
 
-_(to be filled by dev agent)_
+Claude Sonnet 4.6
 
 ### Debug Log References
 
+None — gate check performed via direct file read.
+
 ### Completion Notes List
 
+- Checked `lens-dev-new-codebase-constitution/feature.yaml` → phase: preplan, track: full
+- Gate is OPEN; constitution is far from `expressplan-complete`
+- Decision: keep dependency on constitution feature; no code changes required
+- `depends_on` in this feature's `feature.yaml` already includes `lens-dev-new-codebase-constitution`
+- No governance file changes required
+
 ### File List
+
+- `docs/lens-dev/new-codebase/lens-dev-new-codebase-next/stories/story-E3-S3.md` (updated Dev Notes)
