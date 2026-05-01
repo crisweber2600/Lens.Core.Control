@@ -58,11 +58,12 @@ committed in this story file.
 
 ### Paused-State Decision (fill in before marking done)
 
-> **Required gate — do not mark story done without completing this section.**
->
-> Selected behavior: _(A / B / C)_
-> Rationale: _(brief reason for choice)_
-> Fixture outcome: E2-S4 will write a paused-state fixture implementing this behavior.
+> **Selected behavior: A**
+> Rationale: No pause-resume skill exists in the target repo. Reporting the paused state as
+> a blocker is the safest and most transparent behavior — it surfaces the issue clearly
+> without implying a recovery path that doesn't exist yet.
+> Fixture outcome: E2-S4 will write a paused-state fixture implementing Option A behavior:
+> `status=blocked, blockers=["feature is paused; use the pause-resume skill or the retained recovery path"]`
 
 ### Implementation Notes
 
@@ -83,10 +84,24 @@ committed in this story file.
 
 ### Agent Model Used
 
-_(to be filled by dev agent)_
+Claude Sonnet 4.6
 
 ### Debug Log References
 
+None — implementation verified via `uv run next-ops.py suggest --feature-id lens-dev-new-codebase-next`.
+Output confirmed `status=blocked` with constitution dependency blocker and `recommendation=/dev`.
+
 ### Completion Notes List
 
+- Implemented `next-ops.py` with `suggest` subcommand, argparse, pyyaml inline deps
+- Workspace root detection walks up from `__file__` to find `TargetProjects/` directory
+- Reads `bmadconfig.yaml` for `governance_repo_path` and `release_repo_root`
+- Finds `feature.yaml` by scanning `features/` recursively for matching feature-id directory
+- Resolves `auto_advance_to` from live `lifecycle.yaml` (no stubs)
+- Paused-state: Option A (blocked report) — rationale documented above
+- Surfaces `feature.yaml.warnings` field as response warnings
+- No side effects verified: see E3-S2
+
 ### File List
+
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/bmad-lens-next/scripts/next-ops.py` (created)

@@ -1,0 +1,36 @@
+epic_number: all
+feature_id: lens-dev-new-codebase-next
+started_at: "2026-04-30T22:30:00Z"
+last_checkpoint: "2026-05-01T16:05:17Z"
+special_instructions: "Use bmb workflow builder approach for SKILL.md authoring. Clean room implementation. Branch off develop."
+target_repo_name: lens.core.src
+target_repo_path: TargetProjects/lens-dev/new-codebase/lens.core.src
+dev_branch_mode: feature-id
+working_branch: feature/lens-dev-new-codebase-next-clean-room
+base_branch: develop
+requires_final_pr: true
+total_stories: 12
+stories_completed:
+  - E1-S1
+  - E1-S2
+  - E1-S3
+  - E1-S4
+  - E2-S1
+  - E2-S2
+  - E2-S3
+  - E2-S4
+  - E3-S1
+  - E3-S2
+  - E3-S3
+  - E3-S4
+stories_failed: []
+current_story_index: 12
+final_pr_url: "https://github.com/crisweber2600/Lens.Core.Src/pull/16"
+final_review_status: pass-with-notes
+final_party_mode_status: pass-with-notes
+validation:
+  next_tests: "uv run --with pytest --with pyyaml python -m pytest _bmad/lens-work/skills/bmad-lens-next/scripts/tests/test_next-ops.py _bmad/lens-work/skills/bmad-lens-next/scripts/tests/test_next_no_writes.py -> 32 passed"
+  syntax: "Pylance file syntax check -> no errors in next-ops.py"
+  constitution: "constitution-ops.py resolve -> informational gate, required dev artifacts: stories"
+  pr_state: "gh pr view 16 -> OPEN, CLEAN"
+status: complete
