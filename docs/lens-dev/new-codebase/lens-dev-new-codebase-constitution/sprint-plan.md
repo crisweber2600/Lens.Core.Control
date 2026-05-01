@@ -14,8 +14,8 @@ open_questions:
 depends_on:
   - business-plan.md
   - tech-plan.md
-blocks:
   - expressplan-adversarial-review.md
+blocks: []
 updated_at: 2026-05-01T00:00:00Z
 ---
 
@@ -29,13 +29,13 @@ Deliver a clean-room `constitution` rewrite that can move through the express pl
 
 - The packet is authored for the express planning route rather than the original full multi-phase path.
 - Business and technical plans now carry the express-track parity requirement in addition to the partial-hierarchy fix.
-- The sanctioned feature-yaml switch from `track: full` / `phase: preplan` to the express path is a Slice 1 gate before automation should rely on this packet.
+- The sanctioned `bmad-lens-feature-yaml` switch from `track: full` / `phase: preplan` to the express path is a Slice 1 gate before automation should rely on this packet.
 
 ## Delivery Slices
 
 | Slice | Objective | Exit Criteria |
 | --- | --- | --- |
-| Slice 1 | Express alignment and surface validation | Feature state is switched through feature-yaml; prompt chain and read-only boundaries are confirmed |
+| Slice 1 | Express alignment and surface validation | Feature state is switched via `bmad-lens-feature-yaml`; prompt chain and read-only boundaries are confirmed |
 | Slice 2 | Resolver core rewrite | Missing levels warn instead of error; express is treated as a supported governed track; conductor remains thin |
 | Slice 3 | Compliance and progressive-display parity | All three subcommands preserve output shape, gate behavior, and warning propagation |
 | Slice 4 | Regression and release hardening | Temp-dir parity suite, negative safety tests, and reference docs are complete |
@@ -44,9 +44,9 @@ Deliver a clean-room `constitution` rewrite that can move through the express pl
 
 ### Scope
 
-- Record the sanctioned feature-yaml transition from the original full/preplan path to the express/expressplan path.
+- Record the sanctioned `bmad-lens-feature-yaml` transition from the original full/preplan path to the express/expressplan path.
 - Verify the retained 3-hop chain: public stub → release prompt → SKILL.md → `constitution-ops.py`.
-- Confirm the authority domain remains read-only for governance, control docs, and feature state writes outside the sanctioned feature-yaml operation.
+- Confirm the authority domain remains read-only for governance, control docs, and feature state writes outside the sanctioned `bmad-lens-feature-yaml` operation.
 
 ### Deliverables
 

@@ -13,7 +13,7 @@ key_decisions:
 open_questions: []
 depends_on:
   - business-plan.md (this feature)
-  - lens-dev-new-codebase-baseline architecture.md
+  - lens-dev-new-codebase-baseline
 blocks: []
 updated_at: 2026-05-01T00:00:00Z
 ---
@@ -23,7 +23,7 @@ updated_at: 2026-05-01T00:00:00Z
 **Feature:** lens-dev-new-codebase-constitution  
 **Author:** crisweber2600  
 **Date:** 2026-05-01  
-**References:** [Business Plan](./business-plan.md), [Baseline Architecture](../../lens-dev-new-codebase-baseline/architecture.md)
+**References:** [Business Plan](./business-plan.md), [Baseline Research](../../lens-dev-new-codebase-baseline/research.md)
 
 ---
 
@@ -78,13 +78,13 @@ The following defaults apply when a constitution level is absent or when no leve
 
 ```python
 DEFAULTS = {
-  "permitted_tracks": ["quickplan", "full", "express", "hotfix", "tech-change"],
+    "permitted_tracks": ["quickplan", "full", "express", "hotfix", "tech-change"],
     "required_artifacts": {
         "planning": ["business-plan", "tech-plan"],
         "dev": ["stories"],
     },
     "gate_mode": "informational",
-  "sensing_gate_mode": "informational",
+    "sensing_gate_mode": "informational",
     "additional_review_participants": [],
     "enforce_stories": False,
     "enforce_review": False,
@@ -115,15 +115,15 @@ The YAML frontmatter contains zero or more of the following known keys:
 
 Unknown keys are flagged in the return payload with `_unknown_keys` but do not cause errors.
 
-### 2.4 load_constitution(path) → dict
+### 2.4 load_constitution(path) → dict | None
 
-Reads a constitution file and returns its frontmatter as a dict. Returns `{}` if the file does not exist. Returns `{"_parse_error": str}` if the YAML frontmatter is malformed. Records `_unknown_keys` for any key not in the known set.
+Reads a constitution file and returns its frontmatter as a dict. Returns `None` if the file does not exist (allowing callers to distinguish a missing file from a file with empty frontmatter). Returns `{"_parse_error": str}` if the YAML frontmatter is malformed. Records `_unknown_keys` for any key not in the known set.
 
 Parsing rule: the frontmatter delimiter is the first `---` pair only. A `---` sequence inside a YAML value is not treated as a closing delimiter.
 
-### 2.5 merge_constitutions(levels: list[dict]) → tuple[dict, list[str]]
+### 2.5 merge_constitutions(levels: list[dict]) → tuple[dict, list[dict]]
 
-Merges a list of constitution dicts in order from highest (org) to lowest (repo). Returns `(merged_constitution, warnings)`.
+Merges a list of constitution dicts in order from highest (org) to lowest (repo). Returns `(merged_constitution, warnings)`, where `warnings` is a list of structured warning objects (dicts with keys such as `type` and `detail`).
 
 Merge rules applied in order:
 
@@ -161,7 +161,7 @@ if "org" not in levels_loaded:
 ```python
 for level_name, path in level_paths:
     data = load_constitution(path)
-    if not data:
+    if data is None:
         warnings.append({"type": "level_absent", "level": level_name,
                           "path": str(path)})
         continue  # skip missing levels gracefully

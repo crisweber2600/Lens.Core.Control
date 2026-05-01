@@ -182,4 +182,4 @@ Because the old `resolve` subcommand can return an error for org-missing, every 
 | lens-dev-new-codebase-baseline (epic 4) | blocks | All Epic 4 planning rewrites depend on the stable constitution resolver |
 | lens-dev-new-codebase-baseline (epic 5) | blocks | Dev command depends on constitution for gate mode and artifact enforcement |
 | lens-dev-new-codebase-baseline (epic 6) | blocks | Sensing and dashboard depend on constitution progressive-display |
-| lens-dev-new-codebase-baseline architecture.md | reference | 3-hop chain, BMB-first authoring, authority domain rules |
+| lens-dev-new-codebase-baseline | reference | 3-hop chain, BMB-first authoring, authority domain rules |

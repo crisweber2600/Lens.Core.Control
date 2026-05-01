@@ -22,7 +22,7 @@ review_format: abc-choice-v1
 
 ## Summary
 
-The packet is coherent enough to complete ExpressPlan for the constitution rewrite. It correctly centers the shared partial-hierarchy fix, keeps the command read-only, and defines clean-room parity around the three retained subcommands. The remaining risks are implementation-shaping rather than packet-failing: the current technical contract needs explicit express-track parity, the feature state switch from the original full path must be recorded through the sanctioned feature-yaml flow, and the regression plan must prove the negative safety cases that matter for a shared governance primitive.
+The packet is coherent enough to complete ExpressPlan for the constitution rewrite. It correctly centers the shared partial-hierarchy fix, keeps the command read-only, and defines clean-room parity around the three retained subcommands. The remaining risks are implementation-shaping rather than packet-failing: the current technical contract needs explicit express-track parity, the feature state switch from the original full path must be recorded in `feature.yaml` through the sanctioned `bmad-lens-feature-yaml` operation, and the regression plan must prove the negative safety cases that matter for a shared governance primitive.
 
 Those issues are now visible in the packet and carried into the sprint plan. None require this planning packet to fail.
 
@@ -74,14 +74,14 @@ The packet is being authored for the express path, but the inherited technical c
 **Dimension:** Workflow integrity  
 **Gate:** Before this packet is used by expressplan automation
 
-The planning packet is now written for the express path, but the feature was initialized on the original `track: full` / `phase: preplan` route. If that state change is not recorded through the sanctioned feature-yaml flow, the packet can look correct in docs while automation still routes from the old path.
+The planning packet is now written for the express path, but the feature was initialized on the original `track: full` / `phase: preplan` route. If that state change is not recorded through the sanctioned `bmad-lens-feature-yaml` operation to update `feature.yaml`, the packet can look correct in docs while automation still routes from the old path.
 
 **Recorded response:** A  
-**Applied adjustment:** The sprint plan now makes the sanctioned feature-yaml transition a Slice 1 gate and an explicit critical-path item for automation use.
+**Applied adjustment:** The sprint plan now makes the sanctioned `bmad-lens-feature-yaml` transition a Slice 1 gate and an explicit critical-path item for automation use.
 
 **Choose one:**
 
-- **A.** Require the sanctioned feature-yaml switch before relying on the packet.  
+- **A.** Require the sanctioned `bmad-lens-feature-yaml` switch before relying on the packet.  
   **Why pick this:** Keeps the docs path and governance state aligned.  
   **Why not:** Adds a coordination step outside the planning docs themselves.
 - **B.** Treat the express packet as documentation-only and leave feature state on the full path for now.  
@@ -145,7 +145,7 @@ The packet states that `constitution` is read-only and that slug validation prev
 
 ## Accepted Risks
 
-- The express packet is only fully automatable once the sanctioned feature-yaml switch is recorded.
+- The express packet is only fully automatable once the sanctioned `bmad-lens-feature-yaml` switch is recorded in `feature.yaml`.
 - `sensing_gate_mode` parity and negative safety cases are now planned, but they still need implementation before the feature can claim full output parity.
 
 ## Party-Mode Challenge
@@ -160,4 +160,4 @@ Quinn (QA): Read-only promises are cheap in prose. The parity suite has to prove
 
 - Should repo-level fixtures ship in the first parity wave or after org/domain/service coverage is stable?
 - Do any current callers depend on the accidental omission of `sensing_gate_mode` from resolved output?
-- Which sanctioned feature-yaml operation should be used to record the full-to-express switch for this feature?
+- Which sanctioned `bmad-lens-feature-yaml` operation should be used to record the full-to-express switch for this feature?
