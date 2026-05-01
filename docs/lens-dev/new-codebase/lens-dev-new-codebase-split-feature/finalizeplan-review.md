@@ -11,6 +11,7 @@ high_count: 1
 medium_count: 3
 low_count: 4
 review_format: abc-choice-v1
+status: responses-recorded
 updated_at: 2026-05-01T00:00:00Z
 ---
 
@@ -149,9 +150,9 @@ The planning set can advance to the downstream bundle. The business plan and tec
 
 | Option | Resolution |
 |---|---|
-| **A** | Accept the current state. The governance mirror holds the planning docs; the control repo staging path holds only FinalizePlan outputs forward. Note the deviation in this review and ensure the story file directs the dev agent to consult governance docs for business-plan and tech-plan context. |
-| B | Copy `business-plan.md` and `tech-plan.md` from the governance mirror into the control repo staging path as part of this FinalizePlan commit, restoring the canonical authority domain. |
-| C | Leave the gap unresolved until the trueup feature or a dedicated housekeeping task reconciles governance mirrors and control repo staging paths across all features. |
+| A| Accept the current state. The governance mirror holds the planning docs; the control repo staging path holds only FinalizePlan outputs forward. Note the deviation in this review and ensure the story file directs the dev agent to consult governance docs for business-plan and tech-plan context. |
+| **B** | Copy `business-plan.md` and `tech-plan.md` from the governance mirror into the control repo staging path as part of this FinalizePlan commit, restoring the canonical authority domain. |
+| C| Leave the gap unresolved until the trueup feature or a dedicated housekeeping task reconciles governance mirrors and control repo staging paths across all features. |
 | D | Provide a custom resolution. |
 | E | Accept as-is. The governance mirror is sufficient for cross-feature consumers and the dev agent will be directed to it. |
 
@@ -247,19 +248,19 @@ The business plan says "Clean-room re-implementation — old codebase consulted 
 
 ## Summary and Next Actions
 
-| Finding | Severity | Response Required |
-|---|---|---|
-| H1: Missing base branch | High | **Must resolve before Step 2.** Select Option A or B to create `lens-dev-new-codebase-split-feature` branch. |
-| M1: Test file not in §4 | Medium | Select option — carry response into dev story task list |
-| M2: Embedded YAML priority ambiguous | Medium | Select option — carry response into validate-split implementation note |
-| M3: Governance staging gap | Medium | Select option — determines whether business-plan.md / tech-plan.md are copied to control repo staging path |
-| L1: Feature-index stale | Low | Select option |
-| L2: SAFE_ID_PATTERN placement | Low | Select option |
-| L3: Stale cross-references in moved stories | Low | Select option |
-| L4: Concurrent execution | Low | Select option |
-| BS-1: Delimiter normalization | Advisory | Add to test plan and validate-split spec |
-| BS-2: Old-codebase reference path | Advisory | Add reference pointer to §5 of tech-plan |
-| BS-3: Duplicate feature-index detection | Advisory | Add pre-condition check to create-split-feature spec |
+| Finding | Severity | Response | Applied |
+|---|---|---|---|
+| H1: Missing base branch | High | **A** — create from main | ✓ base branch created, PR #37 open |
+| M1: Test file not in §4 | Medium | **A** — added to §4.1 Core Deliverables | ✓ tech-plan.md updated |
+| M2: Embedded YAML priority ambiguous | Medium | **A** — patterns enumerated, fallback rule added | ✓ tech-plan.md §2.3 updated |
+| M3: Governance staging gap | Medium | **B** — planning docs staged in control repo | ✓ committed in 3cdaff2 |
+| L1: Feature-index stale | Low | **A** — status updated to `techplan` | ✓ feature-index.yaml updated |
+| L2: SAFE_ID_PATTERN placement | Low | **A** — parse-time validation note added to §3 | ✓ tech-plan.md updated |
+| L3: Stale cross-references in moved stories | Low | **B** — post-move scan requirement in SKILL.md deliverable | ✓ tech-plan.md §4.1 + §5 updated |
+| L4: Concurrent execution | Low | **B** — unsupported note added to §8 | ✓ tech-plan.md updated |
+| BS-1: Delimiter normalization | Advisory | Applied — normalization spec in §2.3, test case in §6 | ✓ tech-plan.md updated |
+| BS-2: Old-codebase reference path | Advisory | Applied — reference pointer added to §5 | ✓ tech-plan.md updated |
+| BS-3: Duplicate feature-index detection | Advisory | Applied — pre-condition check added to §2.4 | ✓ tech-plan.md updated |
 
 **Carry-forward blockers into dev story:**
 - Resolve BS-1 (delimiter normalization) in validate-split implementation  
