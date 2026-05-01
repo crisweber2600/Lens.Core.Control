@@ -17,6 +17,7 @@ depends_on:
   - business-plan.md
   - TargetProjects/lens/lens-governance/features/lens-dev/new-codebase/lens-dev-new-codebase-baseline/docs/research.md
   - TargetProjects/lens/lens-governance/features/lens-dev/new-codebase/bugfixes.md
+  - TargetProjects/lens/lens-governance/features/lens-dev/new-codebase/ExpressPlanBugs.md
 blocks:
   - Implementation cannot reach parity until lifecycle/config/state foundations and dev handoff are restored.
 updated_at: '2026-05-01T00:00:00Z'
@@ -43,6 +44,21 @@ The technical plan is to close behavioral parity in layers: restore lifecycle/co
 | Write orchestration | Branches, commits, pushes, PRs, publish-to-governance. | Present but needs bugfix parity. | Absorb BF-1 through BF-6 and artifact slug mapping. |
 | Phase conductors | PrePlan, BusinessPlan, TechPlan, ExpressPlan, FinalizePlan. | Several present; foundations missing. | Reconnect through lifecycle/config/state abstractions. |
 | Dev and Complete | Target-repo implementation loop and terminal closeout. | Dev missing; Complete partial. | Restore dev-session compatibility, retrospective-first closeout, and document-project gap handling. |
+
+## ExpressPlanBugs.md Defect Intake
+
+The ExpressPlan dogfood transcript records defects that must become implementation work rather than conversation-only lessons:
+
+| Defect | Impact | Required fix |
+| --- | --- | --- |
+| Constitution resolver reported `express` as ignored while the governance constitution files permitted it. | ExpressPlan can false-block valid express-track features. | Update constitution resolution to merge and validate express-track permissions from the actual hierarchy, with a regression fixture for `lens-dev/new-codebase`. |
+| Editor glob search and `rg` assumptions failed during setup. | Feature/config discovery becomes environment-dependent and brittle. | Add deterministic repository discovery helpers and fallbacks that do not depend on one editor search provider or `rg` availability. |
+| Git Bash `/d/...` paths used with file-edit tooling created files under `C:/d/...`. | Planning artifacts can be written outside the workspace and validators cannot find them. | Add Windows-safe path normalization or explicit absolute-path validation before file writes and publish operations. |
+| Default ExpressPlan publish mapping copied only the review artifact. | Governance mirrors can miss `business-plan.md`, `tech-plan.md`, and `sprint-plan.md` unless an operator knows the override. | Fix `publish-to-governance` phase artifact mapping so express publishes all required QuickPlan artifacts plus the review artifact by default. |
+| Feature phase advanced but `feature-index.yaml` stayed stale because no sanctioned sync command exists. | `switch`, `next`, dashboards, and cross-feature context can read outdated status. | Add a sanctioned feature-index sync operation and call it after phase transitions; do not rely on hand edits. |
+| Dirty governance state initially blocked phase advancement. | Required publishes can stall despite the user's expectation that repo changes are always published. | Make dirty-state handling explicit: pull, stage the relevant dirty files, commit, push, and report the SHA before continuing. |
+| The public prompt chain gap was identified after initial planning. | Internal-only skills may appear complete while public user commands fail. | Treat public stubs, release prompts, module metadata, and skill owners as a single inventory contract. |
+| Clean-room file hash verification happens outside VS Code. | In-editor validation cannot be the only clean-room evidence. | Emit traceable behavior/parity artifacts and keep source-copy avoidance explicit so external hash checks can run independently. |
 
 ## Design Decisions (ADRs)
 
@@ -157,6 +173,7 @@ Rollback plan: revert or disable target module registration for any restored com
 | Feature YAML | Read, validate, update phase, update docs paths, preserve unknown fields, reject invalid transitions. |
 | Git state | Read-only branch detection, topology reporting, discrepancy surfacing, active feature listing. |
 | Git orchestration | BF-1 through BF-6, base branch validation, feature-index sync, publish-to-governance mapping. |
+| ExpressPlan dogfood defects | Constitution resolver express-track regression, deterministic discovery fallback, Windows path normalization, express artifact publish mapping, dirty-state commit/push handling, and external clean-room hash-check readiness. |
 | Phase gates | Review-ready fast path, missing artifact failure, no advance on review fail. |
 | Wrapper output paths | Lens context overrides global planning/implementation fallback paths. |
 | Dev handoff | Target repo only writes, dev-session compatibility, per-story commits, final PR. |

@@ -10,6 +10,7 @@ key_decisions:
   - Replace the earlier flat-control-repo idea with a three-branch control topology: feature base, plan branch, and dev branch.
   - Keep governance flat on main while allowing target projects to choose flat, feature branch, or feature branch with username strategies.
   - Preserve lifecycle v4 compatibility, retained command behavior, prompt-start preflight, feature identity, and governance authority boundaries.
+  - Treat ExpressPlanBugs.md as a dogfood defect intake source for workflow, tooling, publish, and environment issues observed during ExpressPlan execution.
 open_questions:
   - Should QuickPlan remain internal-only in the clean-room rebuild, or preserve the reference module's standalone conductor behavior?
   - What is the exact persistent user config path for GitHub username and branch identity in the new codebase?
@@ -17,6 +18,7 @@ depends_on:
   - TargetProjects/lens/lens-governance/features/lens-dev/new-codebase/lens-dev-new-codebase-baseline/docs/prd.md
   - TargetProjects/lens/lens-governance/features/lens-dev/new-codebase/lens-dev-new-codebase-baseline/docs/research.md
   - TargetProjects/lens/lens-governance/features/lens-dev/new-codebase/bugfixes.md
+  - TargetProjects/lens/lens-governance/features/lens-dev/new-codebase/ExpressPlanBugs.md
   - docs/lens-dev/new-codebase/lens-dev-new-codebase-discover/retrospective.md
 blocks:
   - Full feature parity is blocked until lifecycle/config/state foundations and the Dev conductor exist in lens.core.src.
@@ -39,6 +41,8 @@ The baseline also freezes several contracts: every public prompt starts with `li
 
 Recent dogfood work adds required corrections that should be integrated now: BF-1 dev branch behavior, BF-2 username persistence, BF-3 `feature-index.yaml` synchronization, BF-4 phase-start branch verification, BF-5 base-branch validation, the BF-6 topology correction, missing Dev startup after FinalizePlan, and Complete automation for retrospective commit/push/merge.
 
+`ExpressPlanBugs.md` adds a second dogfood bugfix stream from the actual ExpressPlan execution. The rebuild must fix the constitution resolver false negative that ignored `express` even when governance files permitted it, make command/config discovery deterministic when editor glob search or `rg` is unavailable, prevent Windows path-form mistakes that can create artifacts outside the workspace, correct express publish defaults so QuickPlan artifacts are mirrored without explicit overrides, provide a sanctioned `feature-index.yaml` sync operation, and treat dirty repo state as a commit/push responsibility rather than a blocker that strands generated artifacts. These are workflow reliability issues, not polish; they directly affect whether the new codebase can run its own lifecycle.
+
 The updated topology decision is explicit. The governance repo is always flat on `main`. The control repo now uses a three-branch feature topology: `{featureId}`, `{featureId}-plan`, and `{featureId}-dev`. Planning items before FinalizePlan go to `{featureId}-plan`; FinalizePlan itself goes to `{featureId}`; FinalizePlan step 3 goes to `{featureId}-dev`. After each PR lands, local and remote branches must be cleaned up, and the workflow must switch to the correct next branch and pull before continuing. Target projects keep their own branch strategy choices: direct default branch writes, `feature/{featureStub}`, or `feature/{featureStub}-{username}`.
 
 ## Stakeholders
@@ -60,6 +64,7 @@ The updated topology decision is explicit. The governance repo is always flat on
 5. Complete writes a retrospective before archive and supports the intended commit/push/merge automation without hand-edited governance state.
 6. Bugfixes BF-1 through BF-6 are either implemented or explicitly split into tracked follow-up stories with acceptance criteria.
 7. Validation uses behavior-level parity tests and command traces rather than copied implementation text.
+8. ExpressPlanBugs.md issues are converted into implementation stories or acceptance criteria covering resolver parity, publish parity, Windows-safe paths, feature-index sync, deterministic discovery, and repo clean-state publishing.
 
 ## Scope
 
@@ -67,6 +72,7 @@ The updated topology decision is explicit. The governance repo is always flat on
 
 - Clean-room parity planning for `TargetProjects/lens-dev/new-codebase/lens.core.src` against the baseline and reference behavior.
 - Integration of the bugfix backlog into the delivery plan.
+- Integration of ExpressPlanBugs.md as execution-derived defect intake for business and technical planning.
 - Restoration of missing P0 lifecycle, config, feature-state, git-state, and Dev orchestration capabilities.
 - Prompt/module/discovery surface reconciliation for the retained 17 commands.
 - Targeted regression strategy for prompt-start routing, phase gates, branch topology, publish-to-governance, and dev handoff.
