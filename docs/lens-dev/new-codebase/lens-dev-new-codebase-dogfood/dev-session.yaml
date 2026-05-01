@@ -1,0 +1,19 @@
+epic_number: all
+feature_id: lens-dev-new-codebase-dogfood
+started_at: '2026-05-01T14:32:48Z'
+last_checkpoint: '2026-05-01T14:32:48Z'
+special_instructions: "develop all stories; use the BMB workflow builder for dogfood feature work inside TargetProjects; clean-room implementation; branch from target develop"
+target_repo_name: lens.core.src
+target_repo_path: TargetProjects/lens-dev/new-codebase/lens.core.src
+dev_branch_mode: feature-id
+working_branch: feature/dogfood
+base_branch: develop
+requires_final_pr: true
+total_stories: 27
+stories_completed: []
+stories_failed: []
+current_story_index: 0
+final_pr_url: null
+final_review_status: null
+final_party_mode_status: null
+status: in-progress
