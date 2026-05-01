@@ -29,7 +29,7 @@ updated_at: '2026-05-01T00:00:00Z'
 | 2 | Integrate git orchestration and topology bugfixes. | S2.1-S2.6 | L | Three-branch control topology must stay separate from target-project branch strategy. |
 | 3 | Reconcile retained command surfaces and phase conductors. | S3.1-S3.5 | XL | Prompt/module/help/manifests can drift unless inventory is generated from one source. |
 | 4 | Restore Dev and Complete handoff behavior. | S4.1-S4.5 | XL | Dev target-repo writes and retrospectives have high authority-boundary risk. |
-| 5 | Prove parity through regression and workflow traces. | S5.1-S5.5 | L | Broad tests may include inherited failures unrelated to dogfood. |
+| 5 | Prove parity through regression and workflow traces. | S5.1-S5.6 | L | Broad tests may include inherited failures unrelated to dogfood. |
 
 ## Sprint 1 - Foundation Restoration
 

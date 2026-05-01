@@ -4,13 +4,12 @@ doc_type: adversarial-review
 phase: expressplan
 source: phase-complete
 verdict: pass-with-warnings
-status: review-complete
+status: responses-recorded
 critical_count: 0
 high_count: 2
 medium_count: 4
 low_count: 2
 review_format: abc-choice-v1
-responses_recorded: true
 updated_at: '2026-05-01T00:00:00Z'
 ---
 
