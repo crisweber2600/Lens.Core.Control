@@ -1,0 +1,66 @@
+sprint_number: 1
+feature: lens-dev-new-codebase-split-feature
+status: not-started
+updated_at: '2026-05-01T00:00:00Z'
+stories:
+  - id: E1-S1
+    title: Add status normalization to validate-split and move-stories
+    type: fix
+    points: 2
+    status: not-started
+    epic: 1
+  - id: E1-S2
+    title: Fix duplicate detection to check feature-index.yaml
+    type: fix
+    points: 2
+    status: not-started
+    epic: 1
+  - id: E1-S3
+    title: Add sprint-status.yaml list-format support to sprint plan parser
+    type: fix
+    points: 2
+    status: not-started
+    epic: 1
+  - id: E2-S1
+    title: Rewrite SKILL.md as thin conductor (BMB-first)
+    type: rewrite
+    points: 3
+    status: not-started
+    epic: 2
+  - id: E2-S2
+    title: Verify prompt files
+    type: confirm
+    points: 1
+    status: not-started
+    epic: 2
+
+---
+sprint_number: 2
+feature: lens-dev-new-codebase-split-feature
+status: not-started
+updated_at: '2026-05-01T00:00:00Z'
+stories:
+  - id: E3-S1
+    title: Add missing test cases for normalization, list format, and duplicate detection
+    type: new
+    points: 3
+    status: not-started
+    epic: 3
+  - id: E3-S2
+    title: Run full test suite and confirm all test classes pass
+    type: confirm
+    points: 2
+    status: not-started
+    epic: 3
+  - id: E4-S1
+    title: Verify module discovery registration and update target_repos
+    type: confirm
+    points: 1
+    status: not-started
+    epic: 4
+  - id: E4-S2
+    title: Commit all artifacts, open final PR, update feature.yaml phase
+    type: new
+    points: 1
+    status: not-started
+    epic: 4
