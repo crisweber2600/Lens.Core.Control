@@ -60,6 +60,21 @@ The ExpressPlan dogfood transcript records defects that must become implementati
 | The public prompt chain gap was identified after initial planning. | Internal-only skills may appear complete while public user commands fail. | Treat public stubs, release prompts, module metadata, and skill owners as a single inventory contract. |
 | Clean-room file hash verification happens outside VS Code. | In-editor validation cannot be the only clean-room evidence. | Emit traceable behavior/parity artifacts and keep source-copy avoidance explicit so external hash checks can run independently. |
 
+### Defect-to-Story Traceability (H1 — FinalizePlan review response D)
+
+All 8 defects must map to a story ID and acceptance criterion before Sprint 1 implementation begins. This table is the governance evidence that the defect intake was fully absorbed. A complete per-defect traceability table (with assigned story IDs) must appear in `implementation-readiness.md`; the mapping below is the planning-phase source from which that table is populated.
+
+| # | Defect summary | Story | Acceptance criterion |
+| --- | --- | --- | --- |
+| 1 | Constitution resolver false negative for `express` track | S1.2 (lifecycle contract) + S2.4 (phase-start validation) | Constitution resolver correctly permits `express` track for `lens-dev/new-codebase`; regression fixture for this domain/service combination passes. |
+| 2 | Editor glob / `rg` discovery assumptions | S1.3 (module config) | Config and feature discovery work without `rg` or any specific editor search provider; fallback path is tested. |
+| 3 | Windows `/d/...` path form creates files outside workspace | S1.3 (module config) + S2.6 (express publish) | File write and publish operations use OS-normalized absolute paths; no artifact is written to `C:/d/...` or similar on Windows. |
+| 4 | Express publish mapping copies only review artifact | S2.6 (express publish artifact mapping) | `publish-to-governance --phase expressplan` copies `business-plan.md`, `tech-plan.md`, `sprint-plan.md`, and the express review artifact; both `expressplan-adversarial-review.md` and legacy `expressplan-review.md` are recognized and reported. |
+| 5 | `feature-index.yaml` goes stale after phase transitions | S2.3 (feature-index sync) | A sanctioned sync operation updates `feature-index.yaml` after every `feature.yaml` phase change; tested with a fixture that exercises the stale-entry scenario. |
+| 6 | Dirty governance state blocks phase advancement | S1.4 (feature-yaml operations) + S2.4 (phase-start validation) | Dirty-state detection pulls, stages, commits, and pushes relevant changes, then reports the SHA before continuing; blocking on uncommitted changes is not valid behavior. |
+| 7 | Public prompt chain gap discovered after planning | S3.1 (prompt stubs + release prompts) | Public stubs, release prompts, module metadata, and skill owners are validated as a single inventory; no retained command is parity-complete without a working public prompt chain. |
+| 8 | Clean-room file hash verification outside VS Code | S5.5 (parity report) | Parity report includes a clean-room compliance checkpoint: external hash comparison result for all touched `lens.core.src` files against `lens.core` counterparts is included as evidence. |
+
 ## Design Decisions (ADRs)
 
 ### ADR-1: Restore lifecycle/config/state foundations first
