@@ -1,7 +1,7 @@
 ---
 feature: lens-dev-new-codebase-split-feature
 doc_type: tech-plan
-status: draft
+status: approved
 goal: "Define the technical design for rewriting split-feature as a thin conductor: validate-first enforcement, in-progress blocking, atomic create-then-move ordering, and dual story-file format support — all in a clean-room implementation."
 key_decisions:
   - split-feature command follows the thin-conductor pattern — SKILL.md orchestrates by delegation; no inline governance-write logic

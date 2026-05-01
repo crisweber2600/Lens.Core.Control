@@ -1,7 +1,7 @@
 ---
 feature: lens-dev-new-codebase-split-feature
 doc_type: epics
-status: draft
+status: approved
 goal: "Deliver a clean-room rewrite of the split-feature command as a thin conductor with validate-first semantics, status normalization, feature-index duplicate detection, and dual story-file format support."
 key_decisions:
   - Script fixes target three spec gaps: status normalization (BS-1), feature-index duplicate detection (BS-3), and stories list-format parsing

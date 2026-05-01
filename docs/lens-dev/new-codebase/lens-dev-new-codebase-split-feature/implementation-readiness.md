@@ -1,7 +1,7 @@
 ---
 feature: lens-dev-new-codebase-split-feature
 doc_type: implementation-readiness
-status: draft
+status: approved
 goal: "Assess implementation readiness for the split-feature command rewrite: script fixes, conductor rewrite, and test suite completion."
 key_decisions:
   - Feature is ready for dev handoff; three script gaps must be closed as the first sprint priority
@@ -28,7 +28,7 @@ The SKILL.md rewrite follows in Sprint 1 alongside the script fixes.
 
 | Condition | Status | Owner |
 |-----------|--------|-------|
-| Status normalization (BS-1) — `in_progress`, `IN_PROGRESS`, `in space` variants | OPEN — must fix | Dev (E1-S1) |
+| Status normalization (BS-1) — `in_progress`, `IN_PROGRESS`, `in progress` variants | OPEN — must fix | Dev (E1-S1) |
 | Feature-index.yaml duplicate check (BS-3) — read index, not file.exists | OPEN — must fix | Dev (E1-S2) |
 | Sprint-status.yaml list-format parsing — `stories: [{id, status}]` | OPEN — must fix | Dev (E1-S3) |
 | SKILL.md thin-conductor rewrite | PENDING | Dev (E2-S1) |

@@ -46,7 +46,7 @@ Cross-check the test output against the 10 required test classes:
 | Dry-run regression | --dry-run produces no writes | Existing tests |
 | Governance completeness regression | feature.yaml, feature-index entry, summary stub all written | Existing tests |
 | Identifier validation regression | Invalid IDs (uppercase, spaces, path traversal) rejected | Existing tests |
-| Status delimiter normalization | in_progress, IN_PROGRESS, in space trigger hard-stop | E3-S1 |
+| Status delimiter normalization | in_progress, IN_PROGRESS, in progress trigger hard-stop | E3-S1 |
 | Sprint plan format fallback | Unrecognized format falls back to story frontmatter | E3-S1 |
 | Duplicate feature-index detection | create-split-feature with existing index entry exits 1 | E3-S1 |
 

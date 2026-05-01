@@ -25,7 +25,7 @@ until E1-S1, E1-S2, and E1-S3 are implemented (the behavior they test does not e
 **File:** `lens.core/_bmad/lens-work/skills/bmad-lens-split-feature/scripts/tests/test-split-feature-ops.py`
 
 Missing test classes (per tech-plan §6):
-1. Status delimiter normalization — `in_progress`, `IN_PROGRESS`, `in space`
+1. Status delimiter normalization — `in_progress`, `IN_PROGRESS`, `in progress`
 2. Sprint plan list-format — sprint-status.yaml `stories: [{id, status}]` format
 3. Feature-index duplicate detection — second run fails via index check, not file check
 4. Sprint plan format fallback — unrecognized format falls back to story-file frontmatter

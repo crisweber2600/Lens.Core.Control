@@ -1,7 +1,7 @@
 ---
 feature: lens-dev-new-codebase-split-feature
 doc_type: business-plan
-status: draft
+status: approved
 goal: "Rewrite split-feature command as a clean-room thin conductor preserving validate-first semantics, in-progress story blocking, and atomic create-then-move ordering."
 key_decisions:
   - Validate-first ordering is non-negotiable — validate-split must pass before any governance mutation is attempted

@@ -1,7 +1,7 @@
 ---
 feature: lens-dev-new-codebase-split-feature
 doc_type: stories
-status: draft
+status: approved
 goal: "Story list with acceptance criteria for the split-feature command rewrite: script gap fixes, conductor rewrite, test completion, and handoff."
 key_decisions:
   - Stories align to four epics: Script Gap Resolution, Conductor Rewrite, Test Suite Completion, Handoff

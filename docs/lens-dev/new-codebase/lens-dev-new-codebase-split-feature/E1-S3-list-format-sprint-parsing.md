@@ -72,7 +72,7 @@ if isinstance(stories, list):
 
 The `parse_sprint_plan` function calls `_extract_statuses_from_yaml_str` for both
 pure YAML and fenced YAML blocks. Since the fix is inside
-`_extract_statuses_from_yaml_list`, it will automatically apply to both call paths.
+`_extract_statuses_from_yaml_str`, it will automatically apply to both call paths.
 
 No changes needed in `parse_sprint_plan` itself.
 
