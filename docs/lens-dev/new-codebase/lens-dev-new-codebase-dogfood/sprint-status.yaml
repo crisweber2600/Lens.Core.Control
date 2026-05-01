@@ -48,7 +48,7 @@ sprints:
         title: Implement read-only git-state operations
         type: new
         points: M
-        status: blocked-review
+        status: done
         epic: 1
         sprint: 1
         story_id: S1.5

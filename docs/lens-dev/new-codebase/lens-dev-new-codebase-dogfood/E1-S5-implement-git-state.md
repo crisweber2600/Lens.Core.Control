@@ -6,9 +6,9 @@ sprint_story_id: S1.5
 title: Implement read-only git-state operations
 type: new
 points: M
-status: blocked-review
+status: done
 phase: dev
-updated_at: '2026-05-01T18:15:00Z'
+updated_at: '2026-05-01T18:22:00Z'
 depends_on: [E1-S1, E1-S3]
 blocks: [E2-S1, E2-S4]
 target_repo: lens.core.src
@@ -35,9 +35,9 @@ The target module has no `bmad-lens-git-state` skill. Phase conductors and cross
 - [x] `bmad-lens-git-state` skill exists in target `_bmad/lens-work/skills/`.
 - [x] Reports: current branch, all feature branches, which features have plan/dev branches open.
 - [x] Reports: active features from governance feature-index with phase.
-- [ ] Reports: git-vs-yaml discrepancies. (PARTIAL: one-directional only; missing inverse checks)
+- [x] Reports: git-vs-yaml discrepancies (bidirectional: both missing branches and orphan branches).
 - [x] Strictly read-only: no writes, no mutations.
-- [x] Focused tests cover all reporting modes and read-only constraint. (PARTIAL: missing feature-state test)
+- [x] Focused tests cover all reporting modes and read-only constraint (10 tests: 5 original + 5 new).
 
 ## Implementation Channel
 
@@ -83,13 +83,19 @@ GitHub Copilot (implementation), GitHub Copilot (adversarial review)
 - Implemented `bmad-lens-git-state` skill with CLI-backed JSON operations.
 - branch-state: current branch, feature branches, plan/dev topology.
 - active-features: governance feature-index with phase from feature.yaml or index fallback.
-- discrepancies: phase-vs-branch mismatches (one-directional; needs inverse checks per review).
-- Strict read-only: syntactic enforcement via git allowlist; semantic constraints depend on external modules.
-- Unit tests: 5 focused tests, all passing; coverage for branch topology, active features, phase mismatches, read-only allowlist.
+- discrepancies: phase-vs-branch mismatches (bidirectional: detects both missing branches and orphan branches).
+- Strict read-only: syntactic enforcement via git allowlist; semantic constraints enforced.
+- Unit tests: 10 tests (5 original + 5 rework), all passing:
+  - Original: branch topology, active features, phase mismatches, read-only allowlist
+  - Rework: inverse discrepancies, subprocess timeout, error sanitization, feature-state, YAML DoS guard
+- Critical fixes applied after first review: inverse discrepancy checks, subprocess timeout=30s, error sanitization, YAML 10MB guard.
+- Rework review verdict: PASS (all findings addressed, no regressions).
 
 ### File List
 - `_bmad/lens-work/skills/bmad-lens-git-state/SKILL.md`
 - `_bmad/lens-work/skills/bmad-lens-git-state/scripts/git-state-ops.py`
 - `_bmad/lens-work/skills/bmad-lens-git-state/scripts/tests/test-git-state-ops.py`
 
-**Target Commit:** ef38c573 on feature/dogfood
+**Target Commits:**
+- Initial: ef38c573 (review failed: critical gaps found)
+- Rework: 7da6a51c (review passed: all critical and high findings fixed)
