@@ -1,0 +1,133 @@
+feature: lens-dev-new-codebase-constitution
+doc_type: sprint-status
+status: approved
+goal: "Sprint delivery sequence for the constitution rewrite across express alignment, resolver core, parity restoration, and release hardening."
+key_decisions:
+  - Use four sprints that map directly to the four delivery epics.
+  - Keep safety regressions in the final sprint so implementation can start once the packet is merged.
+  - Reserve release readiness and caller follow-up capture for the final confirm story.
+open_questions:
+  - Is repo-level fixture coverage required before the first implementation PR?
+  - Does any caller audit for sensing_gate_mode need to land before feature close?
+depends_on:
+  - docs/lens-dev/new-codebase/lens-dev-new-codebase-constitution/stories.md
+blocks: []
+updated_at: '2026-05-01T16:30:00Z'
+
+sprints:
+  - id: sprint-1
+    sprint_number: 1
+    name: "Sprint 1 - Epic 1: Express Alignment and Command Surface"
+    status: not-started
+    notes: >
+      Lock the feature onto the express path, verify the 3-hop command surface, and restate
+      the read-only authority boundary before script changes begin.
+    stories:
+      - id: E1-S1
+        title: Verify and lock express-track feature state alignment
+        type: confirm
+        points: 2
+        status: not-started
+        epic: 1
+      - id: E1-S2
+        title: Verify the 3-hop prompt chain stays thin
+        type: confirm
+        points: 2
+        status: not-started
+        epic: 1
+      - id: E1-S3
+        title: Re-state and verify the read-only authority boundary
+        type: confirm
+        points: 2
+        status: not-started
+        epic: 1
+
+  - id: sprint-2
+    sprint_number: 2
+    name: "Sprint 2 - Epic 2: Resolver Core and Merge Contract"
+    status: not-started
+    notes: >
+      Deliver the partial-hierarchy fix, preserve the merge contract, and harden constitution
+      loading semantics before downstream parity work begins.
+    stories:
+      - id: E2-S1
+        title: Rewrite partial-hierarchy resolution flow
+        type: rewrite
+        points: 5
+        status: not-started
+        epic: 2
+      - id: E2-S2
+        title: Preserve merge rules, defaults, and express-track parity
+        type: rewrite
+        points: 4
+        status: not-started
+        epic: 2
+      - id: E2-S3
+        title: Harden constitution loading and scope validation
+        type: rewrite
+        points: 3
+        status: not-started
+        epic: 2
+
+  - id: sprint-3
+    sprint_number: 3
+    name: "Sprint 3 - Epic 3: Compliance and Progressive Display Parity"
+    status: not-started
+    notes: >
+      Restore caller-facing parity for compliance and display outputs while keeping prompts,
+      skills, and references aligned to the script-backed contract.
+    stories:
+      - id: E3-S1
+        title: Implement check-compliance gate behavior
+        type: rewrite
+        points: 4
+        status: not-started
+        epic: 3
+      - id: E3-S2
+        title: Implement progressive-display filters and warning propagation
+        type: rewrite
+        points: 3
+        status: not-started
+        epic: 3
+      - id: E3-S3
+        title: Keep prompt, skill, and references aligned to the script contract
+        type: rewrite
+        points: 2
+        status: not-started
+        epic: 3
+
+  - id: sprint-4
+    sprint_number: 4
+    name: "Sprint 4 - Epic 4: Regression and Release Hardening"
+    status: not-started
+    notes: >
+      Close parity fixtures, negative safety tests, and release-readiness notes before
+      opening the final feature PR.
+    stories:
+      - id: E4-S1
+        title: Build fixture-backed parity coverage
+        type: new
+        points: 4
+        status: not-started
+        epic: 4
+      - id: E4-S2
+        title: Add negative safety tests for malformed and hostile inputs
+        type: new
+        points: 3
+        status: not-started
+        epic: 4
+      - id: E4-S3
+        title: Confirm release readiness and caller follow-ups
+        type: confirm
+        points: 2
+        status: not-started
+        epic: 4
+
+totals:
+  total_stories: 12
+  total_points: 36
+  sprint_count: 4
+  sprint_1_points: 6
+  sprint_2_points: 12
+  sprint_3_points: 9
+  sprint_4_points: 9
