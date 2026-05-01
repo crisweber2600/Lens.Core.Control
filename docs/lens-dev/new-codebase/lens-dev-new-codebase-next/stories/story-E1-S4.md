@@ -2,7 +2,7 @@
 
 **Feature:** lens-dev-new-codebase-next
 **Epic:** Epic 1 — Prompt Chain and Discovery
-**Status:** ready-for-dev
+**Status:** done
 
 ---
 

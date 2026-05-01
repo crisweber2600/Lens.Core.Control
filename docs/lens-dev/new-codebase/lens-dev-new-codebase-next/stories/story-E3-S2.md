@@ -2,7 +2,7 @@
 
 **Feature:** lens-dev-new-codebase-next
 **Epic:** Epic 3 — Delegation and Release Hardening
-**Status:** ready-for-dev
+**Status:** done
 
 ---
 
