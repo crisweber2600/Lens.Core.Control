@@ -6,7 +6,7 @@ goal: "Define clean-room implementation architecture for closing lens.core.src p
 key_decisions:
   - Rebuild behavior from baseline contracts and observed outcomes; do not copy implementation files from lens.core.
   - Restore P0 platform foundations before declaring any retained command complete.
-  - Make topology policy explicit and configurable so BF-6 can coexist with existing 2-branch features.
+  - Implement the control repo as a three-branch topology while keeping governance flat and target-project branching strategy separate.
   - Treat feature-index synchronization and publish-to-governance mapping as first-class CLI contracts.
   - Use focused parity tests and workflow traces as the acceptance mechanism.
 open_questions:
@@ -38,7 +38,7 @@ The technical plan is to close behavioral parity in layers: restore lifecycle/co
 | Release prompts | `_bmad/lens-work/prompts/lens-*.prompt.md` redirects to owning skill. | Partial: 12 release prompts observed. | Align with 17-command inventory. |
 | Module metadata | `module.yaml`, help CSVs, manifests, command discovery. | Partial: duplicate `lens-expressplan` and incomplete retained surface. | Generate or validate from a single command inventory. |
 | Lifecycle contract | Central phase, track, artifact, and review definitions. | Missing in target lens-work. | Recreate v4-compatible lifecycle contract from baseline behavior. |
-| Config | Governance repo, control repo, topology, user defaults, output paths. | Missing in target lens-work. | Add `bmadconfig.yaml` and selected user config contract. |
+| Config | Governance repo, control repo topology, target-project branch strategy, user defaults, output paths. | Missing in target lens-work. | Add `bmadconfig.yaml` and selected user config contract. |
 | State operations | Feature YAML CRUD, feature-index sync, git state observation. | `feature-yaml` and `git-state` missing. | Implement behavior from baseline acceptance criteria. |
 | Write orchestration | Branches, commits, pushes, PRs, publish-to-governance. | Present but needs bugfix parity. | Absorb BF-1 through BF-6 and artifact slug mapping. |
 | Phase conductors | PrePlan, BusinessPlan, TechPlan, ExpressPlan, FinalizePlan. | Several present; foundations missing. | Reconnect through lifecycle/config/state abstractions. |
@@ -54,13 +54,13 @@ The technical plan is to close behavioral parity in layers: restore lifecycle/co
 
 **Alternatives Rejected:** Continue filling individual command stubs first. This increases the number of entry points that fail deeper in the workflow.
 
-### ADR-2: Treat topology as configuration, not a hardcoded invariant
+### ADR-2: Split governance, control, and target-project topology rules
 
-**Decision:** Add an explicit topology setting with `flat` as the proposed default for new control repos and `2-branch` as a compatibility mode for existing features.
+**Decision:** Governance remains flat on `main`. The control repo uses a three-branch feature topology: `{featureId}`, `{featureId}-plan`, and `{featureId}-dev`. Target projects have independent branch strategy choices: direct writes to the default branch, `feature/{featureStub}`, or `feature/{featureStub}-{username}`.
 
-**Rationale:** The baseline preserved the 2-branch model, but BF-6 reports critical friction and requests flat default behavior. A configurable topology reconciles both without breaking existing feature branches.
+**Rationale:** The workflow needs a stable control-repo promotion path without confusing that path with target-repo implementation branches. Planning before FinalizePlan belongs on `{featureId}-plan`; FinalizePlan belongs on `{featureId}`; FinalizePlan step 3 belongs on `{featureId}-dev`. Branch cleanup after PR merge is part of the topology contract.
 
-**Alternatives Rejected:** Replace 2-branch behavior everywhere. This would break active features and contradict the baseline. Keep 2-branch only. This would ignore the highest-priority dogfood feedback.
+**Alternatives Rejected:** Flat control topology is invalid for this workflow. Reusing target-project branch strategy for the control repo was rejected because target code branching and planning governance are separate concerns.
 
 ### ADR-3: Feature-index synchronization becomes an operation contract
 
@@ -105,11 +105,11 @@ Breaking change: false.
 
 ### Git State Contract
 
-`bmad-lens-git-state` must remain read-only and report topology, branch existence, active features, cross-feature context, and git-vs-yaml discrepancies. Breaking change: false.
+`bmad-lens-git-state` must remain read-only and report the three control branches, target-project branch strategy, active features, cross-feature context, and git-vs-yaml discrepancies. Breaking change: false.
 
 ### Git Orchestration Contract
 
-`bmad-lens-git-orchestration` must support topology-aware branch creation, optional dev branch behavior, structured commit/push, publish-to-governance, express artifact mapping, feature-index sync, and target-repo dev branch preparation. Breaking change: conditional for new flat-default behavior only.
+`bmad-lens-git-orchestration` must create and manage `{featureId}`, `{featureId}-plan`, and `{featureId}-dev`, route artifacts to the correct branch by phase step, switch to the correct branch and pull before continuing, clean up local and remote branches after their PRs merge, publish to governance, map express artifacts, sync feature-index state, and prepare target-project branches using the selected target strategy. Breaking change: yes for the former 2-branch control model; governance remains flat and target-project branch strategy remains separate.
 
 ### Dev Handoff Contract
 
@@ -123,7 +123,8 @@ Potential additions are configuration-level, not feature schema breaking changes
 
 | Field | Location | Purpose |
 | --- | --- | --- |
-| `topology` | module or user config | Select `flat` or `2-branch` behavior. |
+| `control_topology` | module config | Fixed value `3-branch` for `{featureId}`, `{featureId}-plan`, and `{featureId}-dev`. |
+| `target_branch_strategy` | feature or repo config | Select `flat`, `feature/{featureStub}`, or `feature/{featureStub}-{username}` for target project writes. |
 | `username` or `github_username` | user config | Persist branch identity for dev branches and target repo branch modes. |
 | `default_branch` | module or repo config | Avoid silent fallback to `main` when `develop` is expected. |
 
@@ -171,3 +172,8 @@ The rebuild should expose structured output for preflight, phase artifact valida
 2. Which config path is authoritative for persisted username and topology?
 3. Should express review tooling emit only `expressplan-adversarial-review.md`, or also recognize legacy `expressplan-review.md` when publishing old artifacts?
 4. Should `bmad-lens-document-project` be rebuilt inside this dogfood feature or tracked as a separate Complete-flow hardening feature?
+
+## Retrospective Tech Debt Notes
+
+- Express review artifact compatibility is accepted as tech debt: current tooling should canonicalize on `expressplan-adversarial-review.md` while recognizing older `expressplan-review.md` files during reads and publication.
+- The topology correction supersedes the earlier flat-control-repo idea. Any remaining references to flat topology must be scoped only to target-project branch strategy.

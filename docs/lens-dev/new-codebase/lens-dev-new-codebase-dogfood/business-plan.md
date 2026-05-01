@@ -7,10 +7,11 @@ key_decisions:
   - Treat the baseline feature docs as the approved behavior contract and lens.core as a comparison reference, not a source to copy.
   - Prioritize lifecycle, configuration, feature state, git state, git orchestration, and Dev handoff foundations before command polish.
   - Integrate the bugfix backlog into the rebuild scope, especially branch topology, feature-index synchronization, base-branch validation, and closeout automation.
+  - Replace the earlier flat-control-repo idea with a three-branch control topology: feature base, plan branch, and dev branch.
+  - Keep governance flat on main while allowing target projects to choose flat, feature branch, or feature branch with username strategies.
   - Preserve lifecycle v4 compatibility, retained command behavior, prompt-start preflight, feature identity, and governance authority boundaries.
 open_questions:
   - Should QuickPlan remain internal-only in the clean-room rebuild, or preserve the reference module's standalone conductor behavior?
-  - Should BF-6 flat topology become the default immediately while keeping 2-branch compatibility for existing features?
   - What is the exact persistent user config path for GitHub username and branch identity in the new codebase?
 depends_on:
   - TargetProjects/lens/lens-governance/features/lens-dev/new-codebase/lens-dev-new-codebase-baseline/docs/prd.md
@@ -36,7 +37,9 @@ The approved baseline defines the rewrite as a 17-command stable surface, not a 
 
 The baseline also freezes several contracts: every public prompt starts with `light-preflight.py`, feature IDs use `{domain}-{service}-{featureSlug}`, planning artifacts publish through `publish-to-governance`, `next` handoffs are pre-confirmed, lifecycle schema remains v4-compatible, and `dev-session.yaml` remains backwards compatible.
 
-Recent dogfood work adds required corrections that should be integrated now: BF-1 dev branch behavior, BF-2 username persistence, BF-3 `feature-index.yaml` synchronization, BF-4 phase-start branch verification, BF-5 base-branch validation, BF-6 flat topology default, missing Dev startup after FinalizePlan, and Complete automation for retrospective commit/push/merge.
+Recent dogfood work adds required corrections that should be integrated now: BF-1 dev branch behavior, BF-2 username persistence, BF-3 `feature-index.yaml` synchronization, BF-4 phase-start branch verification, BF-5 base-branch validation, the BF-6 topology correction, missing Dev startup after FinalizePlan, and Complete automation for retrospective commit/push/merge.
+
+The updated topology decision is explicit. The governance repo is always flat on `main`. The control repo now uses a three-branch feature topology: `{featureId}`, `{featureId}-plan`, and `{featureId}-dev`. Planning items before FinalizePlan go to `{featureId}-plan`; FinalizePlan itself goes to `{featureId}`; FinalizePlan step 3 goes to `{featureId}-dev`. After each PR lands, local and remote branches must be cleaned up, and the workflow must switch to the correct next branch and pull before continuing. Target projects keep their own branch strategy choices: direct default branch writes, `feature/{featureStub}`, or `feature/{featureStub}-{username}`.
 
 ## Stakeholders
 
@@ -82,7 +85,7 @@ Recent dogfood work adds required corrections that should be integrated now: BF-
 | Risk | Probability | Impact | Mitigation |
 | --- | --- | --- | --- |
 | The plan understates foundational gaps because some phase conductors already exist. | High | High | Treat P0 foundations as Sprint 1 and do not declare command parity until feature-yaml, git-state, lifecycle, config, and Dev conductor are present. |
-| Topology requirements conflict: baseline says 2-branch; BF-6 requests flat default. | High | High | Make topology a configuration decision with flat as proposed default and 2-branch as compatibility mode; test both. |
+| Topology requirements conflict: older baseline says 2-branch while dogfood now requires 3 control branches. | High | High | Implement the new 3-branch control topology, keep governance flat, and keep target-project branching strategy separate. |
 | Clean-room boundary is blurred by comparing against `lens.core`. | Medium | High | Use comparison only to identify behavior and missing surfaces; write implementation from baseline contracts and acceptance criteria. |
 | `feature-index.yaml` remains stale after phase transitions. | High | High | Add explicit feature-index sync behavior to sanctioned operations and test it. |
 | Dev handoff remains broken because target lacks `bmad-lens-dev`. | High | High | Restore Dev conductor as a P1 capability, not later polish. |
