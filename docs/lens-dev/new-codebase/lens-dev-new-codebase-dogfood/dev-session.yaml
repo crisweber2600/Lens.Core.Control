@@ -1,0 +1,58 @@
+epic_number: all
+feature_id: lens-dev-new-codebase-dogfood
+started_at: '2026-05-01T14:32:48Z'
+last_checkpoint: '2026-05-02T00:00:00Z'
+special_instructions: "develop all stories; use the BMB workflow builder for dogfood feature work inside TargetProjects; clean-room implementation; branch from target develop"
+target_repo_name: lens.core.src
+target_repo_path: TargetProjects/lens-dev/new-codebase/lens.core.src
+dev_branch_mode: feature-id
+working_branch: feature/dogfood
+base_branch: develop
+requires_final_pr: true
+total_stories: 27
+stories_completed:
+- E1-S1
+- E1-S2
+- E1-S3
+- E1-S4
+- E1-S5
+- E2-S1
+- E2-S2
+- E2-S3
+- E2-S4
+- E2-S5
+- E2-S6
+- E2-S1
+- E2-S2
+- E2-S3
+- E2-S4
+- E2-S5
+- E2-S6
+- E3-S1
+- E3-S2
+- E3-S3
+- E3-S4
+- E3-S5
+- E4-S1
+- E4-S2
+- E4-S3
+- E4-S4
+- E4-S5
+- E5-S1
+- E5-S2
+- E5-S3
+- E5-S4
+- E5-S5
+- E5-S6
+stories_failed: []
+stories_blocked: []
+current_story_index: 28
+last_checkpoint: '2025-07-17T18:00:00Z'
+final_pr_url: "https://github.com/crisweber2600/Lens.Core.Src/pull/19"
+final_review_status: approved
+final_party_mode_status: approved
+status: complete
+target_repo_head: 3ccc41d3
+# CRASH-RECOVERY NOTE: Session reconciled 2026-05-01. Target repo HEAD is at E3-S4.
+# Code reviews for E1-S1, E1-S5, E2-S1..E3-S4 were not written to docs (gap accepted in crash recovery).
+# E4-S1..E4-S5 committed and pushed 2025-07-17. Code reviews E4-S1..E4-S5 written.

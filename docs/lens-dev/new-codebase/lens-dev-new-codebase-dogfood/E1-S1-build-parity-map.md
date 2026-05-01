@@ -6,7 +6,7 @@ sprint_story_id: S1.1
 title: Build retained-command parity map
 type: new
 points: S
-status: ready
+status: done
 phase: dev
 updated_at: '2026-05-01T14:30:00Z'
 depends_on: []
@@ -33,10 +33,10 @@ The clean-room rule must be documented here: no source files or prose are copied
 
 ## Acceptance Criteria
 
-- [ ] A parity map document lists all 17 retained commands with their public stub path, release prompt path, owning skill, and current target status.
-- [ ] The clean-room traceability statement is explicit: no files were copied from `lens.core`.
-- [ ] The document is committed to `lens.core.src` under a known docs path.
-- [ ] A validation script or check can compare the parity map against the live file tree and report drift.
+- [x] A parity map document lists all 17 retained commands with their public stub path, release prompt path, owning skill, and current target status.
+- [x] The clean-room traceability statement is explicit: no files were copied from `lens.core`.
+- [x] The document is committed to `lens.core.src` under a known docs path.
+- [x] A validation script or check can compare the parity map against the live file tree and report drift.
 
 ## Implementation Channel
 
@@ -51,10 +51,21 @@ This story does NOT touch `lens.core.src/_bmad/lens-work/` directly. The parity 
 ## Dev Agent Record
 
 ### Agent Model Used
-TBD
+GitHub Copilot
 
 ### Debug Log References
+- `python docs/lens-dev/new-codebase/lens-dev-new-codebase-dogfood/validate-retained-command-parity.py` -> OK: retained-command parity map matches the live tree (17 commands: present=10, partial=4, missing=3).
+- E1-S1 adversarial review verdict: PASS.
 
 ### Completion Notes List
+- Added the retained-command parity map in the target repo docs path.
+- Added a deterministic parity validator that compares the map against the live target file tree.
+- Merged the latest target `origin/develop` into `feature/dogfood` before continuing downstream stories.
 
 ### File List
+- `docs/lens-dev/new-codebase/lens-dev-new-codebase-dogfood/retained-command-parity-map.md`
+- `docs/lens-dev/new-codebase/lens-dev-new-codebase-dogfood/validate-retained-command-parity.py`
+
+### Change Log
+
+- 2026-05-01: Completed E1-S1 implementation and review gate on target branch `feature/dogfood`.
