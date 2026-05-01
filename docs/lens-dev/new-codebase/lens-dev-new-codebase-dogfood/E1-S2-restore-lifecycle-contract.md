@@ -6,7 +6,7 @@ sprint_story_id: S1.2
 title: Restore v4-compatible lifecycle contract
 type: new
 points: M
-status: ready
+status: done
 phase: dev
 updated_at: '2026-05-01T14:30:00Z'
 depends_on: [E1-S1]
@@ -35,13 +35,13 @@ This story also fixes Defect 1: the constitution resolver false negative that re
 
 ## Acceptance Criteria
 
-- [ ] Target has `_bmad/lens-work/lifecycle.yaml` at v4-compatible schema.
-- [ ] Covers all retained phases: `preplan`, `businessplan`, `techplan`, `expressplan`, `finalizeplan`, `dev`, `complete`.
-- [ ] Covers all retained tracks: `standard`, `express`, `quickdev`, `hotfix-express`, `spike`.
-- [ ] `express` track lists `finalizeplan` in its phases array.
-- [ ] Express review artifact contract names `expressplan-adversarial-review.md` and recognizes `expressplan-review.md` as legacy alias.
-- [ ] Constitution resolver accepts `express` track for `lens-dev/new-codebase` (Defect 1 regression fixture passes).
-- [ ] Focused regression test is committed and passes.
+- [x] Target has `_bmad/lens-work/lifecycle.yaml` at v4-compatible schema.
+- [x] Covers all retained phases: `preplan`, `businessplan`, `techplan`, `expressplan`, `finalizeplan`, `dev`, `complete`.
+- [x] Covers all retained tracks: `standard`, `express`, `quickdev`, `hotfix-express`, `spike`.
+- [x] `express` track lists `finalizeplan` in its phases array.
+- [x] Express review artifact contract names `expressplan-adversarial-review.md` and recognizes `expressplan-review.md` as legacy alias.
+- [x] Constitution resolver accepts `express` track for `lens-dev/new-codebase` (Defect 1 regression fixture passes).
+- [x] Focused regression test is committed and passes.
 
 ## Implementation Channel
 
@@ -58,10 +58,26 @@ Load the BMB documentation index at `TargetProjects/lens/lens-governance/externa
 ## Dev Agent Record
 
 ### Agent Model Used
-TBD
+GitHub Copilot
 
 ### Debug Log References
+- `uv run --with pytest --with pyyaml python -m pytest _bmad/lens-work/scripts/tests/test-lifecycle-contract.py _bmad/lens-work/scripts/tests/test-validate-phase-artifacts.py _bmad/lens-work/skills/bmad-lens-constitution/scripts/tests/test-constitution-ops.py` -> 98 passed.
+- `uv run _bmad/lens-work/skills/bmad-lens-constitution/scripts/constitution-ops.py progressive-display --governance-repo "D:/Lens.Core.Control - Copy/TargetProjects/lens/lens-governance" --domain lens-dev --service new-codebase --track express` -> `track_permitted: true`.
+- E1-S2 adversarial review verdict: PASS. See `code-review-E1-S2.md`.
 
 ### Completion Notes List
+- Restored the target clean-room lifecycle contract with retained phases, tracks, express review aliasing, and schema version 4.
+- Updated artifact validation to recognize the legacy express review filename when validating the current express review contract.
+- Updated constitution track handling so `express` is permitted for `lens-dev/new-codebase`, with focused regression coverage.
 
 ### File List
+- `_bmad/lens-work/lifecycle.yaml`
+- `_bmad/lens-work/scripts/validate-phase-artifacts.py`
+- `_bmad/lens-work/scripts/tests/test-validate-phase-artifacts.py`
+- `_bmad/lens-work/scripts/tests/test-lifecycle-contract.py`
+- `_bmad/lens-work/skills/bmad-lens-constitution/scripts/constitution-ops.py`
+- `_bmad/lens-work/skills/bmad-lens-constitution/scripts/tests/test-constitution-ops.py`
+
+### Change Log
+
+- 2026-05-01: Completed E1-S2 implementation and review gate on target branch `feature/dogfood`.

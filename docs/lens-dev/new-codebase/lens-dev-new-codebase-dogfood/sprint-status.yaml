@@ -1,7 +1,7 @@
 feature: lens-dev-new-codebase-dogfood
 doc_type: sprint-status
 status: in-progress
-updated_at: '2026-05-01T16:24:43Z'
+updated_at: '2026-05-01T16:38:33Z'
 accepted_risks:
   - id: AR1
     description: "ADR-5 express review filename compatibility debt (expressplan-adversarial-review.md vs expressplan-review.md). Accepted tech debt; E5-S6 documents the mapping. (M3 response A)"
@@ -24,7 +24,7 @@ sprints:
         title: Restore v4-compatible lifecycle contract
         type: new
         points: M
-        status: not-started
+        status: done
         epic: 1
         sprint: 1
         story_id: S1.2
