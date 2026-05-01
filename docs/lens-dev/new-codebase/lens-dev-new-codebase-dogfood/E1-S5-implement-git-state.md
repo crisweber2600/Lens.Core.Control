@@ -6,9 +6,9 @@ sprint_story_id: S1.5
 title: Implement read-only git-state operations
 type: new
 points: M
-status: ready
+status: blocked-review
 phase: dev
-updated_at: '2026-05-01T14:30:00Z'
+updated_at: '2026-05-01T18:15:00Z'
 depends_on: [E1-S1, E1-S3]
 blocks: [E2-S1, E2-S4]
 target_repo: lens.core.src
@@ -32,12 +32,12 @@ The target module has no `bmad-lens-git-state` skill. Phase conductors and cross
 
 ## Acceptance Criteria
 
-- [ ] `bmad-lens-git-state` skill exists in target `_bmad/lens-work/skills/`.
-- [ ] Reports: current branch, all feature branches, which features have plan/dev branches open.
-- [ ] Reports: active features from governance feature-index with phase.
-- [ ] Reports: git-vs-yaml discrepancies.
-- [ ] Strictly read-only: no writes, no mutations.
-- [ ] Focused tests cover all reporting modes and read-only constraint.
+- [x] `bmad-lens-git-state` skill exists in target `_bmad/lens-work/skills/`.
+- [x] Reports: current branch, all feature branches, which features have plan/dev branches open.
+- [x] Reports: active features from governance feature-index with phase.
+- [ ] Reports: git-vs-yaml discrepancies. (PARTIAL: one-directional only; missing inverse checks)
+- [x] Strictly read-only: no writes, no mutations.
+- [x] Focused tests cover all reporting modes and read-only constraint. (PARTIAL: missing feature-state test)
 
 ## Implementation Channel
 
@@ -54,10 +54,42 @@ Load the BMB documentation index at `TargetProjects/lens/lens-governance/externa
 ## Dev Agent Record
 
 ### Agent Model Used
-TBD
+GitHub Copilot (implementation), GitHub Copilot (adversarial review)
 
 ### Debug Log References
+- Implemented read-only git state operations: branch-state, active-features, discrepancies, feature-state.
+- Unit tests pass: 5 passed via pytest.
+- Real command validation: branch-state and feature-state succeed with pass/read_only JSON.
+
+### Review Gate Findings (FAIL)
+
+**CRITICAL:**
+1. Discrepancy detection is one-directional. Detects: "phase=dev but no dev branch". Missing: "dev branch exists but phase≠dev". This violates AC #4 (git-vs-yaml discrepancy reporting).
+2. Subprocess timeout missing. `subprocess.run()` in `run_git_read_only()` has no timeout; script can hang indefinitely on network-mounted repos or stalled git processes.
+
+**HIGH:**
+3. Error message information disclosure. Raw git stderr leaked in JSON responses; can expose paths/commands from malicious repos.
+4. Missing test coverage for `feature-state` command (one of four main commands).
+5. YAML parsing has no size/complexity limits; DoS risk on malicious governance repo.
+
+**MEDIUM:**
+6. Test helper `init_repo()` uses `check=True` without try/except; fails ungracefully if git unavailable.
+7. No test for missing feature-index.yaml error path.
+8. Config discovery path resolution is implicit; can resolve to wrong governance repo.
+
+**RECOMMENDATION:** Hold pending rework on critical and high findings before marking complete.
 
 ### Completion Notes List
+- Implemented `bmad-lens-git-state` skill with CLI-backed JSON operations.
+- branch-state: current branch, feature branches, plan/dev topology.
+- active-features: governance feature-index with phase from feature.yaml or index fallback.
+- discrepancies: phase-vs-branch mismatches (one-directional; needs inverse checks per review).
+- Strict read-only: syntactic enforcement via git allowlist; semantic constraints depend on external modules.
+- Unit tests: 5 focused tests, all passing; coverage for branch topology, active features, phase mismatches, read-only allowlist.
 
 ### File List
+- `_bmad/lens-work/skills/bmad-lens-git-state/SKILL.md`
+- `_bmad/lens-work/skills/bmad-lens-git-state/scripts/git-state-ops.py`
+- `_bmad/lens-work/skills/bmad-lens-git-state/scripts/tests/test-git-state-ops.py`
+
+**Target Commit:** ef38c573 on feature/dogfood

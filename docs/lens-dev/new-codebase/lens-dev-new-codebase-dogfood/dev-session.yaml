@@ -1,7 +1,7 @@
 epic_number: all
 feature_id: lens-dev-new-codebase-dogfood
 started_at: '2026-05-01T14:32:48Z'
-last_checkpoint: '2026-05-01T17:58:19Z'
+last_checkpoint: '2026-05-01T18:15:00Z'
 special_instructions: "develop all stories; use the BMB workflow builder for dogfood feature work inside TargetProjects; clean-room implementation; branch from target develop"
 target_repo_name: lens.core.src
 target_repo_path: TargetProjects/lens-dev/new-codebase/lens.core.src
@@ -16,8 +16,13 @@ stories_completed:
 - E1-S3
 - E1-S4
 stories_failed: []
-current_story_index: 4
+stories_blocked:
+- id: E1-S5
+  status: blocked-review
+  reason: "Adversarial review found critical gaps: (1) discrepancy detection one-directional (missing inverse checks for dev branch without dev phase), (2) subprocess timeout missing, (3) high-severity findings on error handling and test coverage. Requires rework before completion."
+  target_commit: ef38c573
+current_story_index: 5
 final_pr_url: null
 final_review_status: null
 final_party_mode_status: null
-status: in-progress
+status: in-progress-blocked
