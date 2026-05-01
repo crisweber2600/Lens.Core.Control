@@ -5,7 +5,7 @@ phase: finalizeplan
 source: phase-complete
 verdict: pass-with-warnings
 reviewed_artifacts: [business-plan, tech-plan]
-parent_artifacts: [lens-dev-new-codebase-baseline/architecture, lens-dev-new-codebase-baseline/prd]
+parent_artifacts: [lens-dev-new-codebase-baseline/prd]
 critical_count: 0
 high_count: 1
 medium_count: 3
@@ -22,7 +22,7 @@ updated_at: 2026-05-01T00:00:00Z
 **Reviewed planning set:** `business-plan.md`, `tech-plan.md`
 **Parent context:** `lens-dev-new-codebase-baseline` architecture + PRD (archived/complete 2026-05-01)
 **Constitution:** lens-dev (informational), new-codebase service (informational)
-**Cross-feature context:** baseline complete (story 4.4 finalizeplan rewrite confirmed); expressplan archived
+**Cross-feature context:** baseline complete; expressplan archived
 **Governance sensing:** no active features depend on split-feature; `bmad-lens-feature-yaml` and `bmad-lens-git-orchestration` both delivered by baseline (complete)
 **Format:** Each finding presents options A/B/C (proposed solutions), D (write own), E (keep as-is). Respond by letter.
 

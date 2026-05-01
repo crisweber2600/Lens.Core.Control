@@ -12,7 +12,7 @@ key_decisions:
   - Script surface (validate-split, create-split-feature, move-stories) is a retained published API; all three subcommands must remain intact
 open_questions: []
 depends_on:
-  - lens-dev-new-codebase-baseline (story 4.4 — rewrite finalizeplan, prerequisite for split-feature story 5.3)
+  - lens-dev-new-codebase-baseline (baseline architecture/rewrite contract; see in-repo baseline docs including prd.md and research.md)
 blocks: []
 updated_at: 2026-04-30T00:00:00Z
 ---
@@ -105,7 +105,7 @@ These issues increase the risk of leaving governance in a broken partial state a
 |---|---|---|
 | Sprint-plan YAML format variations across features causing missed in-progress status reads | Medium | Unit tests cover all documented sprint-plan formats before merge |
 | Dry-run semantics not enforced consistently across all three subcommands | Low | Explicit dry-run regression test for each subcommand |
-| New feature governance artifacts incomplete after create-split-feature if an intermediate step fails | Low | Atomic write pattern: feature directory, feature.yaml, and feature-index entry committed together or not at all |
+| New feature governance artifacts incomplete after create-split-feature if an intermediate step fails | Low | Ordered create/write sequence with per-file atomic replace where applicable, plus cleanup or idempotent rerun rules so a failure cannot leave unrecoverable partial state |
 
 ---
 
@@ -127,4 +127,4 @@ None — split-feature is not a prerequisite for other features in the baseline 
 
 ## 8. Timeline Expectations
 
-No external deadline. This feature is sequenced after finalizeplan (story 4.4) in the sprint plan and inherits the existing sprint ordering from `lens-dev-new-codebase-baseline` stories.md.
+No external deadline. This feature is sequenced after finalizeplan (story 4.4) and follows the documented prerequisite ordering in Section 7 of this plan.

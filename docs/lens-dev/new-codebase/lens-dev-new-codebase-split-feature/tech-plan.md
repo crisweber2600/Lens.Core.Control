@@ -15,7 +15,8 @@ key_decisions:
 open_questions: []
 depends_on:
   - business-plan.md (this feature)
-  - lens-dev-new-codebase-baseline architecture.md
+  - lens-dev-new-codebase-baseline/prd.md
+  - lens-dev-new-codebase-baseline/research.md
 blocks: []
 updated_at: 2026-04-30T00:00:00Z
 ---
@@ -25,7 +26,7 @@ updated_at: 2026-04-30T00:00:00Z
 **Feature:** lens-dev-new-codebase-split-feature  
 **Author:** crisweber2600  
 **Date:** 2026-04-30  
-**References:** [Business Plan](./business-plan.md), [Baseline Architecture](../../lens-dev-new-codebase-baseline/docs/architecture.md)
+**References:** [Business Plan](./business-plan.md), [Baseline PRD](../../lens-dev-new-codebase-baseline/prd.md), [Baseline Research](../../lens-dev-new-codebase-baseline/research.md)
 
 ---
 
@@ -93,19 +94,24 @@ The split-feature skill is interactive only. There is no batch mode.
    - **Fenced YAML block** — a ` ```yaml ` … ` ``` ` block anywhere in a markdown file that, when parsed, yields a `stories:` map with per-story status fields
    - **Inline key-value pairs** — lines matching `{story-id}: {status}` or `status: {status}` immediately preceded by a story-id context line
    
-   If none of the above patterns match, the sprint plan file is treated as **no-data** for that story ID, and the fallback to source 2 applies. An unrecognized format never causes a hard-stop — it degrades silently to the story-file frontmatter source.
+   If none of the above patterns match, the sprint plan file is treated as **no-data** for that story ID, and the fallback to source 2 applies. Degradation rules:
+   - **Unrecognized format** — the file does not match any recognized variant; treated as no-data for all story IDs; no hard-stop.
+   - **Structural YAML parse error** — the file exists but cannot be parsed (malformed YAML); treated as no-data for all story IDs; degrades silently.
+   - **File I/O error** — file not found or permission denied; causes hard-stop exit code 1.
    
 2. **Story file frontmatter** — if a story ID is not found in the sprint plan (or the sprint plan format is unrecognized), falls back to reading the story file's YAML frontmatter or inline `status:` pattern
 
 **Status normalization:** Before the `in-progress` check, all status values are normalized: `in_progress`, `in-progress`, `IN_PROGRESS`, and `in progress` are treated as equivalent. This covers old-codebase sprint files that used underscore-delimited status values.
 
-A story is `in-progress` if either source reports a normalized `in-progress` value. A story is eligible if status is `pending`, `done`, `blocked`, `backlog`, `ready-for-dev`, or `review` in both sources (or absent from both, which is treated as eligible by default — status unknown is not blocked).
+`validate-split` determines a single effective status per story using the precedence order above: if the sprint plan provides a status for the story, that status is authoritative; otherwise it uses the story file status; if both sources are absent, status is treated as unknown.
 
-If any story in the requested split set has `in-progress` status, `validate-split` exits non-zero and the skill hard-stops. No create or move operations run. The skill lists the blocked story IDs explicitly.
+A story is blocked only if its effective status is `in-progress`. A story is eligible if its effective status is `pending`, `done`, `blocked`, `backlog`, `ready-for-dev`, or `review`, or if status is absent from both sources (eligible by default — unknown status is not blocked).
+
+If any story in the requested split set has effective `in-progress` status, `validate-split` exits non-zero and the skill hard-stops. No create or move operations run. The skill lists the blocked story IDs explicitly.
 
 **Exit codes for `validate-split`:**
 - `0` — all stories eligible; result JSON includes `"status": "pass"`
-- `1` — runtime error (file not found, parse failure)
+- `1` — runtime error (file not found, I/O permission error)
 - `2` — one or more in-progress stories found; result JSON includes `"status": "fail"`
 
 ### 2.4 Atomic Governance Write Ordering
@@ -120,7 +126,13 @@ If any story in the requested split set has `in-progress` status, `validate-spli
 4. Update `feature-index.yaml` entry for the new feature (atomic via temp-file rename)
 5. Write `summary.md` stub
 
-Only after all five artifacts are committed does `move-stories` run (if requested). The source feature is modified last. This ordering ensures that if any step fails, the governance state is either fully clean (no new feature) or fully complete (new feature present with all required artifacts).
+Only after all five artifacts are committed does `move-stories` run (if requested). The source feature is modified last. This ordering ensures the source feature is not mutated until creation of the new feature artifacts has been attempted. Temp-file rename makes the individual `feature.yaml` and `feature-index.yaml` writes atomic. However, because this sequence spans multiple filesystem operations (`mkdir`, multiple file writes), a failure during steps 2–5 can still leave partially created new-feature artifacts unless explicit cleanup/rollback is implemented.
+
+**Failure handling / idempotency requirement:**
+- If any step in `create-split-feature` fails before all four new-feature artifacts are present (directory, `feature.yaml`, `feature-index.yaml` entry, `summary.md`), `move-stories` must not run.
+- The partially created feature must be treated as `incomplete`, not as a valid completed feature.
+- `feature-index.yaml` is the publication point: a new feature is considered discoverable/complete only when `feature.yaml`, `summary.md`, and the feature directory exist and the `feature-index.yaml` entry has been written successfully.
+- Rerunning `create-split-feature` with the same `new-feature-id` must be deterministic: the duplicate guard (step 1) exits 1 if the feature-index entry already exists, preventing double-write but also preventing transparent resume. Partial cleanup of incomplete artifacts must be performed manually or via a dedicated cleanup flag before retrying.
 
 ---
 
@@ -200,18 +212,18 @@ Dry-run lists which files would be moved. Live execution moves `.md` and `.yaml`
 
 | File | Action |
 |------|--------|
-| `skills/bmad-lens-split-feature/references/validate-split.md` | Retain — behavior contract unchanged |
-| `skills/bmad-lens-split-feature/references/split-scope.md` | Retain — process steps unchanged |
-| `skills/bmad-lens-split-feature/references/split-stories.md` | Retain — story-move process unchanged |
+| `lens.core/_bmad/lens-work/skills/bmad-lens-split-feature/references/validate-split.md` | Retain — behavior contract unchanged |
+| `lens.core/_bmad/lens-work/skills/bmad-lens-split-feature/references/split-scope.md` | Retain — process steps unchanged |
+| `lens.core/_bmad/lens-work/skills/bmad-lens-split-feature/references/split-stories.md` | Retain — story-move process unchanged |
 
 ### 4.3 Shared Dependencies (read-only — not modified in this feature)
 
 | Dependency | Why Referenced |
 |-----------|----------------|
-| `skills/bmad-lens-feature-yaml/` | Reads source feature.yaml; creates new feature.yaml schema |
-| `skills/bmad-lens-git-state/` | Cross-feature context on activation |
-| `scripts/light-preflight.py` | Frozen prompt-start gate |
-| `feature-index.yaml` | Updated by create-split-feature subcommand |
+| `lens.core/_bmad/lens-work/skills/bmad-lens-feature-yaml/` | Reads source feature.yaml; creates new feature.yaml schema |
+| `lens.core/_bmad/lens-work/skills/bmad-lens-git-state/` | Cross-feature context on activation |
+| `lens.core/_bmad/lens-work/scripts/light-preflight.py` | Frozen prompt-start gate |
+| `lens.core/_bmad/lens-work/feature-index.yaml` | Updated by create-split-feature subcommand |
 
 ---
 
