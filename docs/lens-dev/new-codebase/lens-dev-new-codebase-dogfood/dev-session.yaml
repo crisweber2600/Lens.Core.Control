@@ -1,7 +1,7 @@
 epic_number: all
 feature_id: lens-dev-new-codebase-dogfood
 started_at: '2026-05-01T14:32:48Z'
-last_checkpoint: '2026-05-01T18:23:00Z'
+last_checkpoint: '2026-05-02T00:00:00Z'
 special_instructions: "develop all stories; use the BMB workflow builder for dogfood feature work inside TargetProjects; clean-room implementation; branch from target develop"
 target_repo_name: lens.core.src
 target_repo_path: TargetProjects/lens-dev/new-codebase/lens.core.src
@@ -16,10 +16,23 @@ stories_completed:
 - E1-S3
 - E1-S4
 - E1-S5
+- E2-S1
+- E2-S2
+- E2-S3
+- E2-S4
+- E2-S5
+- E2-S6
+- E3-S1
+- E3-S2
+- E3-S3
+- E3-S4
+- E3-S5
 stories_failed: []
 stories_blocked: []
-current_story_index: 6
+current_story_index: 17
 final_pr_url: null
 final_review_status: null
 final_party_mode_status: null
 status: in-progress
+# CRASH-RECOVERY NOTE: Session reconciled 2026-05-01. Target repo HEAD is at E3-S4.
+# Code reviews for E1-S1, E1-S5, E2-S1..E3-S4 were not written to docs (gap accepted in crash recovery).
