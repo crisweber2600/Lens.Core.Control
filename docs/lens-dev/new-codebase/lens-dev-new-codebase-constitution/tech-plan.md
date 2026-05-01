@@ -2,10 +2,11 @@
 feature: lens-dev-new-codebase-constitution
 doc_type: tech-plan
 status: draft
-goal: "Define the technical design for rewriting bmad-lens-constitution as a thin script-backed conductor: 3-hop command chain, partial-hierarchy tolerance in constitution-ops.py, preserved merge rules for all three subcommands, and regression coverage for partial and full hierarchies."
+goal: "Define the technical design for rewriting bmad-lens-constitution as a thin script-backed conductor: 3-hop command chain, partial-hierarchy tolerance in constitution-ops.py, express-track parity, preserved merge rules for all three subcommands, and regression coverage for partial and full hierarchies."
 key_decisions:
   - Constitution command follows the thin-conductor pattern; SKILL.md delegates all resolution logic to constitution-ops.py
   - Partial-hierarchy fix: remove org-level hard-fail; replace with informational warning + defaults continuation
+  - Express-track parity is part of the shared contract: `express` must be a supported governed track when constitutions permit it
   - All merge rules preserved identically to old codebase (intersection, union, strongest-wins, etc.)
   - SKILL.md authored via BMB; release prompt authored via bmad-workflow-builder; stub chain verified only
   - Regression coverage required before merge: partial-hierarchy, additive-merge, all three subcommands
@@ -77,17 +78,20 @@ The following defaults apply when a constitution level is absent or when no leve
 
 ```python
 DEFAULTS = {
-    "permitted_tracks": ["quickplan", "full", "hotfix", "tech-change"],
+  "permitted_tracks": ["quickplan", "full", "express", "hotfix", "tech-change"],
     "required_artifacts": {
         "planning": ["business-plan", "tech-plan"],
         "dev": ["stories"],
     },
     "gate_mode": "informational",
+  "sensing_gate_mode": "informational",
     "additional_review_participants": [],
     "enforce_stories": False,
     "enforce_review": False,
 }
 ```
+
+The rewritten script's supported-track allow-list must also include `express`. This is a clean-room correction to old drift, not a downstream workaround: lifecycle.yaml and the baseline expressplan story both treat express as a retained route, so constitution output must be able to validate it.
 
 ### 2.3 Constitution File Format
 
@@ -104,6 +108,7 @@ The YAML frontmatter contains zero or more of the following known keys:
 - `permitted_tracks` — list of allowed track names
 - `required_artifacts` — dict mapping phase names to artifact name lists
 - `gate_mode` — one of: `informational`, `hard`
+- `sensing_gate_mode` — one of: `informational`, `hard`
 - `additional_review_participants` — list of reviewer identifiers
 - `enforce_stories` — boolean
 - `enforce_review` — boolean
@@ -282,10 +287,12 @@ No merge logic, no YAML parsing, no file I/O inline.
 |-------|---------------|---------------|
 | `partial-hierarchy` | Missing any combination of levels resolves without error | org-missing, domain-missing, both missing, all missing |
 | `additive-merge` | Lower levels add constraints on top of higher levels | service adds required artifact; domain restricts tracks |
+| `express-track-parity` | Express is preserved as a valid governed track when the hierarchy permits it | express allowed by domain/service passes resolve, compliance, and display |
 | `merge-rules` | Each merge rule applied correctly | intersection, union, strongest-wins for each field |
 | `check-compliance-gate` | Hard vs informational gate produces correct exit code | hard-fail exits 2, informational-fail exits 0 |
 | `progressive-display-filter` | Phase and track filters applied correctly | phase=planning returns planning bucket only |
 | `full-constitution-available-flag` | Flag correct for full and partial hierarchies | org-present → true; org-absent → false |
+| `path-safety-read-only` | Invalid scopes are rejected and read paths never escape constitutions/ | invalid slug, repo traversal, read-only no-write assertions |
 | `load-constitution-edge-cases` | Malformed frontmatter, unknown keys, empty file | parse error recorded, unknown keys flagged |
 
 ### 4.2 Test Fixture Pattern
@@ -299,9 +306,13 @@ All tests use real temp-directory governance repo structures (not mocks). The `t
 | `test_org_missing_returns_warning_not_error` | Core partial-hierarchy fix |
 | `test_domain_missing_skipped_gracefully` | Partial-hierarchy fix for non-org levels |
 | `test_all_levels_missing_returns_defaults` | Empty-hierarchy coverage |
+| `test_express_track_allowed_when_hierarchy_permits` | express-track parity in resolve/check-compliance |
+| `test_progressive_display_express_track_filter` | express-track parity in progressive-display |
+| `test_sensing_gate_mode_strongest_wins` | sensing strictness preserved in merged output |
 | `test_org_missing_full_constitution_flag_false` | progressive-display flag accuracy |
 | `test_partial_hierarchy_check_compliance` | Compliance works on partial-hierarchy resolve |
 | `test_partial_hierarchy_additive_merge` | Merge applies only to present levels |
+| `test_invalid_slug_or_traversal_rejected` | Path traversal and malformed scope inputs fail safely |
 
 ---
 
@@ -313,9 +324,12 @@ All tests use real temp-directory governance repo structures (not mocks). The `t
 | Org-level missing, domain+service present | resolve | Merged domain+service, warning for org | 0 |
 | All levels missing | resolve | DEFAULTS, warning for all levels | 0 |
 | Track in permitted_tracks | check-compliance | PASS for track check | 0 |
+| Express track permitted in active hierarchy | check-compliance | PASS for express track check | 0 |
 | Track not in permitted_tracks, informational gate | check-compliance | FAIL in payload, no hard_failures | 0 |
 | Track not in permitted_tracks, hard gate | check-compliance | hard_failures non-empty | 2 |
 | Required artifact missing, hard gate | check-compliance | hard_failures non-empty | 2 |
 | Progressive-display with phase filter | progressive-display | required_artifacts_for_phase populated | 0 |
+| Progressive-display with `track=express` | progressive-display | `track_permitted=true` when express is allowed | 0 |
 | Progressive-display, org absent | progressive-display | full_constitution_available=false, warnings present | 0 |
+| Invalid slug / traversal attempt | any | error in JSON payload, no path escape | 1 |
 | Invalid argument | any | error in JSON payload | 1 |

@@ -2,10 +2,11 @@
 feature: lens-dev-new-codebase-constitution
 doc_type: business-plan
 status: draft
-goal: "Rewrite bmad-lens-constitution as a thin, read-only governance resolver that tolerates partial constitution hierarchies without hard-failing, achieves behavioral parity with the old codebase across all three subcommands, and unblocks the Epic 4 planning command rewrites."
+goal: "Rewrite bmad-lens-constitution as a thin, read-only governance resolver that tolerates partial constitution hierarchies without hard-failing, keeps express-track governance usable, achieves behavioral parity with the old codebase across all three subcommands, and unblocks the Epic 4 planning command rewrites."
 key_decisions:
   - bmad-lens-constitution is a shared runtime primitive — all downstream planning and dev commands call it; the rewrite must complete before Epic 4 command rewrites begin
   - Partial-hierarchy tolerance replaces the existing org-level hard-fail behavior (baseline story 3.1 contract)
+  - Express-track parity is required: constitution validation must accept `express` when lifecycle and constitutions permit it, without downstream command-specific workarounds
   - Read-only command: no governance writes, no feature state mutations under any code path
   - BMB-first authoring channel enforced for SKILL.md and release prompt changes
   - Clean-room re-implementation: old codebase consulted as behavioral reference only; no code or content copied
@@ -24,7 +25,7 @@ updated_at: 2026-05-01T00:00:00Z
 **Feature:** lens-dev-new-codebase-constitution  
 **Author:** crisweber2600  
 **Date:** 2026-05-01  
-**Track:** full  
+**Track:** express  
 
 ---
 
@@ -38,8 +39,8 @@ This feature rewrites bmad-lens-constitution as a clean-room thin conductor that
 
 1. Resolves the 4-level constitution hierarchy (org → domain → service → repo) additively, skipping any missing level rather than failing
 2. Returns informational warnings (not errors) when levels are absent
-3. Preserves full behavioral parity for the three subcommands — `resolve`, `check-compliance`, and `progressive-display`
-4. Establishes regression coverage for partial-hierarchy and additive-merge scenarios
+3. Preserves full behavioral parity for the three subcommands — `resolve`, `check-compliance`, and `progressive-display` — including express-track callers
+4. Establishes regression coverage for partial-hierarchy, additive-merge, and express-track scenarios
 
 The constitution rewrite is the shared runtime dependency for all Epic 4 command rewrites. No planning command can be rewritten until the constitution resolver they depend on is stable and tested.
 
@@ -105,12 +106,14 @@ Because the old `resolve` subcommand can return an error for org-missing, every 
 | Enforce_stories / enforce_review: true wins over false | merge-rules regression: one level setting true produces true in resolved output |
 | Exit code 0 for all valid (including partial) hierarchies | exit-code regression: all valid partial and full hierarchies return code 0 |
 | Exit code 1 only for script errors (bad arguments, unreadable path) | exit-code regression: org-missing is NOT a code-1 scenario |
+| Express remains a valid governed track when constitutions permit it | merge-rules regression: resolved permitted_tracks retains `express` when present in the active hierarchy |
 
 ### Constitution check-compliance Subcommand
 
 | Criterion | Acceptance Test |
 |---|---|
 | Track compliance validated against resolved constitution | compliance regression: quickplan track checked against permitted_tracks |
+| Express track compliance validated when constitutions permit it | compliance regression: express feature passes without unknown-track rejection or local workaround |
 | Required artifact presence validated for given phase | compliance regression: missing artifact produces FAIL entry in checks |
 | enforce_review compliance produces check entry when true | compliance regression: participants absent + enforce_review=true produces FAIL |
 | Exit code 2 for compliance failure (hard gate) | exit-code regression: hard gate + missing artifact exits 2 |
@@ -121,6 +124,7 @@ Because the old `resolve` subcommand can return an error for org-missing, every 
 | Criterion | Acceptance Test |
 |---|---|
 | Returns context-filtered governance rules for given phase + track | display regression: phase=planning returns required_artifacts_for_phase for planning bucket |
+| Track filters recognize express when the hierarchy permits it | display regression: `--track express` returns `track_permitted=true` when express is allowed |
 | `full_constitution_available` reflects whether org level was loaded | display regression: org-missing sets full_constitution_available=false |
 | Warnings from resolve propagated to display output | display regression: warnings array present when org-missing |
 
@@ -134,7 +138,7 @@ Because the old `resolve` subcommand can return an error for org-missing, every 
 - Clean-room rewrite of `lens.core/_bmad/lens-work/prompts/lens-constitution.prompt.md`
 - Verify / update `.github/prompts/lens-constitution.prompt.md` stub chain
 - Clean-room rewrite of `lens.core/_bmad/lens-work/skills/bmad-lens-constitution/scripts/constitution-ops.py`
-- Regression tests for partial hierarchy, additive merge, and all three subcommands
+- Regression tests for partial hierarchy, additive merge, express-track parity, and all three subcommands
 
 ### Out of Scope
 
@@ -154,6 +158,7 @@ Because the old `resolve` subcommand can return an error for org-missing, every 
 |---|---|
 | Unblocks Epic 4 (all planning command rewrites) | HIGH — no planning command rewrite can begin until the constitution resolver they depend on is stable |
 | Removes partial-hierarchy deployment blocker | HIGH — enables new domain/service deployments that lack org-level constitutions |
+| Keeps express planning usable without downstream local workarounds | HIGH — expressplan and express-routed features depend on constitution accepting `express` as a governed track |
 | Read-only guarantee preserved and testable | MEDIUM — reduces governance audit surface for all callers |
 | Simplified caller integration | MEDIUM — callers no longer need defensive wrapping for org-missing scenarios |
 
@@ -162,6 +167,7 @@ Because the old `resolve` subcommand can return an error for org-missing, every 
 | Risk | Likelihood | Mitigation |
 |---|---|---|
 | Behavior regression in full-hierarchy case | MEDIUM | Full regression suite preserves existing passing tests alongside new partial-hierarchy tests |
+| Express-track support drifts from lifecycle and baseline rewrite contracts | MEDIUM | Add explicit express-track parity criteria to resolve, compliance, and progressive-display regressions |
 | Progressive-display callers depend on org-missing error | LOW | No confirmed callers rely on hard error for partial hierarchy; `full_constitution_available` flag serves as equivalent signal |
 | Merge rule drift from old codebase | LOW | Behavioral reference review of all 5 merge rules against old codebase before test authoring |
 | Partial-hierarchy defaults mismatch | LOW | DEFAULTS structure verified against old codebase before clean-room implementation |
