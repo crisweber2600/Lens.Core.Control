@@ -10,7 +10,6 @@ high_count: 2
 medium_count: 3
 low_count: 2
 review_format: abc-choice-v1
-responses_recorded: true
 updated_at: '2026-05-01T14:00:00Z'
 ---
 

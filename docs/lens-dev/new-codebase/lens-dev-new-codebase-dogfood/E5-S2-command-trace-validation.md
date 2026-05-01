@@ -40,6 +40,10 @@ The parity map from E1-S1 defined 17 commands. Sprint 5 requires tracing each co
 
 - Reference: tech-plan parity map, E1-S1 parity-map.md, E3-S5 QuickPlan decision.
 
+## Implementation Channel
+
+Lens implementation channel (`lens.core.src`, `develop`). This story validates command-trace behavior in the lens codebase; no non-lens-work exception applies.
+
 ## Dev Agent Record
 
 ### Agent Model Used

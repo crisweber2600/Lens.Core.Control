@@ -23,7 +23,7 @@ All stories in Sprints 1–4 include unit and focused tests. Sprint 5 begins wit
 
 ## Implementation Steps
 
-1. From a clean Windows environment, run `pytest` against all tests added or modified in Sprints 1–4.
+1. From a clean Windows environment, run `uv run python -m pytest` against all tests added or modified in Sprints 1–4.
 2. Capture the full test report.
 3. For each failing test: determine whether the failure is a platform issue (address in this story) or a logic issue (file as a defect against the originating story).
 4. Address all platform-specific failures in this story.
@@ -39,7 +39,11 @@ All stories in Sprints 1–4 include unit and focused tests. Sprint 5 begins wit
 ## Dev Notes
 
 - Reference: tech-plan test strategy, Windows path requirements from E2-S6 and E3-S4.
-- Run from the repo root using the standard `pytest` invocation; do not filter.
+- Run from the repo root using `uv run python -m pytest`; do not filter.
+
+## Implementation Channel
+
+Exception note: this is a confirm/test-execution story, not a lens implementation change. No dedicated implementation channel applies beyond running the focused Windows pytest suite and recording results in the linked test report.
 
 ## Dev Agent Record
 

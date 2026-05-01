@@ -43,6 +43,10 @@ A complete dry-run of the FinalizePlan → Dev transition on a test feature veri
 
 - Reference: tech-plan Dev phase contract, E4-S1, E4-S3.
 
+## Implementation Channel
+
+Exception note: this story is a dry-run/integration verification for the FinalizePlan → Dev transition and does not introduce net-new lens implementation work. Execution should use the standard dev-phase orchestration path for the target repo, with results captured in the referenced dry-run report.
+
 ## Dev Agent Record
 
 ### Agent Model Used

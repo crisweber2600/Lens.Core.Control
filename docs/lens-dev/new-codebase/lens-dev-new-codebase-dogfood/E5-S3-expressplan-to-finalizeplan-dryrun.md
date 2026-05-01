@@ -42,6 +42,10 @@ A complete dry-run of the ExpressPlan → FinalizePlan transition on a test feat
 
 - Reference: tech-plan phase contracts, E2-S6, E2-S2.
 
+## Implementation Channel
+
+Lens workflow dry-run in the control repo and target repo flow for `lens.core.src`; no non-lens-work exception applies.
+
 ## Dev Agent Record
 
 ### Agent Model Used

@@ -43,6 +43,10 @@ Defect 8 requires clean-room evidence that the new codebase was independently re
 
 - Reference: tech-plan Defect 8, clean-room parity requirement.
 
+## Implementation Channel
+
+- Lens work: implement and publish from `lens.core.src` on `develop`, with governance publication via `publish-to-governance`.
+
 ## Dev Agent Record
 
 ### Agent Model Used

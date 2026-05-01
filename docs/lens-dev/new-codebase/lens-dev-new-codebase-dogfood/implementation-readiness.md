@@ -106,7 +106,7 @@ The feature is implementation-complete when:
 - [ ] `uv run python -m pytest` runs and passes on Windows for all touched skills.
 - [ ] No governance file was written directly by an agent; all governance writes went through the publish CLI or sanctioned operations.
 - [ ] Governance repo history remains flat on `main`.
-- [ ] Control repo work used the 2-branch feature topology (base + plan).
+- [ ] Control repo work used the 3-branch feature topology (`{featureId}`, `{featureId}-plan`, `{featureId}-dev`).
 - [ ] Target `lens.core.src` used its configured branch strategy independently.
 - [ ] Known naming drift (expressplan-review.md vs expressplan-adversarial-review.md) is documented, tested for compatibility, and linked from the parity report.
 - [ ] Feature creation or phase readiness warns on missing `target_repos` for implementation-impacting features.

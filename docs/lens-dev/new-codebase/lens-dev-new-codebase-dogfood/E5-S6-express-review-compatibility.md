@@ -42,6 +42,10 @@ ADR-5 (M3 accepted tech debt) records that both `expressplan-adversarial-review.
 - This story is a confirmation and documentation close-out, not new implementation.
 - If E2-S6 tests fail: escalate as a blocking defect before closing this story.
 
+## Implementation Channel
+
+Exception note: this story does not introduce new lens implementation work. It is a confirmation/documentation story that validates the compatibility behavior implemented in E2-S6 and records ADR-5/parity status. No new implementation channel is required for this story beyond the existing E2-S6 publish-path behavior under review.
+
 ## Dev Agent Record
 
 ### Agent Model Used
