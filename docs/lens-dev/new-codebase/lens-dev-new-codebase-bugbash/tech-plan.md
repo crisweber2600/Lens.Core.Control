@@ -7,9 +7,9 @@ key_decisions:
   - Three commands (lens-bugbash, lens-bug-reporter, lens-bug-fixer) each follow the invariant 3-hop conductor chain
   - SKILL.md authored via bmad-module-builder (BMB-first); release prompts via bmad-workflow-builder
   - Bug storage: status-organized folders (bugs/New/, bugs/Inprogress/, bugs/Fixed/) in governance repo
-  - N bugs → 1 feature per batch; featureId = lens-dev-new-codebase-bugfix-{timestamp}
-  - Two-commit model: Phase 2 (→Inprogress commit) and Phase 4 (→Fixed commit)
-  - publish-to-governance is the sole governance write path; no direct file mutations in governance repo
+  - N bugs → 1 feature per batch; featureId = lens-dev-new-codebase-bugfix-{ms-timestamp}-{random4hex} (millisecond timestamp + random suffix prevents collisions)
+  - Three-commit lifecycle: feature-created commit (fix-all-new Phase 2), →Inprogress commit (fix-all-new Phase 3), →Fixed commit (--complete only); fix-all-new uses first two commits only
+  - bugs/ is operational state written directly by scripts; feature docs mirrors under features/ use publish-to-governance exclusively (no direct file mutations for feature docs)
   - Explicit feature-index sync after feature creation (BF-3 workaround)
   - Per-item failure isolation: failed bugs remain in prior valid state with explicit error reporting
 open_questions: []
@@ -66,7 +66,7 @@ title: "Short descriptive title of the bug"
 description: "Concise description of what went wrong and expected behavior"
 status: New          # enum: New | Inprogress | Fixed
 featureId: ""        # empty at intake; populated on fix kickoff
-slug: "descriptive-slug-20260503-120000"
+slug: "descriptive-slug-a3f72c1d"
 created_at: 2026-05-03T12:00:00Z
 updated_at: 2026-05-03T12:00:00Z
 ---
@@ -77,7 +77,7 @@ updated_at: 2026-05-03T12:00:00Z
 - `description`: required, non-empty string
 - `status`: required, must be one of `New`, `Inprogress`, `Fixed` — no other values accepted
 - `featureId`: required field (empty string at intake; set at fix kickoff; must be set before status→Inprogress promotion)
-- `slug`: derived from title (lowercase, hyphens, timestamp suffix for uniqueness)
+- `slug`: derived from title (lowercase, hyphens) + 8-char hex hash of (title+description) for stable content-based idempotency key; no timestamp in slug
 - Chat log content follows the frontmatter as markdown body — preserved verbatim
 
 ### 2.2 Storage Paths
@@ -150,35 +150,39 @@ governance_repo/bugs/
 
 Phase 1: Batch Formation
   → group all New bugs into one batch
-  → generate featureId = lens-dev-new-codebase-bugfix-{timestamp}
+  → generate featureId = lens-dev-new-codebase-bugfix-{ms-timestamp}-{random4hex}
 
-Phase 2: Status → Inprogress
-  → for each bug: move bugs/New/{slug}.md → bugs/Inprogress/{slug}.md
-  → update frontmatter: status=Inprogress, featureId={featureId}
-  → git commit: "[BUGBASH] Batch {timestamp} moved to Inprogress"
-
-Phase 3: Feature & Expressplan
+Phase 2: Feature Creation (BEFORE status promotion)
   → delegate to bmad-lens-feature-yaml: create feature.yaml
-      featureId = lens-dev-new-codebase-bugfix-{timestamp}
+      featureId = lens-dev-new-codebase-bugfix-{ms-timestamp}-{random4hex}
       team = [current_runner, backup_developer]
   → call: publish-to-governance --update-feature-index (BF-3 workaround)
-  → git commit: "[BUGBASH] Batch {timestamp} feature created"
+  → git commit: "[BUGBASH] Batch {featureId} feature created"
+  → if feature creation fails: stop; no bugs touched; report error and exit
+
+Phase 3: Status → Inprogress (only after feature exists)
+  → for each bug independently:
+      move bugs/New/{slug}.md → bugs/Inprogress/{slug}.md
+      update frontmatter: status=Inprogress, featureId={featureId}
+      on per-bug failure: record error, leave bug in New, continue with next bug
+  → git commit: "[BUGBASH] Batch {featureId} moved to Inprogress"
+
+Phase 4: Expressplan Execution
   → delegate to bmad-lens-expressplan: run expressplan on feature
       planning input = concatenated bug descriptions + chat logs
-
-Phase 4: Status → Fixed (after expressplan completes)
-  → for each bug: move bugs/Inprogress/{slug}.md → bugs/Fixed/{slug}.md
-  → update frontmatter: status=Fixed
-  → git commit: "[BUGBASH] Batch {timestamp} completed (featureId {featureId})"
+  → bugs remain Inprogress during and after expressplan
+  [workflow ends here — Fixed transition is reserved for --complete {featureId}]
 
   → print per-bug outcome report
 [done]
 ```
 
 **Error handling (per-item isolation):**
-- If any bug fails during Phase 2 or 3: that bug remains in its current state; error is recorded in per-item report
-- If expressplan fails: all bugs remain Inprogress; full batch retry required
-- No partial commit: Phase 2 commit only lands after all file moves succeed
+- Phase 2 failure (feature creation): stop entire flow; all bugs remain New; no commit
+- Phase 3 per-bug failure: that bug remains New; error recorded; other bugs proceed to Inprogress
+- Phase 3 commit only lands after all attempted moves complete (success or per-item failure recorded)
+- Phase 4 (expressplan) failure: all bugs remain Inprogress; retry via --complete or new --fix-all-new run
+- --fix-all-new never moves bugs to Fixed; Fixed state is only reached via --complete {featureId}
 
 ### 3.3 lens-bug-fixer --complete Flow
 
@@ -249,9 +253,9 @@ Load: {module_path}/_bmad/lens-work/prompts/lens-{command}.prompt.md
 
 | File | Action | Channel |
 |------|--------|---------|
-| `lens.core/_bmad/lens-work/scripts/bugbash-ops.py` | Create | `bmad-module-builder` (BMB-first) |
-| `lens.core/_bmad/lens-work/scripts/bug-reporter-ops.py` | Create | `bmad-module-builder` (BMB-first) |
-| `lens.core/_bmad/lens-work/scripts/bug-fixer-ops.py` | Create | `bmad-module-builder` (BMB-first) |
+| `lens.core/_bmad/lens-work/scripts/bugbash-ops.py` | Create | Direct (Python — not prompts/skills) |
+| `lens.core/_bmad/lens-work/scripts/bug-reporter-ops.py` | Create | Direct (Python — not prompts/skills) |
+| `lens.core/_bmad/lens-work/scripts/bug-fixer-ops.py` | Create | Direct (Python — not prompts/skills) |
 
 ### 4.5 Shared Dependencies (read-only — not modified in this feature)
 
@@ -288,8 +292,10 @@ bug-reporter-ops.py create-bug
 **Internal logic:**
 1. Validate required fields (non-empty)
 2. Scope guard: assert governance_repo prefix
-3. Generate slug: `{title-slug}-{YYYYMMDD-HHMMSS}`
-4. Check idempotency: if `bugs/New/{slug}.md` exists → return `"status": "duplicate"`, exit 0
+3. Compute content hash: `sha256(title + description)[:8]` as 8-char hex
+4. Generate slug: `{title-slug}-{content-hash}` (stable across reruns with same title+description)
+5. Check idempotency: if `bugs/New/{slug}.md` exists → return `"status": "duplicate"`, exit 0
+   Also check `bugs/Inprogress/{slug}.md` and `bugs/Fixed/{slug}.md` for already-processed duplicates
 5. Build frontmatter + body
 6. Write to `bugs/New/{slug}.md`
 7. Return JSON result
@@ -404,7 +410,7 @@ Three categories required before merge:
 | Test | Expected |
 |------|----------|
 | Re-run discover-new after bugs moved to Inprogress | 0 bugs discovered |
-| Re-run create-bug with same title | "duplicate" result; no second file written |
+| Re-run create-bug with same title+description | "duplicate" result; no second file written (content-hash key matches) |
 | Re-run resolve-bugs for already-Fixed bugs | "already_fixed" result; no error |
 
 ---
@@ -416,7 +422,7 @@ Per the `lens-dev/new-codebase` service constitution:
 > Anytime `lens.core.src` is being modified, SKILL.md updates must be authored through `.github/skills/bmad-module-builder` and release prompt or workflow artifacts must be authored through `.github/skills/bmad-workflow-builder`.
 
 **Implementation sequence per story:**
-1. Author scripts (`bug-reporter-ops.py`, `bug-fixer-ops.py`, `bugbash-ops.py`) directly (Python files, not prompts/skills)
+1. Author scripts (`bug-reporter-ops.py`, `bug-fixer-ops.py`, `bugbash-ops.py`) **directly** (Python files — not via bmad-module-builder or any code-generation tool)
 2. Use `bmad-module-builder` to generate each SKILL.md
 3. Use `bmad-workflow-builder` to generate each release prompt
 4. Verify stub chain integrity (light-preflight.py invoked; correct release prompt path)

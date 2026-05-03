@@ -46,9 +46,9 @@ FR12: The workflow can preserve prior valid status when a transition operation f
 FR13: The fix workflow can discover all bug artifacts with status New within new-codebase scope.
 FR14: The fix workflow can create an express-track feature for each discovered New bug.
 FR15: The fix workflow can execute expressplan using each bug artifact's description and chat log content.
-FR16: The fix workflow can write FeatureId linkage into bug frontmatter after feature creation.
-FR17: The workflow can prevent promotion to Inprogress when FeatureId linkage is not established.
-FR18: The completion workflow can resolve linked bug records by FeatureId before setting Fixed.
+FR16: The fix workflow can write featureId linkage into bug frontmatter after feature creation.
+FR17: The workflow can prevent promotion to Inprogress when featureId linkage is not established.
+FR18: The completion workflow can resolve linked bug records by featureId before setting Fixed.
 FR19: Lens developers can run fixbugs as a single batch operation across all eligible New bugs.
 FR20: The workflow can process bugs independently within a batch run.
 FR21: The workflow can report per-bug success or failure outcomes for each batch run.
@@ -61,7 +61,7 @@ FR27: The workflow can preserve governance artifact history through normal git-t
 FR28: The workflow can keep bug records as canonical lifecycle state for intake, active fix work, and completion.
 FR29: Two Lens developers can operate the workflow concurrently without changing the lifecycle model.
 FR30: Developers can inspect bug records to determine current status and linked feature work.
-FR31: Developers can identify in-progress remediation by reading status plus FeatureId from bug artifacts.
+FR31: Developers can identify in-progress remediation by reading status plus featureId from bug artifacts.
 FR32: Developers can distinguish completed fixes from active fixes using frontmatter state only.
 
 ### Non-Functional Requirements
@@ -71,13 +71,13 @@ NFR2 (Performance): Fixbugs batch run can produce a per-item outcome summary for
 NFR3 (Performance): Frontmatter update operations can complete without blocking unrelated bug records in the same batch.
 NFR4 (Security): Workflow can prevent writes outside the new-codebase scope through mandatory path validation before mutation.
 NFR5 (Security): Bug artifacts can preserve chat-log content without exposing data outside governance-authorized repositories.
-NFR6 (Security): Only authorized Lens developer workflows can mutate bug status or FeatureId fields.
+NFR6 (Security): Only authorized Lens developer workflows can mutate bug status or featureId fields.
 NFR7 (Security): Feature linkage mutations can be auditable via git history for each changed bug artifact.
 NFR8 (Reliability): Batch processing can isolate per-item failures so one failed bug does not abort successful updates for other eligible bugs.
 NFR9 (Reliability): Failed items can remain in their prior valid lifecycle state (typically New) with explicit error reporting.
 NFR10 (Reliability): Reruns can be idempotent for already-processed items unless state has changed intentionally.
 NFR11 (Reliability): Completion updates can require successful bug-to-feature resolution before status promotion to Fixed.
-NFR12 (Integration): Fix workflow can integrate with feature creation using express track and consume returned FeatureId values.
+NFR12 (Integration): Fix workflow can integrate with feature creation using express track and consume returned featureId values.
 NFR13 (Integration): Fix workflow can integrate with expressplan execution using each bug artifact's description and chat log body.
 NFR14 (Integration): Completion workflow can integrate with fix completion signals to update linked bug records to Fixed.
 NFR15 (Scalability): MVP can support concurrent operation by two Lens developers without lifecycle corruption.
@@ -88,10 +88,10 @@ NFR16 (Scalability): Workflow design can scale to larger bug sets through repeat
 - Conductor pattern: all commands follow 3-hop chain (.github/stub → release prompt → SKILL.md)
 - SKILL.md authored via bmad-module-builder (BMB-first); release prompt via bmad-workflow-builder
 - Bug storage: status-organized folders (bugs/New/, bugs/Inprogress/, bugs/Fixed/)
-- FeatureId formula: `lens-dev-new-codebase-bugfix-{timestamp}` (immutable after generation)
+- featureId formula: `lens-dev-new-codebase-bugfix-{ms-timestamp}-{random4hex}` (immutable after generation)
 - N bugs → 1 feature per batch; timestamp prevents collisions
-- Two-commit model per batch: Phase 1 (→Inprogress commit), Phase 2 (→Fixed commit)
-- publish-to-governance is the sole governance write path (no direct file writes to governance repo)
+- Three-commit lifecycle: feature-created commit (fix-all-new), →Inprogress commit (fix-all-new), →Fixed commit (--complete only)
+- bugs/ is operational state written directly by scripts (no publish-to-governance for status moves); feature docs mirrors under features/ use publish-to-governance exclusively
 - Explicit feature-index sync via publish-to-governance after feature creation (BF-3 workaround)
 - All 3 commands (lens-bugbash, lens-bug-reporter, lens-bug-fixer) use same chain topology
 - Scripts reside under `lens.core/_bmad/lens-work/scripts/`
@@ -137,7 +137,7 @@ So that each bug is captured as a single canonical markdown artifact in the gove
 **Given** I run `/lens-bug-reporter`
 **When** I provide title, description, and chat log
 **Then** exactly one bug artifact is created at `governance_repo/bugs/New/{slug}.md`
-**And** the artifact contains valid frontmatter with title, description, status=New, FeatureId=""
+**And** the artifact contains valid frontmatter with title, description, status=New, featureId=""
 
 **Given** I run `/lens-bug-reporter`
 **When** I omit a required frontmatter field (title, description, or chat log)
@@ -166,7 +166,7 @@ So that all bug artifacts are machine-parseable and consistent across intake and
 
 **Given** a bug artifact is written by the intake workflow
 **When** the artifact is read by any downstream workflow
-**Then** frontmatter contains exactly: title (string), description (string), status (enum), FeatureId (string or empty)
+**Then** frontmatter contains exactly: title (string), description (string), status (enum), featureId (string or empty)
 
 **Given** a status value is set in any operation
 **When** the value is not in [New, Inprogress, Fixed]
@@ -260,7 +260,7 @@ So that governance state accurately reflects the current lifecycle phase for eve
 **Given** feature generation succeeds for a batch
 **When** Phase 2 (transition to Inprogress) runs
 **Then** each bug file is moved from `bugs/New/{slug}.md` to `bugs/Inprogress/{slug}.md`
-**And** frontmatter is updated: status=Inprogress, FeatureId={generated featureId}
+**And** frontmatter is updated: status=Inprogress, featureId={generated featureId}
 **And** a git commit is created: `[BUGBASH] Batch {timestamp} moved to Inprogress`
 
 **Given** expressplan execution completes successfully for all bugs
@@ -269,11 +269,16 @@ So that governance state accurately reflects the current lifecycle phase for eve
 **And** frontmatter is updated: status=Fixed
 **And** a git commit is created: `[BUGBASH] Batch {timestamp} completed (featureId {featureId})`
 
-**Given** any phase fails mid-transition
+**Given** a failure occurs during Phase 2 (feature creation) — before the Inprogress commit
 **When** the error is detected
-**Then** all bugs in that batch remain in their current state (Inprogress)
-**And** no files are moved for the failed batch
-**And** an explicit error report is written for each affected bug
+**Then** all bugs remain in New (no bugs have been moved yet)
+**And** no commits are made for this batch
+**And** an explicit error report is written
+
+**Given** a per-bug failure occurs during Phase 3 processing — after the feature-created commit
+**When** the per-bug error is detected
+**Then** the failed bug remains in New; successfully moved bugs remain in Inprogress
+**And** an explicit per-bug error report identifies each failed bug and its error
 
 **Implementation Notes:**
 - File moves are atomic (write new, verify, delete old) in `bug-fixer-ops.py`
@@ -327,7 +332,7 @@ So that governance reflects actual completion state and the bug queue stays accu
 **Then** each linked bug's status is updated from Inprogress to Fixed
 **And** a git commit is created: `[BUGBASH] Batch {featureId} completed`
 
-**Given** a bug cannot be resolved by FeatureId
+**Given** a bug cannot be resolved by featureId
 **When** the resolution lookup fails
 **Then** the workflow blocks the Fixed promotion and reports the unresolved bug explicitly
 
@@ -337,7 +342,7 @@ So that governance reflects actual completion state and the bug queue stays accu
 
 **Implementation Notes:**
 - Completion flag in `bug-fixer-ops.py`: `--complete {featureId}`
-- FeatureId lookup scans Inprogress/ for matching frontmatter field
+- featureId lookup scans Inprogress/ for matching frontmatter field
 - Guard: status must be Inprogress before promoting to Fixed
 
 ---
@@ -395,7 +400,7 @@ So that I can identify which bugs succeeded, which failed, and why without readi
 
 **Given** a batch run where all bugs succeed
 **When** the report is printed
-**Then** all bugs show status=Inprogress with their assigned FeatureId
+**Then** all bugs show status=Inprogress with their assigned featureId
 
 **Given** a batch run where zero bugs are eligible
 **When** the report is printed

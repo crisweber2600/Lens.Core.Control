@@ -93,10 +93,8 @@ This is a structural contradiction:
 | FR Coverage | ✅ 32 FRs, each numbered and actionable |
 | NFR Coverage | ✅ 16 NFRs across performance, security, reliability, integration |
 | Scope Guard | ✅ NFR4 explicitly calls out path validation |
-| `goal` frontmatter | ⚠️ Empty string — should match executive summary intent |
+| `goal` frontmatter | ✅ Populated — matches executive summary intent |
 | Status | draft — acceptable pre-dev |
-
-**Minor:** `goal` field in frontmatter is empty. Should be set before PR merge.
 
 ---
 
@@ -203,19 +201,19 @@ Regression Section 7.2 tests scope violations, but does not test what happens wh
 
 | ID | Priority | Item | Owner | Story |
 |----|---------|------|-------|-------|
-| A1 | HIGH | Update architecture.md: align bug storage path to status-folder model | Dev | Before Sprint 1 |
-| A2 | HIGH | Add "operational state" annotation to architecture.md and tech-plan.md re: direct governance writes | Dev | Before Sprint 1 |
+| A1 | HIGH | ~~Update architecture.md: align bug storage path to status-folder model~~ **RESOLVED** — architecture.md starter template updated to match status-folder model | Dev | ✅ Done |
+| A2 | HIGH | ~~Add "operational state" annotation to architecture.md and tech-plan.md re: direct governance writes~~ **RESOLVED** — explicit write-authority clarification added to both files | Dev | ✅ Done |
 | A3 | MEDIUM | Verify `--update-feature-index` flag in publish-to-governance CLI | Dev | Before Story 2.1 |
 | A4 | LOW | Add missing-directory init to Story 1.1 ACs (BS-1) | Dev | Story 1.1 |
 | A5 | LOW | Add slug collision hardening note to Story 1.1 (BS-2) | Dev | Story 1.1 |
 | A6 | LOW | Add empty-queue UX note to Story 2.1 ACs (BS-3) | Dev | Story 2.1 |
 | A7 | LOW | Add governance-repo path validation test case to Story 1.3 (BS-4) | Dev | Story 1.3 |
-| A8 | LOW | Set `goal` field in prd.md frontmatter | Dev | Before PR merge |
+| A8 | LOW | ~~Set `goal` field in prd.md frontmatter~~ **RESOLVED** — goal field is populated | Dev | ✅ Done |
 
 ---
 
 ## 7. Review Summary
 
-**Verdict:** PASS-WITH-WARNINGS — planning bundle is complete and coherent. Two HIGH items (A1, A2) must be resolved before first implementation story begins. Six LOW items to be addressed at story level.
+**Verdict:** PASS-WITH-WARNINGS — planning bundle is complete and coherent. HIGH items (A1, A2) resolved in this PR. Six LOW items to be addressed at story level.
 
-**Recommended next step:** Address A1 and A2 (architecture.md + tech-plan.md documentation fixes), then proceed to sprint planning and Story 1.3 implementation.
+**Recommended next step:** Proceed to sprint planning and Story 1.3 implementation.

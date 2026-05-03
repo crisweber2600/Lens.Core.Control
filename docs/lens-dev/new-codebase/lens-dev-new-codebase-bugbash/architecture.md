@@ -5,8 +5,8 @@ status: draft
 goal: "Design the bugbash meta-workflow for tracking and fixing bugs in lens-work rebuild; define conductor pattern, governance integration, and batch processing semantics"
 key_decisions:
   - Bug storage organized by status (New/Inprogress/Fixed) with markdown frontmatter
-  - N Bugs → 1 Feature mapping with timestamp-based featureId generation
-  - All-or-Nothing atomicity for batch processing (full batch retry on any failure)
+  - N Bugs → 1 Feature mapping with millisecond-timestamp + random-suffix featureId (high-entropy; collision-safe for concurrent use)
+  - Per-item failure isolation: failed bugs remain in prior valid state (New); successful bugs proceed independently
   - Status mutations at phase boundaries (New → Inprogress → Fixed) with explicit commits
   - Self-service developer assignment (runner becomes primary assignee)
   - Explicit feature-index sync via publish-to-governance (BF-3 workaround)
@@ -132,18 +132,25 @@ Bugbash follows the **established conductor pattern** from existing lens-work co
 ```
 lens-dev-new-codebase-bugbash/
 ├── .github/prompts/
-│   └── lens-bugbash.prompt.md              (stub: light-preflight gate)
+│   ├── lens-bugbash.prompt.md              (stub: light-preflight gate)
+│   ├── lens-bug-reporter.prompt.md
+│   └── lens-bug-fixer.prompt.md
 ├── lens.core/_bmad/lens-work/
 │   ├── skills/
-│   │   └── bmad-lens-bugbash/              (main conductor)
-│   │       ├── SKILL.md                    (orchestration contract)
-│   │       ├── scripts/
-│   │       │   ├── bug-reporter-ops.py     (bug creation + governance storage)
-│   │       │   ├── bug-fixer-ops.py        (batch processing + feature generation)
-│   │       │   └── status-updater-ops.py   (frontmatter mutation)
-│   │       └── tests/
+│   │   ├── bmad-lens-bugbash/              (main entry conductor)
+│   │   │   └── SKILL.md
+│   │   ├── bmad-lens-bug-reporter/
+│   │   │   └── SKILL.md
+│   │   └── bmad-lens-bug-fixer/
+│   │       └── SKILL.md
+│   ├── scripts/                            (shared — authored directly, not via bmad-module-builder)
+│   │   ├── bugbash-ops.py                  (status summary + routing)
+│   │   ├── bug-reporter-ops.py             (bug creation + governance storage)
+│   │   └── bug-fixer-ops.py                (batch processing + status mutations)
 │   └── prompts/
-│       └── lens-bugbash.prompt.md          (release prompt: redirects to SKILL.md)
+│       ├── lens-bugbash.prompt.md
+│       ├── lens-bug-reporter.prompt.md
+│       └── lens-bug-fixer.prompt.md
 ```
 
 **Architectural Decisions Provided by Conductor Pattern:**
@@ -151,7 +158,7 @@ lens-dev-new-codebase-bugbash/
 **Governance Integration:**
 - Bug records stored in governance repo (`bugs/` folder) with markdown + frontmatter
 - Feature generation via existing feature.yaml + feature-index.yaml infrastructure
-- All governance writes via publish-to-governance CLI (no direct file mutations)
+- `bugs/` is **operational state** written directly by bugbash scripts (not via publish-to-governance); feature docs mirrors under `features/` use publish-to-governance exclusively
 
 **Workflow Orchestration:**
 - Two entry points: bug reporter (intake) and bug fixer (batch processing)
@@ -212,7 +219,7 @@ governance_repo/bugs/
 - All bugs in batch assigned same featureId
 - Execute single expressplan for entire batch
 
-**Rationale:** Automatic grouping (no user selection); atomic batch execution; efficient single feature for N bugs; timestamp prevents collisions.
+**Rationale:** Automatic grouping (no user selection); atomic batch execution; efficient single feature for N bugs; millisecond timestamp + random 4-char hex suffix prevents collisions even for concurrent same-second runs.
 
 **Implications:**
 - All bugs in batch succeed or fail together
@@ -225,57 +232,62 @@ governance_repo/bugs/
 
 ### Decision 3: Batch Processing Error Handling
 
-**Choice:** All-or-Nothing Atomicity (strict)
+**Choice:** Per-Item Isolation
 
 **Error Handling Model:**
 ```
-Batch execution begins:
-  - All N bugs move to Inprogress
-  - Feature created and expressplan initiated
+Phase 2 (feature creation):
+  - If feature creation fails: stop; no bugs touched; report error
 
-During expressplan:
-  - If ANY bug fails: entire batch marked as failed
-  - All bugs remain in Inprogress
-  
-Retry required:
-  - User runs fix-bugs command again
-  - Batch retried from scratch (no partial recovery)
-  - All bugs move back to New if needed
+Phase 3 (status -> Inprogress):
+  - For each bug independently:
+      - Success: move to Inprogress, featureId set
+      - Failure: bug remains in New; error recorded in per-item report; continue with next bug
+
+Phase 4 (expressplan):
+  - If expressplan fails: all bugs remain Inprogress
+  - Retry via --complete {featureId} or new --fix-all-new run
+
+Fixed transition:
+  - Only via explicit --complete {featureId} command
+  - Per-item: each linked bug independently moved to Fixed; failures recorded
 ```
 
-**Rationale:** Strict consistency; simple logic; no orphaned intermediate states; atomic batch semantics.
+**Rationale:** Per-item isolation prevents one failure from blocking all bugs; failed bugs remain in prior valid state (New) as required by PRD NFR8/NFR9 and FR20-FR24; consistent with per-item outcome reporting contract.
 
 **Implications:**
-- One failure blocks all bugs
-- No per-bug recovery (all-or-nothing)
-- Requires full batch retry
-- ⚠️ Potential: consider checkpoint-based recovery in future iteration
+- Individual failures do not abort the batch
+- Failed bugs stay in New; successful bugs advance to Inprogress
+- Per-item error report required on every batch run
+- Expressplan failure does not roll back Inprogress promotions
+- ⚠️ Partial Inprogress state is expected and recoverable via --complete or retry
 
 ---
 
 ### Decision 4: Status Mutation Contract
 
-**Choice:** Move-at-Phase-Boundary (two-commit model)
+**Choice:** Move-at-Phase-Boundary (three-commit lifecycle)
 
 **Status Transition Flow:**
 
 ```
-Phase 1: Batch Start
-  - Move: bugs/New/{name}.md → bugs/Inprogress/{name}.md
-  - Commit: "[BUGBASH] Move N bugs to Inprogress for batch fix"
-  - Frontmatter update: status=Inprogress, updated_at={timestamp}
+fix-all-new Phase 2: Feature Creation
+  - Feature.yaml created and published; feature-index synced
+  - Commit: "[BUGBASH] Batch {featureId} feature created"
 
-Phase 2: Expression Plan Execution
-  - (Bugs remain in Inprogress during processing)
-  - Feature executed via expressplan
+fix-all-new Phase 3: Status → Inprogress
+  - Per-bug (independently): bugs/New/{name}.md → bugs/Inprogress/{name}.md
+  - Frontmatter update: status=Inprogress, featureId={featureId}, updated_at={timestamp}
+  - Commit: "[BUGBASH] Batch {featureId} moved to Inprogress"
 
-Phase 3: Batch Complete
-  - Move: bugs/Inprogress/{name}.md → bugs/Fixed/{name}.md
-  - Commit: "[BUGBASH] Move N bugs to Fixed after expressplan"
-  - Frontmatter update: status=Fixed, updated_at={timestamp}, fixed_feature_id={featureId}
+--complete Phase: Status → Fixed
+  - Per-bug (independently): bugs/Inprogress/{name}.md → bugs/Fixed/{name}.md
+  - Frontmatter update: status=Fixed, updated_at={timestamp}
+    (featureId field already set during Inprogress transition; unchanged at completion)
+  - Commit: "[BUGBASH] Batch {featureId} completed"
 ```
 
-**Rationale:** Clear phase boundaries in git history; visible in-progress state; explicit transitions; supports resumability.
+**Rationale:** Feature creation committed before bugs promoted to Inprogress prevents orphaned featureId references; clear phase boundaries in git history; explicit transitions; Fixed state only reachable via explicit --complete command.
 
 **Implications:**
 - Two commits per batch (acceptable trade-off)
@@ -321,7 +333,7 @@ After feature creation:
 **Rationale:** Works around BF-3 gap; prevents stale index entries; maintains governance consistency; explicit dependency makes gap visible.
 
 **Implications:**
-- Requires feature-index CLI endpoint (fallback: direct write if needed)
+- Requires feature-index CLI endpoint; if endpoint unavailable Story 2.1 is blocked until endpoint is verified or an alternative is documented (no direct write fallback — governance rules prohibit direct feature docs mutations)
 - Extra CLI call per batch (minimal overhead)
 - BF-3 dependency documented as assumption
 - Visibility into when workaround is in effect
@@ -360,7 +372,7 @@ Bug Fixer (batch)
 **Architectural Constraints Respected:**
 
 - ✅ Frozen interfaces: light-preflight.py, publish-to-governance CLI
-- ✅ Governance rules: no direct file writes, only CLI
+- ✅ Governance rules: bugs/ written directly by scripts (operational state); features/ via publish-to-governance CLI only
 - ✅ Feature.yaml schema: v4 frozen, no field changes
 - ✅ FeatureId formula: preserved
 - ✅ Cleanroom scope: new-codebase only
@@ -396,7 +408,7 @@ Bug Fixer (batch)
 | `.github/prompts/lens-bugbash.prompt.md` | Agent | Standard (established pattern) | `.github/prompts/` |
 | `lens-work/prompts/lens-bugbash.prompt.md` | Agent | `bmad-workflow-builder` | `lens.core/_bmad/lens-work/prompts/` |
 | `skills/bmad-lens-bugbash/SKILL.md` | Agent | `bmad-module-builder` (BMB-first) | `lens.core/_bmad/lens-work/skills/` |
-| `scripts/bugbash-ops.py` | Agent | `bmad-module-builder` (BMB-first) | `lens.core/_bmad/lens-work/scripts/` |
+| `scripts/bugbash-ops.py` | Agent | Direct (Python — not bmad-module-builder) | `lens.core/_bmad/lens-work/scripts/` |
 | `bugs/{status}/*.md` | Agent (via bug-reporter) | Control repo artifacts | `governance_repo/bugs/{New\|Inprogress\|Fixed}/` |
 | `feature.yaml` updates | CLI (publish-to-governance) | Governance CLI only | `governance_repo/features/...` |
 | `feature-index.yaml` sync | CLI (publish-to-governance) | Governance CLI only | `governance_repo/` |
@@ -407,36 +419,37 @@ Bug Fixer (batch)
 
 **Phase 1: Discovery & Batch Formation**
 1. Query `governance_repo/bugs/New/*.md`
-2. Parse frontmatter (title, description, featureId=null initially)
+2. Parse frontmatter (title, description, featureId="" initially)
 3. Group into single batch
-4. Generate featureId: `lens-dev-new-codebase-bugfix-{timestamp}`
-5. **Commit Phase 1:** `[BUGBASH] Batch {timestamp} created with N bugs`
+4. Generate featureId: `lens-dev-new-codebase-bugfix-{ms-timestamp}-{random4hex}`
+   (no commit — batch formation is in-memory only)
 
-**Phase 2: Status Transition to Inprogress**
-1. For each bug: Move `bugs/New/{slug}.md` → `bugs/Inprogress/{slug}.md`
-2. Update frontmatter: featureId set (for forward reference)
-3. **Commit Phase 2:** `[BUGBASH] Batch {timestamp} moved to Inprogress`
-
-**Phase 3: Feature & Expressplan Execution**
+**Phase 2: Feature Creation (before status promotion)**
 1. Generate feature via bmad-lens-feature-yaml
 2. Populate feature.yaml: team = [current_runner, backup_developer]
-3. Call publish-to-governance (with feature-index sync flag)
-4. **Commit:** `[BUGBASH] Batch {timestamp} feature created`
-5. Execute expressplan workflow on feature
+3. Call publish-to-governance --update-feature-index (BF-3 workaround)
+4. **Commit Phase 2:** `[BUGBASH] Batch {featureId} feature created`
+5. If feature creation fails: stop; all bugs remain New; report error
+
+**Phase 3: Status Transition to Inprogress (only after feature exists)**
+1. For each bug independently:
+   - Move `bugs/New/{slug}.md` → `bugs/Inprogress/{slug}.md`
+   - Update frontmatter: status=Inprogress, featureId={featureId}, updated_at={timestamp}
+   - On per-bug failure: record error, leave bug in New, continue with next bug
+2. **Commit Phase 3:** `[BUGBASH] Batch {featureId} moved to Inprogress`
+
+**Phase 4: Expressplan Execution**
+1. Execute expressplan workflow on feature
    - Run all phase states (businessplan → techplan → finalizeplan → expressplan)
    - Generate all downstream artifacts (stories, implementation-readiness, sprint-status)
-6. **Commit (if expressplan succeeds):** `[BUGBASH] Batch {timestamp} expressplan complete`
+2. Bugs remain Inprogress after this phase
+3. [Workflow ends here; Fixed transition reserved for --complete {featureId}]
 
-**Phase 4: Status Transition to Fixed**
-1. For each bug: Move `bugs/Inprogress/{slug}.md` → `bugs/Fixed/{slug}.md`
-2. Finalize frontmatter: featureId confirmed, timestamp recorded
-3. **Commit Phase 4:** `[BUGBASH] Batch {timestamp} completed (featureId {featureId})`
-
-**Error Handling (all-or-nothing atomicity):**
-- If any phase fails: All bugs marked failed (remain in Inprogress)
-- No per-bug rollback
-- Full batch retry required
-- Error logs retained in feature.yaml and commit messages
+**Error Handling (per-item isolation):**
+- Phase 2 failure: all bugs remain New; no commits for this batch
+- Phase 3 per-bug failure: failed bugs remain New; other bugs proceed to Inprogress
+- Phase 4 failure: all bugs remain Inprogress; retry via --complete or new --fix-all-new run
+- Per-item error report always printed at end of run
 
 ### Success Criteria (Validation Gates)
 

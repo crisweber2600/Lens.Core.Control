@@ -29,7 +29,7 @@ Bugbash establishes a cleanroom bug lifecycle for new-codebase by turning Lens f
 
 ### What Makes This Special
 
-The differentiator is the closed-loop workflow between operational failure signals and planning execution. Instead of treating chat logs as informal notes, Bugbash formalizes bug reports as first-class governance records containing structured frontmatter and full incident context (description plus pasted chat log). The fix flow then consumes those records as executable planning inputs, creates express-track fix features, and mutates bug metadata as work advances. On kickoff, bug artifacts transition from New to Inprogress and receive a FeatureId binding to the created fix feature. On completion runs for fixbugs, frontmatter is updated again to reflect completion state, ensuring governance remains the source of truth across intake, execution, and closure.
+The differentiator is the closed-loop workflow between operational failure signals and planning execution. Instead of treating chat logs as informal notes, Bugbash formalizes bug reports as first-class governance records containing structured frontmatter and full incident context (description plus pasted chat log). The fix flow then consumes those records as executable planning inputs, creates express-track fix features, and mutates bug metadata as work advances. On kickoff, bug artifacts transition from New to Inprogress and receive a featureId binding to the created fix feature. On completion runs for fixbugs, frontmatter is updated again to reflect completion state, ensuring governance remains the source of truth across intake, execution, and closure.
 
 ## Project Classification
 
@@ -45,7 +45,7 @@ The differentiator is the closed-loop workflow between operational failure signa
 - Lens developers can capture a bug in one run using intake prompt input: title, description, and pasted chat log.
 - Each intake run creates exactly one governance bug artifact under a bugs folder with valid frontmatter.
 - Developers can run fixbugs once to process all New bugs without manual per-bug routing.
-- Developers can clearly trace each bug to its created fix feature through FeatureId linkage in bug frontmatter.
+- Developers can clearly trace each bug to its created fix feature through featureId linkage in bug frontmatter.
 
 ### Business Success
 
@@ -56,10 +56,10 @@ The differentiator is the closed-loop workflow between operational failure signa
 
 ### Technical Success
 
-- Intake prompt enforces required frontmatter fields: title, description, status, FeatureId.
+- Intake prompt enforces required frontmatter fields: title, description, status, featureId.
 - Allowed status values are constrained to New, Inprogress, Fixed.
 - Fixbugs flow creates express-track features for all New bug files in a single run.
-- On fix start, bug frontmatter is atomically updated to Inprogress and FeatureId set.
+- On fix start, bug frontmatter is atomically updated to Inprogress and featureId set.
 - On fix completion run, corresponding bug frontmatter is updated to Fixed.
 - Workflow only considers artifacts under new-codebase scope.
 
@@ -67,7 +67,7 @@ The differentiator is the closed-loop workflow between operational failure signa
 
 - 100% of new bug entries created as markdown artifacts with complete required frontmatter.
 - 100% of New bugs processed by fixbugs in batch mode per run.
-- 100% of bugs moved New -> Inprogress during kickoff with non-empty FeatureId.
+- 100% of bugs moved New -> Inprogress during kickoff with non-empty featureId.
 - 100% of completed fixbugs runs update associated bug status to Fixed.
 - 0 cross-scope updates outside new-codebase artifacts.
 
@@ -76,10 +76,10 @@ The differentiator is the closed-loop workflow between operational failure signa
 ### MVP - Minimum Viable Product
 
 - Intake prompt creates one bug file per run in governance bugs folder.
-- Frontmatter schema enforced: title, description, status, FeatureId.
+- Frontmatter schema enforced: title, description, status, featureId.
 - Fixbugs prompt scans New bug files and creates express-track features in batch.
 - Status transition logic implemented: New -> Inprogress at kickoff, then Fixed on completion run.
-- FeatureId synchronization into each bug artifact implemented.
+- featureId synchronization into each bug artifact implemented.
 
 ### Growth Features (Post-MVP)
 
@@ -100,8 +100,8 @@ The differentiator is the closed-loop workflow between operational failure signa
 
 Cris is in a live Lens session when a prompt flow fails in a way that blocks forward progress. Instead of opening side notes or losing context, Cris runs the bug intake prompt immediately.
 In the opening scene, frustration is high because the issue is reproducible but fragile in memory. Cris pastes a concise description of what went wrong and the relevant chat log transcript.
-During rising action, the intake prompt validates required frontmatter fields (title, description, status, FeatureId) and creates a single new bug artifact under the governance bugs folder scoped to new-codebase.
-The climax is the moment the bug is stored as canonical governance state with status New and an empty or placeholder FeatureId awaiting fix assignment.
+During rising action, the intake prompt validates required frontmatter fields (title, description, status, featureId) and creates a single new bug artifact under the governance bugs folder scoped to new-codebase.
+The climax is the moment the bug is stored as canonical governance state with status New and an empty or placeholder featureId awaiting fix assignment.
 The resolution is confidence: the bug is no longer in chat history, it is now trackable, auditable, and ready for automated remediation flow.
 
 ### Journey 2: Primary User Edge Case (Lens Developer, Ambiguous/Noisy Incident)
@@ -117,7 +117,7 @@ Failure scenario handled: if required fields are missing, prompt blocks creation
 
 A Lens developer acting as fix orchestrator starts a fixbugs run at the beginning of a remediation cycle.
 Opening scene: multiple bug files are in New state; manual per-bug feature creation would be slow and inconsistent.
-Rising action: fixbugs scans only new-codebase bug artifacts with status New, creates express-track features in batch, and binds each bug to its created feature by updating FeatureId.
+Rising action: fixbugs scans only new-codebase bug artifacts with status New, creates express-track features in batch, and binds each bug to its created feature by updating featureId.
 Climax: each processed bug transitions atomically New -> Inprogress with traceable feature linkage.
 Resolution: the bug queue now reflects active work-in-progress with deterministic ownership and execution context.
 Failure scenario handled: partial batch failures should not silently skip updates; failed items remain New with explicit error reporting.
@@ -126,7 +126,7 @@ Failure scenario handled: partial batch failures should not silently skip update
 
 A second Lens developer is asked, "What is being fixed right now and why?"
 Opening scene: without structured linkage, support would have to search chat transcripts and guess mapping to features.
-Rising action: support reads governance bug artifacts, filters by Inprogress, and follows FeatureId to active fix features and expressplan outputs.
+Rising action: support reads governance bug artifacts, filters by Inprogress, and follows featureId to active fix features and expressplan outputs.
 Climax: support can answer status and provenance quickly from governance truth, not tribal memory.
 Resolution: escalation and communication become fast and accurate because bug state, source context, and fix feature are connected.
 
@@ -134,17 +134,17 @@ Resolution: escalation and communication become fast and accurate because bug st
 
 A workflow maintainer wants to build downstream automation that reacts to bug lifecycle state.
 Opening scene: they need stable metadata transitions to trigger notifications and reporting.
-Rising action: automation watches frontmatter status and FeatureId changes only in new-codebase scope.
+Rising action: automation watches frontmatter status and featureId changes only in new-codebase scope.
 Climax: completion run for fixbugs updates bug frontmatter to Fixed, enabling reliable done-state triggers.
 Resolution: external automation remains simple because lifecycle transitions are explicit and standardized in markdown frontmatter.
 
 ### Journey Requirements Summary
 
 - Intake must create exactly one bug artifact per run.
-- Required frontmatter must include: title, description, status, FeatureId.
+- Required frontmatter must include: title, description, status, featureId.
 - Status enum must be constrained to New, Inprogress, Fixed.
 - Fixbugs must batch-process all New bugs in one run.
-- Fixbugs kickoff must update both status (to Inprogress) and FeatureId.
+- Fixbugs kickoff must update both status (to Inprogress) and featureId.
 - Fix completion run must update status to Fixed for linked bugs.
 - All reads/writes must be scoped to new-codebase artifacts only.
 - Workflow must preserve raw chat log evidence while enabling structured lifecycle automation.
@@ -164,10 +164,10 @@ Resolution: external automation remains simple because lifecycle transitions are
   - title
   - description
   - status (New, Inprogress, Fixed)
-  - FeatureId
+  - featureId
 - Status transitions must be deterministic and valid:
   - intake sets New
-  - fix kickoff sets Inprogress and assigns FeatureId
+  - fix kickoff sets Inprogress and assigns featureId
   - fix completion sets Fixed
 - Batch safety requirement: fixbugs processes all New items, but failed items must remain New with explicit failure reporting.
 - Idempotency requirement: reruns must not duplicate bug files or create conflicting feature mappings.
@@ -189,8 +189,8 @@ Resolution: external automation remains simple because lifecycle transitions are
   - Mitigation: hard path guard and explicit scope validation before any write.
 - Risk: partial batch updates leave ambiguous state.
   - Mitigation: transactional per-item update logic and per-item outcome log.
-- Risk: stale or missing FeatureId linkage.
-  - Mitigation: require FeatureId write confirmation after feature creation; block status promotion when linkage fails.
+- Risk: stale or missing featureId linkage.
+  - Mitigation: require featureId write confirmation after feature creation; block status promotion when linkage fails.
 - Risk: low-quality incident input reduces fix quality.
   - Mitigation: required description plus full chat log capture in intake prompt.
 
@@ -229,7 +229,7 @@ Resolution: external automation remains simple because lifecycle transitions are
 - Risk: false confidence from low-quality pasted chat logs.
   - Mitigation: required structured description plus full transcript retention for auditability.
 - Risk: lifecycle drift between bug and feature entities.
-  - Mitigation: mandatory FeatureId linkage checks before status promotion.
+  - Mitigation: mandatory featureId linkage checks before status promotion.
 
 ## BMAD Workflow Specific Requirements
 
@@ -242,12 +242,12 @@ Bugbash is a BMAD workflow that orchestrates lifecycle actions across governance
 - Intake workflow:
   - capture one bug per run
   - persist bug artifact under new-codebase bugs folder
-  - enforce required frontmatter: title, description, status, FeatureId
+  - enforce required frontmatter: title, description, status, featureId
 - Fix workflow:
   - discover all bugs with status New in new-codebase scope
-  - create express-track features for each bug
+  - create one express-track feature for the batch of New bugs (N bugs → 1 feature)
   - run expressplan using each bug artifact body (description + chat log)
-  - update bug frontmatter to Inprogress and assign FeatureId
+  - update bug frontmatter to Inprogress and assign featureId
 - Completion workflow:
   - on fix completion, resolve linked bug artifacts
   - update status to Fixed
@@ -257,7 +257,7 @@ Bugbash is a BMAD workflow that orchestrates lifecycle actions across governance
 - Allowed status values: New, Inprogress, Fixed
 - Valid transitions:
   - intake: unset/new artifact -> New
-  - fix kickoff: New -> Inprogress (+ FeatureId assignment)
+  - fix kickoff: New -> Inprogress (+ featureId assignment)
   - completion: Inprogress -> Fixed
 - Transition safety:
   - per-item validation and failure isolation
@@ -292,7 +292,7 @@ Core User Journeys Supported:
 - Single-run bug intake from failure description + pasted chat log.
 - Batch fix kickoff processing all New bug artifacts at once.
 - Completion run updating linked bug artifacts to Fixed.
-- Operational traceability journey via status + FeatureId linkage.
+- Operational traceability journey via status + featureId linkage.
 
 Must-Have Capabilities:
 
@@ -302,7 +302,7 @@ Must-Have Capabilities:
   - title
   - description
   - status
-  - FeatureId
+  - featureId
 - Valid status enum and transition logic:
   - New
   - Inprogress
@@ -311,7 +311,7 @@ Must-Have Capabilities:
   - discover all New bugs
   - create express-track feature per bug
   - run expressplan with bug artifact content
-  - update status to Inprogress and set FeatureId
+  - update status to Inprogress and set featureId
 - Completion behavior:
   - resolve linked bugs
   - set status to Fixed
@@ -377,9 +377,9 @@ Resource Risks:
 - FR13: The fix workflow can discover all bug artifacts with status New within new-codebase scope.
 - FR14: The fix workflow can create an express-track feature for each discovered New bug.
 - FR15: The fix workflow can execute expressplan using each bug artifact's description and chat log content.
-- FR16: The fix workflow can write FeatureId linkage into bug frontmatter after feature creation.
-- FR17: The workflow can prevent promotion to Inprogress when FeatureId linkage is not established.
-- FR18: The completion workflow can resolve linked bug records by FeatureId before setting Fixed.
+- FR16: The fix workflow can write featureId linkage into bug frontmatter after feature creation.
+- FR17: The workflow can prevent promotion to Inprogress when featureId linkage is not established.
+- FR18: The completion workflow can resolve linked bug records by featureId before setting Fixed.
 
 ### Batch Execution and Operational Control
 
@@ -401,7 +401,7 @@ Resource Risks:
 
 - FR29: Two Lens developers can operate the workflow concurrently without changing the lifecycle model.
 - FR30: Developers can inspect bug records to determine current status and linked feature work.
-- FR31: Developers can identify in-progress remediation by reading status plus FeatureId from bug artifacts.
+- FR31: Developers can identify in-progress remediation by reading status plus featureId from bug artifacts.
 - FR32: Developers can distinguish completed fixes from active fixes using frontmatter state only.
 
 ## Non-Functional Requirements
@@ -416,7 +416,7 @@ Resource Risks:
 
 - Workflow can prevent writes outside the new-codebase scope through mandatory path validation before mutation.
 - Bug artifacts can preserve chat-log content without exposing data outside governance-authorized repositories.
-- Only authorized Lens developer workflows can mutate bug status or FeatureId fields.
+- Only authorized Lens developer workflows can mutate bug status or featureId fields.
 - Feature linkage mutations can be auditable via git history for each changed bug artifact.
 
 ### Reliability
@@ -428,7 +428,7 @@ Resource Risks:
 
 ### Integration
 
-- Fix workflow can integrate with feature creation using express track and consume returned FeatureId values.
+- Fix workflow can integrate with feature creation using express track and consume returned featureId values.
 - Fix workflow can integrate with expressplan execution using each bug artifact's description and chat log body.
 - Completion workflow can integrate with fix completion signals to update linked bug records to Fixed.
 
