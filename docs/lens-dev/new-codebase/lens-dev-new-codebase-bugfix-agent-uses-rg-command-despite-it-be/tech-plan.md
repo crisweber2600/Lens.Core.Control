@@ -1,0 +1,177 @@
+---
+feature: lens-dev-new-codebase-bugfix-agent-uses-rg-command-despite-it-be
+doc_type: tech-plan
+status: draft
+track: express
+updated_at: "2026-05-03T23:42:00Z"
+depends_on: []
+blocks: []
+key_decisions:
+  - "B3 (step3 routing): The git-orchestration-ops.py step3 route maps to {featureId}-dev; FinalizePlan SKILL.md requires {featureId} (main feature branch) — fix routing table"
+  - "B4 (pull-request flag): Add --pull-request to update subparser in feature-yaml-ops.py and wire it to set links.pull_request in feature.yaml"
+  - "B2 (PowerShell): Prohibit PowerShell heredoc for multi-file text replacement; use Python with explicit encoding"
+open_questions:
+  - "B3: Confirm what the FinalizePlan SKILL.md step3 contract says is the correct target branch"
+---
+
+# Tech Plan — Environment, Orchestration and Tooling Fixes
+
+## Architecture Overview
+
+All fixes are self-contained, single-file changes (or AGENTS.md additions) in the source repo. No new files are created. No shared interfaces are changed beyond the `feature-yaml-ops.py` CLI surface addition (additive only, backward-compatible).
+
+| Bug | File to Change | Change Type |
+|-----|----------------|-------------|
+| B1 — rg not available | `AGENTS.md` | Documentation / wording fix |
+| B2 — PowerShell \r\n | Agent skill instruction + AGENTS.md | Instruction fix |
+| B3 — step3 wrong branch | `skills/lens-git-orchestration/scripts/git-orchestration-ops.py` | Logic fix |
+| B4 — missing --pull-request | `skills/lens-feature-yaml/scripts/feature-yaml-ops.py` | CLI addition |
+| B5 — gh pr no history check | Agent skill instruction + AGENTS.md | Instruction fix |
+| B6 — no branch mismatch warning | `skills/lens-git-orchestration/scripts/git-orchestration-ops.py` | Behavior addition |
+
+---
+
+## B1 — rg command unavailable
+
+**Root cause:** `AGENTS.md` documents `rg is not a command.` but the phrasing is easily missed (bare text, not a formatted rule block). The agent picks `rg` by default before falling back to `grep`.
+
+**Fix:** Reformat the AGENTS.md `Common Terminal Errors & Fixes` section to match the documented example format, making the `rg` unavailability prominent:
+```markdown
+**Error**: `rg: command not found` (or similar)
+**Cause**: `ripgrep (rg) is not installed in this environment`
+**Fix**: Use `grep` instead of `rg` for all text searches
+```
+
+**Testing:** None required (documentation fix). Verify manually that agent no longer invokes `rg` after the AGENTS.md update is applied.
+
+---
+
+## B2 — PowerShell bulk-replace injects `\r\n`
+
+**Root cause:** When PowerShell `-Command` heredocs or `$ExecutionContext.InvokeCommand` expand replacement strings containing `\r\n`, they treat them as two-char literal tokens, not as actual CR+LF. Files get corrupted with literal `\r\n` text.
+
+**Fix:** Add an explicit AGENTS.md rule prohibiting PowerShell for multi-file text replacement when the replacement string contains escape sequences. Rule: use Python with `pathlib` + `str.replace()` or `re.sub()` and explicit `encoding="utf-8"` for all bulk prompt-file replacement operations.
+
+**AGENTS.md addition:**
+```markdown
+**Error**: Prompt files contain literal `\r\n` text after bulk replace
+**Cause**: PowerShell heredoc replacement does not expand `\r\n` as newlines
+**Fix**: Use Python for multi-file text replacement — never PowerShell `-Command` with regex replacements on prompt files
+```
+
+**Testing:** No code change; documentation fix. Python replacement pattern:
+```python
+from pathlib import Path
+for p in Path(".github/prompts").glob("*.prompt.md"):
+    content = p.read_text(encoding="utf-8")
+    content = content.replace("OLD", "NEW")
+    p.write_text(content, encoding="utf-8")
+```
+
+---
+
+## B3 — commit-artifacts step3 wrong branch (HIGH)
+
+**Root cause:** `branch_for_phase_write()` in `git-orchestration-ops.py` maps `finalizeplan step3` to `{feature_id}-dev`. The FinalizePlan SKILL.md step3 contract specifies the downstream bundle must be committed on the `{featureId}` branch (main feature branch, no suffix). The `-dev` routing is wrong for this step.
+
+**Current routing (line 199):**
+```python
+if normalized_step in {"step3", "3", "finalizeplan-step3"}:
+    return f"{feature_id}-dev", "finalizeplan_step_3_to_dev"
+```
+
+**Fix:** Change step3 to route to `feature_id` (no suffix) with an updated rule name:
+```python
+if normalized_step in {"step3", "3", "finalizeplan-step3"}:
+    return feature_id, "finalizeplan_step_3_to_feature"
+```
+
+**Verify FinalizePlan contract:** Load `lens-finalizeplan` SKILL.md and confirm step3 target branch before applying.
+
+**Impact:** Only affects `commit-artifacts` calls with `--phase finalizeplan --phase-step step3`. Step1 and step2 routing unchanged.
+
+**Testing:**
+- Unit test: `branch_for_phase_write("feat-abc", "finalizeplan", "step3")` → `("feat-abc", "finalizeplan_step_3_to_feature")`
+- Unit test: `branch_for_phase_write("feat-abc", "finalizeplan", "step2")` → `("feat-abc-plan", ...)`  still passes
+
+---
+
+## B4 — feature-yaml-ops.py missing --pull-request
+
+**Root cause:** `feature.yaml` schema has `links.pull_request` but the `update` subparser only exposes `--phase`, `--docs-path`, `--governance-docs-path`, `--target-repos`, and `--milestones`. There is no `--pull-request` argument.
+
+**Fix:** Add `--pull-request` to the `update_parser` (line ~557 in `feature-yaml-ops.py`) and handle it in the update logic to set `links.pull_request` in the YAML.
+
+**Addition to update_parser:**
+```python
+update_parser.add_argument("--pull-request", required=False, help="PR URL to set in feature.yaml links.pull_request")
+```
+
+**Handler:** In the `update` command body, check `if args.pull_request: feature_data["links"]["pull_request"] = args.pull_request`
+
+**Backward compatibility:** Additive only. Existing callers unaffected.
+
+**Testing:**
+- `feature-yaml-ops.py update --feature-id X --pull-request https://github.com/... --governance-repo Y` → sets `links.pull_request` in feature.yaml
+
+---
+
+## B5 — gh pr create targets main without history check
+
+**Root cause:** The agent (or skill instruction) runs `gh pr create --base main` without first verifying that the current branch shares history with `main`. When the branch was created from `develop`, there is no common ancestor with `main`, causing GitHub to reject the PR.
+
+**Fix:** Add an AGENTS.md rule and update skill instructions to require a `git merge-base` check before any `gh pr create` call:
+
+**AGENTS.md addition:**
+```markdown
+**Error**: `gh pr create` fails with no common ancestor / no shared history
+**Cause**: Branch was created from `develop` (or another non-main base) but `--base main` was passed
+**Fix**: Run `git merge-base --is-ancestor HEAD main` first; if it fails, use `--base develop` instead
+```
+
+**Check pattern:**
+```bash
+git merge-base --is-ancestor $(git merge-base HEAD main) main 2>/dev/null && BASE=main || BASE=develop
+gh pr create --base "$BASE" ...
+```
+
+**Testing:** Documentation fix. The pattern can be exercised manually on the current repo branches.
+
+---
+
+## B6 — No branch mismatch warning
+
+**Root cause:** `commit_artifacts` in `git-orchestration-ops.py` resolves an expected branch via `branch_for_phase_write()` and compares it to the current branch. When they differ, it currently returns a hard error (or proceeds silently). There is no explicit "warning and confirmation" path.
+
+**Current behavior (lines ~519–546):** When `expected_branch != cb` it emits a structured `status: error` response. There is no distinction between "wrong branch, refusing" and "different branch, warning user".
+
+**Fix:** Add a `--allow-branch-mismatch` flag and a dedicated JSON warning output when the resolved branch ≠ current branch. When the mismatch is detected **without** `--allow-branch-mismatch`, emit:
+```json
+{
+  "status": "warn",
+  "warning": "branch_mismatch",
+  "current_branch": "...",
+  "expected_branch": "...",
+  "detail": "Resolved branch differs from current. Pass --allow-branch-mismatch to proceed."
+}
+```
+When `--allow-branch-mismatch` is passed, proceed with the commit but include the warning in the output.
+
+**Files changed:** `git-orchestration-ops.py` (add CLI flag, update branch-check logic)
+
+**Testing:**
+- Unit test: resolve step3 to `feat-abc`, check on `feat-abc-plan` → returns `status: warn` with mismatch detail
+- Unit test: same scenario with `--allow-branch-mismatch` → proceeds with commit, warning in output
+
+---
+
+## Data / Artifact Contracts
+
+- `feature.yaml` schema: `links.pull_request` field already present; no schema change
+- `git-orchestration-ops.py` JSON output: existing `status: error` shape preserved; new `status: warn` shape added (additive)
+- `AGENTS.md`: 3 new formatted error/fix blocks added to `Common Terminal Errors & Fixes` section
+
+## Rollout
+
+All changes are in the source repo `feature/lens-dev-new-codebase-bugfix-agent-uses-rg-command-despite-it-be` branch, targeting `develop`.
+Single PR covering all 6 bug fixes; changes are independent and can be reviewed per-file.
