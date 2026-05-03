@@ -1,0 +1,36 @@
+feature: lens-dev-new-codebase-bugfix-bug-fixer-uses-excessive-find-probi
+doc_type: sprint-status
+status: approved
+track: express
+domain: lens-dev
+service: new-codebase
+updated_at: '2026-05-03T19:15:00Z'
+sprint_number: 1
+sprint_goal: Fix bug-fixer conductor path ambiguity and commit stub truncation regression guard
+stories:
+  - id: "1.1"
+    title: Fix SKILL.md preflight path and working directory
+    epic: 1
+    points: 2
+    status: Ready
+    assignee: crisweber2600
+    dependencies: []
+    notes: >
+      Edit TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/bmad-lens-bug-fixer/SKILL.md
+      to specify exact CWD and script path for preflight invocation.
+  - id: "2.1"
+    title: Commit and test derive-feature-id stub truncation fix
+    epic: 2
+    points: 1
+    status: Ready
+    assignee: crisweber2600
+    dependencies: []
+    notes: >
+      bug-fixer-ops.py fix already in working tree. Commit to lens.core.src feature branch
+      and add regression test asserting len(feature_id) <= 64.
+totals:
+  stories: 2
+  points: 3
+  ready: 2
+  inprogress: 0
+  done: 0
