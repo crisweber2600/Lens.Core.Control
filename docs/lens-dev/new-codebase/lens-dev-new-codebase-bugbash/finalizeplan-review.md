@@ -2,13 +2,13 @@
 feature: lens-dev-new-codebase-bugbash
 doc_type: finalizeplan-review
 status: approved
-goal: "Final adversarial review of all staged planning artifacts; governance cross-check; action items before dev."
+goal: "Final adversarial review of all staged planning artifacts; governance cross-check; action items before dev and post-dev validation."
 key_decisions:
-  - Three critical findings identified; two require resolution before dev, one is a documentation alignment
-  - Architecture bug storage path is stale — tech-plan status-folder model is canonical
-  - Bug write authority must be explicit — scripts write bug artifacts directly (bugs/ is operational, not governance-mirror)
-  - publish-to-governance --update-feature-index flag existence must be verified
-  - All 32 FRs covered in epics/stories; no coverage gaps
+  - Three pre-dev critical findings identified; all resolved before/during implementation
+  - Post-dev review (manual-rerun): PASS-WITH-WARNINGS with 2 MEDIUM follow-ups
+  - featureId empty-string guard missing at script layer — CLI bypass risk (FINDING-PD01)
+  - Orphaned Inprogress recovery path undocumented — operational gap (FINDING-PD03)
+  - All 32 FRs implemented; 61/61 regression tests passing
 open_questions: []
 depends_on:
   - prd.md
@@ -16,7 +16,8 @@ depends_on:
   - epics.md
   - tech-plan.md
 blocks: []
-updated_at: 2026-05-03T23:30:00Z
+updated_at: 2026-05-03T00:00:00Z
+post_dev_updated_at: 2026-05-03T02:00:00Z
 ---
 
 # FinalizePlan Review — Bugbash
@@ -217,3 +218,87 @@ Regression Section 7.2 tests scope violations, but does not test what happens wh
 **Verdict:** PASS-WITH-WARNINGS — planning bundle is complete and coherent. HIGH items (A1, A2) resolved in this PR. Six LOW items to be addressed at story level.
 
 **Recommended next step:** Proceed to sprint planning and Story 1.3 implementation.
+
+---
+
+---
+
+# Post-Dev Adversarial Review (Manual Rerun — 2026-05-03)
+
+**Source:** manual-rerun after dev completion
+**Reviewer:** lens-adversarial-review skill
+**Scope:** Implementation artifacts vs. planning contract; blind-spot follow-ups from prior review
+**Regression gate:** 61/61 passing
+
+---
+
+## Pre-Dev Action Items — Final Disposition
+
+| ID | Priority | Item | Status |
+|----|---------|------|--------|
+| A1 | HIGH | Bug storage path aligned to status-folder model | ✅ Resolved in implementation |
+| A2 | HIGH | bugs/ is operational state; direct script writes explicit | ✅ Resolved in implementation |
+| A3 | MEDIUM | `--update-feature-index` flag superseded; `init-feature-ops.py create` handles feature-index natively | ✅ Resolved by tech-plan update |
+| A4 | LOW (BS-1) | `mkdir(parents=True, exist_ok=True)` in bug-reporter-ops.py + test | ✅ Resolved in Story 1.1 |
+| A5 | LOW (BS-2) | SHA256(title+description)[:8] slug — collision-resistant for distinct bugs; idempotent for same bug | ✅ Resolved by design choice |
+| A6 | LOW (BS-3) | "0 bugs discovered. Queue is clean." message in SKILL.md Phase 1 | ✅ Resolved in Story 2.1 |
+| A7 | LOW (BS-4) | `assert_governance_repo_exists()` in all 3 scripts; 3 exit-1 tests | ✅ Resolved in Story 1.3 |
+
+---
+
+## Post-Dev Findings
+
+### FINDING-PD01 — featureId emptiness not validated at script layer (MEDIUM)
+
+**Affected:** `bug-fixer-ops.py` `cmd_move_to_inprogress`
+`validate_transition("New", "Inprogress")` checks state machine only. `--feature-id ""` accepted without error. SKILL.md orchestration path is safe (Phase 2 always runs before Phase 3), but a direct CLI call bypasses this.
+**Action:** Add `if not feature_id.strip(): sys.exit(1)` guard in `cmd_move_to_inprogress`.
+
+### FINDING-PD02 — Planning artifacts still `status: draft` (LOW)
+
+**Affected:** `prd.md`, `tech-plan.md`
+Per repo convention, dev-ready artifacts carry `status: approved`. Both remain `status: draft`.
+**Action:** Update both files to `status: approved`.
+
+### FINDING-PD03 — Orphaned Inprogress recovery path undocumented (MEDIUM)
+
+**Affected:** `bmad-lens-bug-fixer` SKILL.md
+If `--fix-all-new` is interrupted between Phase 3 and Phase 4, bugs are stranded in `Inprogress/` with no `--fix-all-new` visibility. No recovery runbook exists.
+**Action:** Add "Error Recovery" section to `bmad-lens-bug-fixer/SKILL.md`: interrupted sessions should call `--complete {featureId}` or inspect `bugbash-ops.py status-summary` output.
+
+### FINDING-PD04 — pyyaml fallback parses colon-embedded values incorrectly (LOW)
+
+**Affected:** `bug-fixer-ops.py`, `bugbash-ops.py`
+The `yaml=None` fallback `_parse_frontmatter` fails on values like `"Login: Session expires"`. Correct under `uv run --script`; latent risk under direct `python script.py` without pyyaml installed.
+**Action:** Assert pyyaml importable in tests; raise `ImportError` explicitly in fallback path.
+
+### FINDING-PD05 — Tech-plan regression coverage counts stale (LOW)
+
+**Affected:** `tech-plan.md` § 7
+Tech-plan specifies 15 test cases; implementation delivered 61 (scope-guard:10, schema:21, reporter:9, fixer:16, conductor:5).
+**Action:** Update § 7 test counts.
+
+---
+
+## Post-Dev Party-Mode Blind-Spot Challenge
+
+**Bob (QA):** Is `_atomic_move` (write-verify-delete) safe under concurrent fixer sessions on Windows NTFS? Two sessions processing the same slug would race on the source delete.
+
+**Winston (Architect):** The `_update_frontmatter` line parser is correct for the current flat schema. Is the frontmatter spec intentionally frozen, or should a `schema_version: 1` field protect against silent future breakage?
+
+**Sally (UX):** When Phase 4 (expressplan delegation) fails, the SKILL.md outcome report has no ❌ lines — only missing ✅ lines. Is this detectable without also running `bugbash-ops.py status-summary`?
+
+### Open Blind-Spot Questions
+1. Concurrent write safety: does `_atomic_move` need an OS-level lock for Windows NTFS?
+2. Orphaned Inprogress recovery: is the runbook surfaced in `status-summary` output or only in SKILL.md?
+3. Phase 4 failure visibility: is a partial outcome report (no ❌ lines) distinguishable from a successful zero-bug batch?
+4. Should `featureId` emptiness be a schema-level enforcement or CLI-level guard?
+5. Should the bug frontmatter spec include `schema_version: 1` for forward compatibility?
+
+---
+
+## Post-Dev Verdict
+
+**PASS-WITH-WARNINGS**
+
+All 10 stories delivered. All pre-dev action items resolved. 61/61 regression tests passing. Two MEDIUM findings (PD01, PD03) are addressable before PR merge without story-level work. Two LOW findings (PD02, PD05) are documentation updates only.

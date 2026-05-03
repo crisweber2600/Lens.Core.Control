@@ -1,7 +1,7 @@
 ---
 feature: lens-dev-new-codebase-bugbash
 doc_type: prd
-status: draft
+status: approved
 goal: "Establish a closed-loop bug lifecycle for new-codebase: structured governance intake, automated batch fix pipeline, and deterministic status progression from New to Fixed."
 key_decisions: []
 open_questions: []

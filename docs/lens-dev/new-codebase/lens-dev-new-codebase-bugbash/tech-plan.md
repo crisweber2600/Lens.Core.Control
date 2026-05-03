@@ -1,7 +1,7 @@
 ---
 feature: lens-dev-new-codebase-bugbash
 doc_type: tech-plan
-status: draft
+status: approved
 goal: "Define the technical design for bugbash: conductor pattern wiring, bug artifact schema, status state machine, batch fix orchestration, and BMB-first authoring protocol."
 key_decisions:
   - Three commands (lens-bugbash, lens-bug-reporter, lens-bug-fixer) each follow the invariant 3-hop conductor chain
