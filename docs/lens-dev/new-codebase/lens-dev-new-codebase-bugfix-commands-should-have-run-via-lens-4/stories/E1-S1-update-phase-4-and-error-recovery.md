@@ -69,7 +69,16 @@ merges and confirm:
 
 ## Acceptance Criteria
 
-- [ ] Phase 4 steps 18–20 match the spec above (already committed)
-- [ ] Error Recovery step 3 uses explicit SKILL.md load language (already committed)
-- [ ] Source repo PR opened from `fix/preflight-old-patterns` → `develop`
-- [ ] PR URL recorded in `feature.yaml.links.pull_request`
+- [x] Phase 4 steps 18–20 match the spec above (clean-room implementation, commit a47f6da0)
+- [x] Error Recovery step 3 uses explicit SKILL.md load language (commit a47f6da0)
+- [x] Source repo PR opened from `feature/lens-dev-new-codebase-bugfix-commands-should-have-run-via-lens-4` → `develop` (Lens.Core.Src #42)
+- [x] PR URL recorded in `feature.yaml.links.pull_request`
+
+## Dev Agent Record
+
+- implementation_commit: a47f6da0
+- branch: feature/lens-dev-new-codebase-bugfix-commands-should-have-run-via-lens-4
+- base_branch: develop
+- target_repo: lens.core.src
+- completed_at: '2026-05-03T12:00:00Z'
+- notes: Clean-room implementation — fix applied directly on new feature branch off develop (not cherry-picked from fix/preflight-old-patterns).
