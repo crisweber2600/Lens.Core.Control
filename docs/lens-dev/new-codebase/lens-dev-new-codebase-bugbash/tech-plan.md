@@ -283,6 +283,8 @@ bug-reporter-ops.py create-bug
   Exit codes: 0=success, 1=validation failure, 2=scope violation, 3=write error
 ```
 
+> **Write authority:** `bug-reporter-ops.py` writes **directly** to `governance_repo/bugs/New/{slug}.md`. The `bugs/` folder is operational state — not a feature docs mirror — and does not go through `publish-to-governance`. Status mutations (file moves between `bugs/New/`, `bugs/Inprogress/`, `bugs/Fixed/`) are likewise direct file operations; a publish-CLI layer would make atomic moves impossible. Feature docs mirrors under `features/` continue to use `publish-to-governance` exclusively.
+
 **Internal logic:**
 1. Validate required fields (non-empty)
 2. Scope guard: assert governance_repo prefix

@@ -66,9 +66,11 @@ The bugbash feature is a meta-workflow designed to track and fix bugs in the len
 - 2-branch topology: `{featureId}` and `{featureId}-plan`
 
 **Governance Integration Points:**
-- Bug storage path: `governance_repo/bugs/{featureId}/bug.md`
-- Feature registry: `governance_repo/features/lens-dev/new-codebase/{featureId}/`
-- Feature-index sync: BF-3 gap — may require workaround or explicit feature-index updates
+- Bug storage paths (operational state — direct script writes, not publish-to-governance): `governance_repo/bugs/New/{slug}.md`, `governance_repo/bugs/Inprogress/{slug}.md`, `governance_repo/bugs/Fixed/{slug}.md`
+- Feature registry (governance mirror — publish-to-governance only): `governance_repo/features/lens-dev/new-codebase/{featureId}/`
+- Feature-index sync: BF-3 gap — explicit `publish-to-governance --update-feature-index` call after feature creation
+
+> **Write authority note:** `bugs/` is **operational state** written directly by bugbash scripts. It is not a feature docs mirror and does not go through the `publish-to-governance` CLI. Feature docs mirrors (under `features/`) continue to use publish-to-governance exclusively. This distinction is intentional: bug status mutations require direct file moves; a publish-CLI layer would break the status-folder model.
 
 **Lens-Work Dependency:**
 - Bugbash is a **consumer of expressplan**, not a replacement or modification to it
@@ -95,7 +97,7 @@ The bugbash feature is a meta-workflow designed to track and fix bugs in the len
 
 2. **FeatureId Injection & Tracking** — FeatureId must be injected at bug creation, preserved through feature generation, and updated in bug frontmatter during completion. This is a single data contract spanning three workflows (reporter → generator → updater).
 
-3. **Governance Repo Consistency** — All governance writes must follow publish-to-governance CLI semantics; no direct file writes. BF-3 (feature-index sync) is a known gap that impacts all feature generation operations.
+3. **Governance Repo Consistency** — Feature docs mirrors (`features/`) use publish-to-governance exclusively. Bug operational state (`bugs/`) is written directly by scripts — status moves require direct file operations that a publish-CLI layer cannot support. BF-3 (feature-index sync) is a known gap; resolved by explicit `publish-to-governance --update-feature-index` after feature creation.
 
 4. **Batch Atomicity & Error Handling** — If one bug fails during batch fix execution, the batch should not partially complete with inconsistent states. Decisions needed on retry strategy and rollback behavior.
 
