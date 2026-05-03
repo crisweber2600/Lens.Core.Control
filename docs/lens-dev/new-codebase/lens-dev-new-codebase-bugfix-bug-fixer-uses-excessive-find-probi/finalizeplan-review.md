@@ -7,6 +7,12 @@ source: phase-complete
 verdict: pass-with-warnings
 domain: lens-dev
 service: new-codebase
+critical_count: 0
+high_count: 0
+medium_count: 2
+low_count: 2
+carry_forward_blockers: []
+review_format: abc-choice-v1
 updated_at: '2026-05-03T19:10:00Z'
 ---
 
@@ -18,10 +24,10 @@ updated_at: '2026-05-03T19:10:00Z'
 
 ## Artifacts Reviewed
 
-- `business-plan.md`
-- `tech-plan.md`
-- `sprint-plan.md`
-- `expressplan-adversarial-review.md` (predecessor review)
+- [`business-plan.md`](business-plan.md)
+- [`tech-plan.md`](tech-plan.md)
+- [`sprint-plan.md`](sprint-plan.md)
+- [`expressplan-adversarial-review.md`](expressplan-adversarial-review.md) (predecessor review)
 
 ## Findings
 
@@ -84,7 +90,7 @@ explicitly deferred and out of scope for this feature.
 ## Verdict Summary
 
 | Severity | Count |
-|---|---|
+| --- | --- |
 | Critical | 0 |
 | Medium | 2 |
 | Low | 2 |
