@@ -1,0 +1,11 @@
+sprint_number: 1
+feature: lens-dev-new-codebase-bugfix-commands-should-have-run-via-lens-4
+status: not-started
+updated_at: '2026-05-03T00:00:00Z'
+stories:
+  - id: E1-S1
+    title: Update Phase 4 and Error Recovery in bmad-lens-bug-fixer/SKILL.md
+    type: fix
+    points: 1
+    status: ready-for-dev
+    epic: 1
