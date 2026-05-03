@@ -9,7 +9,7 @@ key_decisions:
   - Per-item failure isolation: failed bugs remain in prior valid state (New); successful bugs proceed independently
   - Status mutations at phase boundaries (New → Inprogress → Fixed) with explicit commits
   - Self-service developer assignment (runner becomes primary assignee)
-  - Explicit feature-index sync via publish-to-governance (BF-3 workaround)
+  - Feature creation via bmad-lens-init-feature (init-feature-ops.py create) — handles feature-index, summary.md, and branch commands natively
   - Bugbash implemented as LENS Conductor Pattern (thin orchestrator delegating to shared utilities)
   - Release prompts authored via bmad-workflow-builder; SKILL.md via bmad-module-builder (BMB-first)
 open_questions: []
@@ -62,13 +62,14 @@ The bugbash feature is a meta-workflow designed to track and fix bugs in the len
 - `light-preflight.py` exit-code contract (exit 0 = proceed, non-zero = stop)
 - `publish-to-governance` CLI path for governance mutation
 - `feature.yaml` schema v4 (all fields read-only for this rewrite)
-- `featureId` formula: `{domain}-{service}-{featureSlug}` (immutable)
+- `featureId` formula: `{domain}-{service}-{featureSlug}` = `lens-dev-new-codebase-bugfix-{ms-timestamp}-{random4hex}` (immutable after creation)
+- Feature artifact produced by `init-feature-ops.py create` uses the existing v4 feature schema (name, featureId, featureSlug, domain, service, phase, track, milestones, team, dependencies, target_repos, links, priority, created, updated, phase_transitions, docs paths) — no schema changes
 - 2-branch topology: `{featureId}` and `{featureId}-plan`
 
 **Governance Integration Points:**
 - Bug storage paths (operational state — direct script writes, not publish-to-governance): `governance_repo/bugs/New/{slug}.md`, `governance_repo/bugs/Inprogress/{slug}.md`, `governance_repo/bugs/Fixed/{slug}.md`
 - Feature registry (governance mirror — publish-to-governance only): `governance_repo/features/lens-dev/new-codebase/{featureId}/`
-- Feature-index sync: BF-3 gap — explicit `publish-to-governance --update-feature-index` call after feature creation
+- Feature creation via bmad-lens-init-feature (init-feature-ops.py create): handles feature.yaml, feature-index sync, summary.md, and branch creation commands natively — no BF-3 workaround needed
 
 > **Write authority note:** `bugs/` is **operational state** written directly by bugbash scripts. It is not a feature docs mirror and does not go through the `publish-to-governance` CLI. Feature docs mirrors (under `features/`) continue to use publish-to-governance exclusively. This distinction is intentional: bug status mutations require direct file moves; a publish-CLI layer would break the status-folder model.
 
@@ -97,7 +98,7 @@ The bugbash feature is a meta-workflow designed to track and fix bugs in the len
 
 2. **FeatureId Injection & Tracking** — FeatureId must be injected at bug creation, preserved through feature generation, and updated in bug frontmatter during completion. This is a single data contract spanning three workflows (reporter → generator → updater).
 
-3. **Governance Repo Consistency** — Feature docs mirrors (`features/`) use publish-to-governance exclusively. Bug operational state (`bugs/`) is written directly by scripts — status moves require direct file operations that a publish-CLI layer cannot support. BF-3 (feature-index sync) is a known gap; resolved by explicit `publish-to-governance --update-feature-index` after feature creation.
+3. **Governance Repo Consistency** — Feature docs mirrors (`features/`) use publish-to-governance exclusively. Bug operational state (`bugs/`) is written directly by scripts — status moves require direct file operations that a publish-CLI layer cannot support. BF-3 (feature-index sync) is resolved natively by `init-feature-ops.py create` which updates feature-index.yaml as part of feature creation.
 
 4. **Batch Atomicity & Error Handling** — If one bug fails during batch fix execution, the batch should not partially complete with inconsistent states. Decisions needed on retry strategy and rollback behavior.
 
@@ -163,7 +164,7 @@ lens-dev-new-codebase-bugbash/
 **Workflow Orchestration:**
 - Two entry points: bug reporter (intake) and bug fixer (batch processing)
 - Batch 2-pass contract: accumulate bugs → process all with pre-approved context
-- Delegation to existing BMAD skills (feature-yaml, expressplan, git-orchestration)
+- Delegation to existing BMAD skills (bmad-lens-init-feature for feature creation, expressplan, git-orchestration)
 
 **Developer Assignment Model:**
 - Two developers assigned at bug creation
@@ -173,7 +174,7 @@ lens-dev-new-codebase-bugbash/
 **Known Gap Workarounds:**
 - BF-1: Branch creation delegated to git-orchestration (bugbash does not directly create branches)
 - BF-2: Username from existing lens context (not stored separately)
-- BF-3: Explicit publish-to-governance call after feature creation to sync feature-index
+- BF-3: Resolved natively by init-feature-ops.py create (feature-index sync is part of the create operation; no separate publish-to-governance call required)
 
 ---
 
@@ -220,6 +221,45 @@ governance_repo/bugs/
 - Execute single expressplan for entire batch
 
 **Rationale:** Automatic grouping (no user selection); atomic batch execution; efficient single feature for N bugs; millisecond timestamp + random 4-char hex suffix prevents collisions even for concurrent same-second runs.
+
+**Feature.yaml schema (v4 — produced by init-feature-ops.py create, unchanged):**
+```yaml
+name: "Bugbash Batch Fix - {timestamp}"
+description: ""
+featureId: lens-dev-new-codebase-bugfix-{ms-timestamp}-{random4hex}
+featureSlug: bugfix-{ms-timestamp}-{random4hex}
+domain: lens-dev
+service: new-codebase
+phase: expressplan
+track: express
+milestones:
+  businessplan: null
+  techplan: null
+  finalizeplan: null
+  dev-ready: null
+  dev-complete: null
+team:
+  - username: {current_runner}
+    role: lead
+dependencies:
+  depends_on: []
+  depended_by: []
+target_repos: []
+links:
+  retrospective: null
+  issues: []
+  pull_request: null
+priority: medium
+created: {timestamp}
+updated: {timestamp}
+phase_transitions:
+  - phase: expressplan
+    timestamp: {timestamp}
+    user: {current_runner}
+docs:
+  path: docs/lens-dev/new-codebase/{featureId}
+  governance_docs_path: features/lens-dev/new-codebase/{featureId}/docs
+```
 
 **Implications:**
 - All bugs in batch succeed or fail together
@@ -317,26 +357,37 @@ fix-all-new Phase 3: Status → Inprogress
 
 ---
 
-### Decision 6: Governance Sync Strategy (BF-3 Workaround)
+### Decision 6: Feature Creation Strategy
 
-**Choice:** Explicit Feature-Index Update
+**Choice:** Delegate to bmad-lens-init-feature (same path as new-feature command)
 
-**Sync Model:**
+**Creation Model:**
 ```
-After feature creation:
-  1. Feature.yaml created via bmad-lens-feature-yaml
-  2. Explicitly call: publish-to-governance --update-feature-index
-  3. Ensure feature-index entry created/updated
-  4. Commit: "[BUGBASH] Sync feature-index for batch feature"
+Feature creation via init-feature-ops.py create:
+  → --governance-repo {governance_repo}
+  → --control-repo {control_repo}
+  → --feature-id bugfix-{ms-timestamp}-{random4hex}  (slug only)
+  → --domain lens-dev
+  → --service new-codebase
+  → --name "Bugbash Batch Fix - {timestamp}"
+  → --track express
+  → --username {current_runner}
+  → [--execute-governance-git]
+
+Creates natively:
+  - feature.yaml (v4 schema)
+  - feature-index.yaml entry (no separate BF-3 workaround needed)
+  - summary.md stub
+  - domain/service container markers
+  Returns: branch creation commands for git-orchestration delegation
 ```
 
-**Rationale:** Works around BF-3 gap; prevents stale index entries; maintains governance consistency; explicit dependency makes gap visible.
+**Rationale:** Reuses the established `new-feature` creation path; keeps governance artifact production consistent across all features; feature-index sync is part of the create operation; no separate CLI call or BF-3 workaround needed.
 
 **Implications:**
-- Requires feature-index CLI endpoint; if endpoint unavailable Story 2.1 is blocked until endpoint is verified or an alternative is documented (no direct write fallback — governance rules prohibit direct feature docs mutations)
-- Extra CLI call per batch (minimal overhead)
-- BF-3 dependency documented as assumption
-- Visibility into when workaround is in effect
+- Bugbash feature creation is behaviorally identical to any other new-feature creation (same v4 schema, same index entry format)
+- Branch creation commands are returned and delegated to git-orchestration (not executed inline)
+- BF-3 gap is resolved transparently by init-feature-ops.py
 
 ---
 
@@ -410,8 +461,7 @@ Bug Fixer (batch)
 | `skills/bmad-lens-bugbash/SKILL.md` | Agent | `bmad-module-builder` (BMB-first) | `lens.core/_bmad/lens-work/skills/` |
 | `scripts/bugbash-ops.py` | Agent | Direct (Python — not bmad-module-builder) | `lens.core/_bmad/lens-work/scripts/` |
 | `bugs/{status}/*.md` | Agent (via bug-reporter) | Control repo artifacts | `governance_repo/bugs/{New\|Inprogress\|Fixed}/` |
-| `feature.yaml` updates | CLI (publish-to-governance) | Governance CLI only | `governance_repo/features/...` |
-| `feature-index.yaml` sync | CLI (publish-to-governance) | Governance CLI only | `governance_repo/` |
+| `feature.yaml` + `feature-index.yaml` + `summary.md` | init-feature-ops.py create | bmad-lens-init-feature (same path as new-feature) | `governance_repo/features/lens-dev/new-codebase/{featureId}/` |
 
 ### Workflow: Fix All New Bugs
 
@@ -425,10 +475,13 @@ Bug Fixer (batch)
    (no commit — batch formation is in-memory only)
 
 **Phase 2: Feature Creation (before status promotion)**
-1. Generate feature via bmad-lens-feature-yaml
-2. Populate feature.yaml: team = [current_runner, backup_developer]
-3. Call publish-to-governance --update-feature-index (BF-3 workaround)
-4. **Commit Phase 2:** `[BUGBASH] Batch {featureId} feature created`
+1. Delegate to bmad-lens-init-feature: `init-feature-ops.py create`
+   - `--feature-id bugfix-{ms-timestamp}-{random4hex}` (slug portion)
+   - `--domain lens-dev --service new-codebase --track express --username {current_runner}`
+   - `[--execute-governance-git]` if governance auto-publish is enabled
+2. init-feature-ops.py creates: feature.yaml (v4 schema), feature-index entry, summary.md, container markers
+3. Branch creation commands returned (delegated to git-orchestration; not executed inline)
+4. **Commit Phase 2:** `[BUGBASH] Batch {featureId} feature created` (via governance git or manual follow-up)
 5. If feature creation fails: stop; all bugs remain New; report error
 
 **Phase 3: Status Transition to Inprogress (only after feature exists)**
@@ -457,7 +510,7 @@ Bug Fixer (batch)
 |-----------|-----------|---|
 | Bug schema | Frontmatter parses | title, description, status, featureId all present |
 | Storage structure | Folders exist | `bugs/New/`, `bugs/Inprogress/`, `bugs/Fixed/` all writable |
-| Feature generation | Feature.yaml v4 valid | featureId matches formula; team array populated |
+| Feature generation | init-feature-ops.py create succeeds | v4 schema compliant; featureId = lens-dev-new-codebase-bugfix-{ms-timestamp}-{random4hex}; feature-index entry created; summary.md written |
 | Status transitions | File moves atomic | No orphaned bugs; all files moved or none |
 | Expressplan execution | Workflow completes | All phase artifacts generated; sprint-status.yaml valid |
 | Feature-index sync | Entry created | Feature appears in `feature-index.yaml` |

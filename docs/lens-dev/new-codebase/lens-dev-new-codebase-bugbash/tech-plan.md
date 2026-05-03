@@ -10,7 +10,7 @@ key_decisions:
   - N bugs → 1 feature per batch; featureId = lens-dev-new-codebase-bugfix-{ms-timestamp}-{random4hex} (millisecond timestamp + random suffix prevents collisions)
   - Three-commit lifecycle: feature-created commit (fix-all-new Phase 2), →Inprogress commit (fix-all-new Phase 3), →Fixed commit (--complete only); fix-all-new uses first two commits only
   - bugs/ is operational state written directly by scripts; feature docs mirrors under features/ use publish-to-governance exclusively (no direct file mutations for feature docs)
-  - Explicit feature-index sync after feature creation (BF-3 workaround)
+  - Feature creation via bmad-lens-init-feature (init-feature-ops.py create) — handles feature-index sync natively; no separate BF-3 workaround required
   - Per-item failure isolation: failed bugs remain in prior valid state with explicit error reporting
 open_questions: []
 depends_on:
@@ -153,11 +153,24 @@ Phase 1: Batch Formation
   → generate featureId = lens-dev-new-codebase-bugfix-{ms-timestamp}-{random4hex}
 
 Phase 2: Feature Creation (BEFORE status promotion)
-  → delegate to bmad-lens-feature-yaml: create feature.yaml
-      featureId = lens-dev-new-codebase-bugfix-{ms-timestamp}-{random4hex}
-      team = [current_runner, backup_developer]
-  → call: publish-to-governance --update-feature-index (BF-3 workaround)
-  → git commit: "[BUGBASH] Batch {featureId} feature created"
+  → delegate to bmad-lens-init-feature: create feature via init-feature-ops.py create
+      --governance-repo {governance_repo}
+      --control-repo {control_repo}
+      --feature-id bugfix-{ms-timestamp}-{random4hex}   (slug portion only)
+      --domain lens-dev
+      --service new-codebase
+      --name "Bugbash Batch Fix - {timestamp}"
+      --track express
+      --username {current_runner}
+      [--execute-governance-git]   (if governance auto-publish is enabled)
+  → init-feature-ops.py creates:
+      - feature.yaml (v4 schema) at governance_repo/features/lens-dev/new-codebase/{featureId}/
+      - feature-index.yaml entry (no separate BF-3 workaround needed — handled natively)
+      - summary.md stub
+      - domain/service container markers if not present
+      - returns branch creation commands (delegated to git-orchestration)
+  → featureId resolved from payload: lens-dev-new-codebase-bugfix-{ms-timestamp}-{random4hex}
+  → git commit (via --execute-governance-git or manual follow-up): governance artifacts
   → if feature creation fails: stop; no bugs touched; report error and exit
 
 Phase 3: Status → Inprogress (only after feature exists)
@@ -263,7 +276,7 @@ Load: {module_path}/_bmad/lens-work/prompts/lens-{command}.prompt.md
 |-----------|----------------|
 | `scripts/light-preflight.py` | Entry gate for all stubs |
 | `scripts/git-orchestration-ops.py` | Branch creation (BF-1), publish-to-governance |
-| `skills/bmad-lens-feature-yaml/` | feature.yaml creation delegation |
+| `skills/bmad-lens-init-feature/` | Feature creation via init-feature-ops.py create (feature.yaml, feature-index, summary.md, branch commands) |
 | `skills/bmad-lens-expressplan/` | Expressplan execution delegation |
 | `lifecycle.yaml` | Phase contracts |
 
@@ -351,6 +364,37 @@ bugbash-ops.py status-summary
   Output (JSON):
     { "New": int, "Inprogress": int, "Fixed": int }
 ```
+
+---
+
+### 5.4 init-feature-ops.py create — Invocation Contract (delegation reference)
+
+`bug-fixer-ops.py` does **not** call `init-feature-ops.py` directly. The SKILL.md conductor delegates to `bmad-lens-init-feature` as a separate skill step. The expected invocation for bugbash:
+
+```bash
+uv run _bmad/lens-work/skills/bmad-lens-init-feature/scripts/init-feature-ops.py create \
+  --governance-repo {governance_repo} \
+  --control-repo {control_repo} \
+  --feature-id bugfix-{ms-timestamp}-{random4hex} \
+  --domain lens-dev \
+  --service new-codebase \
+  --name "Bugbash Batch Fix - {timestamp}" \
+  --track express \
+  --username {current_runner} \
+  [--execute-governance-git]
+```
+
+Required payload fields used by bugbash:
+
+| Field | Use |
+|-------|-----|
+| `featureId` | Canonical ID assigned to all bugs in the batch |
+| `feature_yaml_path` | Path to created feature.yaml (for audit log) |
+| `index_updated` | Must be `true`; if false the batch is aborted |
+| `governance_git_commands` | Relayed to user if `--execute-governance-git` not used |
+| `control_repo_git_commands` | Relayed to user for manual branch creation |
+
+Failure handling: if `status` is `fail`, the Phase 2 step stops; all bugs remain in New; error message from `init-feature-ops.py` is relayed to the user.
 
 ---
 

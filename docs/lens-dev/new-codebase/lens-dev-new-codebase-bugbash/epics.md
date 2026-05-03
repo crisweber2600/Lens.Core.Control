@@ -88,11 +88,11 @@ NFR16 (Scalability): Workflow design can scale to larger bug sets through repeat
 - Conductor pattern: all commands follow 3-hop chain (.github/stub → release prompt → SKILL.md)
 - SKILL.md authored via bmad-module-builder (BMB-first); release prompt via bmad-workflow-builder
 - Bug storage: status-organized folders (bugs/New/, bugs/Inprogress/, bugs/Fixed/)
-- featureId formula: `lens-dev-new-codebase-bugfix-{ms-timestamp}-{random4hex}` (immutable after generation)
+- featureId formula: `lens-dev-new-codebase-bugfix-{ms-timestamp}-{random4hex}` (immutable after generation); resolved by init-feature-ops.py create from slug `bugfix-{ms-timestamp}-{random4hex}` + domain `lens-dev` + service `new-codebase`
 - N bugs → 1 feature per batch; timestamp prevents collisions
 - Three-commit lifecycle: feature-created commit (fix-all-new), →Inprogress commit (fix-all-new), →Fixed commit (--complete only)
 - bugs/ is operational state written directly by scripts (no publish-to-governance for status moves); feature docs mirrors under features/ use publish-to-governance exclusively
-- Explicit feature-index sync via publish-to-governance after feature creation (BF-3 workaround)
+- Feature-index sync handled natively by init-feature-ops.py create (no separate BF-3 workaround CLI call required)
 - All 3 commands (lens-bugbash, lens-bug-reporter, lens-bug-fixer) use same chain topology
 - Scripts reside under `lens.core/_bmad/lens-work/scripts/`
 
@@ -244,7 +244,8 @@ So that all New bugs are routed into remediation in one run without manual per-b
 - Create `lens.core/_bmad/lens-work/prompts/lens-bug-fixer.prompt.md` (release prompt via bmad-workflow-builder)
 - Create `lens.core/_bmad/lens-work/skills/bmad-lens-bug-fixer/SKILL.md` (via bmad-module-builder)
 - Create `lens.core/_bmad/lens-work/scripts/bug-fixer-ops.py` (discovery, batch formation, feature gen)
-- Delegates to bmad-lens-feature-yaml for feature.yaml creation
+- Delegates to bmad-lens-init-feature for feature creation via init-feature-ops.py create (same path as new-feature command)
+- init-feature-ops.py handles feature.yaml (v4 schema), feature-index.yaml entry, summary.md stub, and returns branch creation commands — no BF-3 workaround needed
 - Delegates to git-orchestration for branch creation (BF-1 workaround)
 
 ---
