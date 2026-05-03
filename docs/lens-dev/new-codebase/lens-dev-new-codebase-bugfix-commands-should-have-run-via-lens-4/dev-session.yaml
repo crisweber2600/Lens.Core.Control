@@ -1,0 +1,13 @@
+feature_id: lens-dev-new-codebase-bugfix-commands-should-have-run-via-lens-4
+epic_number: all
+working_branch: feature/lens-dev-new-codebase-bugfix-commands-should-have-run-via-lens-4
+base_branch: develop
+total_stories: 1
+stories_completed: []
+stories_failed: []
+stories_blocked: []
+current_story_index: 0
+last_checkpoint: '2026-05-03T00:00:00Z'
+status: in-progress
+requires_final_pr: true
+final_pr_url: null
