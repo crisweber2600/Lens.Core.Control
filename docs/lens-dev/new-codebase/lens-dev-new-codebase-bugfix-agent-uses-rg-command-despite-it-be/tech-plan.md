@@ -7,11 +7,12 @@ updated_at: "2026-05-03T23:42:00Z"
 depends_on: []
 blocks: []
 key_decisions:
-  - "B3 (step3 routing): The git-orchestration-ops.py step3 route maps to {featureId}-dev; FinalizePlan SKILL.md requires {featureId} (main feature branch) — fix routing table"
+  - "B3 (step3 routing): git-orchestration-ops.py step3 route changed from {featureId}-dev to {featureId} — confirmed correct per FinalizePlan SKILL.md line 99"
   - "B4 (pull-request flag): Add --pull-request to update subparser in feature-yaml-ops.py and wire it to set links.pull_request in feature.yaml"
   - "B2 (PowerShell): Prohibit PowerShell heredoc for multi-file text replacement; use Python with explicit encoding"
-open_questions:
-  - "B3: Confirm what the FinalizePlan SKILL.md step3 contract says is the correct target branch"
+  - "B6 (branch mismatch): Hard error with structured message — NO --allow-branch-mismatch bypass flag"
+  - "B5 (gh pr): Promote from docs-only fix to code fix in git-orchestration-ops.py create-pr (add merge-base check)"
+open_questions: []
 ---
 
 # Tech Plan — Environment, Orchestration and Tooling Fixes
@@ -141,27 +142,26 @@ gh pr create --base "$BASE" ...
 
 ## B6 — No branch mismatch warning
 
-**Root cause:** `commit_artifacts` in `git-orchestration-ops.py` resolves an expected branch via `branch_for_phase_write()` and compares it to the current branch. When they differ, it currently returns a hard error (or proceeds silently). There is no explicit "warning and confirmation" path.
+**Root cause:** `commit_artifacts` in `git-orchestration-ops.py` resolves an expected branch via `branch_for_phase_write()` and compares it to the current branch. When they differ, it currently returns a generic hard error without a clear, actionable description of the mismatch.
 
-**Current behavior (lines ~519–546):** When `expected_branch != cb` it emits a structured `status: error` response. There is no distinction between "wrong branch, refusing" and "different branch, warning user".
+**Revised design (from expressplan review response):** Keep the behavior as a hard error (non-zero exit), but replace the current generic error message with a structured error that includes the current branch, expected branch, and an explicit instruction for the user. Do NOT add a `--allow-branch-mismatch` bypass flag — that flag creates a silent-bypass risk and was rejected in the expressplan adversarial review.
 
-**Fix:** Add a `--allow-branch-mismatch` flag and a dedicated JSON warning output when the resolved branch ≠ current branch. When the mismatch is detected **without** `--allow-branch-mismatch`, emit:
+**Fix:** Update the branch-mismatch error path to emit:
 ```json
 {
-  "status": "warn",
-  "warning": "branch_mismatch",
+  "status": "error",
+  "error": "branch_mismatch",
   "current_branch": "...",
   "expected_branch": "...",
-  "detail": "Resolved branch differs from current. Pass --allow-branch-mismatch to proceed."
+  "detail": "Phase '{phase}' step '{step}' requires branch '{expected}'. Currently on '{current}'. Checkout '{expected}' before committing."
 }
 ```
-When `--allow-branch-mismatch` is passed, proceed with the commit but include the warning in the output.
 
-**Files changed:** `git-orchestration-ops.py` (add CLI flag, update branch-check logic)
+**Files changed:** `git-orchestration-ops.py` (update error message format; no new flags)
 
 **Testing:**
-- Unit test: resolve step3 to `feat-abc`, check on `feat-abc-plan` → returns `status: warn` with mismatch detail
-- Unit test: same scenario with `--allow-branch-mismatch` → proceeds with commit, warning in output
+- Unit test: resolve step3 to `feat-abc`, check on `feat-abc-plan` → returns `status: error`, `error: branch_mismatch`, with both branch names in the detail
+- Acceptance: `commit-artifacts --phase finalizeplan --phase-step step3` on wrong branch exits non-zero with the structured message
 
 ---
 

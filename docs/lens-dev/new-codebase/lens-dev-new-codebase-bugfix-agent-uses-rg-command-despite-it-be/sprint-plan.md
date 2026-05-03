@@ -25,12 +25,11 @@ All stories target `TargetProjects/lens-dev/new-codebase/lens.core.src` and `D:/
 
 ## Story Map
 
-| Story | Bugs | Files | Type |
-|-------|------|-------|------|
-| S1 | B1 (rg), B2 (PS \r\n), B5 (gh pr) | `AGENTS.md` | Documentation only |
-| S2 | B3 (step3 routing), B6 (branch mismatch warning) | `git-orchestration-ops.py` | Code + tests |
-| S3 | B4 (--pull-request flag) | `feature-yaml-ops.py` | Code + tests |
-| S4 | Regression test sweep | `scripts/tests/` | Tests only |
+| Story | Bugs | Files | Type | Repo |
+|-------|------|-------|------|------|
+| S1 | B1 (rg), B2 (PS \r\n), B5 (gh pr) | `AGENTS.md`, `git-orchestration-ops.py` (B5 code fix) | Documentation + code | control repo (AGENTS.md) + source repo (B5) |
+| S2 | B3 (step3 routing), B6 (branch mismatch hard error) | `git-orchestration-ops.py` | Code + tests | source repo |
+| S3 | B4 (--pull-request flag) | `feature-yaml-ops.py` | Code + tests | source repo |
 
 ---
 
@@ -98,31 +97,15 @@ All stories target `TargetProjects/lens-dev/new-codebase/lens.core.src` and `D:/
 
 ---
 
-## S4 — Regression tests for B3 routing fix
-
-**Type:** Tests only  
-**Branch:** feature/lens-dev-new-codebase-bugfix-agent-uses-rg-command-despite-it-be  
-**File:** `_bmad/lens-work/scripts/tests/test-*.py` (add or update)
-
-**Acceptance criteria:**
-- Test suite passes for all changed code paths
-- step3 routing test added (passes with new behavior, would have failed pre-fix)
-- Branch mismatch warning test added
-
-**Estimated effort:** XS (covered in S2 work)
-
----
-
 ## Sequencing and Dependencies
 
 ```
-S1 (docs) — independent, can be done first
-S2 (git-orch) — independent of S3
-S3 (feature-yaml) — independent of S2
-S4 (tests) — part of S2; no separate sprint item needed
+S1 (docs + B5 code fix) — independent; control-repo AGENTS.md commit + source-repo git-orchestration-ops.py commit
+S2 (git-orch B3+B6) — independent of S3; source-repo only
+S3 (feature-yaml B4) — independent of S2; source-repo only
 ```
 
-All stories can be worked concurrently on the same branch.
+Note: S1 requires two separate commit operations in two repos. S2 and S3 are both source-repo commits on the same feature branch, targeting a PR against `develop`.
 
 ## Risk Register
 
