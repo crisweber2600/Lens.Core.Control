@@ -1,0 +1,53 @@
+---
+feature: lens-dev-new-codebase-bugbash
+doc_type: sprint-status
+status: ready
+goal: "3-sprint sequencing for bugbash: scope guard → schema → intake → batch fix → conductor."
+updated_at: 2026-05-03T23:45:00Z
+---
+
+sprints:
+  - id: sprint-1
+    name: "Bug Intake & Storage Foundation"
+    epic: Epic 1
+    stories:
+      - id: "1.3"
+        title: New-Codebase Scope Guard
+        status: not-started
+      - id: "1.2"
+        title: Bug Frontmatter Schema Enforcement
+        status: not-started
+      - id: "1.1"
+        title: Bug Reporter Intake Prompt & Artifact Creation
+        status: not-started
+
+  - id: sprint-2
+    name: "Batch Fix Orchestration"
+    epic: Epic 2
+    stories:
+      - id: "2.1"
+        title: Bug Discovery & Feature Generation
+        status: not-started
+      - id: "2.2"
+        title: Status Mutations — New → Inprogress → Fixed
+        status: not-started
+      - id: "2.3"
+        title: Expressplan Execution & Batch Idempotency
+        status: not-started
+      - id: "2.4"
+        title: Completion Path — Inprogress → Fixed
+        status: not-started
+
+  - id: sprint-3
+    name: "Observability & Conductor Wiring"
+    epic: Epic 3
+    stories:
+      - id: "3.1"
+        title: Main Entry Conductor (lens-bugbash)
+        status: not-started
+      - id: "3.2"
+        title: Per-Bug Outcome Reporting
+        status: not-started
+      - id: "3.3"
+        title: Chain Validation & Regression Tests
+        status: not-started
