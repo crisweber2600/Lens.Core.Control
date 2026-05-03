@@ -418,7 +418,18 @@ Each SKILL.md follows this structural template (per baseline architecture):
 
 ## 7. Regression Coverage
 
-Three categories required before merge:
+Five test modules required before merge. **Actual counts post-implementation:**
+
+| Module | File | Tests |
+|--------|------|-------|
+| Scope Guard | `test-bugbash-scope-guard.py` | 10 |
+| Schema Enforcement | `test-bugbash-schema.py` | 21 |
+| Bug Reporter | `test-bug-reporter-ops.py` | 9 |
+| Bug Fixer | `test-bug-fixer-ops.py` | 18 |
+| Conductor (Bugbash) | `test-bugbash-ops.py` | 6 |
+| **Total** | | **64** |
+
+> Originally specified as 15 test cases across 4 categories. Implementation expanded to 64 tests with pyyaml import guards, featureId empty-string guard, and additional edge-case coverage.
 
 ### 7.1 Schema Validation
 
@@ -456,6 +467,13 @@ Three categories required before merge:
 | Re-run discover-new after bugs moved to Inprogress | 0 bugs discovered |
 | Re-run create-bug with same title+description | "duplicate" result; no second file written (content-hash key matches) |
 | Re-run resolve-bugs for already-Fixed bugs | "already_fixed" result; no error |
+
+### 7.5 Input Guards (added during implementation)
+
+| Test | Expected |
+|------|----------|
+| move-to-inprogress with empty --feature-id | Exit 1; clear error message |
+| pyyaml importable in active environment | Assert passes; explicit ImportError on failure |
 
 ---
 
