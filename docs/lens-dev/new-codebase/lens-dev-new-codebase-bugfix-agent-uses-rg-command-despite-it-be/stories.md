@@ -11,23 +11,14 @@ This document lists all stories for this feature. Full story files are in `stori
 
 ## Epic 1: Agent Environment and Documentation Hardening
 
-### Story 1.1 — Document Unavailable Commands and Unsafe Patterns in AGENTS.md
+### Story 1.1 — Document Unavailable Commands and Unsafe Patterns in AGENTS.md + Add Merge-Base Check to create-pr
 
 **Story file:** `stories/1-1-document-unavailable-commands-and-unsafe-patterns-in-agents-md.md`  
 **Status:** ready-for-dev  
-**Target repo:** control repo (`AGENTS.md`)  
-**FRs covered:** FR1 (rg), FR2 (PowerShell)
+**Target repos:** control repo (`AGENTS.md`) + source repo (`git-orchestration-ops.py`)  
+**FRs covered:** FR1 (rg), FR2 (PowerShell), FR5 (merge-base check)
 
-As a Lens agent, I want AGENTS.md to clearly document `rg` unavailability, the PowerShell heredoc prohibition, and the `create-pr` base-branch requirement, so that I do not waste turns retrying unavailable commands or corrupt prompt files.
-
-### Story 1.2 — Add Merge-Base History Check to git-orchestration-ops.py create-pr
-
-**Story file:** `stories/1-2-add-merge-base-history-check-to-git-orchestration-ops-create-pr.md`  
-**Status:** ready-for-dev  
-**Target repo:** source repo (`git-orchestration-ops.py`)  
-**FRs covered:** FR5 (merge-base check)
-
-As a Lens agent, I want `git-orchestration-ops.py create-pr` to automatically select the correct base branch by comparing merge-base timestamps, so that PRs never target a base branch that shares no history with the head.
+As a Lens agent, I want AGENTS.md to clearly document `rg` unavailability, the PowerShell heredoc prohibition, and the `create-pr` base-branch requirement, and I want `git-orchestration-ops.py create-pr` to automatically select the correct base branch by comparing merge-base timestamps, so that I do not waste turns retrying unavailable commands or corrupt prompt files, and so that PRs never target a base branch that shares no history with the head.
 
 ---
 

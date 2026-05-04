@@ -35,10 +35,9 @@ story_location: docs/lens-dev/new-codebase/lens-dev-new-codebase-bugfix-agent-us
 
 development_status:
   epic-1: backlog
-  1-1-document-unavailable-commands-and-unsafe-patterns-in-agents-md: backlog
-  1-2-add-merge-base-history-check-to-git-orchestration-ops-create-pr: backlog
+  1-1-document-unavailable-commands-and-unsafe-patterns-in-agents-md: ready-for-dev
   epic-1-retrospective: optional
   epic-2: backlog
-  2-1-fix-branch-for-phase-write-step3-routing-and-add-branch-mismatch-hard-error: backlog
-  2-2-add-pull-request-flag-to-feature-yaml-ops-update: backlog
+  2-1-fix-branch-for-phase-write-step3-routing-and-add-branch-mismatch-hard-error: ready-for-dev
+  2-2-add-pull-request-flag-to-feature-yaml-ops-update: ready-for-dev
   epic-2-retrospective: optional

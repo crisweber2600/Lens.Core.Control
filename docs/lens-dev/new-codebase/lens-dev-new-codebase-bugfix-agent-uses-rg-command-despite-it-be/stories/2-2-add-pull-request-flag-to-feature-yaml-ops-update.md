@@ -32,7 +32,7 @@ so that the PR link is stored in the governance record without a CLI error.
 
 ## Dev Notes
 
-**Target file:** `TargetProjects/lens-dev/new-codebase/lens.core.src/skills/lens-feature-yaml/scripts/feature-yaml-ops.py`
+**Target file:** `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/bmad-lens-feature-yaml/scripts/feature-yaml-ops.py`
 
 **Argument parser addition (from tech-plan B4):**
 ```python
@@ -57,7 +57,7 @@ if args.pull_request:
 ### Project Structure Notes
 
 - Source repo path: `TargetProjects/lens-dev/new-codebase/lens.core.src/`
-- Script path: `skills/lens-feature-yaml/scripts/feature-yaml-ops.py`
+- Script path: `_bmad/lens-work/skills/bmad-lens-feature-yaml/scripts/feature-yaml-ops.py`
 - Purely additive change — no existing arguments touched
 
 ### References
@@ -77,4 +77,4 @@ _to be filled by dev agent_
 
 ### File List
 
-- `TargetProjects/lens-dev/new-codebase/lens.core.src/skills/lens-feature-yaml/scripts/feature-yaml-ops.py`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/bmad-lens-feature-yaml/scripts/feature-yaml-ops.py`

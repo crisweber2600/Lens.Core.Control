@@ -16,7 +16,9 @@ so that downstream bundles are committed to the correct branch and mismatches ar
 
 3. **And** `branch_for_phase_write("feat-abc", "finalizeplan", "step2")` returns the existing step2 value — no regression.
 
-4. **Given** `commit-artifacts` is called and `expected_branch != current_branch`, **when** the mismatch is detected, **then** the command exits non-zero and emits:
+4. **Given** `commit-artifacts --phase finalizeplan --phase-step step3` is about to run, **when** the dev agent prepares the commit, **then** the agent must first manually checkout the `{featureId}` branch — `commit-artifacts` does NOT auto-checkout; failure to checkout beforehand will trigger a `branch_mismatch` hard error.
+
+5. **Given** `commit-artifacts` is called and `expected_branch != current_branch`, **when** the mismatch is detected, **then** the command exits non-zero and emits:
 ```json
 {
   "status": "error",
@@ -27,9 +29,9 @@ so that downstream bundles are committed to the correct branch and mismatches ar
 }
 ```
 
-5. **And** no `--allow-branch-mismatch` flag is added; the mismatch is always a hard error.
+6. **And** no `--allow-branch-mismatch` flag is added; the mismatch is always a hard error.
 
-6. **And** unit tests cover: step3 routing, step1/step2 no-regression, and branch-mismatch hard error with correct JSON fields.
+7. **And** unit tests cover: step3 routing, step1/step2 no-regression, and branch-mismatch hard error with correct JSON fields.
 
 ## Tasks / Subtasks
 
@@ -37,18 +39,18 @@ so that downstream bundles are committed to the correct branch and mismatches ar
   - [ ] Locate the step3 routing block (currently: `return f"{feature_id}-dev", "finalizeplan_step_3_to_dev"`)
   - [ ] Change to: `return feature_id, "finalizeplan_step_3_to_feature"`
   - [ ] Verify step1 and step2 routing is unchanged
-- [ ] Task 2: Update branch-mismatch error path (AC: #4, #5)
+- [ ] Task 2: Update branch-mismatch error path (AC: #5, #6)
   - [ ] Locate the branch comparison block in `commit_artifacts`
   - [ ] Replace generic error with structured JSON (see Dev Notes)
   - [ ] Ensure exit code is non-zero; do NOT add `--allow-branch-mismatch` flag
-- [ ] Task 3: Write unit tests (AC: #6)
+- [ ] Task 3: Write unit tests (AC: #7)
   - [ ] Test: `branch_for_phase_write("feat-abc", "finalizeplan", "step3")` returns `("feat-abc", "finalizeplan_step_3_to_feature")`
   - [ ] Test: step1/step2 routing regression guard
   - [ ] Test: branch mismatch emits correct JSON with all required fields
 
 ## Dev Notes
 
-**Target file:** `TargetProjects/lens-dev/new-codebase/lens.core.src/skills/lens-git-orchestration/scripts/git-orchestration-ops.py`
+**Target file:** `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/bmad-lens-git-orchestration/scripts/git-orchestration-ops.py`
 
 **Step3 routing fix (from tech-plan B3, line ~199):**
 ```python
@@ -83,7 +85,7 @@ sys.exit(1)
 ### Project Structure Notes
 
 - Source repo path: `TargetProjects/lens-dev/new-codebase/lens.core.src/`
-- Script path: `skills/lens-git-orchestration/scripts/git-orchestration-ops.py`
+- Script path: `_bmad/lens-work/skills/bmad-lens-git-orchestration/scripts/git-orchestration-ops.py`
 - Two separate changes in the same file (routing table + error message)
 
 ### References
@@ -104,4 +106,4 @@ _to be filled by dev agent_
 
 ### File List
 
-- `TargetProjects/lens-dev/new-codebase/lens.core.src/skills/lens-git-orchestration/scripts/git-orchestration-ops.py`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/bmad-lens-git-orchestration/scripts/git-orchestration-ops.py`
