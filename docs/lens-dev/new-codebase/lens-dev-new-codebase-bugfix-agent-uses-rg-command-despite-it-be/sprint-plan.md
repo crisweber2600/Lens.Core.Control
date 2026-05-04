@@ -3,7 +3,7 @@ feature: lens-dev-new-codebase-bugfix-agent-uses-rg-command-despite-it-be
 doc_type: sprint-plan
 status: draft
 track: express
-updated_at: "2026-05-03T23:44:00Z"
+updated_at: "2026-05-04T00:08:00Z"
 depends_on: []
 blocks: []
 key_decisions:
@@ -17,7 +17,7 @@ open_questions: []
 
 ## Sprint Overview
 
-Single sprint: 6 bugs, 4 stories, 1 branch (`feature/lens-dev-new-codebase-bugfix-agent-uses-rg-command-despite-it-be` from `develop`).
+Single sprint: 6 bugs, 3 stories, 1 branch (`feature/lens-dev-new-codebase-bugfix-agent-uses-rg-command-despite-it-be` from `develop`).
 
 All stories target `TargetProjects/lens-dev/new-codebase/lens.core.src` and `D:/Lens.Core.Control - Copy/AGENTS.md`.
 
@@ -44,11 +44,20 @@ All stories target `TargetProjects/lens-dev/new-codebase/lens.core.src` and `D:/
 - `rg` unavailability is clearly stated with fix = "use grep"
 - PowerShell bulk-replace restriction is documented with Python alternative
 - `gh pr create` history check requirement is documented
+- `git-orchestration-ops.py` `create-pr` subcommand adds a merge-base timestamp comparison: if the merge-base with `develop` is more recent than the merge-base with `main`, use `--base develop`; otherwise use `--base main`
+- When no shared history exists with the selected base, the command exits non-zero with an explicit error message
 
 **Changes:**
 - `D:/Lens.Core.Control - Copy/AGENTS.md`: update the `Common Terminal Errors & Fixes` section
+- `_bmad/lens-work/skills/lens-git-orchestration/scripts/git-orchestration-ops.py`: add merge-base timestamp check to `create-pr`
 
-**Estimated effort:** XS (< 1 hour)
+**Implementation sequence (B5 code fix):**
+1. In `create-pr` handler, run `git merge-base HEAD main` and `git merge-base HEAD develop` to get merge-base SHAs
+2. Compare their commit timestamps using `git log -1 --format="%ct"` on each SHA
+3. Select `develop` as base when its merge-base is more recent; fall back to `main`
+4. If no candidate branch (neither `main` nor `develop`) can resolve a merge-base SHA with HEAD, emit a structured `no_common_ancestor` error and exit non-zero
+
+**Estimated effort:** S (2–4 hours total: XS doc + XS code)
 
 ---
 
@@ -62,15 +71,13 @@ All stories target `TargetProjects/lens-dev/new-codebase/lens.core.src` and `D:/
 **Acceptance criteria:**
 - `branch_for_phase_write("X", "finalizeplan", "step3")` returns `("X", "finalizeplan_step_3_to_feature")`
 - `branch_for_phase_write("X", "finalizeplan", "step1")` still returns `("X-plan", ...)`
-- When expected_branch ≠ current_branch **and** `--allow-branch-mismatch` is NOT passed, `commit-artifacts` returns `status: warn` JSON with `warning: branch_mismatch`, current and expected branch names, and actionable detail
-- When `--allow-branch-mismatch` is passed, commit proceeds with warning in output
-- New `--allow-branch-mismatch` CLI flag is added to the `commit-artifacts` subparser
+- When expected_branch ≠ current_branch, `commit-artifacts` exits non-zero and returns a structured JSON error with `"status": "error"`, `"error": "branch_mismatch"`, `"current_branch"`, `"expected_branch"`, and a human-readable `"detail"` field — no `--allow-branch-mismatch` bypass flag is added
+- **B3 manual-checkout requirement:** `commit-artifacts` does NOT auto-checkout; for `--phase finalizeplan --phase-step step3` the agent must explicitly checkout the `{featureId}` branch before calling `commit-artifacts`
 
 **Implementation sequence:**
 1. Update `branch_for_phase_write()`: change step3 return to `feature_id, "finalizeplan_step_3_to_feature"`
-2. Add `--allow-branch-mismatch` to `ca` (commit-artifacts) argparser
-3. Update branch mismatch check logic to emit `status: warn` vs hard error based on flag
-4. Update existing tests for step3 routing; add mismatch warning tests
+2. Update branch mismatch check logic to emit the structured `status: error` JSON and exit non-zero (remove any warn+proceed path)
+3. Update existing tests for step3 routing; add mismatch hard-error tests
 
 **Estimated effort:** S (2–4 hours)
 
@@ -112,7 +119,7 @@ Note: S1 requires two separate commit operations in two repos. S2 and S3 are bot
 | Risk | Story | Mitigation |
 |------|-------|-----------|
 | Step3 routing fix breaks non-test callers | S2 | Read all call sites in skill SKILL.md files before applying |
-| --allow-branch-mismatch flag causes agents to bypass branch checks | S2 | Make flag opt-in only; do not set as default |
+| Branch mismatch hard error blocks callers that relied on warn+proceed | S2 | Confirm no existing callers depend on silent-proceed; document exit-code contract |
 | --pull-request field creates duplicate with existing links.issues | S3 | Check feature.yaml schema; links.pull_request is already a declared field |
 
 ## Definition of Done

@@ -3,7 +3,7 @@ feature: lens-dev-new-codebase-bugfix-agent-uses-rg-command-despite-it-be
 doc_type: tech-plan
 status: draft
 track: express
-updated_at: "2026-05-03T23:42:00Z"
+updated_at: "2026-05-04T00:08:00Z"
 depends_on: []
 blocks: []
 key_decisions:
@@ -27,7 +27,7 @@ All fixes are self-contained, single-file changes (or AGENTS.md additions) in th
 | B2 — PowerShell \r\n | Agent skill instruction + AGENTS.md | Instruction fix |
 | B3 — step3 wrong branch | `skills/lens-git-orchestration/scripts/git-orchestration-ops.py` | Logic fix |
 | B4 — missing --pull-request | `skills/lens-feature-yaml/scripts/feature-yaml-ops.py` | CLI addition |
-| B5 — gh pr no history check | Agent skill instruction + AGENTS.md | Instruction fix |
+| B5 — gh pr no history check | `AGENTS.md` + `skills/lens-git-orchestration/scripts/git-orchestration-ops.py` | Documentation + code fix |
 | B6 — no branch mismatch warning | `skills/lens-git-orchestration/scripts/git-orchestration-ops.py` | Behavior addition |
 
 ---
@@ -121,22 +121,47 @@ update_parser.add_argument("--pull-request", required=False, help="PR URL to set
 
 **Root cause:** The agent (or skill instruction) runs `gh pr create --base main` without first verifying that the current branch shares history with `main`. When the branch was created from `develop`, there is no common ancestor with `main`, causing GitHub to reject the PR.
 
-**Fix:** Add an AGENTS.md rule and update skill instructions to require a `git merge-base` check before any `gh pr create` call:
+**Fix:** Add a `create-pr` subcommand enhancement to `git-orchestration-ops.py` that performs a merge-base timestamp comparison before selecting the base branch. Also add an AGENTS.md rule documenting the expected behavior.
 
 **AGENTS.md addition:**
 ```markdown
 **Error**: `gh pr create` fails with no common ancestor / no shared history
 **Cause**: Branch was created from `develop` (or another non-main base) but `--base main` was passed
-**Fix**: Run `git merge-base --is-ancestor HEAD main` first; if it fails, use `--base develop` instead
+**Fix**: Use the merge-base timestamp comparison in `create-pr` of `git-orchestration-ops.py`; do not call `gh pr create --base main` directly
 ```
 
-**Check pattern:**
-```bash
-git merge-base --is-ancestor $(git merge-base HEAD main) main 2>/dev/null && BASE=main || BASE=develop
-gh pr create --base "$BASE" ...
+**Algorithm (code fix in `create-pr`):**
+```python
+import subprocess, sys, json
+
+def pick_base_branch(candidates=("main", "develop")):
+    """Return the candidate branch whose merge-base with HEAD is most recent."""
+    best_branch, best_ts = None, -1
+    for branch in candidates:
+        mb = subprocess.run(
+            ["git", "merge-base", "HEAD", branch],
+            capture_output=True, text=True
+        )
+        if mb.returncode != 0 or not mb.stdout.strip():
+            continue
+        sha = mb.stdout.strip()
+        ts_out = subprocess.run(
+            ["git", "log", "-1", "--format=%ct", sha],
+            capture_output=True, text=True
+        )
+        ts = int(ts_out.stdout.strip()) if ts_out.stdout.strip() else -1
+        if ts > best_ts:
+            best_ts, best_branch = ts, branch
+    if best_branch is None:
+        print(json.dumps({"status": "error", "error": "no_common_ancestor",
+                          "detail": "No shared history found with any candidate base branch."}))
+        sys.exit(1)
+    return best_branch
 ```
 
-**Testing:** Documentation fix. The pattern can be exercised manually on the current repo branches.
+This correctly handles the case where a branch was created from `develop`: the merge-base with `develop` will have a more recent commit timestamp than the merge-base with `main`, so `develop` will be selected.
+
+**Testing:** The algorithm can be unit-tested by mocking `subprocess.run` responses for the two `git merge-base` and `git log` calls.
 
 ---
 
@@ -168,7 +193,7 @@ gh pr create --base "$BASE" ...
 ## Data / Artifact Contracts
 
 - `feature.yaml` schema: `links.pull_request` field already present; no schema change
-- `git-orchestration-ops.py` JSON output: existing `status: error` shape preserved; new `status: warn` shape added (additive)
+- `git-orchestration-ops.py` JSON output: existing `status: error` shape preserved and extended with `error`, `current_branch`, `expected_branch`, and `detail` fields for branch mismatch; no new `status: warn` shape
 - `AGENTS.md`: 3 new formatted error/fix blocks added to `Common Terminal Errors & Fixes` section
 
 ## Rollout

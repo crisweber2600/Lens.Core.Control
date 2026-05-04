@@ -6,7 +6,7 @@ review_format: abc-choice-v1
 phase: finalizeplan
 source: phase-complete
 verdict: pass-with-warnings
-updated_at: "2026-05-03T23:55:00Z"
+updated_at: "2026-05-04T00:08:00Z"
 ---
 
 # FinalizePlan Adversarial Review
@@ -90,9 +90,9 @@ Sprint plan now explicitly documents that S1 involves two separate commits in tw
 
 ## Responses
 
-1. **Business plan goal #3** — "Transparent orchestration" is still accurate: a hard error with branch names in the output is more transparent than silent failure. Success criteria will be updated in the bundle: "A branch mismatch exits non-zero with current and expected branch names in the error output." Business plan does not need a pre-bundle edit.
+1. **Business plan goal #3** — "Transparent orchestration" is still accurate: a hard error with branch names in the output is more transparent than silent failure. `business-plan.md` has been updated in this bundle: goal #3 now reads "mismatches must surface as hard errors with structured output containing current and expected branch names," and the success criterion now reads "A branch mismatch exits non-zero with a structured error message containing current branch, expected branch, and an actionable detail string."
 
-2. **B3 auto-checkout** — `commit-artifacts` does NOT auto-checkout. The dev agent must checkout `{featureId}` before calling `commit-artifacts --phase-step step3`. This will be documented explicitly in the S2 story acceptance criteria.
+2. **B3 auto-checkout** — `commit-artifacts` does NOT auto-checkout. The dev agent must checkout `{featureId}` before calling `commit-artifacts --phase-step step3`. This requirement has been added to the S2 story acceptance criteria in `sprint-plan.md` in this bundle.
 
 3. **S1 split** — S1 will remain a single story but the story file will document it as two sequential commits with clear repo context. Splitting adds tracking overhead for XS-effort changes.
 
