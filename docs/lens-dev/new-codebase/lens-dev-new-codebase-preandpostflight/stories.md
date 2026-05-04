@@ -4,12 +4,12 @@ doc_type: stories
 status: approved
 goal: "Provide an implementation-ready story set for the express-track preflight lifecycle redesign across cadence split, mutable sync policy, and validation hardening."
 key_decisions:
-  - Story PF-1.1 starts by reconciling the live target-repo preflight surface because the checked-in implementation currently exposes only `bmad-lens-preflight/scripts/light-preflight.py`.
+  - Story PF-1.1 starts by reconciling the live target-repo preflight surface because the checked-in implementation exposes `skills/lens-preflight/scripts/light-preflight.py` as the frozen gate and `skills/lens-preflight/scripts/preflight.py` as the full lifecycle entrypoint.
   - Story PF-2.1 makes explicit request classification authoritative, with touched-repo detection as fallback only.
   - Stories PF-2.2 and PF-2.3 make the failure taxonomy explicit in acceptance criteria so readiness does not reopen warning-versus-hard-stop policy.
   - Story PF-3.1 creates the missing focused preflight test surface and extends git orchestration tests where mutation coverage belongs.
 open_questions:
-  - Should the full request-lifecycle entrypoint be introduced as `preflight.py` under `bmad-lens-preflight/scripts/`, or should another name be chosen to avoid confusion with older planning assumptions?
+  - Resolved: the full request-lifecycle entrypoint remains `preflight.py` under `skills/lens-preflight/scripts/`, with shared sync primitives owned by `skills/lens-git-orchestration/scripts/repo_sync.py`.
 depends_on:
   - epics.md
   - sprint-plan.md
@@ -25,14 +25,14 @@ updated_at: 2026-05-04T00:00:00Z
 
 | Story ID | Title | Points | Status | Depends On |
 | --- | --- | --- | --- | --- |
-| PF-1.1 | Reconcile live preflight surface and preserve prompt-start contract | 2 | Ready | - |
-| PF-1.2 | Add layered request-lifecycle entrypoint and cadence state | 5 | Ready | PF-1.1 |
-| PF-1.3 | Implement develop-sensitive release refresh and mirror boundary | 3 | Ready | PF-1.2 |
-| PF-2.1 | Add explicit request classification and sync intent resolution | 3 | Ready | PF-1.3 |
-| PF-2.2 | Implement pre-request control and governance sync policy | 5 | Ready | PF-2.1 |
-| PF-2.3 | Implement post-request touched-repo publish policy | 5 | Ready | PF-2.2 |
-| PF-3.1 | Add focused regression coverage for cadence and sync policy | 5 | Ready | PF-2.3 |
-| PF-3.2 | Align the docs contract and carry the failure taxonomy into readiness handoff | 2 | Ready | PF-3.1 |
+| PF-1.1 | Reconcile live preflight surface and preserve prompt-start contract | 2 | Done | - |
+| PF-1.2 | Add layered request-lifecycle entrypoint and cadence state | 5 | Done | PF-1.1 |
+| PF-1.3 | Implement develop-sensitive release refresh and mirror boundary | 3 | Done | PF-1.2 |
+| PF-2.1 | Add explicit request classification and sync intent resolution | 3 | Done | PF-1.3 |
+| PF-2.2 | Implement pre-request control and governance sync policy | 5 | Done | PF-2.1 |
+| PF-2.3 | Implement post-request touched-repo publish policy | 5 | Done | PF-2.2 |
+| PF-3.1 | Add focused regression coverage for cadence and sync policy | 5 | Done | PF-2.3 |
+| PF-3.2 | Align the docs contract and carry the failure taxonomy into readiness handoff | 2 | Done | PF-3.1 |
 
 **Total story points:** 30
 
@@ -40,7 +40,7 @@ updated_at: 2026-05-04T00:00:00Z
 
 ## Story PF-1.1 - Reconcile live preflight surface and preserve prompt-start contract
 
-**Status:** Ready
+**Status:** Done
 **Story Points:** 2
 **Epic:** Epic 1
 **Depends on:** None
@@ -53,32 +53,32 @@ so that the cadence redesign starts from the real target repo and does not break
 commands.
 
 **Acceptance Criteria:**
-1. The implementation owner is confirmed as `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/bmad-lens-preflight/`, and story notes explicitly call out the path drift from the older `skills/lens-preflight` wording in predecessor docs.
-2. `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/bmad-lens-preflight/scripts/light-preflight.py` continues to return `0` to proceed and non-zero to halt, and remains limited to cheap root, Python, and required-path validation.
-3. `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/bmad-lens-preflight/SKILL.md` documents the same invocation path and supported arguments that the script actually accepts.
-4. The full request-lifecycle entrypoint file under `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/bmad-lens-preflight/scripts/` is named and reserved before cadence work begins; prompt stubs continue to call only `light-preflight.py`.
+1. The implementation owner is confirmed as `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/lens-preflight/`, and story notes explicitly call out the path drift from the older `bmad-lens-*` wording in predecessor docs.
+2. `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/lens-preflight/scripts/light-preflight.py` continues to return `0` to proceed and non-zero to halt, and remains limited to cheap root, Python, and required-path validation.
+3. `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/lens-preflight/SKILL.md` documents the same invocation path and supported arguments that the script actually accepts.
+4. The full request-lifecycle entrypoint file under `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/lens-preflight/scripts/` is named and reserved before cadence work begins; prompt stubs continue to call only `light-preflight.py`.
 5. No control or governance repo mutation is added directly to the prompt-start gate.
 
 **Implementation Notes:**
-- The live target repo currently contains `bmad-lens-preflight/SKILL.md` and `scripts/light-preflight.py`, but no focused preflight tests or full preflight script yet.
+- The live target repo now contains `skills/lens-preflight/SKILL.md`, `scripts/light-preflight.py`, `scripts/preflight.py`, and focused tests under `scripts/tests/`.
 
 ---
 
 ## Story PF-1.2 - Add layered request-lifecycle entrypoint and cadence state
 
-**Status:** Ready
+**Status:** Done
 **Story Points:** 5
 **Epic:** Epic 1
 **Depends on:** PF-1.1
 
 **Story:**
 As a Lens maintainer,
-I want a full request-lifecycle entrypoint under `bmad-lens-preflight/scripts/` that
+I want a full request-lifecycle entrypoint under `skills/lens-preflight/scripts/` that
 separates every-request gates from cadence-owned work,
 so that prompt-start behavior stays cheap and the heavier lifecycle becomes explicit.
 
 **Acceptance Criteria:**
-1. A full lifecycle script is added under `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/bmad-lens-preflight/scripts/` plus supporting helper modules for cadence state as needed.
+1. A full lifecycle script is added under `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/lens-preflight/scripts/` plus supporting helper modules for cadence state as needed.
 2. The implementation separates four internal layers: every-request gates, branch-sensitive release refresh, daily hygiene, and weekly hygiene.
 3. Timestamp freshness can suppress only cadence-owned layers; it never suppresses root, Python, `LENS_VERSION`, or required repo and path checks.
 4. The lifecycle entrypoint records which layers ran and why in the existing preflight log stream.
@@ -86,13 +86,13 @@ so that prompt-start behavior stays cheap and the heavier lifecycle becomes expl
 6. No new request-status UX surface is introduced.
 
 **Implementation Notes:**
-- Keep prompt stubs and SKILL delegation thin; lifecycle logic lives under `bmad-lens-preflight/scripts/`.
+- Keep prompt stubs and SKILL delegation thin; lifecycle logic lives under `skills/lens-preflight/scripts/`.
 
 ---
 
 ## Story PF-1.3 - Implement develop-sensitive release refresh and mirror boundary
 
-**Status:** Ready
+**Status:** Done
 **Story Points:** 3
 **Epic:** Epic 1
 **Depends on:** PF-1.2
@@ -117,7 +117,7 @@ refresh churn.
 
 ## Story PF-2.1 - Add explicit request classification and sync intent resolution
 
-**Status:** Ready
+**Status:** Done
 **Story Points:** 3
 **Epic:** Epic 2
 **Depends on:** PF-1.3
@@ -135,13 +135,13 @@ so that mutable sync policy is auditable instead of inferred from side effects.
 5. Classification decisions are emitted in logs or structured results in a way tests can assert.
 
 **Implementation Notes:**
-- Put classification logic under `bmad-lens-preflight/scripts/`; do not spread policy inference across prompt files or git orchestration docs.
+- Put classification logic under `skills/lens-preflight/scripts/`; do not spread policy inference across prompt files or git orchestration docs.
 
 ---
 
 ## Story PF-2.2 - Implement pre-request control and governance sync policy
 
-**Status:** Ready
+**Status:** Done
 **Story Points:** 5
 **Epic:** Epic 2
 **Depends on:** PF-2.1
@@ -157,7 +157,7 @@ work begins.
 2. Read-only requests treat governance freshness as warning-only unless the command explicitly requires mutable governance state before execution.
 3. The hard-stop taxonomy is explicit and testable: interrupted git state, detached or wrong branch when mutation is required, auth or permission failure for required mutable sync, unresolved merge or rebase conflict, policy-blocked sync, and missing required repo context.
 4. Warning-only taxonomy is explicit and testable: governance freshness on read-only requests, optional publish lag, and other non-required freshness gaps that do not block safe execution.
-5. Any actual pull or reconciliation work reuses `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/bmad-lens-git-orchestration/scripts/git-orchestration-ops.py` or a shared helper it owns; preflight does not embed ad hoc git write sequences.
+5. Any actual pull or reconciliation work reuses `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/lens-git-orchestration/scripts/git-orchestration-ops.py` or a shared helper it owns; preflight does not embed ad hoc git write sequences.
 6. The preflight log stream states separately whether control and governance pre-request sync were skipped, warned, pulled, or blocked.
 
 **Implementation Notes:**
@@ -167,7 +167,7 @@ work begins.
 
 ## Story PF-2.3 - Implement post-request touched-repo publish policy
 
-**Status:** Ready
+**Status:** Done
 **Story Points:** 5
 **Epic:** Epic 2
 **Depends on:** PF-2.2
@@ -193,7 +193,7 @@ unchanged.
 
 ## Story PF-3.1 - Add focused regression coverage for cadence and sync policy
 
-**Status:** Ready
+**Status:** Done
 **Story Points:** 5
 **Epic:** Epic 3
 **Depends on:** PF-2.3
@@ -204,21 +204,21 @@ I want focused regression coverage for cadence, sync policy, and failure outcome
 so that the new layered lifecycle is provable instead of being carried only by prose.
 
 **Acceptance Criteria:**
-1. A focused preflight test module is created under `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/bmad-lens-preflight/scripts/tests/`.
-2. `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/bmad-lens-git-orchestration/scripts/tests/test-git-orchestration-ops.py` is extended where mutation-path assertions belong.
+1. A focused preflight test module is created under `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/lens-preflight/scripts/tests/`.
+2. `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/lens-git-orchestration/scripts/tests/test-git-orchestration-ops.py` is extended where mutation-path assertions belong.
 3. Tests cover: root or Python gate behavior, `lens.core` `develop` every-request refresh, non-`develop` cadence downgrade, fresh timestamps not suppressing required `develop` refresh, explicit classification precedence over touched fallback, read-only governance warning, untouched repo no-op, and touched repo default publish behavior.
 4. Tests assert the hard-stop versus warning taxonomy from PF-2.2 and PF-2.3 rather than reopening the policy.
 5. Windows-safe path handling and repo-root detection remain covered.
 6. The existing preflight log stream remains the authoritative user-visible signal in tests.
 
 **Implementation Notes:**
-- The live target repo currently has no focused preflight test file; this story creates that surface.
+- The live target repo already contains a focused preflight test file and this story extends it to cover request classes, cadence layers, and publish decisions.
 
 ---
 
 ## Story PF-3.2 - Align the docs contract and carry the failure taxonomy into readiness handoff
 
-**Status:** Ready
+**Status:** Done
 **Story Points:** 2
 **Epic:** Epic 3
 **Depends on:** PF-3.1
@@ -231,7 +231,7 @@ so that `implementation-readiness.md` and future story files inherit the finaliz
 taxonomy instead of rediscovering it.
 
 **Acceptance Criteria:**
-1. `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/bmad-lens-preflight/SKILL.md` and any related preflight references describe the live target repo paths and supported invocation contract accurately.
+1. `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/lens-preflight/SKILL.md` and any related preflight references describe the live target repo paths and supported invocation contract accurately.
 2. `implementation-readiness.md` copies the hard-stop versus warning taxonomy from PF-2.2 and PF-2.3 without reopening the policy question.
 3. Story files generated after this bundle inherit the same failure taxonomy in their acceptance criteria.
 4. Any remaining mismatch between predecessor plan wording and the live target repo layout is recorded explicitly as a handoff note.

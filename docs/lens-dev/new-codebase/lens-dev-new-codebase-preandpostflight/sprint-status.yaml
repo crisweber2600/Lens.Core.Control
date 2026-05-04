@@ -6,7 +6,7 @@
 # story_location: docs/lens-dev/new-codebase/lens-dev-new-codebase-preandpostflight/stories
 # initiative: lens-dev-new-codebase-preandpostflight
 # track: express
-# status: planned
+# status: done
 
 generated: 2026-05-04T00:00:00Z
 last_updated: 2026-05-04T00:00:00Z
@@ -16,7 +16,7 @@ tracking_system: file-system
 story_location: docs/lens-dev/new-codebase/lens-dev-new-codebase-preandpostflight/stories
 initiative: lens-dev-new-codebase-preandpostflight
 track: express
-status: planned
+status: done
 
 sprints:
   sprint-1:
@@ -38,27 +38,27 @@ sprints:
       - PF-3-2-align-the-docs-contract-and-carry-the-failure-taxonomy-into-readiness-handoff
 
 stories:
-  PF-1-1-reconcile-live-preflight-surface-and-preserve-prompt-start-contract: { title: "Reconcile live preflight surface and preserve prompt-start contract", epic: epic-1, sprint: sprint-1, points: 2, status: ready-for-dev, depends_on: [] }
-  PF-1-2-add-layered-request-lifecycle-entrypoint-and-cadence-state: { title: "Add layered request-lifecycle entrypoint and cadence state", epic: epic-1, sprint: sprint-1, points: 5, status: ready-for-dev, depends_on: [PF-1-1-reconcile-live-preflight-surface-and-preserve-prompt-start-contract] }
-  PF-1-3-implement-develop-sensitive-release-refresh-and-mirror-boundary: { title: "Implement develop-sensitive release refresh and mirror boundary", epic: epic-1, sprint: sprint-1, points: 3, status: ready-for-dev, depends_on: [PF-1-2-add-layered-request-lifecycle-entrypoint-and-cadence-state] }
-  PF-2-1-add-explicit-request-classification-and-sync-intent-resolution: { title: "Add explicit request classification and sync intent resolution", epic: epic-2, sprint: sprint-2, points: 3, status: ready-for-dev, depends_on: [PF-1-3-implement-develop-sensitive-release-refresh-and-mirror-boundary] }
-  PF-2-2-implement-pre-request-control-and-governance-sync-policy: { title: "Implement pre-request control and governance sync policy", epic: epic-2, sprint: sprint-2, points: 5, status: ready-for-dev, depends_on: [PF-2-1-add-explicit-request-classification-and-sync-intent-resolution] }
-  PF-2-3-implement-post-request-touched-repo-publish-policy: { title: "Implement post-request touched-repo publish policy", epic: epic-2, sprint: sprint-2, points: 5, status: ready-for-dev, depends_on: [PF-2-2-implement-pre-request-control-and-governance-sync-policy] }
-  PF-3-1-add-focused-regression-coverage-for-cadence-and-sync-policy: { title: "Add focused regression coverage for cadence and sync policy", epic: epic-3, sprint: sprint-3, points: 5, status: ready-for-dev, depends_on: [PF-2-3-implement-post-request-touched-repo-publish-policy] }
-  PF-3-2-align-the-docs-contract-and-carry-the-failure-taxonomy-into-readiness-handoff: { title: "Align the docs contract and carry the failure taxonomy into readiness handoff", epic: epic-3, sprint: sprint-3, points: 2, status: ready-for-dev, depends_on: [PF-3-1-add-focused-regression-coverage-for-cadence-and-sync-policy] }
+  PF-1-1-reconcile-live-preflight-surface-and-preserve-prompt-start-contract: { title: "Reconcile live preflight surface and preserve prompt-start contract", epic: epic-1, sprint: sprint-1, points: 2, status: done, depends_on: [] }
+  PF-1-2-add-layered-request-lifecycle-entrypoint-and-cadence-state: { title: "Add layered request-lifecycle entrypoint and cadence state", epic: epic-1, sprint: sprint-1, points: 5, status: done, depends_on: [PF-1-1-reconcile-live-preflight-surface-and-preserve-prompt-start-contract] }
+  PF-1-3-implement-develop-sensitive-release-refresh-and-mirror-boundary: { title: "Implement develop-sensitive release refresh and mirror boundary", epic: epic-1, sprint: sprint-1, points: 3, status: done, depends_on: [PF-1-2-add-layered-request-lifecycle-entrypoint-and-cadence-state] }
+  PF-2-1-add-explicit-request-classification-and-sync-intent-resolution: { title: "Add explicit request classification and sync intent resolution", epic: epic-2, sprint: sprint-2, points: 3, status: done, depends_on: [PF-1-3-implement-develop-sensitive-release-refresh-and-mirror-boundary] }
+  PF-2-2-implement-pre-request-control-and-governance-sync-policy: { title: "Implement pre-request control and governance sync policy", epic: epic-2, sprint: sprint-2, points: 5, status: done, depends_on: [PF-2-1-add-explicit-request-classification-and-sync-intent-resolution] }
+  PF-2-3-implement-post-request-touched-repo-publish-policy: { title: "Implement post-request touched-repo publish policy", epic: epic-2, sprint: sprint-2, points: 5, status: done, depends_on: [PF-2-2-implement-pre-request-control-and-governance-sync-policy] }
+  PF-3-1-add-focused-regression-coverage-for-cadence-and-sync-policy: { title: "Add focused regression coverage for cadence and sync policy", epic: epic-3, sprint: sprint-3, points: 5, status: done, depends_on: [PF-2-3-implement-post-request-touched-repo-publish-policy] }
+  PF-3-2-align-the-docs-contract-and-carry-the-failure-taxonomy-into-readiness-handoff: { title: "Align the docs contract and carry the failure taxonomy into readiness handoff", epic: epic-3, sprint: sprint-3, points: 2, status: done, depends_on: [PF-3-1-add-focused-regression-coverage-for-cadence-and-sync-policy] }
 
 development_status:
-  epic-1: not-started
-  PF-1-1-reconcile-live-preflight-surface-and-preserve-prompt-start-contract: ready-for-dev
-  PF-1-2-add-layered-request-lifecycle-entrypoint-and-cadence-state: ready-for-dev
-  PF-1-3-implement-develop-sensitive-release-refresh-and-mirror-boundary: ready-for-dev
+  epic-1: done
+  PF-1-1-reconcile-live-preflight-surface-and-preserve-prompt-start-contract: done
+  PF-1-2-add-layered-request-lifecycle-entrypoint-and-cadence-state: done
+  PF-1-3-implement-develop-sensitive-release-refresh-and-mirror-boundary: done
   epic-1-retrospective: optional
-  epic-2: not-started
-  PF-2-1-add-explicit-request-classification-and-sync-intent-resolution: ready-for-dev
-  PF-2-2-implement-pre-request-control-and-governance-sync-policy: ready-for-dev
-  PF-2-3-implement-post-request-touched-repo-publish-policy: ready-for-dev
+  epic-2: done
+  PF-2-1-add-explicit-request-classification-and-sync-intent-resolution: done
+  PF-2-2-implement-pre-request-control-and-governance-sync-policy: done
+  PF-2-3-implement-post-request-touched-repo-publish-policy: done
   epic-2-retrospective: optional
-  epic-3: not-started
-  PF-3-1-add-focused-regression-coverage-for-cadence-and-sync-policy: ready-for-dev
-  PF-3-2-align-the-docs-contract-and-carry-the-failure-taxonomy-into-readiness-handoff: ready-for-dev
+  epic-3: done
+  PF-3-1-add-focused-regression-coverage-for-cadence-and-sync-policy: done
+  PF-3-2-align-the-docs-contract-and-carry-the-failure-taxonomy-into-readiness-handoff: done
   epic-3-retrospective: optional
