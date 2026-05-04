@@ -36,10 +36,9 @@ downstream epic and story set is present, `feature.yaml` points implementation a
 target surfaces needed to begin dev already exist.
 
 The remaining work is execution-scoped, not planning-scoped. The bundle still needs
-`sprint-status.yaml` and story-file generation, and implementation still has to land the
-full request-lifecycle entrypoint plus focused preflight tests. Those items are already
-allocated to PF-1.2, PF-1.3, PF-3.1, and PF-3.2, so they do not require reopening the
-express-path policy packet.
+implementation to land the full request-lifecycle entrypoint plus focused preflight tests.
+Those items are already allocated to PF-1.2, PF-1.3, PF-3.1, and PF-3.2, so they do not
+require reopening the express-path policy packet.
 
 ---
 
@@ -51,7 +50,7 @@ express-path policy packet.
 | Target repo anchor | READY | `feature.yaml.target_repos` points to `TargetProjects/lens-dev/new-codebase/lens.core.src` on `develop`. | No |
 | Live target surfaces | READY WITH EXECUTION FOLLOW-THROUGH | `bmad-lens-preflight` exists with `SKILL.md` and `scripts/light-preflight.py`; `bmad-lens-git-orchestration` exists with `scripts/git-orchestration-ops.py` and tests. | No |
 | Failure taxonomy lock | READY | PF-2.2 and PF-2.3 acceptance criteria make hard-stop, warning, and post-request reconciliation behavior explicit. | No |
-| FinalizePlan bundle follow-through | PENDING | `sprint-status.yaml` and story files still need to be generated in the feature docs path. | No for code start; yes for `finalizeplan-complete` |
+| FinalizePlan bundle follow-through | READY | `epics.md`, `stories.md`, `implementation-readiness.md`, `sprint-status.yaml`, and story files are present in the feature docs path. | No |
 
 ---
 
@@ -90,10 +89,10 @@ against the live `bmad-lens-*` surfaces below.
 
 ## Carry-Forward Gates
 
-### Required before FinalizePlan is bundle-complete
+### Required before dev implementation begins
 
-- Generate `sprint-status.yaml` in this feature docs folder.
-- Generate story files for PF-1.1 through PF-3.2.
+- Preserve the generated story files and bundle artifacts as the implementation source of truth.
+- Carry the fixed failure taxonomy into code and tests without reopening policy.
 
 ### Required assumptions for story-file generation
 
@@ -123,5 +122,5 @@ against the live `bmad-lens-*` surfaces below.
 - [x] `stories.md` generated with explicit taxonomy and target-surface notes
 - [x] `feature.yaml` registers `TargetProjects/lens-dev/new-codebase/lens.core.src` as the implementation target
 - [x] Live `bmad-lens-preflight` and `bmad-lens-git-orchestration` surfaces are present in the target repo
-- [ ] `sprint-status.yaml` generated
-- [ ] Story files generated
+- [x] `sprint-status.yaml` generated
+- [x] Story files generated
