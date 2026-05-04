@@ -1,0 +1,44 @@
+# generated: 2026-05-04T00:38:00Z
+# last_updated: 2026-05-03T23:59:00Z
+# project: lens-dev-new-codebase
+# project_key: NOKEY
+# tracking_system: file-system
+# story_location: docs/lens-dev/new-codebase/lens-dev-new-codebase-bugfix-agent-uses-rg-command-despite-it-be/stories
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created in stories folder
+#   - in-progress: Developer actively working on implementation
+#   - review: Ready for code review
+#   - done: Story completed
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+
+feature: lens-dev-new-codebase-bugfix-agent-uses-rg-command-despite-it-be
+doc_type: sprint-status
+status: active
+generated: "2026-05-04T00:38:00Z"
+last_updated: "2026-05-03T23:59:00Z"
+project: lens-dev-new-codebase
+project_key: NOKEY
+tracking_system: file-system
+story_location: docs/lens-dev/new-codebase/lens-dev-new-codebase-bugfix-agent-uses-rg-command-despite-it-be/stories
+
+development_status:
+  epic-1: done
+  1-1-document-unavailable-commands-and-unsafe-patterns-in-agents-md: done
+  1-2-add-merge-base-history-check-to-git-orchestration-ops-create-pr: done
+  epic-1-retrospective: optional
+  epic-2: done
+  2-1-fix-branch-for-phase-write-step3-routing-and-add-branch-mismatch-hard-error: done
+  2-2-add-pull-request-flag-to-feature-yaml-ops-update: done
+  epic-2-retrospective: optional

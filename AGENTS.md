@@ -77,9 +77,28 @@ Each phase produces docs in `docs/lens-dev/new-codebase/<feature-folder>/`. See 
 
 > When a recurring terminal error is encountered, record the fix here.
 
-rg is not a command.
 <!-- Example format:
 **Error**: `<error message>`  
 **Cause**: `<root cause>`  
 **Fix**: `<resolution>`
 -->
+
+**Error**: `rg: command not found` (or similar)
+**Cause**: `ripgrep (rg) is not installed in this environment`
+**Fix**: Use `grep` instead of `rg` for all text searches
+
+**Error**: Prompt files contain literal `\r\n` text after bulk replace
+**Cause**: PowerShell heredoc replacement does not expand `\r\n` as newlines
+**Fix**: Use Python for multi-file text replacement. Never use PowerShell `-Command` regex replacements for prompt files. Example:
+```python
+from pathlib import Path
+
+for p in Path(".github/prompts").glob("*.prompt.md"):
+  content = p.read_text(encoding="utf-8")
+  content = content.replace("OLD", "NEW")
+  p.write_text(content, encoding="utf-8")
+```
+
+**Error**: `gh pr create` fails with no common ancestor / no shared history
+**Cause**: Branch was created from `develop` (or another non-main base) but `--base main` was passed
+**Fix**: Use the merge-base timestamp comparison in `create-pr` of `git-orchestration-ops.py`. Do not call `gh pr create --base main` directly.
