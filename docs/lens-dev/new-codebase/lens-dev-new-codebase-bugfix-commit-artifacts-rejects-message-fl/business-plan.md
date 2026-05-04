@@ -12,7 +12,7 @@ updated_at: '2026-05-04T02:00:00Z'
 
 Recent Lens lifecycle runs exposed a repeated reliability problem: conductors hit unsupported script flags, mixed workspace-root and source-root script paths, and compensated by using ad hoc shell/Python snippets. Those snippets got work unstuck, but they bypassed durable Lens tooling, were hard to review, and created follow-on bugs such as prompt newline corruption.
 
-This bugfix feature bundles 11 New bugs into one express-track remediation plan focused on making recurring workflow operations durable, tested, and script-owned.
+This bugfix feature bundles 11 new bugs into one express-track remediation plan focused on making recurring workflow operations durable, tested, and script-owned.
 
 ## Bugs in Scope
 

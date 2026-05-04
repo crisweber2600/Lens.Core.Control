@@ -2,8 +2,15 @@
 feature: lens-dev-new-codebase-bugfix-commit-artifacts-rejects-message-fl
 doc_type: finalizeplan-review
 status: responses-recorded
+phase: finalizeplan
+source: phase-complete
+verdict: pass-with-warnings
+critical_count: 0
+high_count: 1
+medium_count: 2
+low_count: 0
+carry_forward_blockers: []
 review_format: abc-choice-v1
-track: express
 updated_at: '2026-05-04T02:15:00Z'
 ---
 
@@ -11,12 +18,20 @@ updated_at: '2026-05-04T02:15:00Z'
 
 ## Scope
 
-Reviewed ExpressPlan handoff artifacts:
+Reviewed all FinalizePlan bundle artifacts:
 
 - `business-plan.md`
 - `tech-plan.md`
 - `sprint-plan.md`
 - `expressplan-adversarial-review.md`
+- `epics.md`
+- `stories.md`
+- `implementation-readiness.md`
+- `sprint-status.yaml`
+- `stories/story-1.1-feature-yaml-aliases.md`
+- `stories/story-2.1-git-orchestration-aliases.md`
+- `stories/story-3.1-preflight-alignment.md`
+- `stories/story-4.1-durable-helpers-agents-md.md`
 
 The feature bundles 11 script-error and on-the-fly-script bugs into one express-track implementation packet.
 
@@ -26,9 +41,10 @@ The feature bundles 11 script-error and on-the-fly-script bugs into one express-
 |---|---|---|
 | Predecessor phase | Pass | `feature.yaml.phase` is `expressplan-complete`. |
 | Required ExpressPlan artifacts | Pass | Business, tech, sprint, and express review artifacts exist. |
+| FinalizePlan bundle complete | Pass | `epics.md`, `stories.md`, `implementation-readiness.md`, `sprint-status.yaml`, and all four story files exist. |
 | Review verdict | Pass with warnings | ExpressPlan review verdict is `pass-with-warnings`; warnings are represented in sprint/story criteria. |
 | Target repo metadata | Pass | `target_repos` set to `TargetProjects/lens-dev/new-codebase/lens.core.src` before downstream bundle generation. |
-| Write boundaries | Pass | Source implementation belongs in TargetProjects; release clone remains read-only. |
+| Write boundaries | Pass | Source implementation belongs in TargetProjects; release clone remains read-only; `AGENTS.md` edit is explicitly routed to control-repo PR. |
 
 ## Findings
 
@@ -46,7 +62,7 @@ Severity: Medium
 
 The sprint plan correctly notes that S4 touches both source tooling and `AGENTS.md`. Story generation must make this multi-location boundary explicit so the dev agent does not attempt to place all edits in only one repo.
 
-Response: Accepted. Downstream stories must identify target files and repo boundaries explicitly.
+Response: Resolved. Story 4.1 (`story-4.1-durable-helpers-agents-md.md`) explicitly identifies the two-repo boundary, separates acceptance criteria by repo, and requires that the `AGENTS.md` change lands via a separate control-repo PR independent of the `lens.core.src` branch.
 
 ### F3 — Preflight behavior decision remains implementation-sensitive
 

@@ -1,9 +1,16 @@
 ---
 feature: lens-dev-new-codebase-bugfix-commit-artifacts-rejects-message-fl
-doc_type: expressplan-adversarial-review
+doc_type: adversarial-review
+phase: expressplan
+source: phase-complete
+verdict: pass-with-warnings
 status: responses-recorded
+critical_count: 0
+high_count: 0
+medium_count: 2
+low_count: 1
+carry_forward_blockers: []
 review_format: abc-choice-v1
-track: express
 updated_at: '2026-05-04T02:00:00Z'
 ---
 

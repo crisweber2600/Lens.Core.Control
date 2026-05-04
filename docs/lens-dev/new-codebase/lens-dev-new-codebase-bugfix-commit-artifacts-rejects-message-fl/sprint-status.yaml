@@ -1,0 +1,58 @@
+feature: lens-dev-new-codebase-bugfix-commit-artifacts-rejects-message-fl
+doc_type: sprint-status
+status: approved
+track: express
+domain: lens-dev
+service: new-codebase
+updated_at: '2026-05-04T02:20:00Z'
+sprint_number: 1
+sprint_goal: Harden Lens lifecycle script command interfaces and replace recurring on-the-fly snippet patterns with durable, tested tooling
+stories:
+  - id: "1.1"
+    title: Feature YAML command aliases (set-phase, --field phase --value)
+    epic: 1
+    points: 3
+    status: Ready
+    assignee: crisweber2600
+    dependencies: []
+    notes: >
+      Add set-phase alias and --field phase --value compatibility to feature-yaml-ops.py.
+      Target: TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/lens-feature-yaml/scripts/
+  - id: "2.1"
+    title: Git orchestration command compatibility and PR body handling
+    epic: 2
+    points: 3
+    status: Ready
+    assignee: crisweber2600
+    dependencies: []
+    notes: >
+      Add --message alias, --source-branch/--target-branch aliases, and --body string support
+      to git-orchestration-ops.py.
+      Target: TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/lens-git-orchestration/scripts/
+  - id: "3.1"
+    title: Preflight contract alignment
+    epic: 3
+    points: 2
+    status: Ready
+    assignee: crisweber2600
+    dependencies: []
+    notes: >
+      Reconcile light-preflight.py behavior with SKILL.md. Encode Option A or Option B decision.
+      If Option B: add --caller and --governance-path argument parsing.
+      Target: TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/lens-preflight/
+  - id: "4.1"
+    title: Durable lifecycle helpers and AGENTS.md terminal guidance
+    epic: 4
+    points: 3
+    status: Ready
+    assignee: crisweber2600
+    dependencies: []
+    notes: >
+      Source-repo: add lifecycle state inspection script and prompt repair helper.
+      Control-repo: update AGENTS.md with prohibition on ad hoc snippets — land via separate control-repo PR.
+totals:
+  stories: 4
+  points: 11
+  ready: 4
+  inprogress: 0
+  done: 0

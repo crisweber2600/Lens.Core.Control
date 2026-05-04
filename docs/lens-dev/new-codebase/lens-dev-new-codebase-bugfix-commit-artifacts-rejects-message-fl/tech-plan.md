@@ -103,3 +103,5 @@ Planned changes:
 ## Rollout
 
 Implement in a target source feature branch from `develop`. Open PR to `develop`. Do not modify `lens.core/` directly.
+
+S4 additionally requires a control-repo change to `AGENTS.md` in this repository. That edit must be made directly in the control repo, committed to the appropriate feature branch, and landed via a separate PR targeting the control repo — independent of the `lens.core.src` source branch and PR.
