@@ -3,7 +3,7 @@ feature: lens-dev-new-codebase-bugfix-agent-uses-rg-command-despite-it-be
 doc_type: business-plan
 status: draft
 track: express
-updated_at: "2026-05-03T23:40:00Z"
+updated_at: "2026-05-04T00:08:00Z"
 depends_on: []
 blocks: []
 key_decisions: []
@@ -34,7 +34,7 @@ Six distinct operational bugs were observed across multiple Lens agent sessions.
 
 1. **Zero avoidable retries** — each bug, once fixed, must not require a fallback or retry turn.
 2. **Artifact integrity** — no committed artifact should contain literal escape sequences or point at the wrong branch.
-3. **Transparent orchestration** — branch routing decisions must be logged; mismatches must surface as warnings.
+3. **Transparent orchestration** — branch routing decisions must be logged; mismatches must surface as hard errors with structured output containing current and expected branch names.
 4. **CLI completeness** — all `feature-yaml-ops.py` flags documented in the skill spec must exist in code.
 
 ## Scope
@@ -70,7 +70,7 @@ Six distinct operational bugs were observed across multiple Lens agent sessions.
 
 - `rg` no longer appears in any agent shell command in lens-work skills or scripts
 - `commit-artifacts --phase finalizeplan --phase-step step3` commits to the correct branch
-- A branch mismatch triggers a logged warning and user prompt before proceeding
+- A branch mismatch exits non-zero with a structured error message containing current branch, expected branch, and an actionable detail string
 - `feature-yaml-ops.py --pull-request <value>` executes without CLI error
 - `gh pr create` verifies shared history before targeting base
 - Prompt files updated via bulk-replace contain no literal `\r\n` text
