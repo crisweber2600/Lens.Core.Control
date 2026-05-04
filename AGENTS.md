@@ -89,7 +89,11 @@ Each phase produces docs in `docs/lens-dev/new-codebase/<feature-folder>/`. See 
 
 **Error**: Prompt files contain literal `\r\n` text after bulk replace
 **Cause**: PowerShell heredoc replacement does not expand `\r\n` as newlines
-**Fix**: Use Python for multi-file text replacement. Never use PowerShell `-Command` regex replacements for prompt files. Example:
+**Fix**: Never use PowerShell `-Command` regex replacements or heredoc bulk edits for prompt files. Use the repo-owned prompt normalization helper when repairing literal newline tokens:
+```bash
+uv run --script TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/scripts/prompt-normalize.py .github/prompts
+```
+For new multi-file text replacement work, use a reviewed Python helper or add one under `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/scripts/`; avoid one-off terminal snippets. Minimal fallback pattern:
 ```python
 from pathlib import Path
 
@@ -102,3 +106,11 @@ for p in Path(".github/prompts").glob("*.prompt.md"):
 **Error**: `gh pr create` fails with no common ancestor / no shared history
 **Cause**: Branch was created from `develop` (or another non-main base) but `--base main` was passed
 **Fix**: Use the merge-base timestamp comparison in `create-pr` of `git-orchestration-ops.py`. Do not call `gh pr create --base main` directly.
+
+**Error**: Repeated ad hoc Python one-liners are used for lifecycle state checks
+**Cause**: Phase, track, docs path, target repo, and PR-link inspection was done by temporary snippets instead of durable tooling
+**Fix**: Use the repo-owned lifecycle state helper instead of inline Python parsing:
+```bash
+uv run --script TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/scripts/lifecycle-state.py --feature-id <feature-id> --governance-repo TargetProjects/lens/lens-governance
+```
+If a lifecycle check recurs and this helper does not cover it, extend the helper with tests rather than sending another on-the-fly script.
