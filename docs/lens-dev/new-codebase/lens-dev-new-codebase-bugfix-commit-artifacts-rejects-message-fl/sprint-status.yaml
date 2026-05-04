@@ -4,7 +4,7 @@ status: approved
 track: express
 domain: lens-dev
 service: new-codebase
-updated_at: '2026-05-04T02:20:00Z'
+updated_at: '2026-05-04T02:41:50Z'
 sprint_number: 1
 sprint_goal: Harden Lens lifecycle script command interfaces and replace recurring on-the-fly snippet patterns with durable, tested tooling
 stories:
@@ -12,7 +12,7 @@ stories:
     title: Feature YAML command aliases (set-phase, --field phase --value)
     epic: 1
     points: 3
-    status: Ready
+    status: done
     assignee: crisweber2600
     dependencies: []
     notes: >
@@ -22,7 +22,7 @@ stories:
     title: Git orchestration command compatibility and PR body handling
     epic: 2
     points: 3
-    status: Ready
+    status: done
     assignee: crisweber2600
     dependencies: []
     notes: >
@@ -33,7 +33,7 @@ stories:
     title: Preflight contract alignment
     epic: 3
     points: 2
-    status: Ready
+    status: done
     assignee: crisweber2600
     dependencies: []
     notes: >
@@ -44,7 +44,7 @@ stories:
     title: Durable lifecycle helpers and AGENTS.md terminal guidance
     epic: 4
     points: 3
-    status: Ready
+    status: done
     assignee: crisweber2600
     dependencies: []
     notes: >
@@ -53,6 +53,6 @@ stories:
 totals:
   stories: 4
   points: 11
-  ready: 4
+  ready: 0
   inprogress: 0
-  done: 0
+  done: 4

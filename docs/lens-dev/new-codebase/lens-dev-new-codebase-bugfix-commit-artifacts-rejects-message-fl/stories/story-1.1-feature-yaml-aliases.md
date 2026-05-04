@@ -39,3 +39,9 @@ currently supported, causing conductor retries and ad hoc workarounds.
 2. In the `update` subcommand, accept `--field` and `--value` arguments. If `--field phase` is provided, route to the phase transition validator. Reject all other `--field` values with a structured error.
 3. Add/extend tests in the script's test suite.
 4. Commit to the `lens.core.src` feature branch.
+
+## Dev Agent Record
+
+- Status: Done
+- Source commit: `f70ea524`
+- Validation: `uv run --with pytest --with pyyaml python -m pytest _bmad/lens-work/skills/lens-feature-yaml/scripts/tests/test-feature-yaml-ops.py _bmad/lens-work/skills/lens-git-orchestration/scripts/tests/test-git-orchestration-ops.py _bmad/lens-work/skills/lens-preflight/scripts/tests/test-light-preflight.py _bmad/lens-work/scripts/tests/test-lifecycle-state.py _bmad/lens-work/scripts/tests/test-prompt-normalize.py` — 113 passed

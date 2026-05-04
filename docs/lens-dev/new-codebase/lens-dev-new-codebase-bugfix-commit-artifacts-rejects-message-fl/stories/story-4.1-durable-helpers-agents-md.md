@@ -59,3 +59,11 @@ This story spans **two repositories**:
 2. Add an entry under "Common Terminal Errors & Fixes" for PowerShell prompt replacement prohibition.
 3. Add guidance for lifecycle state checks.
 4. Commit the `AGENTS.md` change and open a PR targeting the appropriate base branch in the control repo.
+
+## Dev Agent Record
+
+- Status: Done
+- Source commit: `4feb869d`
+- Source PR: https://github.com/crisweber2600/Lens.Core.Src/pull/44
+- Control PR for `AGENTS.md`: https://github.com/crisweber2600/Lens.Core.Control/pull/56
+- Validation: `uv run --with pytest --with pyyaml python -m pytest _bmad/lens-work/skills/lens-feature-yaml/scripts/tests/test-feature-yaml-ops.py _bmad/lens-work/skills/lens-git-orchestration/scripts/tests/test-git-orchestration-ops.py _bmad/lens-work/skills/lens-preflight/scripts/tests/test-light-preflight.py _bmad/lens-work/scripts/tests/test-lifecycle-state.py _bmad/lens-work/scripts/tests/test-prompt-normalize.py` — 113 passed

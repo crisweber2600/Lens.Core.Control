@@ -54,3 +54,10 @@ The tech plan prefers Option B unless tests reveal unacceptable startup cost.
 4. Normalize invocation examples for workspace-root and source-root paths.
 5. Add root-detection and argument handling tests.
 6. Commit to the `lens.core.src` feature branch.
+
+## Dev Agent Record
+
+- Status: Done
+- Implementation decision: Option B — `light-preflight.py` now accepts documented arguments and delegates to `preflight.py`; root detection prefers the containing control workspace before falling back to standalone source-repo layout.
+- Source commit: `b20484cb`
+- Validation: `uv run --with pytest --with pyyaml python -m pytest _bmad/lens-work/skills/lens-feature-yaml/scripts/tests/test-feature-yaml-ops.py _bmad/lens-work/skills/lens-git-orchestration/scripts/tests/test-git-orchestration-ops.py _bmad/lens-work/skills/lens-preflight/scripts/tests/test-light-preflight.py _bmad/lens-work/scripts/tests/test-lifecycle-state.py _bmad/lens-work/scripts/tests/test-prompt-normalize.py` — 113 passed
