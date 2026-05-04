@@ -107,6 +107,14 @@ for p in Path(".github/prompts").glob("*.prompt.md"):
 **Cause**: Branch was created from `develop` (or another non-main base) but `--base main` was passed
 **Fix**: Use the merge-base timestamp comparison in `create-pr` of `git-orchestration-ops.py`. Do not call `gh pr create --base main` directly.
 
+**Error**: `UnicodeEncodeError: 'charmap' codec can't encode character` when running Python scripts in a Windows terminal
+**Cause**: Windows console defaults to `cp1252` encoding, which cannot represent Unicode characters (e.g. `✓`) emitted by LENS scripts
+**Fix**: Always prefix `uv run` invocations with `PYTHONUTF8=1` in bash terminals on Windows:
+```bash
+PYTHONUTF8=1 uv run --script <script> <args>
+```
+Never call `uv run` without this prefix. All terminal commands in this workspace that invoke Python scripts via `uv run` must include `PYTHONUTF8=1`.
+
 **Error**: Repeated ad hoc Python one-liners are used for lifecycle state checks
 **Cause**: Phase, track, docs path, target repo, and PR-link inspection was done by temporary snippets instead of durable tooling
 **Fix**: Use the repo-owned lifecycle state helper instead of inline Python parsing:
