@@ -6,12 +6,14 @@ goal: "Define the business outcomes and decision boundaries for turning Lens pre
 key_decisions:
   - Treat the lightweight root, Python, and LENS_VERSION checks as every-request gates.
   - Refresh release-derived assets from lens.core on every request when the lens.core checkout is on develop.
+  - When lens.core leaves develop, release-derived refresh returns to periodic cadence automatically.
   - Separate daily and weekly hygiene from request-time work instead of letting timestamp freshness imply a full skip.
   - Treat control repo sync and governance repo sync as mutable request-lifecycle operations with explicit pre-request and post-request policy, not as generic mirror refreshes.
   - Define read-only and write requests differently so request-time sync can no-op when no mutable repo work is needed.
+  - Read-only requests warn on governance freshness instead of hard-blocking.
+  - Post-request push is the default outcome for qualifying touched control and governance repos.
+  - Existing preflight log output remains the user-visible signal; this feature does not introduce a separate request-status UX surface.
 open_questions:
-  - Should pre-request control and governance sync block all read-only requests, or only requests that depend on mutable feature/governance state?
-  - What exact post-request publish policy is acceptable for auto-commit and auto-push behavior in control and governance repos?
   - Which failures should degrade to warnings versus hard-stop the request lifecycle?
 depends_on:
   - lens.core/_bmad/lens-work/skills/lens-preflight/scripts/light-preflight.py
@@ -53,6 +55,16 @@ That coupling makes prompt-start behavior harder to reason about. A user cannot 
 3. Separate request-time behavior from daily and weekly hygiene so cadence decisions are explicit.
 4. Specify a safe request-lifecycle policy for control repo and governance repo sync before and after requests.
 5. Preserve enough observability that sync decisions and failures are diagnosable rather than implicit.
+
+## Applied Predecessor Review Decisions
+
+The expressplan review responses that materially affect this packet are now treated as binding planning decisions:
+
+- Read-only requests do not hard-block on governance freshness; they warn unless the request explicitly depends on mutable governance state.
+- Request classification remains explicit at the planning level, with touched-repo detection allowed only as the operational fallback.
+- Post-request push behavior is acceptable by default for qualifying touched control and governance repos.
+- The current preflight log stream remains the user-visible signal for no-op, refresh-only, and mutable-sync request paths.
+- When `lens.core` is no longer on `develop`, request-time release refresh automatically downgrades to the slower cadence path.
 
 ## Non-Goals
 

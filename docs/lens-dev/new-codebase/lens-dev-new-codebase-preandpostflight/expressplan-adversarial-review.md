@@ -46,7 +46,7 @@ The following responses were recorded and applied to the planning packet:
 
 | ID | Severity | Title | Your Response |
 | --- | --- | --- | --- |
-| H1 | High | Control and governance publish semantics are still under-specified | **D:** Keep control and governance sync in scope before and after requests, but force implementation to make publish and auto-push behavior explicit instead of inheriting today’s implicit git side effects. |
+| H1 | High | Control and governance publish semantics are still under-specified | **A** |
 | M1 | Medium | Request classification remains open between explicit intent and touched-path inference | **A** |
 | M2 | Medium | `lens.core` reset behavior is still accepted by assumption, not by a stated mirror policy | **A** |
 
@@ -64,6 +64,8 @@ The packet correctly elevates control repo and governance repo sync into explici
 Without that explicit decision, implementation could regress to the current ambiguity: request-time sync would exist everywhere in the lifecycle but still leave the riskiest mutation behavior implicit.
 
 **Recorded response:** **A**
+
+**Applied adjustment:** The staged business, tech, and sprint plans now encode default post-request publish or push behavior, warn-only governance freshness for read-only requests, and explicit request classification at the planning layer.
 
 **Choose one:**
 

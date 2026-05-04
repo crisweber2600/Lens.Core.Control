@@ -6,12 +6,14 @@ goal: "Sequence the preflight cadence redesign into implementation-ready slices 
 key_decisions:
   - Use three delivery slices: cadence split, request-lifecycle sync policy, and validation hardening.
   - Treat `lens.core` `develop` refresh as part of the first implementation slice because it changes default request behavior.
+  - When `lens.core` leaves `develop`, release-derived refresh cadence downgrades automatically without an extra user setting.
   - Treat control and governance sync policy as a dedicated slice so mutable repo behavior is specified before implementation broadens.
+  - Resolve request classification explicitly and allow touched-repo inference only as the execution fallback.
+  - Treat read-only governance freshness as a warning path, not a hard blocker.
+  - Treat post-request publish or push as the default for qualifying touched repos.
   - Keep daily and weekly hygiene as explicit outcomes rather than hidden timestamp side effects.
   - Defer any broader lifecycle or unrelated workflow redesign to follow-on features.
 open_questions:
-  - Is request classification best modeled as explicit command metadata or inferred from actual touched repos?
-  - Should post-request governance sync publish immediately after a successful write request or stop short of push outside publish phases?
   - Which failure categories should hard-stop the request versus record warnings for later reconciliation?
 depends_on:
   - business-plan.md
@@ -29,9 +31,17 @@ Turn preflight into a layered request lifecycle that always performs the right a
 
 ## Current Packet Status
 
-- Feature state is `track: express`, `phase: expressplan`.
+- Feature state is `track: express`, `phase: expressplan-complete`.
 - This packet is intended to supply the three required QuickPlan outputs before the express adversarial review gate.
 - FinalizePlan handoff remains separate and should only occur after the express review records a non-fail verdict.
+
+## Applied Predecessor Review Decisions
+
+- Read-only requests warn on governance freshness instead of hard-blocking.
+- Explicit request classification is part of PF-2.1; touched-repo inference is fallback behavior only.
+- Post-request publish or push is the default for qualifying touched repos.
+- The current preflight log stream remains the user-visible signal.
+- The `lens.core` branch rule downgrades automatically when the release checkout leaves `develop`.
 
 ## Delivery Slices
 
@@ -75,7 +85,7 @@ Turn preflight into a layered request lifecycle that always performs the right a
 - Deterministic policy for control repo sync.
 - Deterministic policy for governance repo sync.
 - No-op behavior for untouched repos.
-- Clear boundaries for auto-commit, pull, rebase, and push behavior.
+- Clear boundaries for auto-commit, pull, rebase, and push behavior, including warning-only handling for read-only governance freshness.
 
 ### Dependencies
 

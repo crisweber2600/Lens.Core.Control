@@ -7,12 +7,14 @@ key_decisions:
   - Keep `light-preflight.py` as the minimal prompt-start wrapper for root and Python gating.
   - Split the full preflight path into request-time validation, release-derived refresh, and periodic hygiene rather than relying on the current timestamp semantics.
   - Force `lens.core` refresh and release-derived asset sync on every request when the release checkout branch is `develop`.
+  - When `lens.core` leaves `develop`, downgrade release-derived refresh cadence automatically.
   - Treat control and governance sync as explicit request-lifecycle stages with touched-repo and policy checks before any commit, pull, or push behavior.
+  - Resolve request classification explicitly and allow touched-repo detection only as the minimum fallback.
+  - Permit default post-request publish or push behavior for qualifying touched control and governance repos.
+  - Treat governance freshness as warning-only for read-only requests.
+  - Preserve the current preflight log output as the user-visible request-state signal.
   - Preserve staged docs and governance reads as first-class request dependencies without assuming every request needs mutable repo sync.
-open_questions:
-  - Should request classification be explicit (`read-only`, `control-write`, `governance-write`, `mixed`) or inferred from touched paths?
-  - Should post-request sync push automatically when commits are created, or should publish remain phase-gated even after a successful write request?
-  - Is the current release hard-reset fallback still acceptable for `lens.core` while on `develop`, or should the mirror sync path be made more explicit?
+open_questions: []
 depends_on:
   - business-plan.md
   - lens.core/_bmad/lens-work/skills/lens-preflight/scripts/light-preflight.py
@@ -49,6 +51,16 @@ That current behavior has three implementation consequences that this feature mu
 2. `lens.core` refresh and `.github` mirror refresh are coupled to mutable control and governance sync.
 3. Request-time sync policy is implicit inside git helper behavior instead of being explicit in the request lifecycle.
 
+## Applied Predecessor Review Decisions
+
+The predecessor expressplan review and user responses now resolve the core policy direction for this packet:
+
+- Read-only requests warn on governance freshness instead of hard-blocking.
+- Request classification is explicit (`read-only`, `control-write`, `governance-write`, `mixed`) with touched-repo detection as the fallback execution check.
+- Post-request sync publishes by default for qualifying touched control and governance repos.
+- The existing preflight log output remains the user-visible request-state signal.
+- The `lens.core` `develop` rule downgrades automatically when the release branch changes to a slower-cadence branch.
+
 ## Desired Runtime Model
 
 ### Layer 1 — Every-Request Prompt Gate
@@ -67,7 +79,7 @@ These checks remain the minimal contract for every prompt-start and should stay 
 Add an explicit branch rule for `lens.core`:
 
 - If `lens.core` is on `develop`, run release sync and release-derived asset refresh on every request.
-- If `lens.core` is not on `develop`, allow cadence gating to move those heavier refresh steps to daily execution.
+- If `lens.core` is not on `develop`, automatically allow cadence gating to move those heavier refresh steps to daily execution.
 
 Release-derived refresh includes:
 
@@ -106,6 +118,8 @@ This stage must decide:
 - whether local repo state is safe to sync
 - whether the sync is a no-op, pull-only, or a blocking condition
 
+Read-only requests should warn on governance freshness rather than hard-block unless the command explicitly requires mutable governance state before execution.
+
 The core design requirement is that mutable sync must be policy-driven rather than assumed.
 
 ### Layer 5 — Post-Request Mutable Sync
@@ -118,6 +132,8 @@ This stage must decide:
 - whether the request touched the governance repo
 - whether post-request sync should stop at local commit, pull-and-reconcile, or publish
 - how failures are reported after user-visible work is already complete
+
+For qualifying touched control and governance repos, the default post-request outcome is publish or push rather than local-only staging.
 
 ## Target Implementation Surface
 
@@ -190,6 +206,7 @@ The rewritten preflight flow must preserve these technical constraints:
 
 - Logging identifies which cadence layer ran on each request.
 - Sync results are attributable to pre-request or post-request stages.
+- The existing preflight log stream remains the authoritative user-visible signal; no new request-status UX surface is required.
 - Existing prompt stubs continue to invoke the shared prompt-start gate successfully.
 
 ## Risks
