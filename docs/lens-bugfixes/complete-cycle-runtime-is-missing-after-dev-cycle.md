@@ -13,7 +13,7 @@ QuickDev bugfix for the `/complete` handoff after dev completion.
 ## Source Changes
 
 - Target repo branch: `feature/bugfix-complete-cycle-runtime-is-missing-after-dev-cycle`
-- Target repo commit: `bfb2f81c`
+- Target repo commit: `5b70163f`
 - Target repo PR: https://github.com/crisweber2600/Lens.Core.Src/pull/67
 - Bug artifact: `TargetProjects/lens/lens-governance/bugs/QuickDev/complete-cycle-runtime-is-missing-after-dev-cycle-28295f39.md`
 
@@ -28,8 +28,8 @@ uv run --with pytest --with PyYAML pytest \
   -q
 ```
 
-Result: 48 passed.
+Result: 50 passed.
 
 ## Control Repo Delivery
 
-This note exists on the control repo `dev` branch so the requested `dev` to `main` PR has an auditable lifecycle handoff artifact.
+This note exists on the control repo `{featureId}-dev` lifecycle path so completion has an auditable handoff artifact. The source fix now validates `{featureId}-plan -> {featureId} -> {featureId}-dev`, merges `{featureId}-dev` to `main`, and deletes related control branches after merge.
