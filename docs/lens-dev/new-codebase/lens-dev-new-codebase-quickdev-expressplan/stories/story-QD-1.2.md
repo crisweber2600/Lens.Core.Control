@@ -2,7 +2,7 @@
 feature: lens-dev-new-codebase-quickdev-expressplan
 story_id: "QD-1.2"
 doc_type: story
-status: backlog
+status: done
 type: new
 title: "Register Command Discovery and Operator Help"
 priority: P0
@@ -17,7 +17,7 @@ updated_at: 2026-05-06T21:20:00Z
 
 **Feature:** `lens-dev-new-codebase-quickdev-expressplan`
 **Epic:** `Epic 1 - Governed Quickdev Entry and Planning Gate`
-**Priority:** P0 | **Points:** 2 | **Status:** backlog
+**Priority:** P0 | **Points:** 2 | **Status:** done
 
 ## Goal
 
@@ -36,10 +36,10 @@ QD-1.1 creates the public prompt and skill. This story registers those surfaces 
 
 ## Acceptance Criteria
 
-- [ ] `_bmad/lens-work/module.yaml` exposes `lens-quickdev` exactly once.
-- [ ] `_bmad/lens-work/module-help.csv` exposes `lens-quickdev` exactly once.
-- [ ] Operator-facing guidance states that `lens-quickdev` is a dev-ready-only governed wrapper.
-- [ ] Discovery/help updates do not silently expand into broader non-source surfaces without an explicit override record.
+- [x] `_bmad/lens-work/module.yaml` exposes `lens-quickdev` exactly once.
+- [x] `_bmad/lens-work/module-help.csv` exposes `lens-quickdev` exactly once.
+- [x] Operator-facing guidance states that `lens-quickdev` is a dev-ready-only governed wrapper.
+- [x] Discovery/help updates do not silently expand into broader non-source surfaces without an explicit override record.
 
 ## Governance Coordination Note
 
@@ -49,16 +49,22 @@ Command discovery is an approved non-source surface for this feature. If impleme
 
 ### Agent Model Used
 
-TBD
+GitHub Copilot
 
 ### Debug Log References
 
-TBD
+- `uv run --with pytest --with pyyaml python -m pytest _bmad/lens-work/scripts/tests/test-quickdev-conductor-contract.py _bmad/lens-work/scripts/tests/test-module-prompt-registry.py _bmad/lens-work/scripts/tests/test-module-surface-uniqueness.py` - 13 passed.
+- `git diff --check` - passed with no blocking output.
+- Target repo commit: `3de34bf4` on `feature/quickdev-expressplan`.
 
 ### Completion Notes
 
-TBD
+- Registered `lens-quickdev.prompt.md` and `lens-quickdev` in `module.yaml` exactly once.
+- Added one `lens-quickdev` row to `module-help.csv` with dev-ready-only guidance and versioned evidence output language.
+- Extended quickdev contract tests to verify module discovery/help registration remains exact and scoped.
 
 ### File List
 
-TBD
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/module.yaml`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/module-help.csv`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/scripts/tests/test-quickdev-conductor-contract.py`

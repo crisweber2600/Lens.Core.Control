@@ -1,7 +1,7 @@
 feature: lens-dev-new-codebase-quickdev-expressplan
 doc_type: sprint-status
 status: approved
-updated_at: '2026-05-06T22:50:13Z'
+updated_at: '2026-05-06T22:51:32Z'
 
 sprint_1:
   sprint_number: 1
@@ -17,7 +17,7 @@ sprint_1:
 
     - story_id: QD-1.2
       title: "Register Command Discovery and Operator Help"
-      status: in-progress
+      status: done
       story_points: 2
       depends_on: [QD-1.1]
       notes: "Requires QD-1.1 surfaces before discovery/help registration can be validated."
@@ -37,7 +37,7 @@ sprint_1:
       notes: "Versioned artifact creation under quickdev/ subfolder."
 
   sprint_points_total: 11
-  sprint_points_complete: 3
+  sprint_points_complete: 5
 
 sprint_2:
   sprint_number: 2
@@ -108,8 +108,8 @@ sprint_3:
 
 overall:
   total_story_points: 29
-  completed_story_points: 3
-  remaining_story_points: 26
+  completed_story_points: 5
+  remaining_story_points: 24
   dev_ready: true
   dev_complete: false
   feature_phase: finalizeplan-complete
