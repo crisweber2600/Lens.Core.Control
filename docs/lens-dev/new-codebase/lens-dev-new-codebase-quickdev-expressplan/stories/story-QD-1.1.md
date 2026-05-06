@@ -35,6 +35,13 @@ The current feature packet makes `lens-quickdev` an additive public command. The
 
 This story establishes those surfaces only. Discovery/help registration, lifecycle gating, and quickdev evidence logic are handled by later stories.
 
+## Implementation Steps
+
+1. Add `_bmad/lens-work/prompts/lens-quickdev.prompt.md` as a redirect-only prompt that runs prompt-start preflight and loads the owning skill.
+2. Add `_bmad/lens-work/skills/lens-quickdev/SKILL.md` with the conductor contract, explicit dev-ready scope, and delegation to `bmad-quick-dev`.
+3. Verify the prompt contains no command registration, lifecycle branching, or implementation logic beyond preflight and skill loading.
+4. Verify the skill names the existing quick-dev engine as the only implementation path.
+
 ---
 
 ## Acceptance Criteria
@@ -64,3 +71,25 @@ This story establishes those surfaces only. Discovery/help registration, lifecyc
 
 - Inspect the prompt to confirm preflight is the first executable step.
 - Inspect the skill contract to confirm it delegates to `bmad-quick-dev`.
+
+## Governance Coordination Note
+
+This story creates public command surfaces only. Any discovery/help registration belongs to QD-1.2 so this story does not silently expand command metadata scope.
+
+## Dev Agent Record
+
+### Agent Model Used
+
+TBD
+
+### Debug Log References
+
+TBD
+
+### Completion Notes
+
+TBD
+
+### File List
+
+TBD
