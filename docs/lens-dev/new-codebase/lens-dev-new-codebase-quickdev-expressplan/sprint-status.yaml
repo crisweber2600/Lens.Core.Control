@@ -1,7 +1,7 @@
 feature: lens-dev-new-codebase-quickdev-expressplan
 doc_type: sprint-status
 status: approved
-updated_at: '2026-05-06T22:49:17Z'
+updated_at: '2026-05-06T22:50:13Z'
 
 sprint_1:
   sprint_number: 1
@@ -17,7 +17,7 @@ sprint_1:
 
     - story_id: QD-1.2
       title: "Register Command Discovery and Operator Help"
-      status: backlog
+      status: in-progress
       story_points: 2
       depends_on: [QD-1.1]
       notes: "Requires QD-1.1 surfaces before discovery/help registration can be validated."
