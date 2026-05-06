@@ -1,0 +1,115 @@
+feature: lens-dev-new-codebase-quickdev-expressplan
+doc_type: sprint-status
+status: approved
+updated_at: '2026-05-06T21:05:00Z'
+
+sprint_1:
+  sprint_number: 1
+  name: "Governed Quickdev Entry and Planning Gate"
+  objective: "Establish public command surfaces, lifecycle gates, and versioned evidence scaffold."
+  status: in-progress
+  stories:
+    - story_id: QD-1.1
+      title: "Add Public Prompt and Skill Surfaces"
+      status: ready
+      story_points: 3
+      notes: "First ready-for-dev story. Seeded as handoff entry point."
+
+    - story_id: QD-1.2
+      title: "Register Command Discovery and Operator Help"
+      status: backlog
+      story_points: 2
+      depends_on: [QD-1.1]
+      notes: "Requires QD-1.1 surfaces before discovery/help registration can be validated."
+
+    - story_id: QD-1.3
+      title: "Implement Feature Resolution and Dev-Ready Gate"
+      status: backlog
+      story_points: 3
+      depends_on: [QD-1.1]
+      notes: "Lifecycle gate and target-repo blocking logic."
+
+    - story_id: QD-1.4
+      title: "Create Versioned Quickdev Evidence Scaffold"
+      status: backlog
+      story_points: 3
+      depends_on: [QD-1.3]
+      notes: "Versioned artifact creation under quickdev/ subfolder."
+
+  sprint_points_total: 11
+  sprint_points_complete: 0
+
+sprint_2:
+  sprint_number: 2
+  name: "Scoped Implementation Execution and Branch Control"
+  objective: "Delegate implementation through bmad-quick-dev, enforce branch policy, and handle validation failures."
+  status: planned
+  stories:
+    - story_id: QD-2.1
+      title: "Delegate Implementation Through bmad-quick-dev"
+      status: backlog
+      story_points: 3
+      depends_on: [QD-1.3]
+      notes: "Conductor-only delegation; no second quick-dev engine."
+
+    - story_id: QD-2.2
+      title: "Apply Branch Policy and PR Orchestration"
+      status: backlog
+      story_points: 2
+      depends_on: [QD-2.1]
+      notes: "Direct commit to active feature branch; otherwise branch and PR via git orchestration."
+
+    - story_id: QD-2.3
+      title: "Record Validation, Commit, and No-Op Outcomes"
+      status: backlog
+      story_points: 3
+      depends_on: [QD-2.2]
+      notes: "Evidence file updated with commit hash, validation result, and no-op outcome when applicable."
+
+    - story_id: QD-2.4
+      title: "Handle Validation Failure Branches and Preserve Bug Quickdev"
+      status: backlog
+      story_points: 3
+      depends_on: [QD-2.3]
+      notes: "Three-state failure handling; non-regression check for /lens-bug-quickdev."
+
+  sprint_points_total: 11
+  sprint_points_complete: 0
+
+sprint_3:
+  sprint_number: 3
+  name: "Audit Trail, Publication, and Safe Surface Expansion"
+  objective: "Publish versioned quickdev evidence to governance, reconcile target-repo metadata, and guard scope expansion."
+  status: planned
+  stories:
+    - story_id: QD-3.1
+      title: "Publish Versioned Quickdev Evidence to Governance"
+      status: backlog
+      story_points: 3
+      depends_on: [QD-2.3]
+      notes: "Publication of exact versioned file to governance_docs_path/quickdev/."
+
+    - story_id: QD-3.2
+      title: "Reconcile Target Repos and Dev-Handoff Metadata"
+      status: backlog
+      story_points: 2
+      depends_on: [QD-3.1]
+      notes: "Register lens.core.src through sanctioned helper; update planning contract."
+
+    - story_id: QD-3.3
+      title: "Guard Scope Expansion and Final Audit Readiness"
+      status: backlog
+      story_points: 2
+      depends_on: [QD-3.2]
+      notes: "Scope-creep warning, override record, and audit readiness check."
+
+  sprint_points_total: 7
+  sprint_points_complete: 0
+
+overall:
+  total_story_points: 29
+  completed_story_points: 0
+  remaining_story_points: 29
+  dev_ready: true
+  dev_complete: false
+  feature_phase: finalizeplan-complete
