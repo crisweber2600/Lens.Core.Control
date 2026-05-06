@@ -2,7 +2,7 @@
 feature: lens-dev-new-codebase-quickdev-expressplan
 story_id: "QD-2.3"
 doc_type: story
-status: backlog
+status: done
 type: new
 title: "Record Validation, Commit, and No-Op Outcomes"
 priority: P1
@@ -17,7 +17,7 @@ updated_at: 2026-05-06T21:20:00Z
 
 **Feature:** `lens-dev-new-codebase-quickdev-expressplan`
 **Epic:** `Epic 2 - Scoped Implementation Execution and Branch Control`
-**Priority:** P1 | **Points:** 3 | **Status:** backlog
+**Priority:** P1 | **Points:** 3 | **Status:** done
 
 ## Goal
 
@@ -37,10 +37,10 @@ The quickdev evidence artifact is the durable operator record. It replaces a sep
 
 ## Acceptance Criteria
 
-- [ ] Focused validation command and result are recorded in the artifact.
-- [ ] Non-empty runs record conventional commit hash, changed files, branch, and PR URL when present.
-- [ ] No-op runs record `no-op` and do not create empty commits.
-- [ ] Evidence updates preserve the existing versioned filename.
+- [x] Focused validation command and result are recorded in the artifact.
+- [x] Non-empty runs record conventional commit hash, changed files, branch, and PR URL when present.
+- [x] No-op runs record `no-op` and do not create empty commits.
+- [x] Evidence updates preserve the existing versioned filename.
 
 ## Governance Coordination Note
 
@@ -50,16 +50,22 @@ Commit and validation evidence belongs in the versioned quickdev artifact. Do no
 
 ### Agent Model Used
 
-TBD
+GitHub Copilot
 
 ### Debug Log References
 
-TBD
+- `uv run --with pytest --with pyyaml python -m pytest _bmad/lens-work/scripts/tests/test-quickdev-conductor-contract.py` - 19 passed.
+- `git diff --check` - passed with no blocking output.
+- Target repo commit: `2821bd63` on `feature/quickdev-expressplan`.
 
 ### Completion Notes
 
-TBD
+- Added the `Run Result Recording` contract to update the existing versioned quickdev artifact in place.
+- Required validation command, exit status, output summary, changed files, conventional commit hash, branch, base branch, and PR URL evidence.
+- Defined no-op handling that records `no-op` and forbids empty commits.
+- Added tests that preserve the original versioned filename and prevent split validation/commit sidecar files.
 
 ### File List
 
-TBD
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/lens-quickdev/SKILL.md`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/scripts/tests/test-quickdev-conductor-contract.py`
