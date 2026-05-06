@@ -1,7 +1,7 @@
 feature: lens-dev-new-codebase-quickdev-expressplan
 doc_type: sprint-status
 status: approved
-updated_at: '2026-05-06T23:59:03Z'
+updated_at: '2026-05-06T23:59:40Z'
 
 sprint_1:
   sprint_number: 1
@@ -80,11 +80,11 @@ sprint_3:
   sprint_number: 3
   name: "Audit Trail, Publication, and Safe Surface Expansion"
   objective: "Publish versioned quickdev evidence to governance, reconcile target-repo metadata, and guard scope expansion."
-  status: planned
+  status: in-progress
   stories:
     - story_id: QD-3.1
       title: "Publish Versioned Quickdev Evidence to Governance"
-      status: backlog
+      status: in-progress
       story_points: 3
       depends_on: [QD-2.3]
       notes: "Publication of exact versioned file to governance_docs_path/quickdev/."
