@@ -2,7 +2,7 @@
 feature: lens-dev-new-codebase-quickdev-expressplan
 story_id: "QD-2.1"
 doc_type: story
-status: backlog
+status: done
 type: new
 title: "Delegate Implementation Through bmad-quick-dev"
 priority: P1
@@ -17,7 +17,7 @@ updated_at: 2026-05-06T21:20:00Z
 
 **Feature:** `lens-dev-new-codebase-quickdev-expressplan`
 **Epic:** `Epic 2 - Scoped Implementation Execution and Branch Control`
-**Priority:** P1 | **Points:** 3 | **Status:** backlog
+**Priority:** P1 | **Points:** 3 | **Status:** done
 
 ## Goal
 
@@ -36,10 +36,10 @@ The wrapper exists to add Lens governance, lifecycle gates, evidence, and public
 
 ## Acceptance Criteria
 
-- [ ] The wrapper delegates implementation through the sanctioned Lens quick-dev path.
-- [ ] If no script facade exists, the wrapper loads the registered `bmad-quick-dev` skill directly with equivalent Lens context.
-- [ ] No second implementation engine is introduced.
-- [ ] Delegate outputs are captured for evidence update and validation handling.
+- [x] The wrapper delegates implementation through the sanctioned Lens quick-dev path.
+- [x] If no script facade exists, the wrapper loads the registered `bmad-quick-dev` skill directly with equivalent Lens context.
+- [x] No second implementation engine is introduced.
+- [x] Delegate outputs are captured for evidence update and validation handling.
 
 ## Governance Coordination Note
 
@@ -49,16 +49,22 @@ Implementation delegation may write source code in the target repo only. Control
 
 ### Agent Model Used
 
-TBD
+GitHub Copilot
 
 ### Debug Log References
 
-TBD
+- `uv run --with pytest --with pyyaml python -m pytest _bmad/lens-work/scripts/tests/test-quickdev-conductor-contract.py` - 14 passed.
+- `git diff --check` - passed with no blocking output.
+- Target repo commit: `8621d0c6` on `feature/quickdev-expressplan`.
 
 ### Completion Notes
 
-TBD
+- Added the `Delegation Packet` contract for `lens-quickdev` with feature id, target repo path, docs paths, evidence artifact path, ask, validation plan, and branch context.
+- Defined the sanctioned Lens BMAD wrapper route and direct registered-skill fallback for `bmad-quick-dev`.
+- Explicitly forbade reimplementing quick-dev planning, editing, validation, or review inside the wrapper.
+- Added delegate output capture fields needed by later evidence and branch-policy stories.
 
 ### File List
 
-TBD
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/lens-quickdev/SKILL.md`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/scripts/tests/test-quickdev-conductor-contract.py`
