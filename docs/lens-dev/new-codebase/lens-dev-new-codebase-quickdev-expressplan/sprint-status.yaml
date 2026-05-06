@@ -11,7 +11,7 @@ sprint_1:
   stories:
     - story_id: QD-1.1
       title: "Add Public Prompt and Skill Surfaces"
-      status: ready
+      status: in-progress
       story_points: 3
       notes: "First ready-for-dev story. Seeded as handoff entry point."
 
