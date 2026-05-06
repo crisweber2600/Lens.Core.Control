@@ -107,6 +107,10 @@ for p in Path(".github/prompts").glob("*.prompt.md"):
 **Cause**: Branch was created from `develop` (or another non-main base) but `--base main` was passed
 **Fix**: Use the merge-base timestamp comparison in `create-pr` of `git-orchestration-ops.py`. Do not call `gh pr create --base main` directly.
 
+**Convention**: `lens-bug-quickdev.prompt.md` must NOT include a preflight gate
+**Cause**: The quick-dev bug flow is intentionally lightweight; preflight adds friction and is not part of its contract
+**Fix**: Remove any preflight block from `.github/prompts/lens-bug-quickdev.prompt.md` (both control repo and source repo). The prompt should load the module prompt directly and handle user input — nothing else.
+
 **Error**: Repeated ad hoc Python one-liners are used for lifecycle state checks
 **Cause**: Phase, track, docs path, target repo, and PR-link inspection was done by temporary snippets instead of durable tooling
 **Fix**: Use the repo-owned lifecycle state helper instead of inline Python parsing:
