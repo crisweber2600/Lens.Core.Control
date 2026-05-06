@@ -1,7 +1,7 @@
 feature: lens-dev-new-codebase-quickdev-expressplan
 doc_type: sprint-status
 status: approved
-updated_at: '2026-05-06T23:56:52Z'
+updated_at: '2026-05-06T23:57:23Z'
 
 sprint_1:
   sprint_number: 1
@@ -68,7 +68,7 @@ sprint_2:
 
     - story_id: QD-2.4
       title: "Handle Validation Failure Branches and Preserve Bug Quickdev"
-      status: backlog
+      status: in-progress
       story_points: 3
       depends_on: [QD-2.3]
       notes: "Three-state failure handling; non-regression check for /lens-bug-quickdev."
