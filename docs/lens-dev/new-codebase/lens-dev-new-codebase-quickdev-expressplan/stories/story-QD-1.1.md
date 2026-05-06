@@ -2,7 +2,7 @@
 feature: lens-dev-new-codebase-quickdev-expressplan
 story_id: "QD-1.1"
 doc_type: story
-status: ready-for-dev
+status: done
 title: "Add Public Prompt and Skill Surfaces"
 priority: P0
 story_points: 3
@@ -16,7 +16,7 @@ updated_at: 2026-05-06T20:55:00Z
 
 **Feature:** `lens-dev-new-codebase-quickdev-expressplan`
 **Epic:** `Epic 1 — Governed Quickdev Entry and Planning Gate`
-**Priority:** P0 | **Points:** 3 | **Status:** ready-for-dev
+**Priority:** P0 | **Points:** 3 | **Status:** done
 
 ---
 
@@ -46,11 +46,11 @@ This story establishes those surfaces only. Discovery/help registration, lifecyc
 
 ## Acceptance Criteria
 
-- [ ] `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/prompts/lens-quickdev.prompt.md` exists and is redirect-only.
-- [ ] `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/lens-quickdev/SKILL.md` exists and owns the wrapper contract.
-- [ ] The prompt runs prompt-start preflight before handing off.
-- [ ] The prompt contains no business logic beyond preflight and skill loading.
-- [ ] The skill documents delegation to `bmad-quick-dev` rather than introducing a second implementation engine.
+- [x] `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/prompts/lens-quickdev.prompt.md` exists and is redirect-only.
+- [x] `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/lens-quickdev/SKILL.md` exists and owns the wrapper contract.
+- [x] The prompt runs prompt-start preflight before handing off.
+- [x] The prompt contains no business logic beyond preflight and skill loading.
+- [x] The skill documents delegation to `bmad-quick-dev` rather than introducing a second implementation engine.
 
 ---
 
@@ -80,16 +80,22 @@ This story creates public command surfaces only. Any discovery/help registration
 
 ### Agent Model Used
 
-TBD
+GitHub Copilot
 
 ### Debug Log References
 
-TBD
+- `uv run --with pytest python -m pytest _bmad/lens-work/scripts/tests/test-quickdev-conductor-contract.py` - 5 passed.
+- `git diff --check` - passed with no output.
+- Target repo commit: `099d2bc1` on `feature/quickdev-expressplan`.
 
 ### Completion Notes
 
-TBD
+- Added the public `/lens-quickdev` module prompt as a redirect-only surface that runs `lens-preflight` before loading the owning skill.
+- Added the `lens-quickdev` skill contract with explicit dev-ready preconditions, scope rules, versioned evidence contract, and delegation to `bmad-quick-dev` as the only implementation engine.
+- Added focused contract tests that protect the redirect-only prompt and conductor-only skill boundaries.
 
 ### File List
 
-TBD
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/prompts/lens-quickdev.prompt.md`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/lens-quickdev/SKILL.md`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/scripts/tests/test-quickdev-conductor-contract.py`

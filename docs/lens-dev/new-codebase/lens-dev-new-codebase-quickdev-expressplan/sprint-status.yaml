@@ -1,7 +1,7 @@
 feature: lens-dev-new-codebase-quickdev-expressplan
 doc_type: sprint-status
 status: approved
-updated_at: '2026-05-06T21:05:00Z'
+updated_at: '2026-05-06T22:49:17Z'
 
 sprint_1:
   sprint_number: 1
@@ -11,7 +11,7 @@ sprint_1:
   stories:
     - story_id: QD-1.1
       title: "Add Public Prompt and Skill Surfaces"
-      status: in-progress
+      status: done
       story_points: 3
       notes: "First ready-for-dev story. Seeded as handoff entry point."
 
@@ -37,7 +37,7 @@ sprint_1:
       notes: "Versioned artifact creation under quickdev/ subfolder."
 
   sprint_points_total: 11
-  sprint_points_complete: 0
+  sprint_points_complete: 3
 
 sprint_2:
   sprint_number: 2
@@ -108,8 +108,8 @@ sprint_3:
 
 overall:
   total_story_points: 29
-  completed_story_points: 0
-  remaining_story_points: 29
+  completed_story_points: 3
+  remaining_story_points: 26
   dev_ready: true
   dev_complete: false
   feature_phase: finalizeplan-complete
