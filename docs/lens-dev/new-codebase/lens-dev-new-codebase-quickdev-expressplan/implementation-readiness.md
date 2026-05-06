@@ -34,9 +34,9 @@ updated_at: '2026-05-06T20:55:00Z'
 | sprint-plan.md | Yes | Approved | Four implementation slices with acceptance criteria documented |
 | expressplan-adversarial-review.md | Yes | Responses recorded | Medium findings reconciled into planning docs |
 | finalizeplan-review.md | Yes | Approved | Pass-with-warnings; carry-forward items addressed or explicitly deferred |
-| epics.md | Yes | Draft bundle complete | Approved epic structure and story decomposition present |
-| stories.md | Yes | Draft bundle complete | Story list with acceptance criteria present |
-| sprint-status.yaml | Yes | Draft bundle complete | First story seeded as ready-for-dev |
+| epics.md | Yes | Approved | Approved epic structure and story decomposition present |
+| stories.md | Yes | Approved | Story list with acceptance criteria present |
+| sprint-status.yaml | Yes | Approved | First story seeded as ready-for-dev |
 | story files | Yes | Seeded | `story-QD-1.1.md` created as ready-for-dev handoff story |
 
 ---

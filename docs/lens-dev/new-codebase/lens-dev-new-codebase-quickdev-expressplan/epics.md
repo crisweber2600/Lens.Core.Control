@@ -391,5 +391,3 @@ So that the feature can expand safely when needed without silently swallowing sc
 **When** operators prepare to enter `/dev`
 **Then** the story and sprint artifacts provide an ordered, reviewable starting point
 **And** the handoff no longer depends on undocumented assumptions.
-
-<!-- Epic and story sections are intentionally deferred to step-02-design-epics. -->
