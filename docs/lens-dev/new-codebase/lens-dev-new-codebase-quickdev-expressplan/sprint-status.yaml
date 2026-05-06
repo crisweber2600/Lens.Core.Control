@@ -1,13 +1,13 @@
 feature: lens-dev-new-codebase-quickdev-expressplan
 doc_type: sprint-status
 status: approved
-updated_at: '2026-05-06T22:53:36Z'
+updated_at: '2026-05-06T22:54:31Z'
 
 sprint_1:
   sprint_number: 1
   name: "Governed Quickdev Entry and Planning Gate"
   objective: "Establish public command surfaces, lifecycle gates, and versioned evidence scaffold."
-  status: in-progress
+  status: complete
   stories:
     - story_id: QD-1.1
       title: "Add Public Prompt and Skill Surfaces"
@@ -31,13 +31,13 @@ sprint_1:
 
     - story_id: QD-1.4
       title: "Create Versioned Quickdev Evidence Scaffold"
-      status: in-progress
+      status: done
       story_points: 3
       depends_on: [QD-1.3]
       notes: "Versioned artifact creation under quickdev/ subfolder."
 
   sprint_points_total: 11
-  sprint_points_complete: 8
+  sprint_points_complete: 11
 
 sprint_2:
   sprint_number: 2
@@ -108,8 +108,8 @@ sprint_3:
 
 overall:
   total_story_points: 29
-  completed_story_points: 8
-  remaining_story_points: 21
+  completed_story_points: 11
+  remaining_story_points: 18
   dev_ready: true
   dev_complete: false
   feature_phase: finalizeplan-complete

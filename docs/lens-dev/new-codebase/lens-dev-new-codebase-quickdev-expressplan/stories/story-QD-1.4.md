@@ -2,7 +2,7 @@
 feature: lens-dev-new-codebase-quickdev-expressplan
 story_id: "QD-1.4"
 doc_type: story
-status: backlog
+status: done
 type: new
 title: "Create Versioned Quickdev Evidence Scaffold"
 priority: P0
@@ -17,7 +17,7 @@ updated_at: 2026-05-06T21:20:00Z
 
 **Feature:** `lens-dev-new-codebase-quickdev-expressplan`
 **Epic:** `Epic 1 - Governed Quickdev Entry and Planning Gate`
-**Priority:** P0 | **Points:** 3 | **Status:** backlog
+**Priority:** P0 | **Points:** 3 | **Status:** done
 
 ## Goal
 
@@ -37,10 +37,10 @@ The approved planning packet removed a separate `commit.md` and made `quickdev/q
 
 ## Acceptance Criteria
 
-- [ ] The wrapper creates `quickdev/quickdev-[summaryofrequeststub]-vNNN.md` for each run.
-- [ ] Reruns create the next available version instead of overwriting prior evidence.
-- [ ] The artifact records request, assessment, assumptions, validation plan, and implementation plan before delegation.
-- [ ] The artifact is the only quickdev evidence file; no separate `commit.md` is created.
+- [x] The wrapper creates `quickdev/quickdev-[summaryofrequeststub]-vNNN.md` for each run.
+- [x] Reruns create the next available version instead of overwriting prior evidence.
+- [x] The artifact records request, assessment, assumptions, validation plan, and implementation plan before delegation.
+- [x] The artifact is the only quickdev evidence file; no separate `commit.md` is created.
 
 ## Governance Coordination Note
 
@@ -50,16 +50,22 @@ This story creates local feature docs evidence only. Governance publication is h
 
 ### Agent Model Used
 
-TBD
+GitHub Copilot
 
 ### Debug Log References
 
-TBD
+- `uv run --with pytest --with pyyaml python -m pytest _bmad/lens-work/scripts/tests/test-quickdev-conductor-contract.py` - 11 passed.
+- `git diff --check` - passed with no blocking output.
+- Target repo commit: `751e9607` on `feature/quickdev-expressplan`.
 
 ### Completion Notes
 
-TBD
+- Added a `Versioned Evidence Scaffold` section to the `lens-quickdev` skill contract.
+- Defined evidence directory resolution, request stub creation, `vNNN` version selection, required artifact sections, and no-overwrite behavior.
+- Explicitly forbade separate `commit.md`, `quickdev-commit.md`, or sidecar commit evidence files.
+- Added focused tests for version selection, pre-delegation evidence sections, overwrite prevention, and sidecar prevention.
 
 ### File List
 
-TBD
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/lens-quickdev/SKILL.md`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/scripts/tests/test-quickdev-conductor-contract.py`
