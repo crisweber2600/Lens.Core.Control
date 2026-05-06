@@ -7,15 +7,15 @@ verdict: pass-with-warnings
 status: approved
 critical_count: 0
 high_count: 0
-medium_count: 2
+medium_count: 1
 low_count: 1
-updated_at: '2026-05-06T16:40:00Z'
+updated_at: '2026-05-06T21:05:00Z'
 review_format: concise-v1
 ---
 
 # FinalizePlan Review - lens-quickdev Wrapper
 
-**Reviewed:** 2026-05-06T16:40:00Z
+**Reviewed:** 2026-05-06T21:05:00Z
 **Source:** phase-complete
 **Artifacts Reviewed:** business-plan.md, tech-plan.md, sprint-plan.md, expressplan-adversarial-review.md
 **Overall Verdict:** **pass-with-warnings**
@@ -57,8 +57,7 @@ review_format: concise-v1
 
 | # | Dimension | Finding | Recommendation |
 | --- | --- | --- | --- |
-| M1 | Dev Handoff Metadata | `feature.yaml.target_repos` is still empty even though the quickdev wrapper is explicitly designed to mutate `TargetProjects/lens-dev/new-codebase/lens.core.src`. Without a target repo entry, the wrapper's own safety gate will block as soon as `/dev` attempts to execute it. | FinalizePlan Step 3 should register `TargetProjects/lens-dev/new-codebase/lens.core.src` in `feature.yaml.target_repos` during metadata reconciliation before strict validation and dev handoff. This is a FinalizePlan-owned task, not a `/dev` negotiation item. |
-| M2 | Non-Source Surface Scope | Feature-associated control-repo docs are now explicitly in scope, but any broader control-repo or packaging/discovery updates would expand the feature beyond its default delivery slice. If implementation discovers those wider surfaces are required, the team needs a clear escalation rule instead of quietly absorbing the extra work. | Treat broader non-source updates as scope creep by default. Warn the user before expanding past feature docs and record any approved override in the downstream bundle artifacts. |
+| M1 | Non-Source Surface Scope | Feature-associated control-repo docs are now explicitly in scope, but any broader control-repo or packaging/discovery updates would expand the feature beyond its default delivery slice. If implementation discovers those wider surfaces are required, the team needs a clear escalation rule instead of quietly absorbing the extra work. | Treat broader non-source updates as scope creep by default. Warn the user before expanding past feature docs and record any approved override in the downstream bundle artifacts. |
 
 ### Low
 
@@ -92,10 +91,15 @@ The sprint slices are implementable, but the first dev story should absorb the m
 2. Control-repo documents associated with the feature are in scope by default. If broader non-source updates materially expand scope, warn the user and document any approved override.
 3. Quickdev evidence should create a new versioned artifact for each run under `quickdev/` so reruns remain separate.
 
+## Post-Bundle Metadata Reconciliation
+
+- Downstream bundle artifacts now exist: `epics.md`, `stories.md`, `implementation-readiness.md`, `sprint-status.yaml`, and a seeded ready-for-dev story file.
+- `feature.yaml.target_repos` now includes `lens.core.src`, resolving the dev-handoff metadata finding from this review.
+- The target-repo contract was aligned to the live `feature.yaml` schema: runtime resolution may map the `lens.core.src` alias to a local path through sanctioned Lens repo inventory.
+- Implementation-readiness now carries the versioned quickdev artifact rule and sanctioned governance publication path, resolving the prior low-severity handoff gap.
+
 ## Action Items Before Bundle Generation
 
 | # | Owner | Action | Priority |
 | --- | --- | --- | --- |
-| A1 | FinalizePlan | Register the target repo in feature metadata before strict handoff validation. | High |
-| A2 | FinalizePlan | If implementation needs broader non-feature control-repo or packaging surfaces, warn the user first and document any approved override. | Medium |
-| A3 | FinalizePlan | Carry versioned `quickdev/` artifact rules and sanctioned publication path expectations into implementation-readiness.md. | Medium |
+| A1 | FinalizePlan | If implementation needs broader non-feature control-repo or packaging surfaces, warn the user first and document any approved override. | Medium |

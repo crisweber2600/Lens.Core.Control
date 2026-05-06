@@ -62,7 +62,7 @@ Feature-associated control-repo docs are the default non-source surface in scope
 2. Load `lens-quickdev/SKILL.md`; keep the prompt as a redirect only.
 3. Resolve feature state via `lens-feature-yaml` and require an active feature unless `--feature-id` is supplied.
 4. Enforce the dev-ready gate. The feature must have the FinalizePlan dev-ready signal, such as `milestones.dev-ready` or the equivalent lifecycle state used by `lens-dev`; planning phases including `expressplan`, `expressplan-complete`, and `finalizeplan` are blocked.
-5. Resolve the target repo from `feature.yaml.target_repos[0].local_path`. FinalizePlan owns registering this metadata before dev handoff. If it is absent at runtime, stop with a clear target-repo blocker and do not guess.
+5. Resolve the target repo from the first `feature.yaml.target_repos` entry. If the entry is a repo alias such as `lens.core.src`, resolve it through the sanctioned Lens repo inventory or target-repo mapping. If a future structured entry with `local_path` exists, honor that path. FinalizePlan owns registering this metadata before dev handoff. If it is absent at runtime, stop with a clear target-repo blocker and do not guess.
 6. Resolve docs path from `feature.yaml.docs.path` and governance docs path from `feature.yaml.docs.governance_docs_path`; create the staged docs folder and `quickdev/` subfolder when missing.
 7. Generate the evidence file name from the request as a versioned artifact under `quickdev/quickdev-[summaryofrequeststub]-vNNN.md`:
   - lowercase the request summary
@@ -101,7 +101,7 @@ feature: <featureId>
 doc_type: quickdev
 status: completed|blocked|no-op|validation-failed
 artifact_version: <vNNN>
-target_repo: <local_path>
+target_repo: <target_repo_identifier_or_local_path>
 branch: <working_branch>
 commit: <hash or null>
 pr_url: <url or null>

@@ -1,0 +1,23 @@
+development_status:
+  # Epic 1 — Governed Quickdev Entry and Planning Gate
+  epic-1: in-progress
+  qd-1-1-add-public-prompt-and-skill-surfaces: ready-for-dev
+  qd-1-2-register-command-discovery-and-operator-help: backlog
+  qd-1-3-implement-feature-resolution-and-dev-ready-gate: backlog
+  qd-1-4-create-versioned-quickdev-evidence-scaffold: backlog
+  epic-1-retrospective: optional
+
+  # Epic 2 — Scoped Implementation Execution and Branch Control
+  epic-2: backlog
+  qd-2-1-delegate-implementation-through-bmad-quick-dev: backlog
+  qd-2-2-apply-branch-policy-and-pr-orchestration: backlog
+  qd-2-3-record-validation-commit-and-no-op-outcomes: backlog
+  qd-2-4-handle-validation-failure-branches-and-preserve-bug-quickdev: backlog
+  epic-2-retrospective: optional
+
+  # Epic 3 — Audit Trail, Publication, and Safe Surface Expansion
+  epic-3: backlog
+  qd-3-1-publish-versioned-quickdev-evidence-to-governance: backlog
+  qd-3-2-reconcile-target-repos-and-dev-handoff-metadata: backlog
+  qd-3-3-guard-scope-expansion-and-final-audit-readiness: backlog
+  epic-3-retrospective: optional
