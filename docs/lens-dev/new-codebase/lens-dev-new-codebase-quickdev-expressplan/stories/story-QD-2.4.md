@@ -2,7 +2,7 @@
 feature: lens-dev-new-codebase-quickdev-expressplan
 story_id: "QD-2.4"
 doc_type: story
-status: backlog
+status: done
 type: new
 title: "Handle Validation Failure Branches and Preserve Bug Quickdev"
 priority: P1
@@ -17,7 +17,7 @@ updated_at: 2026-05-06T21:20:00Z
 
 **Feature:** `lens-dev-new-codebase-quickdev-expressplan`
 **Epic:** `Epic 2 - Scoped Implementation Execution and Branch Control`
-**Priority:** P1 | **Points:** 3 | **Status:** backlog
+**Priority:** P1 | **Points:** 3 | **Status:** done
 
 ## Goal
 
@@ -36,10 +36,10 @@ Planning decisions define three recovery paths: pre-commit failures create no co
 
 ## Acceptance Criteria
 
-- [ ] Pre-commit validation failures create no commit and mark the artifact `blocked`.
-- [ ] Local post-commit validation failures do not push or create PRs and record `validation-failed` guidance.
-- [ ] Pushed or PR validation failures avoid history rewrite and record fix-forward or blocked PR recovery.
-- [ ] `/lens-bug-quickdev` routing remains unchanged under regression coverage.
+- [x] Pre-commit validation failures create no commit and mark the artifact `blocked`.
+- [x] Local post-commit validation failures do not push or create PRs and record `validation-failed` guidance.
+- [x] Pushed or PR validation failures avoid history rewrite and record fix-forward or blocked PR recovery.
+- [x] `/lens-bug-quickdev` routing remains unchanged under regression coverage.
 
 ## Governance Coordination Note
 
@@ -49,16 +49,21 @@ Failure handling changes must preserve the bug quickdev conductor contract. Any 
 
 ### Agent Model Used
 
-TBD
+GitHub Copilot
 
 ### Debug Log References
 
-TBD
+- `uv run --with pytest --with pyyaml python -m pytest _bmad/lens-work/scripts/tests/test-quickdev-conductor-contract.py` - 21 passed.
+- `git diff --check` - passed with no blocking output.
+- Target repo commit: `49b36359` on `feature/quickdev-expressplan`.
 
 ### Completion Notes
 
-TBD
+- Added `Validation Failure Handling` to `lens-quickdev` for pre-commit, local post-commit, and pushed/PR validation failures.
+- Required blocked evidence with no commit for pre-commit failures, `validation-failed` guidance without push/PR for local post-commit failures, and fix-forward or blocked PR guidance without history rewrite after push/PR.
+- Added regression checks proving `/lens-bug-quickdev` still routes to `bmad-lens-bug-quickdev` and keeps mandatory commit, push, PR, bug-artifact recording, and closeout behavior.
 
 ### File List
 
-TBD
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/lens-quickdev/SKILL.md`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/scripts/tests/test-quickdev-conductor-contract.py`

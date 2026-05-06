@@ -1,7 +1,7 @@
 feature: lens-dev-new-codebase-quickdev-expressplan
 doc_type: sprint-status
 status: approved
-updated_at: '2026-05-06T23:57:23Z'
+updated_at: '2026-05-06T23:59:03Z'
 
 sprint_1:
   sprint_number: 1
@@ -43,7 +43,7 @@ sprint_2:
   sprint_number: 2
   name: "Scoped Implementation Execution and Branch Control"
   objective: "Delegate implementation through bmad-quick-dev, enforce branch policy, and handle validation failures."
-  status: in-progress
+  status: complete
   stories:
     - story_id: QD-2.1
       title: "Delegate Implementation Through bmad-quick-dev"
@@ -68,13 +68,13 @@ sprint_2:
 
     - story_id: QD-2.4
       title: "Handle Validation Failure Branches and Preserve Bug Quickdev"
-      status: in-progress
+      status: done
       story_points: 3
       depends_on: [QD-2.3]
       notes: "Three-state failure handling; non-regression check for /lens-bug-quickdev."
 
   sprint_points_total: 11
-  sprint_points_complete: 8
+  sprint_points_complete: 11
 
 sprint_3:
   sprint_number: 3
@@ -108,8 +108,8 @@ sprint_3:
 
 overall:
   total_story_points: 29
-  completed_story_points: 19
-  remaining_story_points: 10
+  completed_story_points: 22
+  remaining_story_points: 7
   dev_ready: true
   dev_complete: false
   feature_phase: finalizeplan-complete
