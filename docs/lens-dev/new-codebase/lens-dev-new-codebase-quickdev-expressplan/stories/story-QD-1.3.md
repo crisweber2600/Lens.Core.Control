@@ -2,7 +2,7 @@
 feature: lens-dev-new-codebase-quickdev-expressplan
 story_id: "QD-1.3"
 doc_type: story
-status: backlog
+status: done
 type: new
 title: "Implement Feature Resolution and Dev-Ready Gate"
 priority: P0
@@ -17,7 +17,7 @@ updated_at: 2026-05-06T21:20:00Z
 
 **Feature:** `lens-dev-new-codebase-quickdev-expressplan`
 **Epic:** `Epic 1 - Governed Quickdev Entry and Planning Gate`
-**Priority:** P0 | **Points:** 3 | **Status:** backlog
+**Priority:** P0 | **Points:** 3 | **Status:** done
 
 ## Goal
 
@@ -37,11 +37,11 @@ Resolve the active Lens feature, enforce dev-ready eligibility, and block safely
 
 ## Acceptance Criteria
 
-- [ ] Active feature context resolves automatically.
-- [ ] Explicit `--feature-id` overrides active context.
-- [ ] Non-dev-ready features block before target-repo assessment.
-- [ ] Missing or unresolved `target_repos` blocks the run without guessing a write target.
-- [ ] Docs and governance docs paths resolve before quickdev evidence is created.
+- [x] Active feature context resolves automatically.
+- [x] Explicit `--feature-id` overrides active context.
+- [x] Non-dev-ready features block before target-repo assessment.
+- [x] Missing or unresolved `target_repos` blocks the run without guessing a write target.
+- [x] Docs and governance docs paths resolve before quickdev evidence is created.
 
 ## Governance Coordination Note
 
@@ -51,16 +51,22 @@ This story consumes `feature.yaml` state but does not mutate governance. Target 
 
 ### Agent Model Used
 
-TBD
+GitHub Copilot
 
 ### Debug Log References
 
-TBD
+- `uv run --with pytest --with pyyaml python -m pytest _bmad/lens-work/scripts/tests/test-quickdev-conductor-contract.py` - 9 passed.
+- `git diff --check` - passed with no blocking output.
+- Target repo commit: `b5616d57` on `feature/quickdev-expressplan`.
 
 ### Completion Notes
 
-TBD
+- Added the `Feature Resolution Gate` to the `lens-quickdev` skill contract.
+- Defined explicit `--feature-id` precedence, active context fallback, sanctioned `feature-yaml-ops.py read` usage, and dev-ready phase allowlist.
+- Required docs path, governance docs path, and first target repo resolution before evidence creation or target source assessment.
+- Added hard-stop language for unresolved target repos without guessing from open files, terminal state, or prompt text.
 
 ### File List
 
-TBD
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/lens-quickdev/SKILL.md`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/scripts/tests/test-quickdev-conductor-contract.py`
