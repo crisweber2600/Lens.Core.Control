@@ -10,7 +10,7 @@ high_count: 0
 medium_count: 2
 low_count: 1
 carry_forward_blockers: []
-updated_at: '2026-05-06T15:45:00Z'
+updated_at: '2026-05-06T16:40:00Z'
 review_format: concise-v1
 ---
 
@@ -38,7 +38,7 @@ Severity: Medium
 
 The wrapper depends on `feature.yaml.target_repos` to avoid guessing write targets. Many planning-only features may not have that field populated until FinalizePlan. That is the right safety choice, but it means the wrapper will block for older or incomplete feature records unless metadata is repaired first.
 
-Response: Accepted and clarified. `lens-quickdev` must only run once the feature is dev-ready, and FinalizePlan should include target-repo metadata readiness in implementation readiness.
+Response: Accepted and clarified. `lens-quickdev` must only run once the feature is dev-ready, and FinalizePlan owns the target-repo metadata registration needed for implementation readiness.
 
 ### L1 - Branch policy needs explicit test coverage
 
@@ -81,4 +81,4 @@ Bob (SM): The biggest delivery risk is hidden target-repo readiness. Put the tar
 	- Before commit: do not commit; record a blocked quickdev evidence file with the failing validation summary.
 	- After local commit but before push or PR: keep the commit local, do not push, record `validation-failed`, and ask for fix-forward or revert direction.
 	- After push or PR: do not rewrite shared history; add a fix-forward commit or mark the PR blocked/draft according to repo policy, then update the quickdev evidence.
-4. Quickdev evidence should publish to governance. Remove the separate commit artifact; commit evidence belongs in a generated `quickdev-[summaryofrequeststub].md` file named from the request.
+4. Quickdev evidence should publish to governance. Remove the separate commit artifact; commit evidence belongs in versioned quickdev artifacts under `quickdev/quickdev-[summaryofrequeststub]-vNNN.md` so reruns remain separate.

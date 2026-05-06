@@ -8,12 +8,14 @@ key_decisions:
   - Preserve the existing BMAD quick-dev implementation workflow as the implementation engine.
   - Require the wrapper to assess the target codebase, plan the ask, implement the ask, and document both the quickdev session and resulting commit in feature docs.
   - Allow lens-quickdev only once the feature is dev-ready; it must not bypass planning or FinalizePlan readiness.
+  - FinalizePlan owns the target-repo metadata registration required before dev-ready quickdev handoff.
   - Use direct commits only when an active feature branch is already in progress; otherwise use the standard branch and PR flow.
-  - Publish quickdev evidence to governance and store commit evidence inside a generated quickdev-[summaryofrequeststub].md file rather than a separate commit artifact.
+  - Treat feature-associated control-repo docs as the default non-source documentation scope; if broader surfaces materially expand scope, warn the user and record any approved override.
+  - Publish quickdev evidence to governance and store commit evidence inside versioned quickdev artifacts under `quickdev/quickdev-[summaryofrequeststub]-vNNN.md` rather than a separate commit artifact.
 open_questions: []
 depends_on: []
 blocks: []
-updated_at: '2026-05-06T15:45:00Z'
+updated_at: '2026-05-06T16:40:00Z'
 ---
 
 # Business Plan - lens-quickdev Wrapper
@@ -34,7 +36,7 @@ Create a public `lens-quickdev` wrapper that gives users a single governed comma
 4. Produce or refresh a concise implementation plan for the ask.
 5. Delegate code changes to the existing `bmad-quick-dev` workflow through Lens context.
 6. Commit the implementation in the target repo when changes are made.
-7. Write durable quickdev evidence that records the request, plan, validation, branch, commit, changed files, and PR URL when applicable.
+7. Write durable quickdev evidence in a versioned quickdev artifact that records the request, plan, validation, branch, commit, changed files, and PR URL when applicable.
 8. Publish the same quickdev evidence to governance so the implementation record survives beyond the local control repo branch.
 
 ## Users
@@ -47,7 +49,8 @@ In scope:
 - Add a public `lens-quickdev` prompt redirect and Lens skill contract in the source module.
 - Register `lens-quickdev` in the module command surfaces needed for discovery.
 - Route implementation through `lens-bmad-skill --skill bmad-quick-dev` or an equivalent sanctioned Lens wrapper path.
-- Define docs output as `quickdev-[summaryofrequeststub].md` under `feature.yaml.docs.path`.
+- Define docs output as versioned quickdev artifacts under `feature.yaml.docs.path/quickdev/`.
+- Update feature-associated control-repo docs when the wrapper contract or operator guidance changes.
 - Publish the generated quickdev document to `feature.yaml.docs.governance_docs_path` through the sanctioned Lens publication path.
 - Require codebase assessment, implementation plan, validation summary, commit hash, branch, PR URL when applicable, and changed-files summary in the generated quickdev document.
 - Enforce the branch policy: commit directly to an active in-progress feature branch when one exists; otherwise create a working branch and PR through standard Lens git orchestration.
@@ -57,6 +60,7 @@ Out of scope:
 - Rewriting the BMAD quick-dev workflow itself.
 - Replacing `lens-dev` or `lens-finalizeplan` lifecycle conductors.
 - Creating a bug intake artifact; `/lens-bug-quickdev` remains the bug-specific route.
+- Broad control-repo or packaging/discovery updates outside the feature docs unless the user explicitly accepts the scope increase and that override is documented.
 - Writing directly to `lens.core/` or `.github/prompts/` in the control repo.
 
 ## Success Criteria
@@ -66,6 +70,7 @@ Out of scope:
 - The wrapper refuses to run when no target repository can be resolved.
 - Codebase assessment and implementation plan are documented before or during the quickdev session.
 - Implementation changes are committed in the target repo with a conventional commit message.
-- Feature docs include a generated `quickdev-[summaryofrequeststub].md` file with the request, plan, validation, changed files, branch, commit hash, and PR URL when applicable.
+- Feature docs include a generated versioned quickdev artifact under `quickdev/` with the request, plan, validation, changed files, branch, commit hash, and PR URL when applicable.
 - The generated quickdev document is published to governance after the local evidence file is written.
+- If implementation expands beyond feature-associated control-repo docs, the scope-creep warning and any approved override are recorded in the feature docs.
 - Existing `/lens-bug-quickdev` behavior remains unchanged.
