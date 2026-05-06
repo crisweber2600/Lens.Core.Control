@@ -2,7 +2,7 @@
 feature: lens-dev-new-codebase-quickdev-expressplan
 story_id: "QD-2.2"
 doc_type: story
-status: backlog
+status: done
 type: new
 title: "Apply Branch Policy and PR Orchestration"
 priority: P1
@@ -17,7 +17,7 @@ updated_at: 2026-05-06T21:20:00Z
 
 **Feature:** `lens-dev-new-codebase-quickdev-expressplan`
 **Epic:** `Epic 2 - Scoped Implementation Execution and Branch Control`
-**Priority:** P1 | **Points:** 2 | **Status:** backlog
+**Priority:** P1 | **Points:** 2 | **Status:** done
 
 ## Goal
 
@@ -37,10 +37,10 @@ User decisions in planning established conditional behavior: commit directly to 
 
 ## Acceptance Criteria
 
-- [ ] Active in-progress feature branches receive direct commits.
-- [ ] Runs without an active feature branch prepare a working branch and PR through Lens git orchestration.
-- [ ] Dirty or ambiguous branch states block before implementation.
-- [ ] Branch, base, and PR URL are recorded for later evidence updates.
+- [x] Active in-progress feature branches receive direct commits.
+- [x] Runs without an active feature branch prepare a working branch and PR through Lens git orchestration.
+- [x] Dirty or ambiguous branch states block before implementation.
+- [x] Branch, base, and PR URL are recorded for later evidence updates.
 
 ## Governance Coordination Note
 
@@ -50,16 +50,22 @@ Branch and PR orchestration must use sanctioned Lens git helpers. Do not hand-ro
 
 ### Agent Model Used
 
-TBD
+GitHub Copilot
 
 ### Debug Log References
 
-TBD
+- `uv run --with pytest --with pyyaml python -m pytest _bmad/lens-work/scripts/tests/test-quickdev-conductor-contract.py` - 17 passed.
+- `git diff --check` - passed with no blocking output.
+- Target repo commit: `c41b0acf` on `feature/quickdev-expressplan`.
 
 ### Completion Notes
 
-TBD
+- Added the `Branch and PR Policy` contract to `lens-quickdev`.
+- Defined direct commit behavior for active in-progress feature branches and Lens git orchestration for prepared working branches and PR creation.
+- Added branch-state blockers for dirty, detached, ambiguous, merge, rebase, and cherry-pick states before implementation.
+- Required branch context fields for later evidence updates.
 
 ### File List
 
-TBD
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/lens-quickdev/SKILL.md`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/scripts/tests/test-quickdev-conductor-contract.py`

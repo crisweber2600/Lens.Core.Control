@@ -1,7 +1,7 @@
 feature: lens-dev-new-codebase-quickdev-expressplan
 doc_type: sprint-status
 status: approved
-updated_at: '2026-05-06T23:53:20Z'
+updated_at: '2026-05-06T23:54:55Z'
 
 sprint_1:
   sprint_number: 1
@@ -54,7 +54,7 @@ sprint_2:
 
     - story_id: QD-2.2
       title: "Apply Branch Policy and PR Orchestration"
-      status: in-progress
+      status: done
       story_points: 2
       depends_on: [QD-2.1]
       notes: "Direct commit to active feature branch; otherwise branch and PR via git orchestration."
@@ -74,7 +74,7 @@ sprint_2:
       notes: "Three-state failure handling; non-regression check for /lens-bug-quickdev."
 
   sprint_points_total: 11
-  sprint_points_complete: 3
+  sprint_points_complete: 5
 
 sprint_3:
   sprint_number: 3
@@ -108,8 +108,8 @@ sprint_3:
 
 overall:
   total_story_points: 29
-  completed_story_points: 14
-  remaining_story_points: 15
+  completed_story_points: 16
+  remaining_story_points: 13
   dev_ready: true
   dev_complete: false
   feature_phase: finalizeplan-complete
