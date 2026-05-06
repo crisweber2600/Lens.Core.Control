@@ -1,7 +1,7 @@
 feature: lens-dev-new-codebase-quickdev-expressplan
 doc_type: sprint-status
 status: approved
-updated_at: '2026-05-06T22:53:03Z'
+updated_at: '2026-05-06T22:53:36Z'
 
 sprint_1:
   sprint_number: 1
@@ -31,7 +31,7 @@ sprint_1:
 
     - story_id: QD-1.4
       title: "Create Versioned Quickdev Evidence Scaffold"
-      status: backlog
+      status: in-progress
       story_points: 3
       depends_on: [QD-1.3]
       notes: "Versioned artifact creation under quickdev/ subfolder."
