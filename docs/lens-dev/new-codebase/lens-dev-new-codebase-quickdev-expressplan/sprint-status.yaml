@@ -1,7 +1,7 @@
 feature: lens-dev-new-codebase-quickdev-expressplan
 doc_type: sprint-status
 status: approved
-updated_at: '2026-05-06T23:54:55Z'
+updated_at: '2026-05-06T23:55:25Z'
 
 sprint_1:
   sprint_number: 1
@@ -61,7 +61,7 @@ sprint_2:
 
     - story_id: QD-2.3
       title: "Record Validation, Commit, and No-Op Outcomes"
-      status: backlog
+      status: in-progress
       story_points: 3
       depends_on: [QD-2.2]
       notes: "Evidence file updated with commit hash, validation result, and no-op outcome when applicable."
