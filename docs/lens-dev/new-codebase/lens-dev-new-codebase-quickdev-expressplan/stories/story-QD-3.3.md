@@ -2,7 +2,7 @@
 feature: lens-dev-new-codebase-quickdev-expressplan
 story_id: "QD-3.3"
 doc_type: story
-status: backlog
+status: done
 type: confirm
 title: "Guard Scope Expansion and Final Audit Readiness"
 priority: P2
@@ -17,7 +17,7 @@ updated_at: 2026-05-06T21:20:00Z
 
 **Feature:** `lens-dev-new-codebase-quickdev-expressplan`
 **Epic:** `Epic 3 - Audit Trail, Publication, and Safe Surface Expansion`
-**Priority:** P2 | **Points:** 2 | **Status:** backlog
+**Priority:** P2 | **Points:** 2 | **Status:** done
 
 ## Goal
 
@@ -37,10 +37,10 @@ Planning allowed feature-associated control-repo docs by default, but broader no
 
 ## Acceptance Criteria
 
-- [ ] Broader non-source work triggers a scope-creep warning before edits proceed.
-- [ ] Any approved override is recorded in the feature docs or quickdev artifact.
-- [ ] The downstream bundle documents command-surface scope, evidence versioning, and governance publication.
-- [ ] Final audit readiness confirms no unresolved blocker remains for the wrapper feature.
+- [x] Broader non-source work triggers a scope-creep warning before edits proceed.
+- [x] Any approved override is recorded in the feature docs or quickdev artifact.
+- [x] The downstream bundle documents command-surface scope, evidence versioning, and governance publication.
+- [x] Final audit readiness confirms no unresolved blocker remains for the wrapper feature.
 
 ## Governance Coordination Note
 
@@ -50,16 +50,22 @@ This story is a governance and audit guard. It should not broaden implementation
 
 ### Agent Model Used
 
-TBD
+GitHub Copilot
 
 ### Debug Log References
 
-TBD
+- `uv run --with pytest --with pyyaml python -m pytest _bmad/lens-work/scripts/tests/test-quickdev-conductor-contract.py` - 27 passed.
+- `uv run --with pytest --with pyyaml python -m pytest _bmad/lens-work/scripts/tests/test-module-prompt-registry.py _bmad/lens-work/scripts/tests/test-module-surface-uniqueness.py _bmad/lens-work/scripts/tests/test-quickdev-conductor-contract.py` - 33 passed.
+- `git diff --check` - passed with no blocking output.
+- Target repo commit: `2f28bde5` on `feature/quickdev-expressplan`.
 
 ### Completion Notes
 
-TBD
+- Added `Scope Expansion Guard and Final Audit` to `lens-quickdev`, distinguishing approved target/source, command metadata, tests, feature docs, and sanctioned governance publication paths from broader non-source edits.
+- Required `quickdev_scope_expansion_warning`, durable `scope_expansion_override` evidence for approved overrides, and `quickdev_scope_expansion_blocked` before unapproved broader non-source edits.
+- Added final audit readiness coverage for command surface, versioned evidence, governance publication, metadata reconciliation, scope guard, and `/lens-bug-quickdev` compatibility.
 
 ### File List
 
-TBD
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/lens-quickdev/SKILL.md`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/scripts/tests/test-quickdev-conductor-contract.py`

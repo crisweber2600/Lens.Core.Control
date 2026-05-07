@@ -1,7 +1,7 @@
 feature: lens-dev-new-codebase-quickdev-expressplan
 doc_type: sprint-status
 status: approved
-updated_at: '2026-05-07T00:03:44Z'
+updated_at: '2026-05-07T00:04:42Z'
 
 sprint_1:
   sprint_number: 1
@@ -80,7 +80,7 @@ sprint_3:
   sprint_number: 3
   name: "Audit Trail, Publication, and Safe Surface Expansion"
   objective: "Publish versioned quickdev evidence to governance, reconcile target-repo metadata, and guard scope expansion."
-  status: in-progress
+  status: complete
   stories:
     - story_id: QD-3.1
       title: "Publish Versioned Quickdev Evidence to Governance"
@@ -98,18 +98,18 @@ sprint_3:
 
     - story_id: QD-3.3
       title: "Guard Scope Expansion and Final Audit Readiness"
-      status: in-progress
+      status: done
       story_points: 2
       depends_on: [QD-3.2]
       notes: "Scope-creep warning, override record, and audit readiness check."
 
   sprint_points_total: 7
-  sprint_points_complete: 5
+  sprint_points_complete: 7
 
 overall:
   total_story_points: 29
-  completed_story_points: 27
-  remaining_story_points: 2
+  completed_story_points: 29
+  remaining_story_points: 0
   dev_ready: true
   dev_complete: false
   feature_phase: finalizeplan-complete
