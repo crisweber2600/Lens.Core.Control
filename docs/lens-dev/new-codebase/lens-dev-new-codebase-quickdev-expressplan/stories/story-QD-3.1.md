@@ -2,7 +2,7 @@
 feature: lens-dev-new-codebase-quickdev-expressplan
 story_id: "QD-3.1"
 doc_type: story
-status: backlog
+status: done
 type: new
 title: "Publish Versioned Quickdev Evidence to Governance"
 priority: P2
@@ -17,7 +17,7 @@ updated_at: 2026-05-06T21:20:00Z
 
 **Feature:** `lens-dev-new-codebase-quickdev-expressplan`
 **Epic:** `Epic 3 - Audit Trail, Publication, and Safe Surface Expansion`
-**Priority:** P2 | **Points:** 3 | **Status:** backlog
+**Priority:** P2 | **Points:** 3 | **Status:** done
 
 ## Goal
 
@@ -37,10 +37,10 @@ User decisions made governance publication mandatory. The governance copy must p
 
 ## Acceptance Criteria
 
-- [ ] The exact versioned artifact is published to `feature.yaml.docs.governance_docs_path/quickdev/`.
-- [ ] Publication uses the sanctioned Lens publication path rather than direct governance authoring.
-- [ ] Published reruns preserve their unique version suffixes.
-- [ ] Publication status is recorded in the quickdev artifact.
+- [x] The exact versioned artifact is published to `feature.yaml.docs.governance_docs_path/quickdev/`.
+- [x] Publication uses the sanctioned Lens publication path rather than direct governance authoring.
+- [x] Published reruns preserve their unique version suffixes.
+- [x] Publication status is recorded in the quickdev artifact.
 
 ## Governance Coordination Note
 
@@ -50,16 +50,21 @@ Governance publication is in scope for this feature, but the implementation must
 
 ### Agent Model Used
 
-TBD
+GitHub Copilot
 
 ### Debug Log References
 
-TBD
+- `uv run --with pytest --with pyyaml python -m pytest _bmad/lens-work/scripts/tests/test-quickdev-conductor-contract.py` - 23 passed.
+- `git diff --check` - passed with no blocking output.
+- Target repo commit: `bcb18d40` on `feature/quickdev-expressplan`.
 
 ### Completion Notes
 
-TBD
+- Added `Governance Publication` to `lens-quickdev`, resolving `feature.yaml.docs.governance_docs_path` and mapping the local versioned evidence artifact to the matching governance `quickdev/` destination.
+- Required sanctioned Lens publication helper usage, exact content verification, preserved rerun version suffixes, and publication status/path recording in `Commit and Publication Record`.
+- Added focused contract tests for governance publication path, helper usage, version preservation, and publication result recording.
 
 ### File List
 
-TBD
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/lens-quickdev/SKILL.md`
+- `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/scripts/tests/test-quickdev-conductor-contract.py`
