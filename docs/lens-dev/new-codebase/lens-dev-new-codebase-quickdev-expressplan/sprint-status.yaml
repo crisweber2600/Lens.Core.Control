@@ -1,7 +1,7 @@
 feature: lens-dev-new-codebase-quickdev-expressplan
 doc_type: sprint-status
 status: approved
-updated_at: '2026-05-07T00:03:09Z'
+updated_at: '2026-05-07T00:03:44Z'
 
 sprint_1:
   sprint_number: 1
@@ -98,7 +98,7 @@ sprint_3:
 
     - story_id: QD-3.3
       title: "Guard Scope Expansion and Final Audit Readiness"
-      status: backlog
+      status: in-progress
       story_points: 2
       depends_on: [QD-3.2]
       notes: "Scope-creep warning, override record, and audit readiness check."
