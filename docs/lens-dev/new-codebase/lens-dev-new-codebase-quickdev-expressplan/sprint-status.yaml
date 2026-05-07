@@ -1,7 +1,7 @@
 feature: lens-dev-new-codebase-quickdev-expressplan
 doc_type: sprint-status
 status: approved
-updated_at: '2026-05-07T00:01:46Z'
+updated_at: '2026-05-07T00:03:09Z'
 
 sprint_1:
   sprint_number: 1
@@ -91,7 +91,7 @@ sprint_3:
 
     - story_id: QD-3.2
       title: "Reconcile Target Repos and Dev-Handoff Metadata"
-      status: in-progress
+      status: done
       story_points: 2
       depends_on: [QD-3.1]
       notes: "Register lens.core.src through sanctioned helper; update planning contract."
@@ -104,12 +104,12 @@ sprint_3:
       notes: "Scope-creep warning, override record, and audit readiness check."
 
   sprint_points_total: 7
-  sprint_points_complete: 3
+  sprint_points_complete: 5
 
 overall:
   total_story_points: 29
-  completed_story_points: 25
-  remaining_story_points: 4
+  completed_story_points: 27
+  remaining_story_points: 2
   dev_ready: true
   dev_complete: false
   feature_phase: finalizeplan-complete
