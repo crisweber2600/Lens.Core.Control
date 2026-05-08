@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>UX Color Themes - lens-dev-new-codebase-flatten</title>
+  <style>
+    :root { --bg: #f6f8fb; --text: #0f172a; }
+    body { margin: 0; font-family: "Segoe UI", Tahoma, sans-serif; background: var(--bg); color: var(--text); }
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 24px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+    .card { background: #fff; border: 1px solid #dbe3ef; border-radius: 10px; overflow: hidden; }
+    .swatches { display: grid; grid-template-columns: repeat(5, 1fr); height: 76px; }
+    .swatch-a1 { background: #0f172a; }
+    .swatch-a2 { background: #1d4ed8; }
+    .swatch-a3 { background: #16a34a; }
+    .swatch-a4 { background: #f59e0b; }
+    .swatch-a5 { background: #dc2626; }
+    .swatch-b1 { background: #111827; }
+    .swatch-b2 { background: #0ea5e9; }
+    .swatch-b3 { background: #22c55e; }
+    .swatch-b4 { background: #f97316; }
+    .swatch-b5 { background: #ef4444; }
+    .swatch-c1 { background: #1f2937; }
+    .swatch-c2 { background: #7c3aed; }
+    .swatch-c3 { background: #10b981; }
+    .swatch-c4 { background: #f59e0b; }
+    .swatch-c5 { background: #e11d48; }
+    .swatch-d1 { background: #0b1324; }
+    .swatch-d2 { background: #2563eb; }
+    .swatch-d3 { background: #059669; }
+    .swatch-d4 { background: #d97706; }
+    .swatch-d5 { background: #b91c1c; }
+    .meta { padding: 12px; font-size: 14px; }
+    .pill { display: inline-block; margin-top: 8px; padding: 2px 8px; border-radius: 999px; font-size: 12px; background: #e8eef9; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Color Theme Explorer</h1>
+    <p>Working visual aid for command-first Lens UX planning. Themes prioritize trust, clarity, and deterministic state communication.</p>
+    <div class="grid">
+      <section class="card"><div class="swatches"><div class="swatch-a1"></div><div class="swatch-a2"></div><div class="swatch-a3"></div><div class="swatch-a4"></div><div class="swatch-a5"></div></div><div class="meta"><strong>Audit Blue</strong><div class="pill">Balanced / Default</div></div></section>
+      <section class="card"><div class="swatches"><div class="swatch-b1"></div><div class="swatch-b2"></div><div class="swatch-b3"></div><div class="swatch-b4"></div><div class="swatch-b5"></div></div><div class="meta"><strong>Operator Cyan</strong><div class="pill">High clarity</div></div></section>
+      <section class="card"><div class="swatches"><div class="swatch-c1"></div><div class="swatch-c2"></div><div class="swatch-c3"></div><div class="swatch-c4"></div><div class="swatch-c5"></div></div><div class="meta"><strong>Signal Violet</strong><div class="pill">Status emphasis</div></div></section>
+      <section class="card"><div class="swatches"><div class="swatch-d1"></div><div class="swatch-d2"></div><div class="swatch-d3"></div><div class="swatch-d4"></div><div class="swatch-d5"></div></div><div class="meta"><strong>Governed Midnight</strong><div class="pill">Strict / enterprise</div></div></section>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>UX Design Directions - lens-dev-new-codebase-flatten</title>
+  <style>
+    body { margin: 0; font-family: "Segoe UI", Tahoma, sans-serif; background: #f3f6fb; color: #0f172a; }
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 20px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
+    .panel { background: #fff; border: 1px solid #dbe3ef; border-radius: 12px; overflow: hidden; }
+    .head { padding: 12px 14px; border-bottom: 1px solid #e7edf7; font-weight: 600; }
+    .body { padding: 14px; font-size: 14px; }
+    .chip { display: inline-block; margin-right: 6px; margin-bottom: 6px; padding: 2px 8px; border-radius: 999px; background: #e8eef9; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Design Directions</h1>
+    <p>Directional mockups for a no-UI, command-first experience. These are planning references for message hierarchy and status framing.</p>
+    <div class="grid">
+      <section class="panel"><div class="head">Direction 1: Audit Console</div><div class="body"><span class="chip">Structured-first</span><span class="chip">Strict states</span><p>Dense logs, strong blocker formatting, highly explicit phase and gate indicators.</p></div></section>
+      <section class="panel"><div class="head">Direction 2: Guided Terminal</div><div class="body"><span class="chip">Balanced</span><span class="chip">Action prompts</span><p>Compact command output with clear "what next" affordances and reduced cognitive load.</p></div></section>
+      <section class="panel"><div class="head">Direction 3: Minimal Deterministic</div><div class="body"><span class="chip">Flat-mode friendly</span><span class="chip">Low noise</span><p>Minimal verbosity, strict consistency in status lines, branch context shown only when relevant.</p></div></section>
+      <section class="panel"><div class="head">Direction 4: Policy Lens</div><div class="body"><span class="chip">Governance visibility</span><span class="chip">Mode transparency</span><p>Each output block starts with resolved mode + policy source and then command outcome.</p></div></section>
+      <section class="panel"><div class="head">Direction 5: Delivery Momentum</div><div class="body"><span class="chip">Flow-first</span><span class="chip">Phase velocity</span><p>Highlights handoff readiness, blockers, and confidence signals with concise summaries.</p></div></section>
+      <section class="panel"><div class="head">Direction 6: Inclusive Ops</div><div class="body"><span class="chip">Accessibility</span><span class="chip">Readable by default</span><p>Simple language, high-contrast status cues, keyboard-safe interaction assumptions.</p></div></section>
+    </div>
+  </div>
+</body>
+</html>

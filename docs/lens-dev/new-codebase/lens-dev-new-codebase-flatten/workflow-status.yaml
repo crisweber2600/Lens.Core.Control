@@ -1,0 +1,62 @@
+---
+featureId: lens-dev-new-codebase-flatten
+project: Control-Repo Workflow Mode (Flatten Feature)
+status: design-phase-complete
+lastUpdated: "2026-05-08T00:00:00Z"
+
+phases:
+  preplan:
+    status: complete
+    completedAt: "2026-05-08T00:00:00Z"
+    artifacts:
+      - brainstorm.md
+      - research.md
+      - product-brief.md
+      - preplan-adversarial-review.md
+    verdict: pass-with-warnings
+    findings: 3 high-priority, 3 medium, 1 low
+
+  businessplan:
+    status: ready
+    readyAt: "2026-05-08T00:00:00Z"
+    artifacts:
+      - business-plan.md (requirements handoff)
+    description: "Requirements conversion from PrePlan review findings. Awaiting PRD/UX-design authoring delegation."
+
+  uxdesign:
+    status: complete
+    completedAt: "2026-05-08T00:00:00Z"
+    steps: 14/14
+    artifacts:
+      - ux-design-specification.md (main deliverable)
+      - ux-color-themes.html (supporting visual asset)
+      - ux-design-directions.html (supporting visual asset)
+    description: "Comprehensive UX specification for CLI-focused control-repo workflow mode."
+
+deliverables:
+  planning:
+    - brainstorm.md
+    - research.md
+    - product-brief.md
+    - business-plan.md
+    - preplan-adversarial-review.md
+
+  design:
+    - ux-design-specification.md
+    - ux-color-themes.html
+    - ux-design-directions.html
+
+nextSteps:
+  - Activate BusinessPlan phase for PRD/UX-design authoring (or skip to Architecture)
+  - Wireframe generation based on UX spec
+  - Interactive prototype development
+  - Solution architecture and technical design
+  - Figma visual design implementation
+  - Epic and story creation for development
+
+recommendedPath: "BusinessPlan PRD → Wireframes → Prototype → Architecture → Epics → Dev"
+
+notes: |
+  PrePlan complete with pass-with-warnings verdict. Three high-level findings addressed in BusinessPlan
+  requirements conversion. UX design workflow completed with best-practice CLI-focused defaults. Ready
+  for next phase activation or direct progression to architecture/implementation.
