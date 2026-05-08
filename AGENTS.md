@@ -1,5 +1,7 @@
 # AGENTS.md - Lens Core Source Enforcement
-
+## MUST HAVE RULES:
+- Use `vscode_askQuestions` #askquestions for all follow-up questions instead of freeform chat prompts.
+- Always run `bmad-lens-postflight` immediately after every Lens command execution before ending the session.
 ## Purpose
 
 This file defines non-negotiable operating constructs required for Lens and BMAD skills to work reliably in a control-repo lifecycle model.
@@ -208,8 +210,6 @@ Hard stop behavior:
 - Do not bypass validators for phase or metadata contracts.
 - Do not use destructive git operations unless explicitly requested and approved.
 - Keep governance operations auditable and boundary-preserving.
-- Use `vscode_askQuestions` for all follow-up questions instead of freeform chat prompts.
-- Always run `bmad-lens-postflight` immediately after every Lens command execution before ending the session.
 
 ## Quick Compliance Checklist
 
