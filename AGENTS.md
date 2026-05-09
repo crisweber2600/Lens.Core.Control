@@ -1,120 +1,241 @@
-# AGENTS.md — Lens.Core.Control
+# AGENTS.md - Lens Core Source Enforcement
+## MUST HAVE RULES:
+- Use `vscode_askQuestions` #askquestions for all follow-up questions instead of freeform chat prompts.
+- Always run `bmad-lens-postflight` immediately after every Lens command execution before ending the session.
+## Purpose
 
-## What This Repo Is
+This file defines non-negotiable operating constructs required for Lens and BMAD skills to work reliably in a control-repo lifecycle model.
 
-This is a **LENS Workbench control repo**. It is a local workspace container — not a source repo itself. It orchestrates planning, documentation, and lifecycle operations for the LENS project.
+Scope covered by this policy:
+- Control-repo planning orchestration
+- Governance publication boundaries
+- Feature lifecycle gates
+- Artifact naming contracts
+- Delegation boundaries between conductors and BMAD skills
 
-## Critical Rules
+## Repository Roles and Source of Truth
 
-| Rule | Detail |
-|------|--------|
-| **Never write to `lens.core/`** | It is a read-only clone of the Lens.Core.Release module. Changes there are overwritten on every pull. |
-| **All code changes go in `TargetProjects/`** | The real source repos live here. The primary source for the lens-work module is `TargetProjects/lens-dev/new-codebase/lens.core.src/`. |
-| **All Lens documentation goes in `docs/`** | Planning artifacts, phase reports, and sprint files are written under `docs/lens-dev/new-codebase/<feature-folder>/`. |
-| **Never generate code in the control repo root** | Only `docs/`, `setup.py`, and `.lens/` (non-personal) are tracked by this repo. |
+- Control repo is the planning workspace and branch topology owner.
+- Governance repo is the metadata and published-artifact authority on main only.
+- Target repos are implementation-only surfaces for code and tests.
+- Release clone surfaces are read-only in local control workspaces.
+- All code changes must be made in `TargetProjects/`; do not place implementation edits in the control repo root or release clone surfaces.
+- All output documents and planning artifacts must be written under `docs/`.
 
-## Directory Layout
+Canonical authorities:
+- Feature lifecycle state: feature.yaml in governance repo.
+- Planning staging path: docs path resolved from feature.yaml.docs.path.
+- Governance mirror updates: publish-to-governance flow only.
 
-```
-lens.core/                          # READ-ONLY — local clone of Lens.Core.Release
-  _bmad/lens-work/                  # Reference copy of the LENS workbench module
-TargetProjects/
-  lens-dev/new-codebase/
-    lens.core.src/                  # PRIMARY SOURCE — lens-work module development
-      _bmad/lens-work/              # Edit here, not in lens.core/
-    lens.core.ghactions/            # GitHub Actions source
-    lens.core.release/              # Release packaging
-  lens/
-    lens-governance/                # Governance repo (constitutions, feature index, artifacts)
-docs/
-  lens-dev/new-codebase/            # All planning docs for active features
-    lens-dev-new-codebase-<name>/   # One folder per feature
-.lens/
-  personal/context.yaml             # Active feature context (domain + service) — not committed
-  governance-setup.yaml             # Governance repo path config
-setup.py                            # Local workspace bootstrap script
-```
+## Write Scope Boundaries
 
-## Active Context
+### Allowed writes by class
 
-Current active context (`.lens/personal/context.yaml`):
-- **domain**: `lens-dev`
-- **service**: `new-codebase`
+- Planning conductors: write only to resolved control-repo docs path.
+- Dev conductors and implementation delegates: write only to resolved target repo path.
+- Governance updates: only through approved orchestration boundaries.
 
-Use `/lens-switch` to change the active feature context.
+### Prohibited writes
 
-## Lens Lifecycle Phases
+The following are hard prohibited unless explicitly required by a dedicated governance operation:
+- Direct file patching under governance repo feature folders.
+- Direct authoring under governance repo docs mirror paths.
+- Direct writes to release clone paths in local control workspaces.
+- Direct writes to generated control-root .github artifacts when those artifacts are setup-generated mirrors.
 
-**Full track**: `preplan → businessplan → techplan → finalizeplan → dev → complete`  
-**Express track**: `expressplan → finalizeplan → dev → complete`
+Hard stop behavior:
+- On write-scope violation risk, stop before mutation.
+- Do not auto-reroute to a guessed path.
+- Report required approved path or operation.
 
-Each phase produces docs in `docs/lens-dev/new-codebase/<feature-folder>/`. See [lifecycle.yaml](lens.core/_bmad/lens-work/lifecycle.yaml) for full phase definitions.
+## Governance Boundary Contract
 
-## Feature Folder & Artifact Conventions
+Governance artifacts must be updated through approved boundaries only:
+- publish-to-governance workflow
+- lens-git-orchestration governed operations
+- lens-feature-yaml lifecycle metadata operations
 
-- Feature doc folders: `lens-dev-new-codebase-<featureId>/`
-- Planning artifacts use YAML frontmatter with `status: approved|draft|reviewed`
-- `sprint-status.yaml` is a **single YAML document** (not a multi-doc stream)
-- ExpressPlan review report: `expressplan-adversarial-review.md` (legacy alias: `expressplan-review.md`)
-- PrePlan review: `preplan-adversarial-review.md`; TechPlan review: `techplan-adversarial-review.md`
-- FinalizePlan review: `finalizeplan-review.md`
+Rules:
+- Governance remains on main as the authoritative state.
+- No feature-branch governance topology is allowed.
+- No hand-copy publication is allowed.
 
-## Making Changes to the Lens Module
+Hard stop behavior:
+- If publication cannot proceed via approved boundary, stop with blocking reason.
+- Never suggest direct manual file patching in governance as a fallback.
 
-1. Edit files in `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/`
-2. Commit and push to the source repo (branch strategy: `feature/<featureStub>`)
-3. Merge to `main` or `develop` — the [promote-to-release workflow](.github/workflows/promote-to-release.yml) builds the full BMAD release and pushes to Lens.Core.Release
+## Feature Context Resolution Contract
 
-## Key Reference Files
+Before reading or writing phase artifacts, resolve context in this order:
+1. Explicit feature input
+2. Session feature context
+3. feature.yaml authority
 
-- [lens.core/_bmad/lens-work/lifecycle.yaml](lens.core/_bmad/lens-work/lifecycle.yaml) — phase definitions and artifact contracts
-- [lens.core/_bmad/lens-work/bmadconfig.yaml](lens.core/_bmad/lens-work/bmadconfig.yaml) — module configuration and topology
-- [lens.core/_bmad/lens-work/module-help.csv](lens.core/_bmad/lens-work/module-help.csv) — full Lens command catalog
-- [lens.core/_bmad/lens-work/README.md](lens.core/_bmad/lens-work/README.md) — workbench overview
-- [docs/lens-dev/new-codebase/lens-dev-new-codebase-baseline/research.md](docs/lens-dev/new-codebase/lens-dev-new-codebase-baseline/research.md) — baseline lifecycle contract reference
+Required resolved values:
+- domain
+- service
+- feature_id
+- track
+- phase
+- docs.path
+- target_repos for implementation operations
 
-## Common Terminal Errors & Fixes
+Rules:
+- Never infer feature identity from open files, cwd, or branch name.
+- Never infer phase from branch topology or artifact presence.
+- Never silently apply track defaults.
 
-> When a recurring terminal error is encountered, record the fix here.
+Hard stop behavior:
+- Missing required context for requested operation is blocking.
+- Do not continue with placeholder or guessed values.
 
-<!-- Example format:
-**Error**: `<error message>`  
-**Cause**: `<root cause>`  
-**Fix**: `<resolution>`
--->
+## Phase Gate Contract
 
-**Error**: `rg: command not found` (or similar)
-**Cause**: `ripgrep (rg) is not installed in this environment`
-**Fix**: Use `grep` instead of `rg` for all text searches
+Phase progression requires explicit gate success. Review failure blocks advancement.
 
-**Error**: Prompt files contain literal `\r\n` text after bulk replace
-**Cause**: PowerShell heredoc replacement does not expand `\r\n` as newlines
-**Fix**: Never use PowerShell `-Command` regex replacements or heredoc bulk edits for prompt files. Use the repo-owned prompt normalization helper when repairing literal newline tokens:
-```bash
-uv run --script TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/scripts/prompt-normalize.py .github/prompts
-```
-For new multi-file text replacement work, use a reviewed Python helper or add one under `TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/scripts/`; avoid one-off terminal snippets. Minimal fallback pattern:
-```python
-from pathlib import Path
+Rules:
+- A failed adversarial review blocks all downstream phase actions.
+- On failed review: no phase update, no PR creation, no publish, no continuation.
+- Phase transitions must follow lifecycle ordering for the active track.
 
-for p in Path(".github/prompts").glob("*.prompt.md"):
-  content = p.read_text(encoding="utf-8")
-  content = content.replace("OLD", "NEW")
-  p.write_text(content, encoding="utf-8")
-```
+Express track progression:
+- expressplan -> finalizeplan -> dev -> complete
 
-**Error**: `gh pr create` fails with no common ancestor / no shared history
-**Cause**: Branch was created from `develop` (or another non-main base) but `--base main` was passed
-**Fix**: Use the merge-base timestamp comparison in `create-pr` of `git-orchestration-ops.py`. Do not call `gh pr create --base main` directly.
+Full track progression:
+- preplan -> businessplan -> techplan -> finalizeplan -> dev -> complete
 
-**Convention**: `lens-bug-quickdev.prompt.md` must NOT include a preflight gate
-**Cause**: The quick-dev bug flow is intentionally lightweight; preflight adds friction and is not part of its contract
-**Fix**: Remove any preflight block from `.github/prompts/lens-bug-quickdev.prompt.md` (both control repo and source repo). The prompt should load the module prompt directly and handle user input — nothing else.
+Hard stop behavior:
+- If predecessor gate is incomplete or invalid, stop with expected predecessor state and artifact contract.
 
-**Error**: Repeated ad hoc Python one-liners are used for lifecycle state checks
-**Cause**: Phase, track, docs path, target repo, and PR-link inspection was done by temporary snippets instead of durable tooling
-**Fix**: Use the repo-owned lifecycle state helper instead of inline Python parsing:
-```bash
-uv run --script TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/scripts/lifecycle-state.py --feature-id <feature-id> --governance-repo TargetProjects/lens/lens-governance
-```
-If a lifecycle check recurs and this helper does not cover it, extend the helper with tests rather than sending another on-the-fly script.
+## Artifact Naming and Metadata Contract
+
+Canonical filenames are strict and required.
+
+### Review artifacts
+
+- preplan-adversarial-review.md
+- businessplan-adversarial-review.md
+- techplan-adversarial-review.md
+- expressplan-adversarial-review.md
+- finalizeplan-review.md
+
+Strict naming rule:
+- Legacy aliases are not accepted as compliant outputs.
+- Do not create, recommend, or validate legacy alias filenames.
+
+### Finalize bundle core outputs
+
+- epics.md
+- stories.md
+- implementation-readiness.md
+- sprint-status.yaml
+- story files
+
+### Story file frontmatter minimum
+
+Each story file must include:
+- feature
+- story_id
+- doc_type set to story
+- status
+- title
+- depends_on
+- updated_at
+
+### Sprint status format
+
+For new outputs, sprint-status.yaml must be a single YAML document.
+
+Hard stop behavior:
+- Missing required artifact names or required frontmatter fields blocks phase completion.
+
+## Track-Aware Input Contract
+
+Downstream BMAD generation must use track-approved input artifacts from lifecycle validation.
+
+Rules:
+- Use approved input document list supplied by lifecycle gate.
+- Do not block on generic BMAD file expectations that are not required by active track.
+
+Express-track required planning inputs for FinalizePlan downstream generation:
+- business-plan.md
+- tech-plan.md
+- sprint-plan.md
+
+Hard stop behavior:
+- If lifecycle input-ready validation fails, do not invoke downstream bundle generation.
+
+## Delegation Contract
+
+Conductors orchestrate. Delegates author.
+
+Rules:
+- Conductors must not synthesize delegated artifacts inline.
+- BMAD wrapper resolves context, enforces write scope, delegates, then stops.
+- Wrapper does not continue conductor menus or discovery after handoff.
+
+Hard stop behavior:
+- If delegate skill is unavailable or unregistered, stop with actionable resolution path.
+
+## Batch Mode Contract
+
+Batch flows follow strict two-pass behavior.
+
+Pass 1:
+- Generate batch intake artifact only.
+- Do not publish, do not phase-transition, do not generate lifecycle outputs.
+
+Pass 2:
+- Resume owning conductor with approved batch answers.
+- Only ask genuinely unresolved questions.
+
+Hard stop behavior:
+- Placeholder or incomplete required answer blocks are blocking.
+
+## Dev Readiness and Implementation Contract
+
+Dev operations require explicit readiness.
+
+Rules:
+- Allowed entry phases for quick dev must be explicitly dev-ready per lifecycle policy.
+- target_repos must be resolvable from feature metadata before implementation writes.
+- If control-repo dev branch activation is required by conductor, branch gate must pass before reading sprint or story state.
+
+Hard stop behavior:
+- Missing target repo mapping or failed dev branch activation blocks implementation flow.
+
+## Operational Guardrails
+
+- Prefer durable repo scripts over ad hoc one-off shell parsing for lifecycle state.
+- Do not bypass validators for phase or metadata contracts.
+- Do not use destructive git operations unless explicitly requested and approved.
+- Keep governance operations auditable and boundary-preserving.
+
+## Quick Compliance Checklist
+
+Before any phase action:
+- Context resolved from authoritative sources
+- Operation write scope resolved and logged
+- Predecessor phase gate passed
+- Required artifact contract known for active track
+
+Before any publication:
+- Review gate passed
+- Publication route is approved orchestration boundary
+- No direct governance patching attempted
+
+Before phase completion:
+- Required artifacts present with strict names
+- Required metadata validated
+- Lifecycle state update performed through approved feature metadata operation
+
+## Enforcement Priority
+
+When rules conflict, apply this precedence:
+1. Write boundary safety
+2. Governance immutability and publication boundary
+3. Lifecycle phase gate integrity
+4. Canonical artifact and metadata contracts
+5. Delegation boundary correctness
+
+If unresolved after precedence resolution, stop and escalate with explicit blocker details.

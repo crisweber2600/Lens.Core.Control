@@ -1,0 +1,21 @@
+sprint_number: 1
+sprint_goal: Implement the governed feature reopen capability in lens-feature-yaml
+status: not-started
+stories:
+  - story_id: S1.1
+    title: Add reopen subcommand to feature-yaml-ops.py
+    status: not-started
+    estimate: M
+    depends_on: []
+  - story_id: S1.2
+    title: Add automated tests for the reopen subcommand
+    status: not-started
+    estimate: S
+    depends_on:
+      - S1.1
+  - story_id: S1.3
+    title: Update lens-feature-yaml SKILL.md with reopen documentation
+    status: not-started
+    estimate: S
+    depends_on:
+      - S1.1
