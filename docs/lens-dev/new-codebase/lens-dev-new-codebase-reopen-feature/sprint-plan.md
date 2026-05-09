@@ -1,7 +1,7 @@
 ---
 feature: lens-dev-new-codebase-reopen-feature
 doc_type: sprint-plan
-status: draft
+status: approved
 goal: "Deliver reopen capability in one focused slice with script + tests + skill docs updates."
 key_decisions:
   - Single-slice implementation to minimize lifecycle risk.

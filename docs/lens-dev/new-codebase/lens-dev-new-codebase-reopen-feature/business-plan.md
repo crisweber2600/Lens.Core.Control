@@ -1,15 +1,18 @@
 ---
 feature: lens-dev-new-codebase-reopen-feature
 doc_type: business-plan
-status: draft
+status: approved
 goal: "Enable a governed reopen workflow so archived/complete features can be safely returned to express planning when work resumes."
 key_decisions:
   - Add a sanctioned CLI operation in lens-feature-yaml instead of manual governance edits.
-  - Limit reopen to terminal features and require a non-terminal target phase.
+  - Limit reopen to terminal features (phase=complete OR status=archived) and require a non-terminal target phase.
   - Default reopen target phase to expressplan for this feature's intended workflow.
   - Keep feature-index synchronization in the same operation so lens-switch visibility is immediately correct.
-open_questions:
-  - Should a dedicated /lens-reopen command be added later, or is lens-feature-yaml reopen sufficient?
+open_questions: []
+deferred:
+  - question: "Should a dedicated /lens-reopen command be added later, or is lens-feature-yaml reopen sufficient?"
+    disposition: "Deferred. feature-yaml-ops.py reopen is sufficient for this slice. A /lens-reopen conductor is a future UX improvement."
+    recorded_in: finalizeplan-review.md
 depends_on:
   - TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/lens-feature-yaml/scripts/feature-yaml-ops.py
 blocks:
@@ -33,6 +36,7 @@ In scope:
 - Add governed reopen operation to `lens-feature-yaml`.
 - Keep behavior deterministic and script-backed.
 - Ensure `feature-index.yaml` status is unarchived as part of reopen.
+- Terminal states that qualify for reopen: `phase=complete` OR `status=archived` (or both).
 
 Out of scope:
 - New UI or interactive menu command.
