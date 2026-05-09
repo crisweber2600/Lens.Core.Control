@@ -9,7 +9,7 @@ updated_at: '2026-05-08T00:00:00Z'
 
 ## Summary
 
-All express-track planning artifacts are approved and the downstream bundle is complete. This feature is ready for dev handoff pending target_repos registration in `feature.yaml`.
+All express-track planning artifacts are approved, the downstream bundle is complete, and `target_repos` is populated in `feature.yaml`. This feature is ready for dev handoff.
 
 ## Planning Artifacts Status
 
@@ -45,7 +45,6 @@ TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/lens-f
 
 | Risk | Severity | Mitigation |
 |---|---|---|
-| `target_repos` not yet populated in `feature.yaml` | High | Must be resolved before dev handoff — see H1 in finalizeplan-review.md |
 | `/lens-reopen` conductor absent | Medium | Formally deferred; documented in business-plan.md and finalizeplan-review.md |
 | Governance mirror state after reopen | Low | Out-of-scope per finalizeplan-review.md M2; acceptable for this slice |
 
@@ -53,7 +52,7 @@ TargetProjects/lens-dev/new-codebase/lens.core.src/_bmad/lens-work/skills/lens-f
 
 - [x] Planning bundle complete and committed
 - [x] `feature.yaml` phase = `finalizeplan-complete` (after Step 3 completion)
-- [ ] `target_repos` populated in `feature.yaml` (H1 — must be resolved)
+- [x] `target_repos` populated in `feature.yaml`
 - [x] Dev branch exists: `lens-dev-new-codebase-reopen-feature-dev`
 - [x] Test harness: `uv run python -m pytest` confirmed working in repo
 
