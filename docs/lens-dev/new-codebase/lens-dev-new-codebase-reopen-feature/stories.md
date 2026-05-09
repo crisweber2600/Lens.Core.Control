@@ -16,7 +16,7 @@ updated_at: '2026-05-08T00:00:00Z'
 **so that** I can restore a terminal feature to active express planning without manually editing `feature.yaml`.
 
 **Acceptance Criteria:**
-- Command accepts `--feature-id` (or `--feature-path`), `--governance-repo`, `--to-phase` (default: `expressplan`), and optional `--actor`.
+- Command accepts `--feature-id`, `--governance-repo`, `--to-phase` (default: `expressplan`), and optional `--actor`.
 - Rejects non-terminal features with a clear `reopen_not_allowed` error and non-zero exit code.
 - On success, `feature.yaml` has: `phase=<to-phase>`, `status=active`, no `completed_at` key, and a new `phase_transitions` entry with timestamp and actor.
 - `feature-index.yaml` status is set to `active` via the existing sync helper.
