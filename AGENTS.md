@@ -1,7 +1,7 @@
 # AGENTS.md - Lens Core Source Enforcement
 ## MUST HAVE RULES:
 - Use `vscode_askQuestions` #askquestions for all follow-up questions instead of freeform chat prompts.
-- Always run `bmad-lens-postflight` immediately after every Lens command execution before ending the session.
+- Always run `uv run lens.core/_bmad/lens-work/scripts/bmad-lens-postflight.py` (from workspace root) immediately after every Lens command execution before ending the session.
 ## Purpose
 
 This file defines non-negotiable operating constructs required for Lens and BMAD skills to work reliably in a control-repo lifecycle model.
