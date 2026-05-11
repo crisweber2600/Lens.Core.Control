@@ -192,6 +192,23 @@ Pass 2:
 Hard stop behavior:
 - Placeholder or incomplete required answer blocks are blocking.
 
+## Constitution Hard Gate Enforcement Contract
+
+All phase conductors (planning and dev) must invoke constitution resolution and enforce hard gates before delegating to any authoring or implementation skill.
+
+Rules:
+- Invoke `lens-constitution resolve --governance-dir {governance_repo}` (via `lens-constitution/SKILL.md`) immediately after feature context is resolved and before any artifact authoring or implementation delegation.
+- If constitution resolution fails (missing required org level or parse error), stop immediately. Do not continue to authoring or implementation.
+- Extract all hard-gate requirements from the full resolved constitution — both structured fields (`gate_mode: hard`, `required_artifacts`, `enforce_stories`, `enforce_review`) and all prose articles.
+- Display the applicable hard-gate requirements to the operator before delegation.
+- Pass the full resolved constitution prose as required context to every authoring and implementation delegate.
+- If a planned artifact or implementation would violate any hard-gate requirement (including Article 7 TDD red-green discipline, Article 3 architecture.md required, Article 8 BDD GWT scenarios, Article 9 security credential docs, FD-1 doc sync AC, FD-3 OpenAPI for /v1/ routes), stop and report the violation list.
+- Do not delegate and do not write any artifact until all hard-gate violations are resolved.
+
+Hard stop behavior:
+- Constitution resolution failure blocks all downstream authoring and implementation.
+- Any hard-gate violation blocks delegation until the violation is resolved.
+
 ## Dev Readiness and Implementation Contract
 
 Dev operations require explicit readiness.
@@ -218,6 +235,7 @@ Before any phase action:
 - Operation write scope resolved and logged
 - Predecessor phase gate passed
 - Required artifact contract known for active track
+- Constitution loaded and hard gates extracted and enforced
 
 Before any publication:
 - Review gate passed
