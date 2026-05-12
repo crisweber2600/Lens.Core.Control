@@ -1,26 +1,24 @@
 ---
-stepsCompleted: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
-completedAt: "2026-05-08T00:00:00Z"
-workflowStatus: complete
-inputDocuments:
-  - docs/lens-dev/new-codebase/lens-dev-new-codebase-flatten/product-brief.md
-  - docs/lens-dev/new-codebase/lens-dev-new-codebase-flatten/research.md
-  - docs/lens-dev/new-codebase/lens-dev-new-codebase-flatten/business-plan.md
-  - docs/lens-dev/new-codebase/lens-dev-new-codebase-flatten/preplan-adversarial-review.md
-outputDocuments:
-  - docs/lens-dev/new-codebase/lens-dev-new-codebase-flatten/ux-design-specification.md
-  - docs/lens-dev/new-codebase/lens-dev-new-codebase-flatten/ux-color-themes.html
-  - docs/lens-dev/new-codebase/lens-dev-new-codebase-flatten/ux-design-directions.html
+feature: lens-dev-new-codebase-flatten
+doc_type: ux-design
+status: draft
+goal: "Define the operator-facing UX for structured and flat control-repo workflow modes so mode-aware behavior stays explicit, trustworthy, and low-friction"
+key_decisions:
+  - Mode transparency is required: commands should surface the resolved workflow mode before mode-sensitive outcomes.
+  - Command determinism matters more than convenience heuristics when behavior differs between structured and flat mode.
+  - Governance rigor stays constant across both modes; only the control-repo git operating model changes.
+  - Mode-change blocking for active features must be explained with explicit, actionable messaging.
+  - Later lifecycle surfaces must communicate branchless control-repo behavior coherently, not just early planning commands.
+open_questions: []
+depends_on: [prd, business-plan, preplan-adversarial-review]
+blocks: []
+updated_at: 2026-05-12T00:00:00Z
 ---
 
-# UX Design Specification lens-dev-new-codebase-flatten
+# UX Design Specification - Governance-Controlled Flat Mode (lens-dev-new-codebase-flatten)
 
 **Author:** CrisWeber
 **Date:** 2026-05-08
-
----
-
-<!-- UX design content will be appended sequentially through collaborative workflow steps -->
 
 ## Executive Summary
 
