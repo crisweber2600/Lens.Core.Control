@@ -1,7 +1,7 @@
 ---
 feature: nextlens-src-implement
 doc_type: finalizeplan-review
-status: approved
+status: responses-recorded
 review_format: abc-choice-v1
 phase: finalizeplan
 verdict: pass-with-warnings
@@ -26,6 +26,26 @@ The full-track planning set is complete and coherent for downstream bundle gener
 2. Upstream planning artifacts from TechPlan were published to governance using `publish-to-governance --phase techplan`.
 3. Predecessor review findings were reconciled by carrying forward packet schema formalization, deterministic tie-break policy, and correction routing constraints into architecture decisions.
 
+## Response Record
+
+| Option | Meaning |
+| --- | --- |
+| A / B / C | Accept the proposed resolution with its stated trade-offs |
+| D | Provide a custom resolution after `D:` |
+| E | Explicitly accept the finding with no action |
+
+---
+
+## Finding Summary
+
+| ID | Severity | Title | Response |
+| --- | --- | --- | --- |
+| M1 | Medium | Finalize bundle artifacts were pending at review time | **A** |
+| M2 | Medium | `target_repos` is still unregistered in feature metadata | **E** |
+| L1 | Low | Confidence threshold constants remain implementation-open | **A** |
+
+---
+
 ## Findings
 
 ### Critical
@@ -38,11 +58,48 @@ None.
 
 ### Medium / Low
 
-| # | Dimension | Finding | Recommendation |
-|---|-----------|---------|----------------|
-| M1 | Coverage Gaps | Finalize bundle artifacts are not yet generated at review time. | Generate `epics.md`, `stories.md`, `implementation-readiness.md`, `sprint-status.yaml`, and story files in Step 3 before phase completion. |
-| M2 | Cross-Feature Dependencies | `target_repos` remains empty in feature metadata, which can weaken `/dev` routing clarity. | Register target repositories during post-bundle metadata reconciliation before phase update. |
-| L1 | Assumptions and Blind Spots | Confidence threshold constants remain implementation-open. | Record concrete threshold values in implementation-readiness and story acceptance criteria. |
+#### M1 — Coverage Gaps
+
+**Finding:** Finalize bundle artifacts were not yet generated at review time.
+
+**Resolution Options:**
+- **A** — Generate `epics.md`, `stories.md`, `implementation-readiness.md`, `sprint-status.yaml`, and story files before phase completion.
+- **B** — Defer bundle generation to the opening dev checklist and keep FinalizePlan conditionally approved.
+- **C** — Reduce FinalizePlan scope to review only pre-bundle artifacts and re-run FinalizePlan after generation.
+- **D** — Custom resolution.
+- **E** — Accept with no action.
+
+**Response recorded:** A — The FinalizePlan bundle now includes `epics.md`, `stories.md`, `implementation-readiness.md`, `sprint-status.yaml`, and all generated story files before dev handoff.
+
+---
+
+#### M2 — Cross-Feature Dependencies
+
+**Finding:** `target_repos` remains empty in feature metadata, which can weaken `/dev` routing clarity.
+
+**Resolution Options:**
+- **A** — Register target repositories in feature metadata before phase completion.
+- **B** — Add a blocking note in implementation readiness and prevent `/dev` entry until `target_repos` is set.
+- **C** — Create a follow-up planning artifact dedicated to repo ownership resolution.
+- **D** — Custom resolution.
+- **E** — Accept as a tracked follow-up outside this bundle.
+
+**Response recorded:** E — Accepted as a tracked follow-up. The bundle now preserves the warning explicitly for post-bundle metadata reconciliation before `/dev` routing begins.
+
+---
+
+#### L1 — Assumptions and Blind Spots
+
+**Finding:** Confidence threshold constants remain implementation-open.
+
+**Resolution Options:**
+- **A** — Record concrete threshold behavior in implementation-readiness and story acceptance criteria.
+- **B** — Defer thresholds entirely to dev story grooming with no plan artifact updates.
+- **C** — Remove threshold references from the planning bundle until exact constants are known.
+- **D** — Custom resolution.
+- **E** — Accept with no action.
+
+**Response recorded:** A — Threshold behavior remains a dev warning, but implementation-readiness and story guidance now record the remaining threshold work explicitly so it is auditable at handoff.
 
 ## Accepted Risks
 

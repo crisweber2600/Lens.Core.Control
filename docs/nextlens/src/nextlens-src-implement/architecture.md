@@ -44,15 +44,15 @@ The scope is limited to the first selected Feature packet and excludes full disc
 4. Selection Gate
 5. Authoritative State Writer
 6. Derived Projection Builder
-7. Packet Emitter
-8. Doctor Validator
+7. Pre-Flight Doctor Validator
+8. Packet Emitter
 9. Correction Router
 
 ### 2.2 Stage Pipeline
 
-1. intake -> 2. context sufficiency -> 3. rank -> 4. confirm -> 5. write authoritative -> 6. rebuild projection -> 7. emit packet -> 8. validate -> 9. route corrections
+1. intake -> 2. context sufficiency -> 3. rank -> 4. confirm -> 5. write authoritative -> 6. rebuild projection -> 7. pre-flight validate -> 8. emit packet -> 9. route corrections
 
-The pipeline is linear in v1 and emits exactly one packet on success.
+The pipeline is linear in v1 and emits exactly one packet on success. Blocking Doctor findings must stop packet emission before the final packet write occurs.
 
 ### 2.3 Top-Down Bridge Boundary
 
@@ -229,7 +229,7 @@ Ranking input order, scoring factors, and tie-break sequence are fixed. Tie-brea
 
 - Doctor is non-mutating and emits JSONL.
 - Severity classes: blocking, advisory, informational.
-- Blocking findings stop packet emission if detected before confirmation.
+- Blocking findings stop packet emission if detected during the pre-flight validation stage before emit packet runs.
 
 ### 5.2 Correction Routing
 

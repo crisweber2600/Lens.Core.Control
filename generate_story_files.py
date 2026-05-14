@@ -4,80 +4,81 @@ Generate individual story files for NextLens v1 feature.
 Parses stories.md and creates individual YAML story files with frontmatter.
 """
 
-import re
 import json
+import re
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timezone
+
+FEATURE_ID = "nextlens-src-implement"
+
+
+def build_story_filename(story_data):
+    """Build a stable story filename from story metadata."""
+    sanitized_title = story_data['title'].lower().replace('&', 'and')
+    sanitized_title = re.sub(r'[^a-z0-9]+', '-', sanitized_title).strip('-')
+    return f"{story_data['story_id']}-{sanitized_title}.md"
+
 
 def parse_stories_md(content):
-    """Parse stories.md to extract all 41 stories."""
+    """Parse stories.md to extract individual stories."""
     stories = []
-    
+
     # Split by ### Story pattern to find individual stories
     story_pattern = r'### Story (\d+\.\d+):\s*(.+?)\n\n'
     story_matches = list(re.finditer(story_pattern, content))
-    
+
     if not story_matches:
         print("WARNING: No stories found with ### Story pattern")
         return stories
-    
+
     # For each story, extract content from current position to next story
     for i, match in enumerate(story_matches):
         story_start = match.start()
         story_end = story_matches[i + 1].start() if i + 1 < len(story_matches) else len(content)
-        
+
         story_text = content[story_start:story_end]
         story_id = match.group(1)
-        story_title = match.group(2)
-        
+        story_title = match.group(2).strip()
+
         # Parse Story ID to get epic number
         epic_num = story_id.split('.')[0]
-        
+
         # Extract acceptance criteria
-        ac_pattern = r'\*\*Acceptance Criteria:\*\*\n(.*?)(?:\n\n\*\*|$)'
+        ac_pattern = r'\*\*Acceptance Criteria:\*\*\n(.*?)(?:\n\n\*\*Dependencies:\*\*|$)'
         ac_match = re.search(ac_pattern, story_text, re.DOTALL)
         acceptance_criteria = ac_match.group(1).strip() if ac_match else ""
-        
+
         # Extract complexity
-        complexity_pattern = r'\*\*Complexity:\*\*\s*(\w+)'
+        complexity_pattern = r'\*\*Complexity:\*\*\s*([^\n]+)'
         complexity_match = re.search(complexity_pattern, story_text)
-        complexity = complexity_match.group(1) if complexity_match else "Medium"
-        
+        complexity = complexity_match.group(1).strip() if complexity_match else "Medium"
+
         # Extract priority
         priority_pattern = r'\*\*Priority:\*\*\s*([^\n]+)'
         priority_match = re.search(priority_pattern, story_text)
-        priority = priority_match.group(1) if priority_match else "High"
-        
+        priority = priority_match.group(1).strip() if priority_match else "High"
+
         # Extract dependencies
         deps_pattern = r'\*\*Dependencies:\*\*\s*(.+?)(?:\n\n|$)'
         deps_match = re.search(deps_pattern, story_text, re.DOTALL)
         dependencies_text = deps_match.group(1).strip() if deps_match else ""
-        
+
         # Parse dependencies into list
         depends_on = []
         if "None" not in dependencies_text and dependencies_text:
-            # Extract story references like "Story 1.1" or "EP1.1"
             dep_refs = re.findall(r'(?:Story |EP)?(\d+\.\d+)', dependencies_text)
-            depends_on = list(set(dep_refs))
-            depends_on.sort(key=lambda x: (int(x.split('.')[0]), int(x.split('.')[1])))
-        
+            depends_on = sorted(set(dep_refs), key=lambda x: (int(x.split('.')[0]), int(x.split('.')[1])))
+
         # Extract epic name
         epic_pattern = r'\*\*Epic:\*\*\s*(.+?)(?:\n|$)'
         epic_match = re.search(epic_pattern, story_text)
-        epic_name = epic_match.group(1) if epic_match else f"EP{epic_num}"
-        
-        # Extract user story (As a... I want... so that...)
-        user_story_pattern = r'\*\*User Story:\*\*\n\nAs a \*\*(.+?)\*\*, I want (?:the system to )?\*\*(.+?)\*\*, so that \*\*(.+?)\*\*\.'
+        epic_name = epic_match.group(1).strip() if epic_match else f"EP{epic_num}"
+
+        # Extract and preserve the raw user story block
+        user_story_pattern = r'\*\*User Story:\*\*\n\n(.*?)(?:\n\n\*\*Acceptance Criteria:\*\*)'
         user_story_match = re.search(user_story_pattern, story_text, re.DOTALL)
-        
-        user_role = ""
-        user_action = ""
-        user_benefit = ""
-        if user_story_match:
-            user_role = user_story_match.group(1)
-            user_action = user_story_match.group(2)
-            user_benefit = user_story_match.group(3)
-        
+        user_story = user_story_match.group(1).strip() if user_story_match else ""
+
         stories.append({
             'story_id': story_id,
             'title': story_title,
@@ -86,48 +87,49 @@ def parse_stories_md(content):
             'priority': priority,
             'complexity': complexity,
             'depends_on': depends_on,
-            'user_role': user_role,
-            'user_action': user_action,
-            'user_benefit': user_benefit,
+            'user_story': user_story,
             'acceptance_criteria': acceptance_criteria,
-            'full_text': story_text.strip()
+            'full_text': story_text.strip(),
         })
-    
+
     return stories
 
-def create_story_file(story_data, docs_path):
+
+def create_story_file(story_data, docs_path, story_filename_map):
     """Create individual story file with YAML frontmatter."""
-    
-    # Create stories directory if it doesn't exist
     stories_dir = Path(docs_path) / 'stories'
     stories_dir.mkdir(parents=True, exist_ok=True)
-    
-    # Create filename: EP#.#-story-title.md
-    sanitized_title = story_data['title'].lower().replace(' ', '-').replace('&', 'and')
-    sanitized_title = re.sub(r'[^a-z0-9\-]', '', sanitized_title)
-    filename = f"{stories_dir}/{story_data['story_id']}-{sanitized_title}.md"
-    
-    # Build YAML frontmatter
+
+    filename = stories_dir / build_story_filename(story_data)
+    dependency_links = []
+    for dependency in story_data['depends_on']:
+        dependency_filename = story_filename_map.get(dependency)
+        if dependency_filename:
+            dependency_links.append(f'[Story {dependency}](../stories/{dependency_filename})')
+        else:
+            dependency_links.append(f'Story {dependency}')
+
+    timestamp = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace('+00:00', 'Z')
+    user_story = story_data['user_story'] or '_User story source could not be parsed from `stories.md`._'
+
     frontmatter = f"""---
-feature: nextlens-src-implement
-story_id: "{story_data['story_id']}"
+feature: {FEATURE_ID}
+story_id: \"{story_data['story_id']}\"
 doc_type: story
 status: ready
-title: "{story_data['title']}"
-epic: "{story_data['epic_name']}"
+title: \"{story_data['title']}\"
+epic: \"{story_data['epic_name']}\"
 priority: {story_data['priority']}
 complexity: {story_data['complexity']}
 depends_on: {json.dumps(story_data['depends_on'])}
-updated_at: {datetime.utcnow().isoformat()}Z
+updated_at: {timestamp}
 ---
 
 # Story {story_data['story_id']}: {story_data['title']}
 
 ## User Story
 
-As a **{story_data['user_role']}**,
-I want the system to **{story_data['user_action']}**,
-so that **{story_data['user_benefit']}**.
+{user_story}
 
 ## Acceptance Criteria
 
@@ -149,7 +151,7 @@ This story is part of the NextLens v1 implementation. See [epics.md](../epics.md
 
 ### Related Stories
 
-Depends on: {', '.join([f'[Story {dep}](../stories/{dep}-*.md)' for dep in story_data['depends_on']]) if story_data['depends_on'] else 'None'}
+Depends on: {', '.join(dependency_links) if dependency_links else 'None'}
 
 ## Dev Agent Record
 
@@ -166,54 +168,55 @@ Claude Haiku 4.5
 - [ ] Story marked complete
 
 """
-    
-    # Write file
+
     with open(filename, 'w', encoding='utf-8') as f:
         f.write(frontmatter)
-    
+
     return filename
+
 
 def main():
     """Main execution."""
-    docs_path = Path(__file__).parent / 'docs' / 'nextlens' / 'src' / 'nextlens-src-implement'
+    docs_path = Path(__file__).parent / 'docs' / 'nextlens' / 'src' / FEATURE_ID
     stories_md_path = docs_path / 'stories.md'
-    
+
     print(f"Reading: {stories_md_path}")
     with open(stories_md_path, 'r', encoding='utf-8') as f:
         content = f.read()
-    
+
     print("Parsing stories...")
     stories = parse_stories_md(content)
     print(f"Found {len(stories)} stories")
-    
-    if len(stories) != 41:
-        print(f"WARNING: Expected 41 stories but found {len(stories)}")
-    
-    # Generate story files
+
+    expected_story_count = len(re.findall(r'^### Story ', content, re.MULTILINE))
+    if len(stories) != expected_story_count:
+        print(f"WARNING: Expected {expected_story_count} stories but found {len(stories)}")
+
+    story_filename_map = {story['story_id']: build_story_filename(story) for story in stories}
+
     print(f"Generating story files in: {docs_path / 'stories'}")
-    
     created_files = []
     for story_data in stories:
-        filename = create_story_file(story_data, docs_path)
+        filename = create_story_file(story_data, docs_path, story_filename_map)
         created_files.append(filename)
         print(f"Created: {filename}")
-    
+
     print(f"\n✓ Generated {len(created_files)} story files")
-    
-    # Create summary
+
     summary = {
         'status': 'success',
         'artifacts_created': len(created_files),
         'artifact_paths': [str(f) for f in created_files],
         'stories_generated': len(stories),
         'frontmatter_validation': f"all {len(stories)} files have required fields",
-        'message': f"Successfully generated {len(stories)} story files for nextlens-src-implement"
+        'message': f"Successfully generated {len(stories)} story files for {FEATURE_ID}",
     }
-    
+
     print("\nSummary:")
     print(json.dumps(summary, indent=2))
-    
+
     return summary
+
 
 if __name__ == '__main__':
     main()

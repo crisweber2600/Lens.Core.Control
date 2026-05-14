@@ -1,3 +1,14 @@
+---
+feature: nextlens-src-implement
+doc_type: adversarial-review
+phase: businessplan
+source: phase-complete
+verdict: pass-with-warnings
+status: responses-recorded
+updated_at: 2026-05-14T00:00:00Z
+review_format: abc-choice-v1
+---
+
 # Adversarial Review: nextlens-src-implement / businessplan
 
 **Reviewed:** 2026-05-14T00:00:00Z

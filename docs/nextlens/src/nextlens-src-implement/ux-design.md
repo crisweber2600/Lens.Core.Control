@@ -40,9 +40,9 @@ The design covers:
 4. System ranks candidate Features by outcome alignment, journey criticality, role value, risk reduction, dependency readiness, implementation boundedness, BMAD readiness, evidence clarity, and open-question severity.
 5. System displays top candidate details and why it was selected.
 6. Operator confirms selection.
-7. System writes authoritative state, rebuilds derived projection, emits one packet.
-8. System runs doctor checks and outputs summary plus JSONL artifact path.
-9. If findings exist, system offers correction routing choices.
+7. System writes authoritative state and rebuilds derived projection.
+8. System runs pre-flight doctor checks; blocking findings stop packet emission, while non-blocking findings are summarized with a JSONL artifact path.
+9. If validation passes, system emits one packet and then offers correction routing choices when findings remain.
 
 Expected result: one packet and one evidence bundle produced with clear status.
 
@@ -66,8 +66,8 @@ The interaction model is stage-based. Each stage has a clear input, output, and 
 4. Confirmation Gate
 5. Authoritative Write
 6. Projection Rebuild
-7. Packet Emission
-8. Doctor Validation
+7. Doctor Validation
+8. Packet Emission
 9. Correction Routing
 
 Each stage must print a deterministic status line and an outcome line.

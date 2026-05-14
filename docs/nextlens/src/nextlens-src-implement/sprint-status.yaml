@@ -1,17 +1,16 @@
----
-sprint_metadata:
-  name: "NextLens v1 Development"
-  feature: "nextlens-src-implement"
-  domain: "nextlens"
-  service: "src"
-  track: "full"
-  created_date: "2026-05-14T00:00:00Z"
-  phase: "finalizeplan"
-  status: "planning"
-  total_stories: 41
-  total_epics: 11
-  total_effort_points: 205
-  estimated_sprint_duration_weeks: 14
+feature: nextlens-src-implement
+doc_type: sprint-status
+status: approved
+domain: nextlens
+service: src
+track: full
+phase: finalizeplan
+updated_at: 2026-05-14T00:00:00Z
+name: "NextLens v1 Development"
+total_stories: 38
+total_epics: 11
+total_effort_points: 213
+estimated_sprint_duration_weeks: 14
 
 sprints:
   - sprint_id: 1
@@ -421,10 +420,10 @@ risk_mitigation:
 
 notes:
   - "Sprint plan assumes sequential implementation with identified parallelizable epics"
-  - "Total effort: 205 story points across 13 sprints"
+  - "Total effort: 213 story points across 13 sprints"
   - "Average sprint velocity: 16 points (range 5-20)"
   - "Critical dependencies respected: EP1 blocks EP2/EP4; EP4 blocks EP8"
-  - "All 41 stories allocated to specific sprints"
+  - "All 38 stories allocated to specific sprints"
   - "Milestone dates represent clear readiness checkpoints"
   - "BMAD integration occurs in EP8 with scope containment hints"
   - "Module packaging (EP11) completes feature lifecycle"

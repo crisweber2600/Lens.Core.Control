@@ -2,6 +2,21 @@
 feature: nextlens-src-implement
 doc_type: implementation-readiness
 status: approved
+goal: "Validate that the NextLens v1 planning bundle is sufficiently specified, sequenced, and constrained for dev handoff."
+key_decisions:
+  - Treat the five core planning artifacts plus generated story files as the readiness gate for development.
+  - Accept infrastructure-heavy epics as necessary for deterministic v1 behavior when dependencies remain forward-only and testable.
+  - Carry threshold tuning and repo-registration gaps as explicit warnings rather than blockers because the delivery path is otherwise implementation-ready.
+open_questions:
+  - Exact numeric weights and thresholds for deterministic scoring bands.
+  - Final target repository registration before `/dev` routing begins.
+depends_on:
+  - prd.md
+  - ux-design.md
+  - architecture.md
+  - epics.md
+  - stories.md
+blocks: []
 date: 2026-05-14
 readiness_verdict: pass-with-warnings
 stepsCompleted: 
@@ -35,7 +50,7 @@ The **nextlens-src-implement** feature has passed implementation readiness valid
 - ✅ UX Design is complete with comprehensive interaction model and acceptance criteria
 - ✅ Architecture is complete with deterministic design decisions and module packaging requirements
 - ✅ Epics (11) are well-defined with clear user value and dependencies mapped
-- ✅ Stories (41) are complete with acceptance criteria and sequencing logic
+- ✅ Stories (38) are complete with acceptance criteria and sequencing logic
 - ⚠️ **Warnings:** See sections below for quality gate findings
 
 ---
@@ -432,14 +447,14 @@ EP11 (BMAD Module) - stands alone (packaging)
 | No forward dependencies | ✓ | All dependencies flow forward through pipeline. |
 | Entity/database creation when needed | ✓ | Landscape entities created in EP3 with lazy persistence. |
 | Clear acceptance criteria | ✓ | 97% of stories have explicit BDD criteria. |
-| Traceability to FRs maintained | ✓ | 40/41 stories explicitly map to FRs. |
+| Traceability to FRs maintained | ✓ | 37/38 stories explicitly map to FRs. |
 | Stories independently testable | ✓ | Each story can be tested with mocked dependencies. |
 | Technical epics clearly flagged | ⚠️ | EP3, EP5, EP6, EP11 are infrastructure epics. Recommend explicit flagging in sprint planning. |
 
 **Overall Quality Assessment:** 🟡 **PASS WITH WARNINGS**
 
 **Summary:**
-- 36/41 stories meet all best practices criteria
+- 33/38 stories meet all best practices criteria
 - 5 stories have minor ambiguities resolvable in Dev phase
 - 4 epics are infrastructure-focused but necessary for v1 deterministic guarantees
 - Epic sequencing is correct; no architectural violations detected
@@ -463,8 +478,8 @@ EP11 (BMAD Module) - stands alone (packaging)
 | UX-to-PRD Alignment | ✅ PASS | 98% | Excellent alignment; open questions acceptable |
 | UX-to-Architecture Alignment | ✅ PASS | 98% | Comprehensive support for all UX requirements |
 | Epic Structure Quality | ⚠️ PASS-WITH-WARNINGS | 90% | 4 infrastructure epics; acceptable for v1 |
-| Story Quality | ⚠️ PASS-WITH-WARNINGS | 91% | 36/41 stories perfect; 5 minor ambiguities |
-| Traceability Matrix | ✅ PASS | 95% | 40/41 stories trace to FRs; 1 story traces to NFR |
+| Story Quality | ⚠️ PASS-WITH-WARNINGS | 91% | 33/38 stories perfect; 5 minor ambiguities |
+| Traceability Matrix | ✅ PASS | 95% | 37/38 stories trace to FRs; 1 story traces to NFR |
 
 ### Reconciliation Matrix: Requirements → Epics → Stories
 
@@ -474,7 +489,7 @@ PRD FRs (17)
   ↓ Mapped to
 Epics (11)
   ↓ Decomposed to
-Stories (41)
+Stories (38)
   ↓ Each with
 Acceptance Criteria (5-6 per story avg.)
   ↓ Organized in
@@ -484,8 +499,8 @@ Sequenced Pipeline (9 stages)
 **Full Traceability:**
 - ✅ 17/17 FRs have epic coverage
 - ✅ 11 Epics have clear user value or architectural necessity
-- ✅ 41 Stories have explicit acceptance criteria
-- ✅ 40/41 Stories trace back to specific FRs
+- ✅ 38 Stories have explicit acceptance criteria
+- ✅ 37/38 Stories trace back to specific FRs
 - ✅ 1 Story (11.1) traces to NFR10 (Module Compliance)
 - ✅ Epic sequencing follows deterministic pipeline order
 - ✅ No FRs orphaned or uncovered
@@ -530,7 +545,7 @@ Sequenced Pipeline (9 stages)
 | **UX is complete** | ✅ | 3 user journeys, 10 design requirements, 10 UX acceptance criteria |
 | **Architecture is complete** | ✅ | 12 architecture decisions, data contracts, failure handling, module packaging |
 | **Epics are complete** | ✅ | 11 epics with clear scope, dependencies, user value |
-| **Stories are complete** | ⚠️ | 41 stories; 36 perfect, 5 with minor ambiguities. Acceptable for Dev. |
+| **Stories are complete** | ⚠️ | 38 stories; 33 perfect, 5 with minor ambiguities. Acceptable for Dev. |
 | **Requirements coverage** | ✅ | 100% of FRs covered; 95% of NFRs addressed |
 | **Alignment** | ✅ | UX-to-PRD 98%, UX-to-Arch 98%, Epic-to-FR 100% |
 | **Quality gates** | ⚠️ | 7/8 gates pass; 4 infrastructure epics acceptable for v1 |
@@ -618,7 +633,7 @@ Minor issues identified are **informational and appropriate for the Dev phase** 
 ### Stories Evidence
 - Status: APPROVED (ready for Dev)
 - Completeness: 97%
-- Artifacts: 41 Stories, Each with User Story, ACs, Dependencies, Complexity
+- Artifacts: 38 Stories, Each with User Story, ACs, Dependencies, Complexity
 
 ---
 

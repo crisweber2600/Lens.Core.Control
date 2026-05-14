@@ -17,7 +17,7 @@ updated_at: 2026-05-14T00:00:00Z
 
 ## Overview
 
-This document lists all 41 user stories for NextLens v1 implementation, organized by epic. Each story includes:
+This document lists all 38 user stories for NextLens v1 implementation, organized by epic. Each story includes:
 
 - Story ID (Epic.Sequence)
 - Story Title
@@ -95,7 +95,7 @@ As a **NextLens operator**, I want the system to **accept command-line arguments
 
 **User Story:**
 
-As a **NextLens system architect**, I want the command spine **to transition deterministically through stages (intake → sufficiency → rank → confirm → write → rebuild → emit → validate → route)**, so that **operators always know which stage they're in and what comes next**.
+As a **NextLens system architect**, I want the command spine **to transition deterministically through stages (intake → sufficiency → rank → confirm → write → rebuild → validate → emit → route)**, so that **operators always know which stage they're in and what comes next**.
 
 **Acceptance Criteria:**
 
@@ -597,7 +597,7 @@ As a **NextLens system**, I want to **score candidate Features using nine fixed 
 4. **Risk Reduction Score**
    - Given: candidate Feature with context
    - When: scoring runs
-   - Then: score = (count of mitigated risks × weight by severity) / total risks
+   - Then: if total risks = 0, score defaults to 100; otherwise score = (count of mitigated risks × weight by severity) / total risks
    - Range: 0-100
 
 5. **Dependency Readiness Score**
@@ -795,7 +795,7 @@ As a **NextLens system**, I want to **generate and store idempotency tokens for 
 1. **Token Generation**
    - Given: a mutating operation is about to start
    - When: token generation runs
-   - Then: a unique idempotency token is created (UUID v4 or KSUID) with format: 40-char random alphanumeric
+   - Then: a unique idempotency token is created using the canonical string format of either UUID v4 or KSUID and stored without transformation
 
 2. **Token Metadata**
    - Given: token is generated
@@ -2184,7 +2184,7 @@ As a **NextLens system**, I want to **emit evidence bundle as structured YAML wi
 1. **Bundle File Creation**
    - Given: run completes (success or failure)
    - When: bundle generation runs
-   - Then: bundle is written to {docs_path}/.nextlens/evidence-{packetId}.yaml
+   - Then: bundle is written to {docs_path}/.nextlens/evidence-{packetId-or-runId}.yaml, using run_id as the filename fallback when packet_id is null
 
 2. **Run Metadata**
    - Given: bundle is created
@@ -2682,4 +2682,4 @@ As a **NextLens implementation team**, I want to **run Create Module (CM) and Va
 4. EP9, EP10 (correction and audit)
 5. EP11 (packaging)
 
-**Estimated Effort:** 41 stories × ~3-5 story points each = **120-200 story points** for full v1 implementation (~8-12 weeks at 15 points/week sprint capacity).
+**Estimated Effort:** 38 stories totaling **213 planned sprint points** across 13 sequenced sprints (~13-14 weeks at ~16 points per sprint).
