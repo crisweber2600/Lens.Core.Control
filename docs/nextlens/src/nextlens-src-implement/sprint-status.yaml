@@ -27,7 +27,7 @@ sprints:
         status: done
         blocked_by: []
       - story_id: "1.2"
-        status: ready
+        status: in-progress
         blocked_by: ["1.1"]
       - story_id: "1.3"
         status: ready
