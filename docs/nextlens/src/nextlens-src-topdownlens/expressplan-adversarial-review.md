@@ -77,13 +77,13 @@ Sally (Release Engineer): The split between `promote-to-release` and `publish-to
 
 ## Open Questions Surfaced
 
-- FinalizePlan should decide whether `_bmad-output/lens/` or `docs/` is the first authoritative module output root.
-- FinalizePlan should define the mapping between control-repo feature lifecycle IDs and TopDownLens `feature.<slug>` identities.
-- FinalizePlan should define the minimum relationship lifecycle states required for MVP implementation.
-- FinalizePlan should decide whether bottom-up `lens feature new` ships in the first dev increment or remains a documented compatibility constraint.
-- FinalizePlan should address the missing `fetch-context` runtime subcommand if cross-feature context is required by the first implementation.
-- FinalizePlan should define what evidence is required for capability and product-area promotion suggestions.
-- FinalizePlan should resolve `feature.yaml.target_repos` before dev-ready handoff.
+- FinalizePlan should decide whether `_bmad-output/lens/` or `docs/` is the first authoritative module output root. - docs/
+- FinalizePlan should define the mapping between control-repo feature lifecycle IDs and TopDownLens `feature.<slug>` identities. yes for now
+- FinalizePlan should define the minimum relationship lifecycle states required for MVP implementation. you decide
+- FinalizePlan should decide whether bottom-up `lens feature new` ships in the first dev increment or remains a documented compatibility constraint. yes ship it
+- FinalizePlan should address the missing `fetch-context` runtime subcommand if cross-feature context is required by the first implementation.you decide
+- FinalizePlan should define what evidence is required for capability and product-area promotion suggestions. you decide
+- FinalizePlan should resolve `feature.yaml.target_repos` before dev-ready handoff. 
 - FinalizePlan should confirm that the first dev increment is sized to close the dogfooding loop (TL-12) without requiring a second sprint.
 - FinalizePlan should document the negative pipeline tests that prove `promote-to-release` cannot write to `nextlens-governance` and vice versa.
 - FinalizePlan should specify the one-time reconciliation step for moving `nextlens` constitutions from `Lens.Core.Governance` to `nextlens-governance`.
