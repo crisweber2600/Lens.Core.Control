@@ -2,7 +2,7 @@
 feature: nextlens-src-topdownlens
 story_id: TL-9
 doc_type: story
-status: not-started
+status: in-progress
 title: Constitution Layering For TopDownLens
 depends_on: [TL-8]
 implementation_kind: schema
@@ -44,3 +44,5 @@ Apply the 4-level constitution hierarchy (org -> domain -> service -> repo) to T
 
 - Spine story. Governance writes must go through the approved orchestration boundary (publish-to-governance or lens-git-orchestration governed operations). Direct manual commits to governance main are not an approved path.
 - Per session contract: informational gates only; do not block downstream stories on constitution violations.
+
+## Dev Agent Record
