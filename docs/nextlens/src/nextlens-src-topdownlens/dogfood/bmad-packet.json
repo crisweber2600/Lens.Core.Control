@@ -1,0 +1,69 @@
+{
+  "id": "bmad_packet.feature.topdownlens_contract.dogfood",
+  "schema_version": "v1.0",
+  "selected_feature": {
+    "id": "feature.topdownlens_contract",
+    "title": "TopDownLens Contract",
+    "current_path": "docs/nextlens/src/nextlens-src-topdownlens/feature.yaml",
+    "summary": "Dogfood-selected vertical slice proving the first TopDownLens contracts, topology, graph projection, BMAD handoff, and Salmon feedback loop."
+  },
+  "source_context": [
+    {
+      "type": "walkthrough",
+      "path": "docs/nextlens/src/nextlens-src-topdownlens/dogfood/walkthrough.md",
+      "reason": "Records the dogfood chain from system thesis to selected feature."
+    },
+    {
+      "type": "business_plan",
+      "path": "docs/nextlens/src/nextlens-src-topdownlens/business-plan.md",
+      "reason": "Provides the product intent and acceptance boundary."
+    },
+    {
+      "type": "tech_plan",
+      "path": "docs/nextlens/src/nextlens-src-topdownlens/tech-plan.md",
+      "reason": "Defines the storage, topology, and schema decisions used by the dogfood run."
+    },
+    {
+      "type": "capability",
+      "path": "docs/nextlens/src/nextlens-src-topdownlens/examples/entities/capability.topdown-discovery.json",
+      "reason": "Anchors the selected feature to the top-down discovery capability."
+    }
+  ],
+  "scope_boundaries": {
+    "include": [
+      "Validate the TopDownLens identity hierarchy, derived graph, BMAD packet, topology, constitution layering, and Salmon feedback contracts."
+    ],
+    "exclude": [
+      "Do not implement the full future TopDownLens runtime beyond the first contract and doctor-check slice."
+    ],
+    "guardrails": [
+      "All durable references resolve by stable IDs, not mutable paths.",
+      "Implementation code remains in TargetProjects; control docs record feature artifacts and evidence.",
+      "Release-repo verification is deferred on this first run because nextlens-release is not present."
+    ]
+  },
+  "traceability": {
+    "outcomes": ["outcome.bmad_ready_feature"],
+    "journeys": ["journey.capture_to_packet"],
+    "capabilities": ["capability.topdown_discovery"],
+    "evidence": ["evidence.tl1_schema_validation"]
+  },
+  "acceptance_evidence": [
+    {
+      "criterion": "A complete top-down walkthrough is recorded in dogfood/walkthrough.md.",
+      "evidence_id": "evidence.tl1_schema_validation"
+    },
+    {
+      "criterion": "The dogfood run produces exactly one selected feature and one BMAD packet.",
+      "evidence_id": "evidence.tl1_schema_validation"
+    },
+    {
+      "criterion": "Release verification skip is explicitly recorded with a Salmon signal.",
+      "evidence_id": "evidence.tl1_schema_validation"
+    }
+  ],
+  "bmad_responsibilities": {
+    "must_produce": ["prd", "architecture", "epics", "stories", "implementation", "review"],
+    "must_not_pre_author": ["prd", "architecture", "epics", "stories", "implementation", "review"]
+  }
+}

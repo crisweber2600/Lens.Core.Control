@@ -1,0 +1,23 @@
+{
+  "id": "capability.topdown_discovery",
+  "kind": "capability",
+  "status": "candidate",
+  "name": "Top-down discovery",
+  "current_path": "_bmad-output/lens/landscape/capabilities/topdown-discovery.json",
+  "summary": "Candidate capability for decomposing system intent into product areas, outcomes, journeys, and feature candidates.",
+  "hierarchy": {
+    "system": "system.nextlens",
+    "product_area": "product_area.planning_intelligence",
+    "outcome": "outcome.bmad_ready_feature",
+    "journey": "journey.capture_to_packet",
+    "capability": "capability.topdown_discovery"
+  },
+  "produces": [],
+  "consumes": [],
+  "relationships": ["rel.feature.topdownlens_contract.depends_on.capability.topdown_discovery"],
+  "promotion_evidence": [],
+  "provenance": {
+    "source_documents": ["docs/nextlens/src/nextlens-src-topdownlens/business-plan.md"],
+    "confidence": "medium"
+  }
+}

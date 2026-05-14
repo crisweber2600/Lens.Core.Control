@@ -1,0 +1,21 @@
+{
+  "id": "task.tl_1.define_schemas",
+  "kind": "task",
+  "status": "implemented",
+  "name": "Define TopDownLens schemas",
+  "current_path": "docs/nextlens/src/nextlens-src-topdownlens/schemas",
+  "summary": "Task that creates schema files for ontology, relationships, landscape entities, and derived graph projections.",
+  "hierarchy": {
+    "feature": "feature.topdownlens_contract",
+    "story": "story.tl_1",
+    "task": "task.tl_1.define_schemas"
+  },
+  "produces": ["code.tl_1.schemas"],
+  "consumes": [],
+  "relationships": [],
+  "promotion_evidence": [],
+  "provenance": {
+    "source_documents": ["docs/nextlens/src/nextlens-src-topdownlens/stories/TL-1.md"],
+    "confidence": "high"
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "schema_version": "v1.0",
+  "identity": {
+    "stable_ids_required": true,
+    "path_addresses_are_mutable": true,
+    "references_resolve_by": "id"
+  },
+  "storage_topology": {
+    "feature_archive": {
+      "root": "_bmad-output/lens/archive/features",
+      "purpose": "Versioned history of selected features, BMAD packets, validation notes, and Salmon signals."
+    },
+    "living_landscape": {
+      "root": "_bmad-output/lens/landscape",
+      "purpose": "Current human-curated interpretation of systems, product areas, outcomes, journeys, and capabilities."
+    },
+    "derived_graph": {
+      "root": "_bmad-output/lens/graph",
+      "purpose": "Rebuildable machine projection generated from archive, landscape, relationship, test, and evidence records."
+    }
+  },
+  "hierarchy_levels": [
+    { "kind": "system", "label": "system", "parent": null, "child": "product_area" },
+    { "kind": "product_area", "label": "product area", "parent": "system", "child": "outcome" },
+    { "kind": "outcome", "label": "outcome", "parent": "product_area", "child": "journey" },
+    { "kind": "journey", "label": "journey", "parent": "outcome", "child": "capability" },
+    { "kind": "capability", "label": "capability", "parent": "journey", "child": "feature" },
+    { "kind": "feature", "label": "feature", "parent": "capability", "child": "story" },
+    { "kind": "story", "label": "story", "parent": "feature", "child": "task" },
+    { "kind": "task", "label": "task", "parent": "story", "child": "code" },
+    { "kind": "code", "label": "code", "parent": "task", "child": "test" },
+    { "kind": "test", "label": "test", "parent": "code", "child": "evidence" },
+    { "kind": "evidence", "label": "evidence", "parent": "test", "child": null }
+  ],
+  "durable_entity_kinds": [
+    "system",
+    "product_area",
+    "outcome",
+    "journey",
+    "capability",
+    "feature",
+    "story",
+    "task",
+    "code",
+    "test",
+    "evidence"
+  ]
+}

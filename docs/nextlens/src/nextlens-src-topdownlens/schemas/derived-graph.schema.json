@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lens.local/nextlens/topdownlens/derived-graph.schema.json",
+  "title": "TopDownLens Derived Graph",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "derived", "rebuildable_from", "generated_at", "nodes", "edges"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^graph\\.[a-z0-9][a-z0-9_.-]*$" },
+    "derived": { "const": true },
+    "rebuildable_from": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "nodes": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/node" }
+    },
+    "edges": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/edge" }
+    }
+  },
+  "$defs": {
+    "node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "source_path"],
+      "properties": {
+        "id": { "$ref": "landscape-entity.schema.json#/$defs/stableId" },
+        "kind": { "$ref": "landscape-entity.schema.json#/$defs/entityKind" },
+        "source_path": { "type": "string", "minLength": 1 }
+      }
+    },
+    "edge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["relationship_id", "from", "to", "type"],
+      "properties": {
+        "relationship_id": { "$ref": "landscape-entity.schema.json#/$defs/stableId" },
+        "from": { "$ref": "landscape-entity.schema.json#/$defs/stableId" },
+        "to": { "$ref": "landscape-entity.schema.json#/$defs/stableId" },
+        "type": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

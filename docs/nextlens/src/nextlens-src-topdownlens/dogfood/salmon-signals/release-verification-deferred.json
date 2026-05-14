@@ -1,0 +1,14 @@
+{
+  "id": "salmon.20260514T130600Z.release_verification_deferred",
+  "source": {
+    "type": "validation",
+    "id": "evidence.tl1_schema_validation"
+  },
+  "signal_type": "missing_context",
+  "severity": "medium",
+  "upstream_targets": ["landscape"],
+  "finding": "Dogfood release verification was skipped because nextlens-release does not exist yet in the first-run topology.",
+  "recommended_action": "landscape_update",
+  "status": "open",
+  "evidence_refs": ["evidence.tl1_schema_validation"]
+}

@@ -1,0 +1,24 @@
+{
+  "id": "evidence.tl1_schema_validation",
+  "kind": "evidence",
+  "status": "validated",
+  "name": "TL-1 schema validation evidence",
+  "current_path": "docs/nextlens/src/nextlens-src-topdownlens/dev-session.yaml",
+  "summary": "Recorded evidence that TL-1 schemas and example artifacts were validated during dev execution.",
+  "hierarchy": {
+    "feature": "feature.topdownlens_contract",
+    "story": "story.tl_1",
+    "task": "task.tl_1.define_schemas",
+    "code": "code.tl_1.schemas",
+    "test": "test.tl_1.schema_validation",
+    "evidence": "evidence.tl1_schema_validation"
+  },
+  "produces": [],
+  "consumes": ["test.tl_1.schema_validation"],
+  "relationships": [],
+  "promotion_evidence": [],
+  "provenance": {
+    "source_documents": ["docs/nextlens/src/nextlens-src-topdownlens/sprint-status.yaml"],
+    "confidence": "high"
+  }
+}

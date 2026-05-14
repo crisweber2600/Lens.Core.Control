@@ -1,0 +1,29 @@
+{
+  "id": "graph.topdownlens_traceability",
+  "derived": true,
+  "rebuildable_from": [
+    "docs/nextlens/src/nextlens-src-topdownlens/examples/entities",
+    "docs/nextlens/src/nextlens-src-topdownlens/examples/relationship-example.json"
+  ],
+  "generated_at": "2026-05-14T04:00:00Z",
+  "nodes": [
+    {
+      "id": "feature.topdownlens_contract",
+      "kind": "feature",
+      "source_path": "docs/nextlens/src/nextlens-src-topdownlens/examples/entities/feature.topdownlens-contract.json"
+    },
+    {
+      "id": "capability.topdown_discovery",
+      "kind": "capability",
+      "source_path": "docs/nextlens/src/nextlens-src-topdownlens/examples/entities/capability.topdown-discovery.json"
+    }
+  ],
+  "edges": [
+    {
+      "relationship_id": "rel.feature.topdownlens_contract.depends_on.capability.topdown_discovery",
+      "from": "feature.topdownlens_contract",
+      "to": "capability.topdown_discovery",
+      "type": "depends_on"
+    }
+  ]
+}

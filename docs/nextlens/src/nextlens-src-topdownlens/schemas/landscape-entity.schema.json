@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lens.local/nextlens/topdownlens/landscape-entity.schema.json",
+  "title": "TopDownLens Landscape Entity",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "kind", "status", "name", "current_path", "provenance", "relationships"],
+  "properties": {
+    "id": { "$ref": "#/$defs/stableId" },
+    "kind": { "$ref": "#/$defs/entityKind" },
+    "status": { "enum": ["candidate", "active", "implemented", "validated", "superseded"] },
+    "name": { "type": "string", "minLength": 1 },
+    "current_path": { "type": "string", "minLength": 1 },
+    "summary": { "type": "string" },
+    "hierarchy": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "system": { "$ref": "#/$defs/nullableStableId" },
+        "product_area": { "$ref": "#/$defs/nullableStableId" },
+        "outcome": { "$ref": "#/$defs/nullableStableId" },
+        "journey": { "$ref": "#/$defs/nullableStableId" },
+        "capability": { "$ref": "#/$defs/nullableStableId" },
+        "feature": { "$ref": "#/$defs/nullableStableId" },
+        "story": { "$ref": "#/$defs/nullableStableId" },
+        "task": { "$ref": "#/$defs/nullableStableId" },
+        "code": { "$ref": "#/$defs/nullableStableId" },
+        "test": { "$ref": "#/$defs/nullableStableId" },
+        "evidence": { "$ref": "#/$defs/nullableStableId" }
+      }
+    },
+    "produces": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/stableId" },
+      "uniqueItems": true
+    },
+    "consumes": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/stableId" },
+      "uniqueItems": true
+    },
+    "relationships": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/stableId" },
+      "uniqueItems": true
+    },
+    "promotion_evidence": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/stableId" },
+      "uniqueItems": true
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_documents", "confidence"],
+      "properties": {
+        "source_documents": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "confidence": { "enum": ["low", "medium", "high"] }
+      }
+    }
+  },
+  "$defs": {
+    "entityKind": {
+      "enum": ["system", "product_area", "outcome", "journey", "capability", "feature", "story", "task", "code", "test", "evidence"]
+    },
+    "stableId": {
+      "type": "string",
+      "pattern": "^(system|product_area|outcome|journey|capability|feature|story|task|code|test|evidence|rel|salmon)\\.[a-z0-9][a-z0-9_.-]*$"
+    },
+    "nullableStableId": {
+      "anyOf": [
+        { "$ref": "#/$defs/stableId" },
+        { "type": "null" }
+      ]
+    }
+  }
+}

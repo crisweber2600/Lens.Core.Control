@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lens.local/nextlens/topdownlens/relationship.schema.json",
+  "title": "TopDownLens Relationship Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "from", "to", "type", "status", "confidence", "evidence"],
+  "properties": {
+    "id": { "$ref": "landscape-entity.schema.json#/$defs/stableId" },
+    "from": { "$ref": "landscape-entity.schema.json#/$defs/stableId" },
+    "to": { "$ref": "landscape-entity.schema.json#/$defs/stableId" },
+    "type": {
+      "enum": ["contains", "depends_on", "supports", "produces", "consumes", "validates", "invalidates", "evidences", "adjacent_to"]
+    },
+    "status": { "enum": ["extracted", "hypothesized", "challenged", "reviewed", "promoted", "implemented", "validated", "superseded"] },
+    "confidence": { "enum": ["low", "medium", "high"] },
+    "evidence": {
+      "type": "array",
+      "items": { "$ref": "landscape-entity.schema.json#/$defs/stableId" },
+      "uniqueItems": true
+    },
+    "notes": { "type": "string" }
+  }
+}

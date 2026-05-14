@@ -1,0 +1,11 @@
+{
+  "id": "salmon.20260514T045800Z.blocking_release_missing",
+  "source": { "type": "validation", "id": "test.tl_1.schema_validation" },
+  "signal_type": "assumption_invalidated",
+  "severity": "blocking",
+  "upstream_targets": ["landscape"],
+  "finding": "Release verification cannot run because nextlens-release does not exist yet.",
+  "recommended_action": "block_promotion",
+  "status": "open",
+  "evidence_refs": ["evidence.tl1_schema_validation"]
+}

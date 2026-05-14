@@ -1,0 +1,22 @@
+{
+  "id": "code.tl_1.schemas",
+  "kind": "code",
+  "status": "implemented",
+  "name": "TL-1 schema files",
+  "current_path": "docs/nextlens/src/nextlens-src-topdownlens/schemas",
+  "summary": "JSON Schema files that specify the durable TopDownLens contract.",
+  "hierarchy": {
+    "feature": "feature.topdownlens_contract",
+    "story": "story.tl_1",
+    "task": "task.tl_1.define_schemas",
+    "code": "code.tl_1.schemas"
+  },
+  "produces": ["test.tl_1.schema_validation"],
+  "consumes": [],
+  "relationships": [],
+  "promotion_evidence": [],
+  "provenance": {
+    "source_documents": ["docs/nextlens/src/nextlens-src-topdownlens/schemas/ontology.schema.json"],
+    "confidence": "high"
+  }
+}

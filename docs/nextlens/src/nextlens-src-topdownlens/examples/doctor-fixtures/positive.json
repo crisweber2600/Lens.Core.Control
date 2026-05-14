@@ -1,0 +1,74 @@
+{
+  "entities": {
+    "capability.discovery.json": {
+      "id": "capability.discovery",
+      "kind": "capability"
+    },
+    "evidence.validation.json": {
+      "id": "evidence.validation",
+      "kind": "evidence"
+    },
+    "feature.topdownlens.json": {
+      "id": "feature.topdownlens",
+      "kind": "feature"
+    },
+    "journey.capture.json": {
+      "id": "journey.capture",
+      "kind": "journey"
+    },
+    "outcome.bmad-ready.json": {
+      "id": "outcome.bmad_ready",
+      "kind": "outcome"
+    },
+    "system.nextlens.json": {
+      "id": "system.nextlens",
+      "kind": "system"
+    }
+  },
+  "relationships": {
+    "relationship-example.json": {
+      "id": "rel.feature.topdownlens.depends_on.capability.discovery",
+      "from": "feature.topdownlens",
+      "to": "capability.discovery",
+      "type": "depends_on",
+      "evidence": ["evidence.validation"]
+    }
+  },
+  "bmad_packets": {
+    "bmad-packet-example.json": {
+      "id": "bmad_packet.feature.topdownlens",
+      "selected_feature": {
+        "id": "feature.topdownlens"
+      },
+      "scope_boundaries": {
+        "include": ["contracts"],
+        "exclude": ["runtime"],
+        "guardrails": ["id-first"]
+      },
+      "traceability": {
+        "outcomes": ["outcome.bmad_ready"],
+        "journeys": ["journey.capture"],
+        "capabilities": ["capability.discovery"],
+        "evidence": ["evidence.validation"]
+      },
+      "acceptance_evidence": [
+        {
+          "criterion": "validated",
+          "evidence_id": "evidence.validation"
+        }
+      ]
+    }
+  },
+  "salmon_signals": {
+    "resolved.json": {
+      "id": "salmon.20260514T000000Z.resolved",
+      "source": {
+        "id": "feature.topdownlens"
+      },
+      "severity": "blocking",
+      "status": "resolved",
+      "finding": "Resolved issue",
+      "evidence_refs": ["evidence.validation"]
+    }
+  }
+}
