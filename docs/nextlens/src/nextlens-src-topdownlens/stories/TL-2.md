@@ -2,7 +2,7 @@
 feature: nextlens-src-topdownlens
 story_id: TL-2
 doc_type: story
-status: in-progress
+status: done
 title: Top-Down Discovery Walkthrough
 depends_on: [TL-1, TL-4]
 implementation_kind: docs-only
@@ -47,3 +47,7 @@ Document the flow from large product idea down to one selected feature, using To
 - Use TL-1 schemas to validate the example traceability chain.
 
 ## Dev Agent Record
+
+- Status: done
+- Files produced: `walkthroughs/top-down-example-1.md`, `guides/top-down-discovery.md`.
+- Validation: local content check confirmed the walkthrough traces to system, product area, role, outcome, journey, capability, selected feature, evidence, and BMAD packet reference.
