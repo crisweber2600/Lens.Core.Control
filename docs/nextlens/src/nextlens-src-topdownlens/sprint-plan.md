@@ -1,7 +1,7 @@
 ---
 feature: nextlens-src-topdownlens
 doc_type: sprint-plan
-status: draft
+status: approved
 track: express
 phase: expressplan
 inputDocuments:
