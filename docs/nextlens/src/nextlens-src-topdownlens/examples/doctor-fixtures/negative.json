@@ -1,0 +1,45 @@
+{
+  "entities": {
+    "missing-id.json": {
+      "kind": "feature"
+    }
+  },
+  "relationships": {
+    "relationship-broken.json": {
+      "id": "rel.feature.topdownlens.depends_on.feature.missing",
+      "from": "feature.topdownlens",
+      "to": "feature.missing",
+      "type": "depends_on",
+      "evidence": ["evidence.missing"]
+    }
+  },
+  "bmad_packets": {
+    "bmad-packet-example.json": {
+      "id": "bmad_packet.feature.topdownlens",
+      "selected_feature": {},
+      "scope_boundaries": {
+        "include": [],
+        "exclude": [],
+        "guardrails": []
+      },
+      "traceability": {
+        "outcomes": [],
+        "journeys": [],
+        "capabilities": [],
+        "evidence": []
+      }
+    }
+  },
+  "salmon_signals": {
+    "open-blocking.json": {
+      "id": "salmon.20260514T010000Z.open_blocking",
+      "source": {
+        "id": "feature.topdownlens"
+      },
+      "severity": "blocking",
+      "status": "open",
+      "finding": "Promotion is blocked",
+      "evidence_refs": ["evidence.validation"]
+    }
+  }
+}

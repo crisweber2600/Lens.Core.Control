@@ -45,3 +45,9 @@ Provide deterministic, non-mutating health checks for TopDownLens topology and c
 
 - **Deferrable** beyond first dev increment; TL-12 closure can substitute manual validation if TL-7 slips.
 - Wire into TL-11 `regression-and-doctor` pipeline once shipped.
+
+## Dev Agent Record
+
+- Status: done
+- Files produced: target CLI `TargetProjects/nextlens/src/NextLens/scripts/lens_topdown/doctor_checks.py`, tests `TargetProjects/nextlens/src/NextLens/tests/test_doctor_checks.py`, `guides/doctor-checks.md`, and reusable fixtures under `examples/doctor-fixtures/`.
+- Validation: `uv run --with pytest python -m pytest tests/test_rebuild_derived_graph.py tests/test_doctor_checks.py -q` passed. The doctor ran against the feature docs and reported one blocking finding, `open_blocking_salmon_signal`, from the intentionally open release-repo Salmon signal.

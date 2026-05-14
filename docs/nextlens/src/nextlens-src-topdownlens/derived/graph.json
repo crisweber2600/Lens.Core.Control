@@ -8,7 +8,7 @@
       "type": "depends_on"
     }
   ],
-  "generated_at": "2026-01-02T20:40:46Z",
+  "generated_at": "2026-01-15T22:13:45Z",
   "id": "graph.topdownlens_derived",
   "nodes": [
     {
@@ -52,6 +52,11 @@
       "source_path": "examples/entities/story.tl-1.json"
     },
     {
+      "id": "story.tl_2",
+      "kind": "story",
+      "source_path": "examples/entities/story.tl-2.json"
+    },
+    {
       "id": "system.nextlens",
       "kind": "system",
       "source_path": "examples/entities/system.nextlens.json"
@@ -76,6 +81,7 @@
     "examples/entities/outcome.bmad-ready-feature.json",
     "examples/entities/product-area.planning-intelligence.json",
     "examples/entities/story.tl-1.json",
+    "examples/entities/story.tl-2.json",
     "examples/entities/system.nextlens.json",
     "examples/entities/task.tl-1-define-schemas.json",
     "examples/entities/test.tl-1-schema-validation.json",
