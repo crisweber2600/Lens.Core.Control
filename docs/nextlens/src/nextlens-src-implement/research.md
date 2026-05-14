@@ -9,7 +9,7 @@ updated_at: 2026-05-14
 
 ## Research Goal
 
-Validate the smallest useful implementation path from ambiguous context to one selected feature packet, with deterministic writes, non-mutating doctor checks, and upstream correction signaling.
+Validate the smallest useful top-down implementation path from discovered system context to one selected Feature packet, with deterministic writes, non-mutating doctor checks, and upstream correction signaling.
 
 ## Executive Findings
 
@@ -18,17 +18,18 @@ Validate the smallest useful implementation path from ambiguous context to one s
 3. Doctor output should use newline-delimited JSON for streaming, machine-readable checks, and CI compatibility.
 4. Workflow assets must be installed in executable workflow locations, not only documented as templates.
 5. Multi-source correction signaling should deduplicate by fingerprint to avoid noisy retries and duplicate remediation loops.
+6. Context sufficiency must run before ranking so incomplete discovery output cannot silently produce a packet.
 
 ## Technical Analysis
 
 ### 1. Command-Query Separation Fits the Landscape + Derived Graph Design
 
-The current design intent already separates authoritative mutation surfaces (landscape and packet selection state) from disposable read surfaces (derived graph). This aligns with CQRS guidance: write models enforce business consistency; read models optimize query behavior and can lag safely under eventual consistency.
+The current design intent already separates authoritative mutation surfaces (Living Landscape and packet selection state) from disposable read surfaces (Derived Graph). This aligns with CQRS guidance: write models enforce business consistency; read models optimize query behavior and can lag safely under eventual consistency.
 
 Applied to nextlens:
 
-- Treat landscape files and packet selection updates as command-side writes.
-- Treat derived graph files as query-side projections that can be rebuilt eagerly on successful writes.
+- Treat Work Archive and Living Landscape files plus packet selection updates as command-side writes.
+- Treat Derived Graph files as query-side projections that can be rebuilt eagerly on successful writes.
 - Keep query projection rebuild deterministic and disposable, never authoritative.
 
 This supports the existing invariant: stable IDs are source-of-truth, graph is projection.
@@ -92,14 +93,19 @@ Recommended fingerprint fields:
 
 Then attach all sources as evidence on one Salmon event record.
 
+### 6. Top-Down Sufficiency Is Required Before Ranking
+
+Candidate Features should be ranked only after the command verifies that discovery output contains a system thesis, role, outcome, journey or journey hypothesis, traceable candidate Features, captured risks/open questions, and BMAD consumer context. Missing outcome or journey context should block packet emission and recommend return to discovery rather than creating a bottom-up packet.
+
 ## Recommended Technical Shape for V1
 
-1. Keep inline context ingestion in the command spine (chosen path B).
-2. Implement request-level idempotency for all write commands.
-3. Persist authoritative state by stable ID; rebuild graph projection eagerly after successful writes.
-4. Emit doctor as JSONL with one line per check.
-5. Enforce write allowlist and block governance/release direct mutation.
-6. Emit deduplicated Salmon correction events keyed by failure fingerprint.
+1. Keep top-down context ingestion in the command spine.
+2. Run context sufficiency before ranking candidate Features.
+3. Implement request-level idempotency for all write commands.
+4. Persist authoritative state by stable ID; rebuild graph projection eagerly after successful writes.
+5. Emit doctor as JSONL with one line per check.
+6. Enforce write allowlist and block governance/release direct mutation.
+7. Emit deduplicated Salmon correction events keyed by failure fingerprint and top-down impacted nodes.
 
 ## Risks and Mitigations
 
@@ -115,9 +121,12 @@ Then attach all sources as evidence on one Salmon event record.
 - Risk: Correction stream noise.
   Mitigation: Fingerprint-based dedup with multi-source evidence attachment.
 
+- Risk: Ranking arbitrary or under-specified Features.
+  Mitigation: Block or warn through context sufficiency before ranking.
+
 ## Decision Implications for Implementation
 
-- Confirms RC direction: one command, one packet, one report schema, one correction object per failure domain.
+- Confirms RC direction: one command, one selected Feature packet, one report schema, one correction object per failure domain.
 - Confirms FA direction: vocabulary/status drift and workflow-installability checks are essential early tests.
 - Supports preplan objective: a constrained, auditable first implementation path before broader automation expansion.
 
