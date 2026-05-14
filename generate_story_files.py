@@ -4,10 +4,10 @@ Generate individual story files for NextLens v1 feature.
 Parses stories.md and creates individual YAML story files with frontmatter.
 """
 
-import json
-import re
 from datetime import datetime, timezone
+import json
 from pathlib import Path
+import re
 
 FEATURE_ID = "nextlens-src-implement"
 
@@ -22,6 +22,7 @@ def build_story_filename(story_data):
 def parse_stories_md(content):
     """Parse stories.md to extract individual stories."""
     stories = []
+    section_boundary = r'(?:\n\n(?=\*\*[A-Z][^:\n]+:\*\*)|$)'
 
     # Split by ### Story pattern to find individual stories
     story_pattern = r'### Story (\d+\.\d+):\s*(.+?)\n\n'
@@ -44,7 +45,7 @@ def parse_stories_md(content):
         epic_num = story_id.split('.')[0]
 
         # Extract acceptance criteria
-        ac_pattern = r'\*\*Acceptance Criteria:\*\*\n(.*?)(?:\n\n\*\*Dependencies:\*\*|$)'
+        ac_pattern = rf'\*\*Acceptance Criteria:\*\*\n(.*?){section_boundary}'
         ac_match = re.search(ac_pattern, story_text, re.DOTALL)
         acceptance_criteria = ac_match.group(1).strip() if ac_match else ""
 
@@ -75,9 +76,11 @@ def parse_stories_md(content):
         epic_name = epic_match.group(1).strip() if epic_match else f"EP{epic_num}"
 
         # Extract and preserve the raw user story block
-        user_story_pattern = r'\*\*User Story:\*\*\n\n(.*?)(?:\n\n\*\*Acceptance Criteria:\*\*)'
+        user_story_pattern = rf'\*\*User Story:\*\*\n\n(.*?){section_boundary}'
         user_story_match = re.search(user_story_pattern, story_text, re.DOTALL)
         user_story = user_story_match.group(1).strip() if user_story_match else ""
+        if not user_story:
+            print(f"WARNING: User story block could not be parsed for Story {story_id}")
 
         stories.append({
             'story_id': story_id,
