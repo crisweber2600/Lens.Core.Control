@@ -6,7 +6,7 @@
 
 ## Summary
 
-The ExpressPlan artifact set is coherent enough to proceed to FinalizePlan. The business plan, tech plan, and sprint plan all converge on the same module thesis: TopDownLens should reframe LENS around slice orchestration, top-down discovery, bottom-up growth, living landscape topology, BMAD bridging, and Salmon upstream validation. No critical blocker was found. The main risks are scope control, storage-location ambiguity, promotion-threshold ambiguity, and the lack of runtime cross-feature context support in the installed `init-feature-ops.py`.
+The ExpressPlan artifact set is coherent enough to proceed to FinalizePlan. The business plan, tech plan, and sprint plan all converge on the same module thesis: TopDownLens should reframe LENS around feature orchestration, top-down discovery, bottom-up growth, living landscape topology, BMAD bridging, and Salmon upstream validation. No critical blocker was found. The main risks are scope control, storage-location ambiguity, promotion-threshold ambiguity, and the lack of runtime cross-feature context support in the installed `init-feature-ops.py`.
 
 ## Findings
 
@@ -28,9 +28,9 @@ The ExpressPlan artifact set is coherent enough to proceed to FinalizePlan. The 
 | # | Severity | Dimension | Finding | Recommendation |
 |---|----------|-----------|---------|----------------|
 | M1 | Medium | Assumptions and Blind Spots | Promotion thresholds are described conceptually, but the sprint plan does not yet define concrete evidence counts or decision gates. | Add story acceptance criteria for repeated pressure categories and examples before implementing promotion suggestions. |
-| M2 | Medium | Coverage Gaps | Salmon is well-framed as upstream consistency validation, but routing from signal severity to action is still early. | FinalizePlan should require a signal routing table covering local note, landscape update, BMAD correct-course, split slice, and block promotion. |
+| M2 | Medium | Coverage Gaps | Salmon is well-framed as upstream consistency validation, but routing from signal severity to action is still early. | FinalizePlan should require a signal routing table covering local note, landscape update, BMAD correct-course, split feature, and block promotion. |
 | M3 | Medium | Cross-Feature Dependencies | The review attempted to load cross-feature context with `fetch-context --depth full`, but this installed runtime does not expose the subcommand. | Carry this as an implementation environment gap; do not make TopDownLens depend on unavailable context-loading until the runtime surface is restored or replaced. |
-| M4 | Low | Logic Flaws | The business and tech plans intentionally demote domain/service/feature, but compatibility with current Lens feature lifecycle is only stated at a high level. | FinalizePlan should include a compatibility story or ADR so current `/new-feature` flows can map to future `slice` identity without breaking governance. |
+| M4 | Low | Logic Flaws | The business and tech plans intentionally demote domain/service/repo as planning roots, but compatibility with the current Lens feature lifecycle is only stated at a high level. | FinalizePlan should include a compatibility story or ADR so current `/new-feature` flows can map to future `feature.<slug>` identity without breaking governance. |
 
 ## Accepted Risks
 
@@ -56,6 +56,6 @@ Quinn (QA): Salmon is the differentiator, but it needs testable behavior. A sign
 
 - FinalizePlan should decide whether `_bmad-output/lens/` or `docs/` is the first authoritative module output root.
 - FinalizePlan should define the minimum relationship lifecycle states required for MVP implementation.
-- FinalizePlan should decide whether bottom-up `lens slice new` ships in the first dev increment or remains a documented compatibility constraint.
+- FinalizePlan should decide whether bottom-up `lens feature new` ships in the first dev increment or remains a documented compatibility constraint.
 - FinalizePlan should address the missing `fetch-context` runtime subcommand if cross-feature context is required by the first implementation.
 - FinalizePlan should define what evidence is required for capability promotion suggestions.

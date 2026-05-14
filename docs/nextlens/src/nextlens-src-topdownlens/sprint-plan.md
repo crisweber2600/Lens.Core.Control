@@ -24,8 +24,8 @@ Build the module spine first:
 1. Define stable data contracts.
 2. Define the source-of-truth topology.
 3. Support one top-down discovery walkthrough.
-4. Preserve bottom-up slice-first behavior.
-5. Generate a focused BMAD packet for one selected slice.
+4. Preserve bottom-up feature-first behavior.
+5. Generate a focused BMAD packet for one selected feature.
 6. Rebuild a minimal derived graph.
 7. Record Salmon signals for upstream correction.
 
@@ -36,56 +36,61 @@ Build the module spine first:
 **Goal:** Define the core objects and where they live.
 
 **Scope:**
-- `slice.yaml`
+- `feature.yaml`
 - relationship records
 - landscape entity records
 - derived graph files
 - Salmon signal records
 - BMAD packet schema
+- hierarchy records from system to product area to outcome to journey to capability to feature
 
 **Acceptance:**
 - Stable IDs are required for all durable entities.
 - Paths are treated as mutable addresses.
 - Graph files are marked derived and rebuildable.
-- Slice archive, living landscape, and derived graph are separate.
+- Feature archive, living landscape, and derived graph are separate.
+- The hierarchy explicitly names system, product area, outcome, journey, capability, feature, story, task, code, test, and evidence levels.
 
 ### TL-2 - Top-Down Discovery Walkthrough
 
-**Goal:** Document and/or prototype the flow from large product idea to selected slice.
+**Goal:** Document and/or prototype the flow from large product idea to selected feature.
 
 **Scope:**
 - Raw context capture.
 - System thesis extraction.
+- Product area map.
 - Role and stakeholder map.
 - Outcome map.
 - Journey map.
-- Selected vertical slice.
+- Capability candidates.
+- Selected vertical feature.
 - Focused BMAD packet.
 
 **Acceptance:**
 - The walkthrough does not begin with domain/service/feature.
-- At least one selected slice traces to role, outcome, journey, and evidence.
+- At least one selected feature traces to system, product area, role, outcome, journey, capability candidate, and evidence.
 - Candidate services are labeled implementation consequences, not planning roots.
 
 ### TL-3 - Bottom-Up Compatibility Rules
 
-**Goal:** Ensure TopDownLens does not break the slice-first mental model.
+**Goal:** Ensure TopDownLens does not break the feature-first mental model.
 
 **Scope:**
-- Standalone slice creation rules.
+- Standalone feature creation rules.
 - Adjacency detection concept.
 - Repeated pressure categories.
 - Promotion threshold guidance.
+- Bottom-up promotion path from feature to capability to product area to domain/system when evidence exists.
 
 **Acceptance:**
-- A slice can remain independent forever.
+- A feature can remain independent forever.
 - Adjacency is weak by default.
 - Promotion is advisory and requires evidence.
 - The rule "no growth without pressure" is encoded in the planning model.
 
 ### TL-4 - BMAD Bridge Packet
 
-**Goal:** Define how LENS hands one selected slice to BMAD.
+**Goal:** Define how LENS hands one selected feature to BMAD.
 
 **Scope:**
 - Packet schema.
@@ -95,7 +100,7 @@ Build the module spine first:
 - Traceability fields.
 
 **Acceptance:**
-- Packet targets exactly one slice.
+- Packet targets exactly one feature.
 - Packet includes scope boundaries and acceptance evidence.
 - Packet includes outcome/journey traceability when available.
 - BMAD remains responsible for PRD, architecture, epics, stories, implementation, and review.
@@ -127,8 +132,8 @@ Build the module spine first:
 - Recommended actions.
 
 **Acceptance:**
-- Signals can target slice, journey, outcome, landscape, or BMAD correct-course.
-- Signals distinguish local note, landscape update, split slice, and blocking correction.
+- Signals can target feature, journey, outcome, product area, landscape, or BMAD correct-course.
+- Signals distinguish local note, landscape update, split feature, and blocking correction.
 - Signals preserve evidence and provenance.
 
 ### TL-7 - Doctor Checks
@@ -139,7 +144,7 @@ Build the module spine first:
 - Missing IDs.
 - Broken references.
 - Derived graph freshness.
-- Missing slice scope.
+- Missing feature scope.
 - Missing BMAD packet traceability.
 - Open blocking Salmon signals.
 
