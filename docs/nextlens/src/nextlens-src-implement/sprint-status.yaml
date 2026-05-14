@@ -1,0 +1,429 @@
+feature: nextlens-src-implement
+doc_type: sprint-status
+status: approved
+domain: nextlens
+service: src
+track: full
+phase: finalizeplan
+updated_at: 2026-05-14T00:00:00Z
+name: "NextLens v1 Development"
+total_stories: 38
+total_epics: 11
+total_effort_points: 213
+estimated_sprint_duration_weeks: 14
+
+sprints:
+  - sprint_id: 1
+    name: "Sprint 1: Command Spine Foundation"
+    epic_ids:
+      - "EP1"
+    target_date: "2026-05-28"
+    estimated_points: 18
+    priority: "critical"
+    stories:
+      - "1.1"
+      - "1.2"
+      - "1.3"
+    dependencies:
+      before: []
+      after:
+        - "EP2"
+        - "EP4"
+
+  - sprint_id: 2
+    name: "Sprint 2: Context Sufficiency Gate"
+    epic_ids:
+      - "EP2"
+    target_date: "2026-06-11"
+    estimated_points: 18
+    priority: "critical"
+    stories:
+      - "2.1"
+      - "2.2"
+      - "2.3"
+    dependencies:
+      before: ["EP1"]
+      after:
+        - "EP4"
+
+  - sprint_id: 3
+    name: "Sprint 3: Landscape State Management"
+    epic_ids:
+      - "EP3"
+    target_date: "2026-06-25"
+    estimated_points: 18
+    priority: "high"
+    stories:
+      - "3.1"
+      - "3.2"
+      - "3.3"
+    dependencies:
+      before: []
+      after:
+        - "EP4"
+        - "EP6"
+        - "EP7"
+
+  - sprint_id: 4
+    name: "Sprint 4: Feature Ranking & Selection (Part 1)"
+    epic_ids:
+      - "EP4"
+    target_date: "2026-07-09"
+    estimated_points: 18
+    priority: "critical"
+    stories:
+      - "4.1"
+      - "4.2"
+      - "4.3"
+    dependencies:
+      before:
+        - "EP1"
+        - "EP2"
+        - "EP3"
+      after:
+        - "EP8"
+
+  - sprint_id: 5
+    name: "Sprint 5: Idempotency & Replay Safety"
+    epic_ids:
+      - "EP5"
+    target_date: "2026-07-23"
+    estimated_points: 15
+    priority: "high"
+    stories:
+      - "5.1"
+      - "5.2"
+      - "5.3"
+    dependencies:
+      before: []
+      after:
+        - "EP8"
+
+  - sprint_id: 6
+    name: "Sprint 6: Derived Graph Projection"
+    epic_ids:
+      - "EP6"
+    target_date: "2026-08-06"
+    estimated_points: 15
+    priority: "high"
+    stories:
+      - "6.1"
+      - "6.2"
+      - "6.3"
+    dependencies:
+      before: ["EP3"]
+      after:
+        - "EP7"
+
+  - sprint_id: 7
+    name: "Sprint 7: Doctor Validation Framework"
+    epic_ids:
+      - "EP7"
+    target_date: "2026-08-20"
+    estimated_points: 18
+    priority: "high"
+    stories:
+      - "7.1"
+      - "7.2"
+      - "7.3"
+      - "7.4"
+    dependencies:
+      before:
+        - "EP3"
+        - "EP6"
+      after:
+        - "EP8"
+
+  - sprint_id: 8
+    name: "Sprint 8: Feature Packet Schema & Emission (Part 1)"
+    epic_ids:
+      - "EP8"
+    target_date: "2026-09-03"
+    estimated_points: 20
+    priority: "critical"
+    stories:
+      - "8.1"
+      - "8.2"
+      - "8.3"
+      - "8.4"
+    dependencies:
+      before:
+        - "EP4"
+        - "EP5"
+        - "EP7"
+      after:
+        - "EP8"
+
+  - sprint_id: 9
+    name: "Sprint 9: Packet Emission Completion & Salmon Routing (Part 1)"
+    epic_ids:
+      - "EP8"
+      - "EP9"
+    target_date: "2026-09-17"
+    estimated_points: 20
+    priority: "high"
+    stories:
+      - "8.5"
+      - "9.1"
+      - "9.2"
+      - "9.3"
+    dependencies:
+      before:
+        - "EP4"
+        - "EP5"
+        - "EP7"
+      after:
+        - "EP9"
+
+  - sprint_id: 10
+    name: "Sprint 10: Salmon Correction Routing & Evidence (Part 1)"
+    epic_ids:
+      - "EP9"
+      - "EP10"
+    target_date: "2026-10-01"
+    estimated_points: 20
+    priority: "high"
+    stories:
+      - "9.4"
+      - "10.1"
+      - "10.2"
+    dependencies:
+      before:
+        - "EP8"
+        - "EP9"
+      after:
+        - "EP10"
+
+  - sprint_id: 11
+    name: "Sprint 11: Evidence & Traceability Completion"
+    epic_ids:
+      - "EP10"
+    target_date: "2026-10-15"
+    estimated_points: 13
+    priority: "high"
+    stories:
+      - "10.3"
+    dependencies:
+      before:
+        - "EP9"
+      after:
+        - "EP11"
+
+  - sprint_id: 12
+    name: "Sprint 12: BMAD Module Packaging (Part 1)"
+    epic_ids:
+      - "EP11"
+    target_date: "2026-10-29"
+    estimated_points: 15
+    priority: "high"
+    stories:
+      - "11.1"
+      - "11.2"
+      - "11.3"
+    dependencies:
+      before:
+        - "EP10"
+      after:
+        - "EP11"
+
+  - sprint_id: 13
+    name: "Sprint 13: Module Gates & Completion"
+    epic_ids:
+      - "EP11"
+    target_date: "2026-11-12"
+    estimated_points: 5
+    priority: "high"
+    stories:
+      - "11.4"
+    dependencies:
+      before:
+        - "EP10"
+        - "EP11"
+      after: []
+
+story_allocations:
+  "1.1": 1
+  "1.2": 1
+  "1.3": 1
+  "2.1": 2
+  "2.2": 2
+  "2.3": 2
+  "3.1": 3
+  "3.2": 3
+  "3.3": 3
+  "4.1": 4
+  "4.2": 4
+  "4.3": 4
+  "5.1": 5
+  "5.2": 5
+  "5.3": 5
+  "6.1": 6
+  "6.2": 6
+  "6.3": 6
+  "7.1": 7
+  "7.2": 7
+  "7.3": 7
+  "7.4": 7
+  "8.1": 8
+  "8.2": 8
+  "8.3": 8
+  "8.4": 8
+  "8.5": 9
+  "9.1": 9
+  "9.2": 9
+  "9.3": 9
+  "9.4": 10
+  "10.1": 10
+  "10.2": 10
+  "10.3": 11
+  "11.1": 12
+  "11.2": 12
+  "11.3": 12
+  "11.4": 13
+
+dependencies:
+  "2.1": ["1.1"]
+  "2.2": ["2.1"]
+  "2.3": ["2.2", "1.3"]
+  "3.1": []
+  "3.2": ["3.1"]
+  "3.3": ["3.2"]
+  "4.1": ["2.3", "3.3"]
+  "4.2": ["4.1"]
+  "4.3": ["4.1", "4.2", "1.3"]
+  "5.1": []
+  "5.2": ["5.1"]
+  "5.3": ["5.2", "5.1"]
+  "6.1": []
+  "6.2": ["3.3", "6.1"]
+  "6.3": ["6.2"]
+  "7.1": ["3.3", "6.1"]
+  "7.2": ["7.1"]
+  "7.3": ["7.2", "6.3"]
+  "7.4": ["7.3", "1.3"]
+  "8.1": []
+  "8.2": ["4.1", "4.3", "3.3", "6.2", "7.2"]
+  "8.3": ["8.2", "7.4", "1.3"]
+  "8.4": ["8.3", "5.1"]
+  "8.5": ["8.2"]
+  "9.1": []
+  "9.2": ["9.1"]
+  "9.3": ["9.1"]
+  "9.4": ["9.3", "8.4"]
+  "10.1": ["8.5"]
+  "10.2": ["10.1"]
+  "10.3": ["10.2"]
+  "11.1": []
+  "11.2": ["11.1"]
+  "11.3": ["11.1"]
+  "11.4": ["11.2", "11.3", "10.3"]
+
+epic_dependencies:
+  "EP1": []
+  "EP2": ["EP1"]
+  "EP3": []
+  "EP4": ["EP1", "EP2", "EP3"]
+  "EP5": []
+  "EP6": ["EP3"]
+  "EP7": ["EP3", "EP6"]
+  "EP8": ["EP4", "EP5", "EP7"]
+  "EP9": ["EP8"]
+  "EP10": ["EP9"]
+  "EP11": ["EP10"]
+
+milestone_dates:
+  - name: "Command Spine Complete"
+    date: "2026-05-28"
+    epics: ["EP1"]
+    
+  - name: "Context & Ranking Engine Ready"
+    date: "2026-07-09"
+    epics: ["EP1", "EP2", "EP3", "EP4"]
+    
+  - name: "Validation & Routing Framework Ready"
+    date: "2026-08-20"
+    epics: ["EP1", "EP2", "EP3", "EP4", "EP5", "EP6", "EP7"]
+    
+  - name: "Packet Emission Ready"
+    date: "2026-09-03"
+    epics: ["EP1", "EP2", "EP3", "EP4", "EP5", "EP6", "EP7", "EP8"]
+    
+  - name: "Salmon Routing Complete"
+    date: "2026-10-01"
+    epics: ["EP1", "EP2", "EP3", "EP4", "EP5", "EP6", "EP7", "EP8", "EP9"]
+    
+  - name: "Evidence & Module Packaging Complete"
+    date: "2026-11-12"
+    epics: ["EP1", "EP2", "EP3", "EP4", "EP5", "EP6", "EP7", "EP8", "EP9", "EP10", "EP11"]
+
+team_capacity:
+  estimated_team_size: 1
+  story_points_per_sprint: "15-20"
+  sprint_duration_days: 14
+  working_days_per_sprint: 10
+  velocity_assumption: "15-20 points/sprint"
+  team_notes:
+    - "Solo development with focused task breakdown"
+    - "Each epic has clear story sequencing"
+    - "Critical path: EP1 → EP2 → EP4 → EP8"
+    - "Parallel tracks: EP3, EP5, EP6 can progress independently"
+
+story_complexity_breakdown:
+  critical: 10
+  high: 18
+  medium: 12
+  low: 1
+
+implementation_sequence:
+  critical_path:
+    - "EP1: Command Spine (foundational)"
+    - "EP2: Context Sufficiency (validation gate)"
+    - "EP4: Feature Ranking (selection logic)"
+    - "EP8: Packet Emission (output delivery)"
+  
+  parallel_workstreams:
+    - "EP3: Landscape State (independent, supports EP4, EP6, EP7)"
+    - "EP5: Idempotency (supports EP8)"
+    - "EP6: Derived Graph (depends on EP3, supports EP7)"
+  
+  secondary_path:
+    - "EP7: Doctor Validation (depends on EP3, EP6, precedes EP8)"
+    - "EP9: Salmon Routing (sequential after EP8)"
+    - "EP10: Evidence (sequential after EP9)"
+    - "EP11: BMAD Module (final integration)"
+
+risk_mitigation:
+  - id: "RISK-001"
+    description: "Deterministic ranking algorithm complexity"
+    epic: "EP4"
+    mitigation: "Extensive unit testing; automated scoring reproducibility checks in Sprint 4"
+    
+  - id: "RISK-002"
+    description: "State persistence and reconstruction correctness"
+    epic: "EP3"
+    mitigation: "Integration tests verify round-trip state persistence in Sprint 3"
+    
+  - id: "RISK-003"
+    description: "Doctor framework coverage and check quality"
+    epic: "EP7"
+    mitigation: "Iterative check implementation; validation against real-world scenarios"
+    
+  - id: "RISK-004"
+    description: "Packet emission and BMAD integration contract"
+    epic: "EP8"
+    mitigation: "Schema validation gates; contract testing before EP8 completion"
+    
+  - id: "RISK-005"
+    description: "Salmon deduplication fingerprint reliability"
+    epic: "EP9"
+    mitigation: "Collision testing; determinism validation with identical events"
+
+notes:
+  - "Sprint plan assumes sequential implementation with identified parallelizable epics"
+  - "Total effort: 213 story points across 13 sprints"
+  - "Average sprint velocity: 16 points (range 5-20)"
+  - "Critical dependencies respected: EP1 blocks EP2/EP4; EP4 blocks EP8"
+  - "All 38 stories allocated to specific sprints"
+  - "Milestone dates represent clear readiness checkpoints"
+  - "BMAD integration occurs in EP8 with scope containment hints"
+  - "Module packaging (EP11) completes feature lifecycle"
