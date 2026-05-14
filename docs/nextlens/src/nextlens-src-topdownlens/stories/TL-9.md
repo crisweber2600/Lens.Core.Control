@@ -2,7 +2,7 @@
 feature: nextlens-src-topdownlens
 story_id: TL-9
 doc_type: story
-status: in-progress
+status: done
 title: Constitution Layering For TopDownLens
 depends_on: [TL-8]
 implementation_kind: schema
@@ -46,3 +46,7 @@ Apply the 4-level constitution hierarchy (org -> domain -> service -> repo) to T
 - Per session contract: informational gates only; do not block downstream stories on constitution violations.
 
 ## Dev Agent Record
+
+- Status: done
+- Files produced: `guides/constitution-layering.md`.
+- Validation: local content check confirmed all constitution levels, informational gate mode, story/review enforcement, and governance write-boundary language are present.

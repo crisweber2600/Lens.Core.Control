@@ -45,7 +45,7 @@ stories:
     epic: 2
     spine: true
     implementation_kind: docs-only
-    status: in-progress
+    status: done
     depends_on: [TL-8]
   - story_id: TL-2
     title: Top-Down Discovery Walkthrough
