@@ -52,7 +52,7 @@ stories:
     epic: 3
     spine: false
     implementation_kind: docs-only
-    status: not-started
+    status: in-progress
     depends_on: [TL-1, TL-4]
   - story_id: TL-3
     title: Bottom-Up Compatibility Rules

@@ -2,7 +2,7 @@
 feature: nextlens-src-topdownlens
 story_id: TL-2
 doc_type: story
-status: not-started
+status: in-progress
 title: Top-Down Discovery Walkthrough
 depends_on: [TL-1, TL-4]
 implementation_kind: docs-only
@@ -45,3 +45,5 @@ Document the flow from large product idea down to one selected feature, using To
 
 - Docs-only. No code or schemas authored here.
 - Use TL-1 schemas to validate the example traceability chain.
+
+## Dev Agent Record
