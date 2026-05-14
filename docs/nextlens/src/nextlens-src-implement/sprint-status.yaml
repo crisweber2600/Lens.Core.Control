@@ -1,6 +1,7 @@
 feature: nextlens-src-implement
 doc_type: sprint-status
 status: approved
+status: in-progress
 domain: nextlens
 service: src
 track: full
@@ -20,10 +21,10 @@ sprints:
     target_date: "2026-05-28"
     estimated_points: 18
     priority: "critical"
-    status: ready
+    status: in-progress
     stories:
       - story_id: "1.1"
-        status: ready
+        status: in-progress
         blocked_by: []
       - story_id: "1.2"
         status: ready
