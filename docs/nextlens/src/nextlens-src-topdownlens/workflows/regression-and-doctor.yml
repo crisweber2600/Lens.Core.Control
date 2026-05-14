@@ -1,0 +1,86 @@
+name: TopDownLens Regression And Doctor
+
+on:
+  push:
+    branches:
+      - '*-dev'
+  pull_request:
+    paths:
+      - docs/nextlens/src/nextlens-src-topdownlens/**
+      - TargetProjects/nextlens/src/NextLens/scripts/lens_topdown/**
+      - TargetProjects/nextlens/src/NextLens/tests/**
+  workflow_dispatch:
+    inputs:
+      feature_docs:
+        description: Feature docs path to inspect
+        required: true
+        default: docs/nextlens/src/nextlens-src-topdownlens
+      strict:
+        description: Fail on blocking doctor findings
+        required: true
+        default: 'true'
+      skip_doctor:
+        description: Explicit non-publication skip mode
+        required: true
+        default: 'false'
+
+permissions:
+  contents: read
+
+jobs:
+  regression-and-doctor:
+    name: Run rebuild, tests, and doctor checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install test dependencies
+        run: python -m pip install pytest
+
+      - name: Enforce explicit skip mode
+        env:
+          SKIP_DOCTOR: ${{ inputs.skip_doctor || 'false' }}
+          STRICT: ${{ inputs.strict || 'true' }}
+        run: |
+          set -euo pipefail
+          if [[ "$SKIP_DOCTOR" == "true" && "$STRICT" == "true" ]]; then
+            echo "SKIP_DOCTOR=true is non-publication mode and cannot pass in strict mode." >&2
+            exit 1
+          fi
+
+      - name: Run TopDownLens CLI tests
+        run: |
+          set -euo pipefail
+          test -f TargetProjects/nextlens/src/NextLens/scripts/lens_topdown/rebuild_derived_graph.py
+          test -f TargetProjects/nextlens/src/NextLens/scripts/lens_topdown/doctor_checks.py
+          cd TargetProjects/nextlens/src/NextLens
+          python -m pytest tests/test_rebuild_derived_graph.py tests/test_doctor_checks.py -q
+
+      - name: Rebuild derived graph
+        env:
+          FEATURE_DOCS: ${{ inputs.feature_docs || 'docs/nextlens/src/nextlens-src-topdownlens' }}
+        run: |
+          python TargetProjects/nextlens/src/NextLens/scripts/lens_topdown/rebuild_derived_graph.py --feature-docs "$FEATURE_DOCS"
+
+      - name: Run doctor checks
+        env:
+          FEATURE_DOCS: ${{ inputs.feature_docs || 'docs/nextlens/src/nextlens-src-topdownlens' }}
+          SKIP_DOCTOR: ${{ inputs.skip_doctor || 'false' }}
+          STRICT: ${{ inputs.strict || 'true' }}
+        run: |
+          set -euo pipefail
+          if [[ "$SKIP_DOCTOR" == "true" ]]; then
+            echo "Skipping doctor checks for explicit non-publication mode."
+            exit 0
+          fi
+          if [[ "$STRICT" == "true" ]]; then
+            python TargetProjects/nextlens/src/NextLens/scripts/lens_topdown/doctor_checks.py --feature-docs "$FEATURE_DOCS" --strict
+          else
+            python TargetProjects/nextlens/src/NextLens/scripts/lens_topdown/doctor_checks.py --feature-docs "$FEATURE_DOCS"
+          fi

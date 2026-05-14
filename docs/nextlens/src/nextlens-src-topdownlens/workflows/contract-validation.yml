@@ -1,0 +1,69 @@
+name: TopDownLens Contract Validation
+
+on:
+  pull_request:
+    paths:
+      - docs/nextlens/src/nextlens-src-topdownlens/**
+  workflow_dispatch:
+    inputs:
+      feature_docs:
+        description: Feature docs path to validate
+        required: true
+        default: docs/nextlens/src/nextlens-src-topdownlens
+
+permissions:
+  contents: read
+
+jobs:
+  validate-contracts:
+    name: Validate schemas and examples
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install validators
+        run: python -m pip install jsonschema pyyaml
+
+      - name: Validate TopDownLens contracts
+        env:
+          FEATURE_DOCS: ${{ inputs.feature_docs || 'docs/nextlens/src/nextlens-src-topdownlens' }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          from jsonschema import Draft202012Validator, RefResolver
+
+          base = Path(os.environ['FEATURE_DOCS'])
+          if not base.exists():
+              raise SystemExit(f'feature docs path does not exist: {base}')
+
+          schemas = {path.name: json.loads(path.read_text()) for path in sorted((base / 'schemas').glob('*.schema.json'))}
+          entity_schema = schemas['landscape-entity.schema.json']
+          store = {'landscape-entity.schema.json': entity_schema}
+
+          for path in sorted((base / 'examples' / 'entities').glob('*.json')):
+              Draft202012Validator(entity_schema).validate(json.loads(path.read_text()))
+
+          relationship_schema = schemas['relationship.schema.json']
+          relationship_resolver = RefResolver.from_schema(relationship_schema, store=store)
+          for path in sorted((base / 'examples').glob('relationship*.json')):
+              Draft202012Validator(relationship_schema, resolver=relationship_resolver).validate(json.loads(path.read_text()))
+
+          for schema_name, paths in {
+              'derived-graph.schema.json': [base / 'derived' / 'graph.json', base / 'examples' / 'derived-graph-example.json'],
+              'bmad-packet.schema.json': sorted((base / 'examples').glob('bmad-packet*.json')) + sorted((base / 'dogfood').glob('bmad-packet*.json')),
+              'salmon-signal.schema.json': sorted((base / 'examples' / 'salmon-signals').glob('*.json')) + sorted((base / 'dogfood' / 'salmon-signals').glob('*.json')),
+          }.items():
+              schema = schemas[schema_name]
+              resolver = RefResolver.from_schema(schema, store=store)
+              for path in paths:
+                  if path.exists():
+                      Draft202012Validator(schema, resolver=resolver).validate(json.loads(path.read_text()))
+          PY

@@ -1,0 +1,51 @@
+name: TopDownLens Governance Publish Gate
+
+on:
+  pull_request:
+    paths:
+      - docs/nextlens/src/nextlens-src-topdownlens/**
+  workflow_dispatch:
+    inputs:
+      feature_docs:
+        description: Feature docs path to inspect
+        required: true
+        default: docs/nextlens/src/nextlens-src-topdownlens
+
+permissions:
+  contents: read
+
+jobs:
+  publish-readiness:
+    name: Check publish readiness artifacts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Verify required artifacts
+        env:
+          FEATURE_DOCS: ${{ inputs.feature_docs || 'docs/nextlens/src/nextlens-src-topdownlens' }}
+        run: |
+          set -euo pipefail
+          required=(
+            business-plan.md
+            tech-plan.md
+            sprint-plan.md
+            sprint-status.yaml
+            implementation-readiness.md
+            stories/TL-1.md
+            stories/TL-4.md
+            stories/TL-8.md
+            stories/TL-9.md
+            dogfood/report.md
+          )
+          for relative_path in "${required[@]}"; do
+            test -f "$FEATURE_DOCS/$relative_path" || {
+              echo "Missing required artifact: $FEATURE_DOCS/$relative_path" >&2
+              exit 1
+            }
+          done
+
+      - name: Refuse direct governance publication
+        run: |
+          echo "This gate is read-only. Publish through the approved Lens governance operation."

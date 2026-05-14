@@ -6,7 +6,7 @@ pass-with-warnings
 
 ## Summary
 
-TopDownLens was run against its own feature artifacts from system thesis to one selected feature and one BMAD packet. The run validates the stable-ID hierarchy, source-vs-derived storage boundary, BMAD handoff packet, governance topology, constitution layering evidence, and Salmon signal loop.
+TopDownLens was run against its own feature artifacts from system thesis to one selected feature and one BMAD packet. The run validates the stable-ID hierarchy, source-vs-derived storage boundary, BMAD handoff packet, governance topology, constitution layering evidence, workflow-template packaging, and Salmon signal loop.
 
 ## Acceptance Results
 
@@ -18,6 +18,7 @@ TopDownLens was run against its own feature artifacts from system thesis to one 
 | Topology verified in nextlens-control and nextlens-governance | Pass | control branch `nextlens-src-topdownlens-dev`; governance `feature.yaml` present |
 | First-run nextlens-release verification skipped and recorded | Pass with warning | `dogfood/salmon-signals/release-verification-deferred.json` |
 | Doctor checks run after TL-7 | Pass with warning | one open blocking Salmon signal remains for missing release verification |
+| TL-11 workflow artifacts stored with feature documents | Pass | `workflows/contract-validation.yml`; `workflows/governance-publish-gate.yml`; `workflows/regression-and-doctor.yml` |
 
 ## Topology Verification
 
@@ -27,7 +28,7 @@ TopDownLens was run against its own feature artifacts from system thesis to one 
 
 ## Warnings
 
-- TL-11 remains blocked because root `.github/` is a generated ignored mirror and workflow installation requires an approved setup or publish path.
+- TL-11 workflow YAML is stored as docs-owned templates, not installed into root `.github/workflows/`; installation still requires an approved setup or publish path.
 - The doctor intentionally reports `open_blocking_salmon_signal` for `salmon.20260514T045800Z.blocking_release_missing` until release-repo verification is available.
 - `dogfood/salmon-signals/release-verification-deferred.json` records the relaxed first-run skip so the missing release topology is visible on the next pass.
 
@@ -37,4 +38,4 @@ The dogfood BMAD handoff was simulated. It produced one packet at `dogfood/bmad-
 
 ## Closure Decision
 
-The TopDownLens feature is acceptable for first-run completion with warnings. The only unresolved implementation story is TL-11, which is blocked by the generated workflow boundary rather than by a contract failure in the TopDownLens module artifacts.
+The TopDownLens feature is acceptable for first-run completion with warnings. All stories now have docs or implementation artifacts recorded; workflow installation and release-repo verification remain deferred topology operations.

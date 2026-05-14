@@ -8,11 +8,13 @@ updated_at: 2026-05-14T05:10:00Z
 
 # GitHub Actions Pipelines
 
-TopDownLens needs three self-hosting pipeline surfaces. In this control workspace, root `.github/` is intentionally ignored and sync-generated, so the workflows are documented here but not installed by this story. Installing them requires an approved setup or publication operation that owns the generated `.github` surface. Dedicated `nextlens-governance`, `nextlens-release`, and target repo workflows can reuse these contracts after those repos exist.
+TopDownLens needs three self-hosting pipeline surfaces. In this control workspace, root `.github/` is intentionally ignored and sync-generated, so TL-11 stores workflow templates with the rest of the feature documents under `docs/nextlens/src/nextlens-src-topdownlens/workflows/`. Installing them into a repo's root `.github/workflows/` directory still requires an approved setup or publication operation that owns that generated surface.
 
 ## Contract Validation
 
-Workflow: `.github/workflows/contract-validation.yml`
+Template: `docs/nextlens/src/nextlens-src-topdownlens/workflows/contract-validation.yml`
+
+Install target: `.github/workflows/contract-validation.yml` in the control repo or an equivalent validation repo.
 
 Trigger: pull requests touching TopDownLens schemas/examples, plus manual dispatch.
 
@@ -22,7 +24,9 @@ Failure routing: fix the schema or example in the control docs path before publi
 
 ## Governance Publish Gate
 
-Workflow: `.github/workflows/governance-publish-gate.yml`
+Template: `docs/nextlens/src/nextlens-src-topdownlens/workflows/governance-publish-gate.yml`
+
+Install target: `.github/workflows/governance-publish-gate.yml` in the governance-aware publishing repo.
 
 Trigger: pull requests touching the TopDownLens feature docs path, plus manual dispatch for a feature ID.
 
@@ -32,7 +36,9 @@ Failure routing: restore the missing artifact or rerun the appropriate Lens life
 
 ## Regression And Doctor
 
-Workflow: `.github/workflows/regression-and-doctor.yml`
+Template: `docs/nextlens/src/nextlens-src-topdownlens/workflows/regression-and-doctor.yml`
+
+Install target: `.github/workflows/regression-and-doctor.yml` in the target repo or integration repo that has the TopDownLens CLI scripts available.
 
 Trigger: pushes to `*-dev`, relevant pull requests, and manual dispatch.
 
