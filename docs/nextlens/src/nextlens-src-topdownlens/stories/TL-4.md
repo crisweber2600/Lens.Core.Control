@@ -2,7 +2,7 @@
 feature: nextlens-src-topdownlens
 story_id: TL-4
 doc_type: story
-status: not-started
+status: in-progress
 title: BMAD Bridge Packet
 depends_on: [TL-1]
 implementation_kind: schema
@@ -43,3 +43,5 @@ Define how LENS hands one selected feature to BMAD as a packet. BMAD remains res
 
 - Spine story. Cannot start until TL-1 is merged.
 - TL-7 doctor checks (deferrable) will validate packet traceability fields.
+
+## Dev Agent Record

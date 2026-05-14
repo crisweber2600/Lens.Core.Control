@@ -31,7 +31,7 @@ stories:
     epic: 1
     spine: true
     implementation_kind: schema
-    status: not-started
+    status: in-progress
     depends_on: [TL-1]
   - story_id: TL-8
     title: Self-Hosting Repo Topology Contract
