@@ -2,7 +2,7 @@
 feature: nextlens-src-topdownlens
 story_id: TL-8
 doc_type: story
-status: not-started
+status: in-progress
 title: Self-Hosting Repo Topology Contract
 depends_on: [TL-1]
 implementation_kind: docs-only
@@ -43,3 +43,5 @@ Document the three-repo plus per-domain repo topology that LENS will host itself
 
 - Spine story. Docs-only. No file writes outside `docs/`.
 - TL-9 (constitution layering) and TL-10 (bugfix flow) both reference this topology.
+
+## Dev Agent Record
