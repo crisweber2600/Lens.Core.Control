@@ -1,0 +1,108 @@
+feature: nextlens-src-topdownlens
+doc_type: sprint-status
+status: draft
+track: express
+phase: finalizeplan
+updated_at: 2026-05-14T04:00:00Z
+sprint_goal: "Deliver the first TopDownLens module increment: spine contracts, self-hosting governance plumbing, and a dogfooding acceptance run."
+suggested_order:
+  - TL-1
+  - TL-4
+  - TL-8
+  - TL-9
+  - TL-2
+  - TL-3
+  - TL-6
+  - TL-10
+  - TL-11
+  - TL-5
+  - TL-7
+  - TL-12
+stories:
+  - story_id: TL-1
+    title: Module Ontology And Storage Contract
+    epic: 1
+    spine: true
+    implementation_kind: schema
+    status: not-started
+    depends_on: []
+  - story_id: TL-4
+    title: BMAD Bridge Packet
+    epic: 1
+    spine: true
+    implementation_kind: schema
+    status: not-started
+    depends_on: [TL-1]
+  - story_id: TL-8
+    title: Self-Hosting Repo Topology Contract
+    epic: 2
+    spine: true
+    implementation_kind: docs-only
+    status: not-started
+    depends_on: [TL-1]
+  - story_id: TL-9
+    title: Constitution Layering For TopDownLens
+    epic: 2
+    spine: true
+    implementation_kind: docs-only
+    status: not-started
+    depends_on: [TL-8]
+  - story_id: TL-2
+    title: Top-Down Discovery Walkthrough
+    epic: 3
+    spine: false
+    implementation_kind: docs-only
+    status: not-started
+    depends_on: [TL-1, TL-4]
+  - story_id: TL-3
+    title: Bottom-Up Compatibility Rules
+    epic: 3
+    spine: false
+    implementation_kind: docs-only
+    status: not-started
+    depends_on: [TL-1]
+  - story_id: TL-6
+    title: Salmon Signal Contract
+    epic: 1
+    spine: false
+    implementation_kind: schema
+    status: not-started
+    depends_on: [TL-1]
+  - story_id: TL-10
+    title: Bugfix Flow (Lens-Core-Bugfix Pattern)
+    epic: 2
+    spine: false
+    implementation_kind: docs-only
+    status: not-started
+    depends_on: [TL-6, TL-8]
+  - story_id: TL-11
+    title: GitHub Actions Pipelines
+    epic: 2
+    spine: false
+    implementation_kind: cli
+    status: not-started
+    depends_on: [TL-8]
+  - story_id: TL-5
+    title: Minimal Derived Graph Rebuild
+    epic: 3
+    spine: false
+    implementation_kind: cli
+    status: not-started
+    deferrable: true
+    depends_on: [TL-1]
+  - story_id: TL-7
+    title: Doctor Checks
+    epic: 3
+    spine: false
+    implementation_kind: cli
+    status: not-started
+    deferrable: true
+    depends_on: [TL-1, TL-4, TL-6]
+  - story_id: TL-12
+    title: Dogfooding Acceptance Run
+    epic: 3
+    spine: true
+    implementation_kind: test
+    status: not-started
+    depends_on: [TL-1, TL-2, TL-4, TL-6, TL-8, TL-9]
+    notes: "Closure gate. First-run acceptance relaxed: skip nextlens-release verification because the repo does not yet exist."
