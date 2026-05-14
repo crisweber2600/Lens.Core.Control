@@ -24,7 +24,7 @@ stories:
     epic: 1
     spine: true
     implementation_kind: schema
-    status: not-started
+    status: in-progress
     depends_on: []
   - story_id: TL-4
     title: BMAD Bridge Packet

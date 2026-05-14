@@ -2,7 +2,7 @@
 feature: nextlens-src-topdownlens
 story_id: TL-1
 doc_type: story
-status: not-started
+status: in-progress
 title: Module Ontology And Storage Contract
 depends_on: []
 implementation_kind: schema
@@ -48,3 +48,5 @@ Define the core TopDownLens objects and where they live on disk.
 
 - Source of truth: `business-plan.md` and `tech-plan.md` (TopDownLens Module Architecture section).
 - All other stories depend on this contract. Do not start TL-2 / TL-3 / TL-4 / TL-6 until schemas are checked in.
+
+## Dev Agent Record
