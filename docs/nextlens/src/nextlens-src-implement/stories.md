@@ -795,7 +795,7 @@ As a **NextLens system**, I want to **generate and store idempotency tokens for 
 1. **Token Generation**
    - Given: a mutating operation is about to start
    - When: token generation runs
-   - Then: a unique idempotency token is created using the canonical string format of either UUID v4 or KSUID and stored without transformation
+   - Then: a unique idempotency token is created using the canonical string format of either UUID v4 or KSUID and stored without transformation (for example, UUID v4 `550e8400-e29b-41d4-a716-446655440000` or KSUID `2YBXZJ2c5YQ1g7k0J6mH9pQf8Rt`)
 
 2. **Token Metadata**
    - Given: token is generated
