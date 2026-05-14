@@ -6,8 +6,8 @@ Parses stories.md and creates individual YAML story files with frontmatter.
 
 import json
 import re
-from pathlib import Path
 from datetime import datetime, timezone
+from pathlib import Path
 
 FEATURE_ID = "nextlens-src-implement"
 
@@ -109,7 +109,7 @@ def create_story_file(story_data, docs_path, story_filename_map):
         else:
             dependency_links.append(f'Story {dependency}')
 
-    timestamp = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace('+00:00', 'Z')
+    timestamp = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
     user_story = story_data['user_story'] or '_User story source could not be parsed from `stories.md`._'
 
     frontmatter = f"""---
@@ -193,6 +193,8 @@ def main():
         print(f"WARNING: Expected {expected_story_count} stories but found {len(stories)}")
 
     story_filename_map = {story['story_id']: build_story_filename(story) for story in stories}
+    if len(set(story_filename_map.values())) != len(story_filename_map):
+        raise ValueError('Story filename collision detected; adjust titles or sanitization before generation.')
 
     print(f"Generating story files in: {docs_path / 'stories'}")
     created_files = []
