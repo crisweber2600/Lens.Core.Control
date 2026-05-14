@@ -2,7 +2,7 @@
 feature: nextlens-src-topdownlens
 story_id: TL-6
 doc_type: story
-status: not-started
+status: in-progress
 title: Salmon Signal Contract
 depends_on: [TL-1]
 implementation_kind: schema
@@ -52,3 +52,5 @@ Define a recursive upstream consistency validation signal that flows from low-le
 
 - Depends on TL-1 (entity IDs).
 - TL-10 and TL-12 both consume this contract.
+
+## Dev Agent Record

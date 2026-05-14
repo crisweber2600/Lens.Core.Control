@@ -66,7 +66,7 @@ stories:
     epic: 1
     spine: false
     implementation_kind: schema
-    status: not-started
+    status: in-progress
     depends_on: [TL-1]
   - story_id: TL-10
     title: Bugfix Flow (Lens-Core-Bugfix Pattern)
