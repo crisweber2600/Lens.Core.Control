@@ -73,7 +73,7 @@ stories:
     epic: 2
     spine: false
     implementation_kind: docs-only
-    status: in-progress
+    status: done
     depends_on: [TL-6, TL-8]
   - story_id: TL-11
     title: GitHub Actions Pipelines
