@@ -14,10 +14,11 @@ key_decisions:
   - Treat Feature Archive, Living Landscape, and Derived Graph as separate topology layers.
   - Make promotion advisory and evidence-driven.
   - Keep BMAD as the artifact and implementation engine; LENS supplies context and validation boundaries.
+  - TopDownLens self-hosts through a dedicated control / governance / release topology, additive constitution layering, a lens-core-bugfix-style correction flow, and GitHub Actions pipelines, mirroring the existing Lens module pattern.
 open_questions: []
 depends_on: [business-plan]
 blocks: []
-updated_at: 2026-05-14T01:30:00Z
+updated_at: 2026-05-14T03:10:00Z
 ---
 
 # Tech Plan - TopDownLens Module
@@ -342,3 +343,122 @@ The first Doctor checks should be simple and deterministic:
 ## Implementation Boundary For This Feature
 
 This feature should hand FinalizePlan a coherent module blueprint and implementation spine. It should not build a complete CLI or UI. The first buildable implementation after FinalizePlan should focus on schemas, storage layout, one top-down walkthrough, one bottom-up compatibility example, BMAD packet generation, derived graph rebuild, and Salmon signal recording.
+
+## Self-Hosting And Dogfooding Architecture
+
+TopDownLens must be designed using TopDownLens. The technical design therefore reserves a thin but explicit self-hosting layer so the module can plan its own evolution as soon as the first dev increment lands.
+
+### Repo Topology
+
+The module mirrors the existing Lens control / governance / release split:
+
+```text
+nextlens-control       <- planning workspace, branch topology owner
+nextlens-governance    <- authoritative metadata, constitutions, feature-index, published artifacts
+nextlens-release       <- read-only publish destination for the module payload
+```
+
+Rules:
+
+- `nextlens-control` writes to `docs/` and `feature.yaml` only; it never patches `nextlens-governance` or `nextlens-release` directly.
+- `nextlens-governance` is updated only through `publish-to-governance` orchestration.
+- `nextlens-release` is updated only through `promote-to-release` orchestration.
+- During incubation, the existing `Lens.Core.Governance` and the current control repo host TopDownLens; the topology becomes physical after the first dev increment.
+
+### Constitution Layering
+
+TopDownLens reuses the 4-level additive resolution order: `org -> domain -> service -> repo`. Each level may add `required_artifacts`, `enforce_stories`, `enforce_review`, `gate_mode`, `additional_review_participants`, and TopDownLens-specific extensions:
+
+```yaml
+# Additive TopDownLens extensions
+required_doctor_checks: [ids_resolvable, graph_freshness, packet_traceability]
+promotion_evidence:
+  capability:
+    min_supporting_features: 2
+    min_repeated_artifact_types: 1
+salmon_routing:
+  blocking_severity: blocking
+  default_action_by_target:
+    feature: local_note
+    journey: landscape_update
+    outcome: bmad_correct_course
+```
+
+Resolution rules:
+
+- Levels are additive; lower levels cannot relax stricter upper levels.
+- Resolution must succeed before any TopDownLens authoring or publication.
+- Constitution prose must be passed to every authoring delegate.
+
+### Bugfix Flow (Lens-Core-Bugfix Pattern)
+
+A defect in TopDownLens output flows through a governed correction loop instead of direct edits:
+
+1. Defect observed in `nextlens-release` or in a published TopDownLens artifact.
+2. `lens-core-bugfix`-style conductor opens a tracked correction feature in `nextlens-control` with explicit scope, evidence, and target artifact.
+3. Implementation, review, and publication follow the standard lifecycle gate set (or the hotfix-express track for urgent fixes).
+4. `publish-to-governance` updates the governance record; `promote-to-release` updates the published payload.
+5. A Salmon signal with severity `high` or `blocking` may auto-open a bugfix feature once the module is dogfooding.
+
+### GitHub Actions Pipelines
+
+Three pipelines are required for self-hosting:
+
+```yaml
+pipelines:
+  promote-to-release:
+    triggers: [push to main/develop on nextlens-control, workflow_dispatch]
+    actions:
+      - validate module payload (schemas, doctor checks, declarative-only constraint)
+      - assemble module bundle (lens-work analog for nextlens)
+      - push to nextlens-release branch matrix (alpha for main, develop for develop)
+
+  publish-to-governance:
+    triggers: [merge to main on nextlens-control with lifecycle metadata changes]
+    actions:
+      - validate feature.yaml schema and lifecycle transitions
+      - update feature-index.yaml
+      - mirror reviewed artifacts under features/<domain>/<service>/<featureId>/docs/
+      - never accept direct PRs against feature folders
+
+  regression-and-doctor:
+    triggers: [pull_request on nextlens-control]
+    actions:
+      - schema validation for feature.yaml and constitution.md frontmatter
+      - doctor checks (broken refs, graph freshness, packet traceability)
+      - derived graph rebuild round-trip diff (must be empty)
+      - Salmon signal lint (severity, target, action present)
+```
+
+Guardrails:
+
+- No pipeline mutates `nextlens-release` or `nextlens-governance` from a feature branch.
+- All pipelines fail closed: missing validators block publication.
+- Workflow files live in `nextlens-control` and are mirrored to `nextlens-release` only through `promote-to-release`.
+
+### Dogfooding Loop
+
+```text
+[Idea] -> lens capture        (nextlens-control)
+       -> lens synthesize     (top-down or bottom-up)
+       -> lens prepare bmad   (BMAD packet for one feature)
+       -> BMAD planning + dev (in target repo)
+       -> lens sync bmad      (write back to feature archive + landscape)
+       -> doctor + Salmon     (validation, upstream correction)
+       -> publish-to-governance + promote-to-release
+       -> next TopDownLens feature is created with TopDownLens itself
+```
+
+The loop is closed when the next TopDownLens feature is authored through TopDownLens commands rather than by hand.
+
+### Migration Boundary
+
+- Incubation stage: TopDownLens features live in `Lens.Core.Control` and `Lens.Core.Governance` under the `nextlens/src` namespace. Outputs stay under `docs/`.
+- Dogfooding stage: `nextlens-governance` and `nextlens-release` go live, constitutions are mirrored, and the GitHub Actions pipelines start enforcing publication boundaries.
+- Post-migration: control-repo `featureId` continues to identify the lifecycle container; TopDownLens `feature.<slug>` identifies the operational unit. The mapping is recorded in `feature.yaml` under `topdownlens.feature_id`.
+
+### Risks Specific To Self-Hosting
+
+- Bootstrapping TopDownLens with TopDownLens can deadlock if the first dev increment cannot produce a usable command set.
+- Pipeline scope creep can pull governance behavior into release publication; the two boundaries must stay distinct.
+- Constitution drift between `Lens.Core.Governance` and `nextlens-governance` is possible during the migration window and must be reconciled by a one-time copy plus a doctor check.

@@ -7,12 +7,12 @@ phase: expressplan
 inputDocuments:
   - docs/nextlens/src/rawNotes/Reimagine.md
   - docs/nextlens/src/rawNotes/TopDown.md
-goal: "Sequence the first buildable TopDownLens module increment from express planning into FinalizePlan."
+goal: "Sequence the first buildable TopDownLens module increment from express planning into FinalizePlan, including the self-hosting and dogfooding spine."
 key_decisions: []
 open_questions: []
 depends_on: [business-plan, tech-plan]
 blocks: []
-updated_at: 2026-05-14T01:30:00Z
+updated_at: 2026-05-14T03:10:00Z
 ---
 
 # Sprint Plan - TopDownLens Module
@@ -157,15 +157,94 @@ Build the module spine first:
 - Checks do not mutate files.
 - Blocking and informational findings are separated.
 
+### TL-8 - Self-Hosting Repo Topology Contract
+
+**Goal:** Define the `nextlens-control` / `nextlens-governance` / `nextlens-release` split so TopDownLens can dogfood itself after the first dev increment.
+
+**Scope:**
+- Write-scope boundaries per repo.
+- Publication boundary rules (no direct governance or release patches).
+- Migration window between incubation in `Lens.Core.Governance` and a live `nextlens-governance`.
+- Mapping between control-repo `featureId` and TopDownLens `feature.<slug>`.
+
+**Acceptance:**
+- A clear contract states which repo accepts which writes.
+- The migration boundary is documented as a one-time copy plus reconcile.
+- The feature identity mapping is recorded in `feature.yaml`.
+
+### TL-9 - Constitution Layering For TopDownLens
+
+**Goal:** Apply the 4-level additive constitution model to TopDownLens with module-specific extensions.
+
+**Scope:**
+- Org / domain / service / repo levels for TopDownLens.
+- Additive fields: `required_doctor_checks`, `promotion_evidence`, `salmon_routing`.
+- Resolution rules: additive only, resolution must succeed before authoring.
+- Constitution prose is passed to every authoring delegate.
+
+**Acceptance:**
+- Constitution scaffolds exist (or are explicitly deferred) for `nextlens` and `nextlens/src`.
+- Additive extension fields are validated.
+- A resolution failure blocks TopDownLens authoring.
+
+### TL-10 - Bugfix Flow (Lens-Core-Bugfix Pattern)
+
+**Goal:** Wire a governed correction loop for TopDownLens defects without allowing direct edits in governance or release repos.
+
+**Scope:**
+- Tracked bugfix feature creation in `nextlens-control`.
+- Standard lifecycle gates or hotfix-express track.
+- Salmon-to-bugfix routing rules for `high` and `blocking` severities.
+- Publication via `publish-to-governance` and `promote-to-release` only.
+
+**Acceptance:**
+- Defects always produce a tracked feature, evidence, and reviewed publication.
+- Direct edits in release or governance are rejected by pipeline guardrails.
+- Salmon-triggered bugfixes carry their originating signal ID.
+
+### TL-11 - GitHub Actions Pipelines
+
+**Goal:** Stand up the three pipelines required for self-hosting.
+
+**Scope:**
+- `promote-to-release` workflow mirroring the existing Lens release pipeline.
+- `publish-to-governance` workflow restricted to lifecycle metadata changes on protected branches.
+- `regression-and-doctor` pipeline for schema validation, doctor checks, derived graph round-trip, and Salmon lint on PRs.
+
+**Acceptance:**
+- Workflows live in `nextlens-control` and are mirrored to `nextlens-release` only via `promote-to-release`.
+- All pipelines fail closed on missing validators.
+- No pipeline can mutate `nextlens-release` or `nextlens-governance` from a feature branch.
+
+### TL-12 - Dogfooding Acceptance Run
+
+**Goal:** Prove TopDownLens can be used to plan TopDownLens itself.
+
+**Scope:**
+- After the first dev increment, create the next TopDownLens feature using TopDownLens commands.
+- Run doctor checks, BMAD packet generation, and one Salmon signal end-to-end.
+- Capture friction notes as input for the next sprint.
+
+**Acceptance:**
+- Next feature's planning artifacts are produced by TopDownLens commands, not by hand.
+- Doctor checks pass before FinalizePlan.
+- A deliberately broken assumption produces a routable Salmon signal observable in `nextlens-governance`.
+- `nextlens-release` is updated only by GitHub Actions during the run.
+
 ## Suggested Sprint Order
 
 1. TL-1 - Module Ontology And Storage Contract.
 2. TL-4 - BMAD Bridge Packet.
-3. TL-2 - Top-Down Discovery Walkthrough.
-4. TL-3 - Bottom-Up Compatibility Rules.
-5. TL-6 - Salmon Signal Contract.
-6. TL-5 - Minimal Derived Graph Rebuild.
-7. TL-7 - Doctor Checks.
+3. TL-8 - Self-Hosting Repo Topology Contract.
+4. TL-9 - Constitution Layering For TopDownLens.
+5. TL-2 - Top-Down Discovery Walkthrough.
+6. TL-3 - Bottom-Up Compatibility Rules.
+7. TL-6 - Salmon Signal Contract.
+8. TL-10 - Bugfix Flow (Lens-Core-Bugfix Pattern).
+9. TL-11 - GitHub Actions Pipelines.
+10. TL-5 - Minimal Derived Graph Rebuild.
+11. TL-7 - Doctor Checks.
+12. TL-12 - Dogfooding Acceptance Run.
 
 ## Dependencies
 

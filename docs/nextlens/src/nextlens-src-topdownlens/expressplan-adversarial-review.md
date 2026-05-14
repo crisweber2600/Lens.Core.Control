@@ -16,13 +16,13 @@ review_format: abc-choice-v1
 
 # Adversarial Review: nextlens-src-topdownlens / expressplan
 
-**Reviewed:** 2026-05-14T02:58:59Z  
-**Source:** manual-rerun  
+**Reviewed:** 2026-05-14T03:15:00Z  
+**Source:** manual-rerun-post-dogfooding-integration  
 **Overall Rating:** pass-with-warnings
 
 ## Summary
 
-This manual rerun confirms that the terminology pass improved the packet materially. The business plan, tech plan, and sprint plan now align on a clear top-down hierarchy of `System -> Product Area -> Outcome -> Journey -> Capability -> Feature`, and they consistently treat `feature` as the unit selected for BMAD planning. No critical blocker was introduced by the rename. The main carry-forward risks are still scope control, output-root ambiguity, promotion and signal-routing thresholds, and a now-sharper identity collision between the current Lens control-repo feature lifecycle container and the future TopDownLens `feature.<slug>` operational unit. The `nextlens` domain and `src` service constitutions are informational and do not add blocking constraints beyond review enforcement and the presence of a business plan.
+This rerun reviews the ExpressPlan packet after the dogfooding and self-hosting integration. The business plan, tech plan, and sprint plan now align on a clear top-down hierarchy of `System -> Product Area -> Outcome -> Journey -> Capability -> Feature`, and they add a dedicated self-hosting layer covering a `nextlens-control` / `nextlens-governance` / `nextlens-release` repo split, additive constitution layering for TopDownLens, a `lens-core-bugfix`-style correction loop, and three GitHub Actions pipelines (`promote-to-release`, `publish-to-governance`, `regression-and-doctor`). The integration is internally consistent and explicitly defers physical repo standup to the first dev increment. No critical blocker was introduced. The main carry-forward risks are scope control, output-root ambiguity, promotion and signal-routing thresholds, the control-feature versus operational-feature identity mapping, and new dogfooding-specific risks: bootstrapping deadlock, pipeline boundary drift between governance and release, and constitution drift during the migration window. The `nextlens` domain and `src` service constitutions remain informational and do not add blocking constraints beyond review enforcement and the presence of a business plan.
 
 ## Findings
 
@@ -48,6 +48,10 @@ This manual rerun confirms that the terminology pass improved the packet materia
 | M3 | Medium | Logic Flaws | The new `feature` terminology is clearer for TopDownLens, but it now collides more directly with the existing Lens control-repo concept of a feature. The tech plan starts to separate `nextlens-src-topdownlens` from `feature.<slug>`, but the handoff contract is not explicit enough yet. | FinalizePlan should add a compatibility ADR or story that defines the mapping between control-repo `featureId`, TopDownLens `feature.<slug>` IDs, docs paths, and BMAD traceability fields. |
 | M4 | Medium | Cross-Feature Dependencies | The review attempted to load cross-feature context with `fetch-context --depth full`, but this installed runtime still does not expose the subcommand. | Carry this as an implementation environment gap; do not make TopDownLens depend on unavailable context loading until the runtime surface is restored or replaced. |
 | M5 | Low | Cross-Feature Dependencies | `feature.yaml.target_repos` is still empty even though FinalizePlan will need an authoritative implementation target before dev-ready handoff. | FinalizePlan should resolve and persist the target repo mapping before generating implementation-readiness artifacts. |
+| M6 | Medium | Self-Hosting | Bootstrapping deadlock: TopDownLens must be designed using TopDownLens, but the first dev increment must deliver a usable command set before the dogfooding loop can close. If the first increment slips, the next feature cannot be planned by TopDownLens itself. | FinalizePlan must size the first dev increment to deliver capture, synthesize, prepare-bmad, and doctor checks at a minimum, and treat TL-12 as the explicit closure gate for self-hosting. |
+| M7 | Medium | Self-Hosting | Pipeline boundary drift: the design separates `publish-to-governance` (metadata, feature-index, mirrored artifacts) from `promote-to-release` (module payload). It is easy for future contributors to add governance behavior into the release pipeline or vice versa. | Add explicit guardrails to each workflow that fail the run if it tries to write outside its boundary, and assert this in regression tests added by TL-11. |
+| M8 | Medium | Self-Hosting | Constitution drift: during the migration window, `Lens.Core.Governance` hosts `nextlens` constitutions while `nextlens-governance` is being stood up. Without a one-time reconciliation, the additive resolution order can return inconsistent results. | TL-9 must include a one-time copy and a doctor check that detects content drift between the two governance locations until incubation ends. |
+| M9 | Low | Self-Hosting | The `lens-core-bugfix` pattern is reused conceptually, but the sprint plan does not yet specify whether TopDownLens forks the skill or wires it via configuration. | TL-10 should default to configuration reuse and explicitly forbid forking the `lens-core-bugfix` skill payload. |
 
 ## Accepted Risks
 
@@ -59,7 +63,9 @@ John (Product): The hierarchy is much easier to explain now, but a hierarchy is 
 
 Winston (Architect): The rename clarifies the product model, but it also creates a naming collision with the current Lens feature lifecycle. If FinalizePlan does not make the control-feature versus operational-feature mapping explicit, the module will blur governance identity and product topology.
 
-Quinn (QA): The new hierarchy adds more traceability power, which means more ways to drift. Promotion rules, Salmon routing, and doctor checks all need executable examples or the first implementation will look deterministic on paper and ambiguous in practice.
+Quinn (QA): The new hierarchy adds more traceability power, which means more ways to drift. Promotion rules, Salmon routing, and doctor checks all need executable examples or the first implementation will look deterministic on paper and ambiguous in practice. The added self-hosting pipelines also need fail-closed assertions, or the dogfooding loop will look green while quietly bypassing publication boundaries.
+
+Sally (Release Engineer): The split between `promote-to-release` and `publish-to-governance` is correct, but two workflows in two repos with overlapping triggers is exactly where boundary creep happens. The first regression run must include a negative test that proves neither workflow can write into the other repo's surface.
 
 ## Gaps You May Not Have Considered
 
@@ -78,3 +84,6 @@ Quinn (QA): The new hierarchy adds more traceability power, which means more way
 - FinalizePlan should address the missing `fetch-context` runtime subcommand if cross-feature context is required by the first implementation.
 - FinalizePlan should define what evidence is required for capability and product-area promotion suggestions.
 - FinalizePlan should resolve `feature.yaml.target_repos` before dev-ready handoff.
+- FinalizePlan should confirm that the first dev increment is sized to close the dogfooding loop (TL-12) without requiring a second sprint.
+- FinalizePlan should document the negative pipeline tests that prove `promote-to-release` cannot write to `nextlens-governance` and vice versa.
+- FinalizePlan should specify the one-time reconciliation step for moving `nextlens` constitutions from `Lens.Core.Governance` to `nextlens-governance`.

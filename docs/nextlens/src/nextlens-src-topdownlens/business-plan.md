@@ -14,10 +14,11 @@ key_decisions:
   - The module must support both top-down decomposition from a known system and bottom-up growth from one useful feature.
   - Promotion is optional and evidence-driven; no growth happens without repeated pressure.
   - Salmon is recursive upstream consistency validation, not a notification system.
+  - TopDownLens is self-hosting: its own design and evolution must be planned by TopDownLens itself, using a dedicated governance repo, a dedicated release/publish repo, constitution layering, and a Lens-style bugfix flow wired through GitHub Actions.
 open_questions: []
 depends_on: []
 blocks: []
-updated_at: 2026-05-14T01:30:00Z
+updated_at: 2026-05-14T03:10:00Z
 ---
 
 # Business Plan - TopDownLens Module
@@ -158,3 +159,60 @@ This express feature should define the module to build, not implement the whole 
 - Where should the future module store outputs: `docs/`, `_bmad-output/lens/`, or both during migration?
 - What minimum relationship lifecycle is needed for useful AI traversal without over-modeling?
 - What Salmon severity threshold should trigger BMAD correct-course versus a landscape-only update?
+
+## Dogfooding And Self-Hosting Strategy
+
+The primary acceptance test for TopDownLens is that TopDownLens can be used to plan, evolve, and govern itself. The module is not successful if the team designing it cannot run its top-down workflow on its own backlog.
+
+### Goals
+
+- Use TopDownLens to discover, sequence, and govern TopDownLens features after the first dev increment lands.
+- Mirror the existing Lens control / governance / release split so the module reaches dogfooding with the same operational guarantees as Lens.
+- Make publication, bugfix routing, and constitution enforcement reproducible through GitHub Actions instead of manual hand-copy.
+
+### Repo Topology
+
+- `nextlens-control`: planning workspace and branch topology owner for TopDownLens features (this repo, or a clean clone once the module exits incubation).
+- `nextlens-governance`: authoritative metadata, feature index, constitutions, and published artifacts for TopDownLens.
+- `nextlens-release`: read-only publish destination for the TopDownLens module payload, mirroring the role `Lens.Core.Release` plays for `lens-work`.
+- TargetProjects clones for `nextlens-governance` and `nextlens-release` remain local read-only surfaces under the control workspace.
+
+### Constitution Layering For TopDownLens
+
+TopDownLens reuses the 4-level additive constitution hierarchy: org -> domain -> service -> repo.
+
+- Org level: shared safety, review, and publication rules for the next-generation Lens program.
+- Domain level (`nextlens`): planning, evidence, and Salmon defaults that apply to every TopDownLens feature.
+- Service level (`nextlens/src`): module-implementation rules such as schema validation, doctor-check enforcement, and packet traceability requirements.
+- Repo level: per-repository overrides only when a target repo has stricter constraints than the service default.
+
+During incubation, TopDownLens features remain governed by the existing `nextlens` and `nextlens/src` constitutions in `Lens.Core.Governance`. After the first dev increment, the constitutions migrate to `nextlens-governance` without losing their additive resolution order.
+
+### Bugfix Flow
+
+TopDownLens reuses the `lens-core-bugfix` pattern as its standard correction loop:
+
+- Defects surfaced in published TopDownLens artifacts route through a governed bugfix conductor, not direct edits in `nextlens-release`.
+- Each bugfix produces a feature.yaml-style record, evidence, and a governed publish step, so the release repo only ever receives reviewed changes.
+- Salmon signals with severity `high` or `blocking` can open a bugfix automatically once the module reaches dogfooding.
+
+### GitHub Actions Surface
+
+TopDownLens needs three pipelines from day one of self-hosting:
+
+- A `promote-to-release` workflow that publishes the module payload from `nextlens-control` to `nextlens-release` on protected branches, mirroring the existing `promote-to-release.yml`.
+- A `publish-to-governance` workflow that updates feature metadata, feature-index, and published artifacts in `nextlens-governance` only through approved orchestration boundaries.
+- A regression / doctor pipeline that runs schema validation, derived-graph rebuild round-trip, and doctor checks on every PR.
+
+### Dogfooding Acceptance Criteria
+
+- The next TopDownLens feature after the first dev increment is created using TopDownLens commands, not by hand.
+- That feature's planning artifacts pass TopDownLens doctor checks before FinalizePlan.
+- A deliberately broken assumption triggers a Salmon signal that is observable in `nextlens-governance` and routable through the bugfix flow.
+- `nextlens-release` is updated by GitHub Actions only; no manual file pushes are accepted.
+
+### Non-Goals For This Express Feature
+
+- Do not stand up `nextlens-governance` or `nextlens-release` as live repos inside this ExpressPlan. The express scope is the contract and migration plan; the repos are created during the first dev increment.
+- Do not migrate existing Lens governance content; TopDownLens governance starts empty and grows as features land.
+- Do not duplicate `lens-core-bugfix` logic; reuse the pattern via configuration rather than forking the skill.
