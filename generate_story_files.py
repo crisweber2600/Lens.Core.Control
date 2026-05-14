@@ -10,6 +10,9 @@ from pathlib import Path
 import re
 
 FEATURE_ID = "nextlens-src-implement"
+TARGET_REPO_ROOT = "TargetProjects/nextlens/src/NextLens"
+FEATURE_DOCS_ROOT = f"docs/nextlens/src/{FEATURE_ID}"
+SECTION_BOUNDARY = r'(?:\n\n(?=\*\*[A-Z][^:\n]+:\*\*)|$)'
 
 
 def build_story_filename(story_data):
@@ -19,10 +22,99 @@ def build_story_filename(story_data):
     return f"{story_data['story_id']}-{sanitized_title}.md"
 
 
+def strip_markdown_emphasis(text):
+    """Remove simple markdown emphasis wrappers from short labels."""
+    return re.sub(r'\*\*(.*?)\*\*', r'\1', text).strip()
+
+
+def parse_numbered_items(block):
+    """Parse a markdown numbered list into grouped line blocks."""
+    items = []
+    current_item = []
+
+    for raw_line in (block or "").splitlines():
+        line = raw_line.rstrip()
+        match = re.match(r'^\s*\d+\.\s+(.*)', line)
+        if match:
+            if current_item:
+                items.append(current_item)
+            current_item = [match.group(1).strip()]
+            continue
+        if current_item:
+            current_item.append(line)
+
+    if current_item:
+        items.append(current_item)
+
+    return items
+
+
+def render_acceptance_checklist(acceptance_criteria):
+    """Render numbered acceptance criteria as markdown checkboxes."""
+    items = parse_numbered_items(acceptance_criteria)
+    if not items:
+        fallback = acceptance_criteria.strip() or "Acceptance criteria could not be parsed from stories.md."
+        return f"- [ ] {fallback}"
+
+    rendered = []
+    for item in items:
+        title = strip_markdown_emphasis(item[0])
+        rendered.append(f"- [ ] {title}")
+        for line in item[1:]:
+            if line.strip():
+                rendered.append(f"  {line}")
+    return "\n".join(rendered)
+
+
+def build_context(story_data, dependency_links):
+    """Build a canonical dev-ready Context section."""
+    dependency_summary = (
+        f"Blocked until the following stories are complete: {', '.join(dependency_links)}."
+        if dependency_links
+        else "This story has no upstream story dependencies."
+    )
+    return "\n".join([
+        story_data['user_story'] or '_User story source could not be parsed from `stories.md`._',
+        "",
+        f"Primary implementation root: `{TARGET_REPO_ROOT}`.",
+        f"Authoritative planning references live under `{FEATURE_DOCS_ROOT}`.",
+        dependency_summary,
+    ])
+
+
+def build_implementation_steps(story_data):
+    """Build implementation steps from acceptance slices and target-repo conventions."""
+    acceptance_items = parse_numbered_items(story_data['acceptance_criteria'])
+    steps = [
+        f"Identify the smallest set of files under `{TARGET_REPO_ROOT}` that directly control `{story_data['title']}`.",
+    ]
+
+    for item in acceptance_items:
+        steps.append(f"Implement the acceptance slice `{strip_markdown_emphasis(item[0])}`.")
+
+    steps.append(f"Add or update focused tests under `{TARGET_REPO_ROOT}/tests` or adjacent test locations for the touched behavior.")
+    steps.append("Run the narrowest validation available before marking the story complete.")
+
+    return "\n".join(f"{index}. {step}" for index, step in enumerate(steps, start=1))
+
+
+def build_notes_for_dev(story_data, dependency_links, definition_of_done):
+    """Build stable developer guidance for generated story packets."""
+    notes = [
+        f"- Implement code and tests in `{TARGET_REPO_ROOT}`; do not place implementation code in control-repo docs paths.",
+        f"- Planning source of truth: `{FEATURE_DOCS_ROOT}/stories.md`, `{FEATURE_DOCS_ROOT}/epics.md`, and `{FEATURE_DOCS_ROOT}/architecture.md`.",
+    ]
+    if dependency_links:
+        notes.append(f"- Resolve dependencies first: {', '.join(dependency_links)}.")
+    if definition_of_done:
+        notes.append("- Definition of done from the source plan:")
+        notes.extend(f"  - {item}" for item in definition_of_done)
+    return "\n".join(notes)
+
+
 def parse_stories_md(content):
     """Parse stories.md to extract individual stories."""
     stories = []
-    section_boundary = r'(?:\n\n(?=\*\*[A-Z][^:\n]+:\*\*)|$)'
 
     # Split by ### Story pattern to find individual stories
     story_pattern = r'### Story (\d+\.\d+):\s*(.+?)\n\n'
@@ -45,7 +137,7 @@ def parse_stories_md(content):
         epic_num = story_id.split('.')[0]
 
         # Extract acceptance criteria
-        ac_pattern = rf'\*\*Acceptance Criteria:\*\*\n(.*?){section_boundary}'
+        ac_pattern = rf'\*\*Acceptance Criteria:\*\*\n(.*?){SECTION_BOUNDARY}'
         ac_match = re.search(ac_pattern, story_text, re.DOTALL)
         acceptance_criteria = ac_match.group(1).strip() if ac_match else ""
 
@@ -76,11 +168,21 @@ def parse_stories_md(content):
         epic_name = epic_match.group(1).strip() if epic_match else f"EP{epic_num}"
 
         # Extract and preserve the raw user story block
-        user_story_pattern = rf'\*\*User Story:\*\*\n\n(.*?){section_boundary}'
+        user_story_pattern = rf'\*\*User Story:\*\*\n\n(.*?){SECTION_BOUNDARY}'
         user_story_match = re.search(user_story_pattern, story_text, re.DOTALL)
         user_story = user_story_match.group(1).strip() if user_story_match else ""
         if not user_story:
             print(f"WARNING: User story block could not be parsed for Story {story_id}")
+
+        dod_pattern = rf'\*\*Definition of Done:\*\*\n(.*?){SECTION_BOUNDARY}'
+        dod_match = re.search(dod_pattern, story_text, re.DOTALL)
+        definition_of_done = []
+        if dod_match:
+            definition_of_done = [
+                re.sub(r'^- \[ \]\s*', '', line.strip())
+                for line in dod_match.group(1).splitlines()
+                if line.strip().startswith('- [ ]')
+            ]
 
         stories.append({
             'story_id': story_id,
@@ -92,6 +194,7 @@ def parse_stories_md(content):
             'depends_on': depends_on,
             'user_story': user_story,
             'acceptance_criteria': acceptance_criteria,
+            'definition_of_done': definition_of_done,
             'full_text': story_text.strip(),
         })
 
@@ -113,7 +216,14 @@ def create_story_file(story_data, docs_path, story_filename_map):
             dependency_links.append(f'Story {dependency}')
 
     timestamp = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
-    user_story = story_data['user_story'] or '_User story source could not be parsed from `stories.md`._'
+    context = build_context(story_data, dependency_links)
+    implementation_steps = build_implementation_steps(story_data)
+    acceptance_criteria = render_acceptance_checklist(story_data['acceptance_criteria'])
+    notes_for_dev = build_notes_for_dev(
+        story_data,
+        dependency_links,
+        story_data.get('definition_of_done', []),
+    )
 
     frontmatter = f"""---
 feature: {FEATURE_ID}
@@ -130,31 +240,21 @@ updated_at: {timestamp}
 
 # Story {story_data['story_id']}: {story_data['title']}
 
-## User Story
+## Context
 
-{user_story}
+{context}
+
+## Implementation Steps
+
+{implementation_steps}
 
 ## Acceptance Criteria
 
-{story_data['acceptance_criteria']}
+{acceptance_criteria}
 
-## Dependencies
+## Notes For Dev
 
-{', '.join(story_data['depends_on']) if story_data['depends_on'] else 'None (independent story)'}
-
-## Complexity Assessment
-
-- **Rating:** {story_data['complexity']}
-- **Priority:** {story_data['priority']}
-- **Epic:** {story_data['epic_name']}
-
-## Implementation Notes
-
-This story is part of the NextLens v1 implementation. See [epics.md](../epics.md) for epic context and [architecture.md](../architecture.md) for technical requirements.
-
-### Related Stories
-
-Depends on: {', '.join(dependency_links) if dependency_links else 'None'}
+{notes_for_dev}
 
 ## Dev Agent Record
 
