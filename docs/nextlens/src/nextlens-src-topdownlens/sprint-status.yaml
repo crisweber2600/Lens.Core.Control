@@ -59,7 +59,7 @@ stories:
     epic: 3
     spine: false
     implementation_kind: docs-only
-    status: not-started
+    status: in-progress
     depends_on: [TL-1]
   - story_id: TL-6
     title: Salmon Signal Contract
