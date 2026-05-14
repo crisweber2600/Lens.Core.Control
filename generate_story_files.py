@@ -193,8 +193,13 @@ def main():
         print(f"WARNING: Expected {expected_story_count} stories but found {len(stories)}")
 
     story_filename_map = {story['story_id']: build_story_filename(story) for story in stories}
-    if len(set(story_filename_map.values())) != len(story_filename_map):
-        raise ValueError('Story filename collision detected; adjust titles or sanitization before generation.')
+    collisions = {}
+    for story_id, filename in story_filename_map.items():
+        collisions.setdefault(filename, []).append(story_id)
+    collisions = {filename: ids for filename, ids in collisions.items() if len(ids) > 1}
+    if collisions:
+        collision_details = ', '.join(f"{filename}: {', '.join(ids)}" for filename, ids in sorted(collisions.items()))
+        raise ValueError(f"Story filename collision detected: {collision_details}")
 
     print(f"Generating story files in: {docs_path / 'stories'}")
     created_files = []
