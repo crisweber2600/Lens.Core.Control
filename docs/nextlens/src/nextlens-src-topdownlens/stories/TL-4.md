@@ -2,7 +2,7 @@
 feature: nextlens-src-topdownlens
 story_id: TL-4
 doc_type: story
-status: in-progress
+status: done
 title: BMAD Bridge Packet
 depends_on: [TL-1]
 implementation_kind: schema
@@ -45,3 +45,7 @@ Define how LENS hands one selected feature to BMAD as a packet. BMAD remains res
 - TL-7 doctor checks (deferrable) will validate packet traceability fields.
 
 ## Dev Agent Record
+
+- Status: done
+- Files produced: `schemas/bmad-packet.schema.json`, `examples/bmad-packet-example.json`, `guides/bmad-bridge.md`.
+- Validation: `uv run --with jsonschema python` validated the packet schema and example packet.

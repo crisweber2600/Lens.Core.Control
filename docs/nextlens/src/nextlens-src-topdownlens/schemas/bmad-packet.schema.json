@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lens.local/nextlens/topdownlens/bmad-packet.schema.json",
+  "title": "TopDownLens BMAD Bridge Packet",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "schema_version",
+    "selected_feature",
+    "source_context",
+    "scope_boundaries",
+    "traceability",
+    "acceptance_evidence",
+    "bmad_responsibilities"
+  ],
+  "properties": {
+    "id": { "type": "string", "pattern": "^bmad_packet\\.[a-z0-9][a-z0-9_.-]*$" },
+    "schema_version": { "type": "string", "pattern": "^v[0-9]+\\.[0-9]+$" },
+    "selected_feature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "current_path"],
+      "properties": {
+        "id": { "$ref": "landscape-entity.schema.json#/$defs/stableId" },
+        "title": { "type": "string", "minLength": 1 },
+        "current_path": { "type": "string", "minLength": 1 },
+        "summary": { "type": "string" }
+      }
+    },
+    "source_context": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/sourceContext" },
+      "minItems": 1
+    },
+    "scope_boundaries": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["include", "exclude", "guardrails"],
+      "properties": {
+        "include": { "$ref": "#/$defs/nonEmptyStringList" },
+        "exclude": { "$ref": "#/$defs/nonEmptyStringList" },
+        "guardrails": { "$ref": "#/$defs/nonEmptyStringList" }
+      }
+    },
+    "traceability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["outcomes", "journeys", "capabilities", "evidence"],
+      "properties": {
+        "outcomes": { "$ref": "#/$defs/stableIdList" },
+        "journeys": { "$ref": "#/$defs/stableIdList" },
+        "capabilities": { "$ref": "#/$defs/stableIdList" },
+        "evidence": { "$ref": "#/$defs/stableIdList" }
+      }
+    },
+    "acceptance_evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["criterion", "evidence_id"],
+        "properties": {
+          "criterion": { "type": "string", "minLength": 1 },
+          "evidence_id": { "$ref": "landscape-entity.schema.json#/$defs/stableId" }
+        }
+      },
+      "minItems": 1
+    },
+    "bmad_responsibilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["must_produce", "must_not_pre_author"],
+      "properties": {
+        "must_produce": {
+          "type": "array",
+          "items": { "enum": ["prd", "architecture", "epics", "stories", "implementation", "review", "retrospective"] },
+          "minItems": 4,
+          "uniqueItems": true
+        },
+        "must_not_pre_author": {
+          "type": "array",
+          "items": { "enum": ["prd", "architecture", "epics", "stories", "implementation", "review"] },
+          "uniqueItems": true
+        }
+      }
+    }
+  },
+  "$defs": {
+    "sourceContext": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "path", "reason"],
+      "properties": {
+        "type": { "enum": ["raw_note", "business_plan", "tech_plan", "walkthrough", "capability", "evidence", "story"] },
+        "path": { "type": "string", "minLength": 1 },
+        "reason": { "type": "string", "minLength": 1 }
+      }
+    },
+    "nonEmptyStringList": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1
+    },
+    "stableIdList": {
+      "type": "array",
+      "items": { "$ref": "landscape-entity.schema.json#/$defs/stableId" },
+      "uniqueItems": true
+    }
+  }
+}

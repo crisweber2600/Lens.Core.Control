@@ -1,0 +1,55 @@
+{
+  "id": "bmad_packet.feature.topdownlens_contract",
+  "schema_version": "v1.0",
+  "selected_feature": {
+    "id": "feature.topdownlens_contract",
+    "title": "TopDownLens contract",
+    "current_path": "docs/nextlens/src/nextlens-src-topdownlens/feature.yaml",
+    "summary": "Define the first module contract for ontology, storage topology, graph projection, and BMAD handoff."
+  },
+  "source_context": [
+    {
+      "type": "business_plan",
+      "path": "docs/nextlens/src/nextlens-src-topdownlens/business-plan.md",
+      "reason": "Carries the product thesis and success criteria."
+    },
+    {
+      "type": "tech_plan",
+      "path": "docs/nextlens/src/nextlens-src-topdownlens/tech-plan.md",
+      "reason": "Defines the storage topology and core data contracts."
+    },
+    {
+      "type": "capability",
+      "path": "docs/nextlens/src/nextlens-src-topdownlens/examples/entities/capability.topdown-discovery.json",
+      "reason": "Shows the candidate capability this feature supports."
+    }
+  ],
+  "scope_boundaries": {
+    "include": [
+      "Define contracts for ontology, relationships, landscape entities, derived graph, and BMAD packet handoff."
+    ],
+    "exclude": [
+      "Do not implement the full future TopDownLens runtime in this packet."
+    ],
+    "guardrails": [
+      "BMAD must plan and build only the selected feature represented by selected_feature.id.",
+      "References resolve by stable IDs; paths are mutable context."
+    ]
+  },
+  "traceability": {
+    "outcomes": ["outcome.bmad_ready_feature"],
+    "journeys": ["journey.capture_to_packet"],
+    "capabilities": ["capability.topdown_discovery"],
+    "evidence": ["evidence.tl1_schema_validation"]
+  },
+  "acceptance_evidence": [
+    {
+      "criterion": "Packet targets exactly one selected vertical feature.",
+      "evidence_id": "evidence.tl1_schema_validation"
+    }
+  ],
+  "bmad_responsibilities": {
+    "must_produce": ["prd", "architecture", "epics", "stories", "implementation", "review"],
+    "must_not_pre_author": ["prd", "architecture", "epics", "stories", "implementation", "review"]
+  }
+}
