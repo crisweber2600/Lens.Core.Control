@@ -53,7 +53,7 @@ stories:
     spine: false
     implementation_kind: docs-only
     status: not-started
-    depends_on: [TL-1]
+    depends_on: [TL-1, TL-4]
   - story_id: TL-3
     title: Bottom-Up Compatibility Rules
     epic: 3
@@ -87,14 +87,16 @@ stories:
     epic: 3
     spine: false
     implementation_kind: cli
-    status: deferrable
+    status: not-started
+    deferrable: true
     depends_on: [TL-1]
   - story_id: TL-7
     title: Doctor Checks
     epic: 3
     spine: false
     implementation_kind: cli
-    status: deferrable
+    status: not-started
+    deferrable: true
     depends_on: [TL-1, TL-4, TL-6]
   - story_id: TL-12
     title: Dogfooding Acceptance Run
@@ -102,5 +104,5 @@ stories:
     spine: true
     implementation_kind: test
     status: not-started
-    depends_on: [TL-1, TL-4, TL-8, TL-9]
+    depends_on: [TL-1, TL-2, TL-4, TL-6, TL-8, TL-9]
     notes: "Closure gate. First-run acceptance relaxed: skip nextlens-release verification because the repo does not yet exist."

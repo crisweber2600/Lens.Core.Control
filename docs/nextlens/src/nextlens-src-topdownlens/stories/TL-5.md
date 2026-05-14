@@ -2,7 +2,8 @@
 feature: nextlens-src-topdownlens
 story_id: TL-5
 doc_type: story
-status: deferrable
+status: not-started
+deferrable: true
 title: Minimal Derived Graph Rebuild
 depends_on: [TL-1]
 implementation_kind: cli
@@ -33,7 +34,7 @@ Provide a rebuildable graph projection over source files (entities and relations
 
 ## Files To Produce
 
-- CLI entry point (location TBD with dev; default: `lens.core/_bmad/lens-work/skills/lens-topdown/scripts/rebuild-derived-graph.py` or equivalent).
+- CLI entry point (location TBD with dev; default: `TargetProjects/lens/Lens.Core.Control/scripts/lens-topdown/rebuild-derived-graph.py` or equivalent).
 - Output: `docs/nextlens/src/nextlens-src-topdownlens/derived/graph.json` plus `derived/freshness.json`.
 - Tests covering: rebuild from clean tree, rebuild with broken references, rebuild idempotency.
 

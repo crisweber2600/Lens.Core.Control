@@ -9,11 +9,11 @@ inputDocuments:
   - docs/nextlens/src/rawNotes/TopDown.md
 goal: "Sequence the first buildable TopDownLens module increment from express planning into FinalizePlan, including the self-hosting and dogfooding spine."
 key_decisions:
-  - First dev increment is scoped to the spine: TL-1, TL-4, TL-8, TL-9, TL-12 plus enabling stories from TL-2, TL-3, TL-6, TL-10, TL-11.
+  - "First dev increment is scoped to the spine: TL-1, TL-4, TL-8, TL-9, TL-12 plus enabling stories from TL-2, TL-3, TL-6, TL-10, TL-11."
   - Suggested sprint order ends with TL-12 (Dogfooding Acceptance) as the explicit closure gate.
   - For the first run, TL-12 acceptance is relaxed to skip `nextlens-release` verification because that repo does not yet exist.
-  - TL-12 depends_on at minimum: TL-1, TL-4, TL-8, TL-9.
-  - Target repo for the first dev increment is Lens.Core.Control only; nextlens-control remains a forward-looking concept.
+  - "TL-12 depends_on at minimum: TL-1, TL-2, TL-4, TL-6, TL-8, TL-9."
+  - "Target repo for the first dev increment is Lens.Core.Control only; nextlens-control remains a forward-looking concept."
 open_questions: []
 depends_on: [business-plan, tech-plan]
 blocks: []
@@ -232,9 +232,8 @@ Build the module spine first:
 
 **Acceptance:**
 - Next feature's planning artifacts are produced by TopDownLens commands, not by hand.
-- Doctor checks pass before FinalizePlan.
-- A deliberately broken assumption produces a routable Salmon signal observable in `nextlens-governance`.
-- `nextlens-release` is updated only by GitHub Actions during the run.
+- A deliberately broken assumption produces a routable Salmon signal (TL-6 schema) verifiable in control-repo docs.
+- **First-run relaxed:** `nextlens-governance` observability and `nextlens-release` updates are explicitly deferred because those repos are not yet stood up. These are post-migration acceptance criteria. Doctor checks (TL-7) are also deferrable; if TL-7 has not shipped, substitute manual validation recorded in the dogfood report.
 
 ## Suggested Sprint Order
 

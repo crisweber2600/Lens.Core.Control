@@ -2,7 +2,8 @@
 feature: nextlens-src-topdownlens
 story_id: TL-7
 doc_type: story
-status: deferrable
+status: not-started
+deferrable: true
 title: Doctor Checks
 depends_on: [TL-1, TL-4, TL-6]
 implementation_kind: cli

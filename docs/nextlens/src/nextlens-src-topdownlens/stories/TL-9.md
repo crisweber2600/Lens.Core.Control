@@ -5,7 +5,7 @@ doc_type: story
 status: not-started
 title: Constitution Layering For TopDownLens
 depends_on: [TL-8]
-implementation_kind: docs-only
+implementation_kind: schema
 epic: 2
 spine: true
 updated_at: 2026-05-14T04:00:00Z
@@ -15,7 +15,7 @@ updated_at: 2026-05-14T04:00:00Z
 
 ## Goal
 
-Apply the 4-level constitution hierarchy (org, domain, service, feature) to TopDownLens itself, with informational gates only for the first dev increment.
+Apply the 4-level constitution hierarchy (org -> domain -> service -> repo) to TopDownLens itself, with informational gates only for the first dev increment.
 
 ## Scope
 
@@ -42,5 +42,5 @@ Apply the 4-level constitution hierarchy (org, domain, service, feature) to TopD
 
 ## Notes For Dev
 
-- Spine story. Governance writes must go through the approved orchestration boundary (publish-to-governance or manual main commits via the recorded boundary procedure).
+- Spine story. Governance writes must go through the approved orchestration boundary (publish-to-governance or lens-git-orchestration governed operations). Direct manual commits to governance main are not an approved path.
 - Per session contract: informational gates only; do not block downstream stories on constitution violations.

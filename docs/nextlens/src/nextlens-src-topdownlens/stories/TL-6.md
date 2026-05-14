@@ -19,17 +19,26 @@ Define a recursive upstream consistency validation signal that flows from low-le
 
 ## Scope
 
-- Signal schema (id, severity, target_kind, target_id, evidence_refs, recommended_action, lifecycle_state).
-- Signal lifecycle states (open, acknowledged, in-progress, resolved, rejected).
-- Severity levels (info, low, medium, high, blocking).
-- Upstream targets (feature, journey, outcome, product area, landscape, BMAD correct-course).
-- Recommended action vocabulary (local note, landscape update, split feature, blocking correction).
+- Signal schema aligned with `salmon-signal.yaml` module contract:
+  - `id` (salmon.<timestamp>.<slug>)
+  - `source` (type: story | feature | implementation | review | validation; id)
+  - `signal_type` (assumption_invalidated | missing_context | scope_drift | impact_discovered | boundary_wrong | evidence_changed)
+  - `severity` (low | medium | high | blocking)
+  - `upstream_targets` (feature | journey | outcome | product_area | landscape)
+  - `finding` (description of what was discovered)
+  - `recommended_action` (local_note | landscape_update | bmad_correct_course | split_feature | block_promotion)
+  - `status` (open | accepted | rejected | resolved | superseded)
+- Severity routing rules: which severities trigger which recommended_action defaults.
+- Upstream target scope: feature, journey, outcome, product area, landscape.
+- Recommended action vocabulary: local_note, landscape_update, split_feature, bmad_correct_course, block_promotion.
 
 ## Acceptance
 
-- Signals can target feature, journey, outcome, product area, landscape, or BMAD correct-course.
-- Signals distinguish local note, landscape update, split feature, and blocking correction.
-- Signals preserve evidence and provenance (source story ID, source file path with line range).
+- Signals can target feature, journey, outcome, product area, or landscape.
+- Signal schema matches the `salmon-signal.yaml` contract defined in the tech plan.
+- Signals distinguish local_note, landscape_update, split_feature, bmad_correct_course, and block_promotion actions.
+- Signals preserve evidence and provenance (source.type, source.id, upstream_targets, finding).
+- Signal status lifecycle is: open → accepted | rejected → resolved | superseded.
 - At least one example signal per severity level is committed.
 - TL-10 bugfix routing rules reference this schema for high/blocking severities.
 

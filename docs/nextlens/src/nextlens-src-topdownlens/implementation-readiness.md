@@ -26,7 +26,7 @@ updated_at: 2026-05-14T04:00:00Z
 | FinalizePlan review | pass-with-warnings, fixes applied | `finalizeplan-review.md` |
 | Epics defined | pass | `epics.md` (3 epics) |
 | Stories enumerated | pass | `stories.md` + `stories/TL-*.md` (12 files) |
-| Target repo identified | pass | `feature.yaml` target_repos = [Lens.Core.Control] |
+| Target repo identified | pending | `feature.yaml` not yet committed; directive recorded: target_repos = [Lens.Core.Control] |
 | Constitution resolved | pass (informational gates) | org -> nextlens -> nextlens/src |
 | Dependencies graph acyclic | pass | see Story Dependency Graph below |
 | First dev increment scoped | pass | spine + supporting, TL-5/TL-7 deferred |
@@ -36,6 +36,7 @@ updated_at: 2026-05-14T04:00:00Z
 ```
 TL-1 (root)
   |-- TL-2
+  |     `-- (uses TL-4 schema)
   |-- TL-3
   |-- TL-4
   |     `-- TL-7 (deferrable)
@@ -48,10 +49,10 @@ TL-1 (root)
         |-- TL-10
         `-- TL-11
 
-TL-12 depends on: TL-1, TL-4, TL-8, TL-9 (closure gate)
+TL-12 depends on: TL-1, TL-2, TL-4, TL-6, TL-8, TL-9 (closure gate)
 ```
 
-No cycles. TL-12 is the explicit closure gate and depends only on spine stories.
+No cycles. TL-12 is the explicit closure gate and depends on spine stories plus TL-2 (walkthrough format) and TL-6 (Salmon signal schema).
 
 ## Constraints Carried Into Dev
 

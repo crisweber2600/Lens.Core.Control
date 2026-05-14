@@ -22,7 +22,7 @@ Document the three-repo plus per-domain repo topology that LENS will host itself
 - Repo roles: control, governance, release, target.
 - Branch model per repo.
 - Ownership and write boundaries per repo.
-- Promotion path from control plan branches into governance (publish-to-governance) and from dev branches into release (publish-to-release).
+- Promotion path from control plan branches into governance (publish-to-governance) and from dev branches into release (promote-to-release).
 - Bootstrap notes for `nextlens-control` self-hosting LENS itself.
 
 ## Acceptance
@@ -32,7 +32,7 @@ Document the three-repo plus per-domain repo topology that LENS will host itself
 - Release = published, read-only consumer surface (for current feature: not yet created).
 - Target repos = implementation surfaces only.
 - The contract explicitly forbids direct writes to governance feature folders, governance docs mirror, and release clone paths from non-orchestration code paths.
-- The doc names the approved orchestration boundaries (publish-to-governance, publish-to-release, lens-git-orchestration governed ops).
+- The doc names the approved orchestration boundaries (publish-to-governance, promote-to-release, lens-git-orchestration governed ops).
 
 ## Files To Produce
 

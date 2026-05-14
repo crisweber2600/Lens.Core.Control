@@ -4,14 +4,13 @@ doc_type: finalizeplan-review
 phase: finalizeplan
 source: phase-complete
 verdict: pass-with-warnings
-status: fixes-applied
+status: responses-recorded
 critical_count: 0
 high_count: 0
 medium_count: 3
 low_count: 1
 carry_forward_blockers: []
 updated_at: '2026-05-14T03:35:00Z'
-review_format: abc-choice-v1
 ---
 
 # Adversarial Review: nextlens-src-topdownlens / finalizeplan
@@ -22,14 +21,14 @@ review_format: abc-choice-v1
 
 ## Summary
 
-The ExpressPlan packet (business-plan, tech-plan, sprint-plan) is internally consistent and the rerun expressplan-adversarial-review verdict is `pass-with-warnings` with 0 critical, 2 high, 5 medium, 1 low. The packet now covers the top-down hierarchy and a self-hosting / dogfooding layer (repo topology, additive constitution, lens-core-bugfix flow, three GH Actions pipelines, dogfooding acceptance run TL-12). FinalizePlan can proceed to downstream bundle generation, but a small set of metadata gaps must be reconciled in the Pre-Review Fixes Applied section before bundle delegation: `feature.yaml.target_repos` is still empty (required for dev-ready handoff), `key_decisions` frontmatter is empty in business-plan and sprint-plan even though the bodies state explicit decisions, and several ExpressPlan high/medium findings need an explicit accept-or-apply record. No critical blockers were introduced at the FinalizePlan boundary.
+The ExpressPlan packet (business-plan, tech-plan, sprint-plan) is internally consistent and the rerun expressplan-adversarial-review verdict is `pass-with-warnings` with 0 critical, 2 high, 7 medium, 2 low. The packet now covers the top-down hierarchy and a self-hosting / dogfooding layer (repo topology, additive constitution, lens-core-bugfix flow, three GH Actions pipelines, dogfooding acceptance run TL-12). FinalizePlan can proceed to downstream bundle generation, but a small set of metadata gaps must be reconciled in the Pre-Review Fixes Applied section before bundle delegation: `feature.yaml.target_repos` is still empty (required for dev-ready handoff), `key_decisions` frontmatter is empty in business-plan and sprint-plan even though the bodies state explicit decisions, and several ExpressPlan high/medium findings need an explicit accept-or-apply record. No critical blockers were introduced at the FinalizePlan boundary.
 
 ## Pre-Review Fixes Applied
 
 Operator answers (recorded 2026-05-14T03:30:00Z): `target_repos = [Lens.Core.Control]`; populate `key_decisions` now; encode TL-12 dependencies and relax acceptance for the first run.
 
 Applied:
-- **F1 resolved.** `feature.yaml.target_repos` set to `[Lens.Core.Control]`. `nextlens-control` is explicitly deferred as a forward-looking concept and is not a target repo for the first dev increment.
+- **F1 pending.** `feature.yaml.target_repos` directive recorded: target_repos = [Lens.Core.Control]; `nextlens-control` is explicitly deferred as a forward-looking concept and is not a target repo for the first dev increment. The actual `feature.yaml` update must be committed before dev-ready handoff is complete.
 - **F2 partially resolved.** `business-plan.md` frontmatter already lists `key_decisions`; no change needed. `sprint-plan.md` frontmatter `key_decisions` populated with the spine scoping, sprint order closure, TL-12 deferral, and target-repo decisions.
 - **F5 directive recorded.** `bmad-create-story` must emit TL-12 with `depends_on: [TL-1, TL-4, TL-8, TL-9]` and relaxed acceptance for the first run (skip `nextlens-release` verification because the repo is not yet stood up).
 - **F3 directive recorded.** `bmad-create-story` must emit `implementation_kind` per story (docs-only | schema | cli | test) and treat unbuilt-repo paths as design specifications, not file targets.
@@ -83,9 +82,11 @@ Sally (Release Engineer): TL-11 (GH Actions Pipelines) is the most expensive sto
 4. Does the constitution change required by TL-9 (additive fields `required_doctor_checks`, `promotion_evidence`, `salmon_routing`) need to land as a constitution edit before `/dev`, or is it acceptable to ship it inside the first increment?
 5. Should TL-12 be allowed to mark the increment "done" without exercising `nextlens-release` (since the repo is not stood up yet), or should TL-12's acceptance criteria be relaxed for the first run?
 
-## Open Questions Surfaced
+## Carry-Forward Actions
 
-- FinalizePlan must resolve `feature.yaml.target_repos` before opening the final dev-ready PR.
-- FinalizePlan must populate `key_decisions` in `business-plan.md` and `sprint-plan.md` frontmatter or record explicit deferral here.
-- FinalizePlan must instruct `bmad-create-story` to emit `implementation_kind` per story and to encode TL-12's dependencies.
+The following items are not resolved in this PR and must be addressed before the dev-ready gate is fully closed:
+
+- A `feature.yaml` for `nextlens-src-topdownlens` must be committed with `target_repos: [Lens.Core.Control]` set before the dev implementation cycle opens.
+- `key_decisions` in `business-plan.md` and `sprint-plan.md` frontmatter should be quoted where values contain `: ` to prevent YAML parse ambiguity.
+- `bmad-create-story` must emit `implementation_kind` per story and encode TL-12's dependencies as `[TL-1, TL-2, TL-4, TL-6, TL-8, TL-9]`.
 - FinalizePlan must confirm whether `nextlens-control` is a recorded forward-looking target repo or strictly a future-feature concept.

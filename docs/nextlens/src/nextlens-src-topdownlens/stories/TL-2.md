@@ -4,7 +4,7 @@ story_id: TL-2
 doc_type: story
 status: not-started
 title: Top-Down Discovery Walkthrough
-depends_on: [TL-1]
+depends_on: [TL-1, TL-4]
 implementation_kind: docs-only
 epic: 3
 spine: false

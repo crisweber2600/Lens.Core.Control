@@ -360,7 +360,7 @@ nextlens-release       <- read-only publish destination for the module payload
 
 Rules:
 
-- `nextlens-control` writes to `docs/` and `feature.yaml` only; it never patches `nextlens-governance` or `nextlens-release` directly.
+- `nextlens-control` writes to `docs/` and a control-side `feature-manifest.yaml` (a local planning manifest, not the governance-owned `feature.yaml`); it never patches `nextlens-governance` or `nextlens-release` directly.
 - `nextlens-governance` is updated only through `publish-to-governance` orchestration.
 - `nextlens-release` is updated only through `promote-to-release` orchestration.
 - During incubation, the existing `Lens.Core.Governance` and the current control repo host TopDownLens; the topology becomes physical after the first dev increment.

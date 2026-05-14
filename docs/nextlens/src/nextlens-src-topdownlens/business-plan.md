@@ -10,12 +10,14 @@ inputDocuments:
 goal: "Outline the TopDownLens module: a BMAD-native LENS redesign that supports top-down system discovery, bottom-up feature growth, and Salmon upstream validation."
 key_decisions:
   - LENS should shift from domain/service/feature as the planning root to system, product area, outcome, journey, capability, feature, impact, and evolving topology.
-  - Feature is the operational unit; domains, services, capabilities, product areas, and systems are context or promoted structure.
+  - "Feature is the operational unit; domains, services, capabilities, product areas, and systems are context or promoted structure."
   - The module must support both top-down decomposition from a known system and bottom-up growth from one useful feature.
   - Promotion is optional and evidence-driven; no growth happens without repeated pressure.
   - Salmon is recursive upstream consistency validation, not a notification system.
-  - TopDownLens is self-hosting: its own design and evolution must be planned by TopDownLens itself, using a dedicated governance repo, a dedicated release/publish repo, constitution layering, and a Lens-style bugfix flow wired through GitHub Actions.
-open_questions: []
+  - "TopDownLens is self-hosting: its own design and evolution must be planned by TopDownLens itself, using a dedicated governance repo, a dedicated release/publish repo, constitution layering, and a Lens-style bugfix flow wired through GitHub Actions."
+open_questions:
+  - "What minimum relationship lifecycle states are needed for useful AI traversal without over-modeling? (you decide)"
+  - "What Salmon severity threshold should trigger BMAD correct-course versus a landscape-only update? (you decide)"
 depends_on: []
 blocks: []
 updated_at: 2026-05-14T03:10:00Z
@@ -154,7 +156,7 @@ This express feature should define the module to build, not implement the whole 
 
 ## Open Questions
 
-- Should the first implementation command be named `lens-new-system`, `lens-capture`, or `lens-discover`? lens-new-system
+- Should the first implementation command be named `lens-new-system`, `lens-capture`, or `lens-discover`? Provisional: `lens capture` (from tech plan command candidates). Command names are not fixed and will be confirmed in TL-12 dogfooding.
 - Should bottom-up seed creation ship in the first module increment or only be represented in the schema? yes as it will help with evolution as needed. 
 - Where should the future module store outputs: `docs/`, `_bmad-output/lens/`, or both during migration? docs
 - What minimum relationship lifecycle is needed for useful AI traversal without over-modeling? you decide 
@@ -208,8 +210,8 @@ TopDownLens needs three pipelines from day one of self-hosting:
 
 - The next TopDownLens feature after the first dev increment is created using TopDownLens commands, not by hand.
 - That feature's planning artifacts pass TopDownLens doctor checks before FinalizePlan.
-- A deliberately broken assumption triggers a Salmon signal that is observable in `nextlens-governance` and routable through the bugfix flow.
-- `nextlens-release` is updated by GitHub Actions only; no manual file pushes are accepted.
+- A deliberately broken assumption triggers a Salmon signal that is verifiable in control-repo docs and routable through the bugfix flow.
+- **Post-migration acceptance (not required for first dev increment):** `nextlens-release` is updated by GitHub Actions only (no manual file pushes); Salmon signals are observable in `nextlens-governance`. These criteria apply once `nextlens-governance` and `nextlens-release` repos are stood up.
 
 ### Non-Goals For This Express Feature
 

@@ -16,7 +16,7 @@ Per-story files live in `stories/`. Each file contains its own frontmatter, scop
 | Story | Title | Epic | Spine | Kind | Depends On |
 |-------|-------|------|-------|------|------------|
 | [TL-1](stories/TL-1.md) | Module Ontology And Storage Contract | 1 | yes | schema | (root) |
-| [TL-2](stories/TL-2.md) | Top-Down Discovery Walkthrough | 3 | no | docs-only | TL-1 |
+| [TL-2](stories/TL-2.md) | Top-Down Discovery Walkthrough | 3 | no | docs-only | TL-1, TL-4 |
 | [TL-3](stories/TL-3.md) | Bottom-Up Compatibility Rules | 3 | no | docs-only | TL-1 |
 | [TL-4](stories/TL-4.md) | BMAD Bridge Packet | 1 | yes | schema | TL-1 |
 | [TL-5](stories/TL-5.md) | Minimal Derived Graph Rebuild | 3 | no | cli | TL-1 |
@@ -26,7 +26,7 @@ Per-story files live in `stories/`. Each file contains its own frontmatter, scop
 | [TL-9](stories/TL-9.md) | Constitution Layering For TopDownLens | 2 | yes | docs-only | TL-8 |
 | [TL-10](stories/TL-10.md) | Bugfix Flow (Lens-Core-Bugfix Pattern) | 2 | no | docs-only | TL-6, TL-8 |
 | [TL-11](stories/TL-11.md) | GitHub Actions Pipelines | 2 | no | cli | TL-8 |
-| [TL-12](stories/TL-12.md) | Dogfooding Acceptance Run | 3 | yes | test | TL-1, TL-4, TL-8, TL-9 |
+| [TL-12](stories/TL-12.md) | Dogfooding Acceptance Run | 3 | yes | test | TL-1, TL-2, TL-4, TL-6, TL-8, TL-9 |
 
 ## Suggested Sprint Order
 
