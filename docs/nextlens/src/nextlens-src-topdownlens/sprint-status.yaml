@@ -80,7 +80,7 @@ stories:
     epic: 2
     spine: false
     implementation_kind: cli
-    status: in-progress
+    status: blocked
     depends_on: [TL-8]
   - story_id: TL-5
     title: Minimal Derived Graph Rebuild
