@@ -9,6 +9,8 @@ key_decisions:
   - Enforce idempotency for mutating operations with replay-safe request handling.
   - Emit doctor checks as non-mutating JSONL and keep correction routing as a separate mutating stage.
   - Use a canonical packet schema with explicit required fields and version marker.
+  - Package NextLens as a BMAD module with generated registration artifacts (`module.yaml`, `module-help.csv`) and manifest (`.claude-plugin/marketplace.json`).
+  - Use Create Module (CM) and Validate Module (VM) as mandatory packaging and quality gates before distribution.
 open_questions:
   - Exact numeric threshold values for candidate confidence bands.
   - Long-term schema evolution policy for packet version upgrades.
@@ -154,3 +156,69 @@ TechPlan hardens the contracts needed for implementation start:
 1. packet schema is now explicit,
 2. deterministic tie-break policy is fixed,
 3. idempotency and correction contracts are architecture-level requirements.
+
+## 11. BMAD Module Alignment
+
+This feature will ship as a BMAD module, so the architecture includes packaging, registration, and distribution constraints from the BMAD Builder reference at:
+
+- https://bmad-builder-docs.bmad-method.org/llms-full.txt
+
+### 11.1 Required Module Build Flow
+
+For module readiness, the implementation must follow this sequence:
+
+1. Plan module capability shape (IM)
+2. Build skills/workflows (BA and BW)
+3. Scaffold module package (CM)
+4. Validate structure and quality (VM)
+
+### 11.2 Packaging Strategy
+
+Given this feature is expected to include multiple capabilities (selection pipeline, doctor validation, correction routing), use a multi-skill module layout by default.
+
+If scope is reduced to one skill, standalone self-registering packaging is acceptable.
+
+### 11.3 Mandatory Registration Artifacts
+
+The packaged output must include:
+
+1. `module.yaml` with module identity and config variables
+2. `module-help.csv` with capability entries for `bmad-help` discoverability
+3. `.claude-plugin/marketplace.json` manifest for installer/distribution compatibility
+
+### 11.4 Repository and Manifest Constraints
+
+Manifest and repository conventions are treated as architecture constraints:
+
+1. Module name must be lowercase and hyphenated
+2. Manifest `plugins[].skills` paths must match actual repository paths
+3. Manifest versioning must be semantic (`major.minor.patch`) and bumped on each release
+4. Single-module and multi-module repository layouts are both valid, but path consistency is mandatory
+
+### 11.5 Module Quality Gates
+
+Before any release or distribution:
+
+1. Run CM to regenerate module registration files from current skills
+2. Run VM and resolve structural and quality findings
+3. Verify manifest integrity and skill path accuracy
+4. Verify module help ordering and command discoverability in `bmad-help`
+
+### 11.6 Operational Implications for NextLens
+
+This module-oriented architecture adds non-functional obligations:
+
+1. Discoverability: capabilities must be registered and orderable through module help metadata
+2. Installability: module must install from a Git source through BMAD custom-source support
+3. Maintainability: future capability additions must re-run CM/VM rather than hand-editing registration files
+4. Portability: packaging must remain host-agnostic (GitHub, GitLab, Bitbucket, local path)
+
+## 12. Module-Oriented Implementation Additions
+
+To support BMAD module delivery, the next implementation slice must add these work packages:
+
+1. Define module identity and configuration variables in `module.yaml`
+2. Define capability catalog and ordering entries in `module-help.csv`
+3. Add/verify setup skill behavior for multi-skill registration (or self-registration path for standalone)
+4. Create and validate `.claude-plugin/marketplace.json`
+5. Add packaging validation checks to CI or release checklist (CM and VM gates)
