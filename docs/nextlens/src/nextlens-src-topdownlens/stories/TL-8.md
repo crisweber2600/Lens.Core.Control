@@ -2,7 +2,7 @@
 feature: nextlens-src-topdownlens
 story_id: TL-8
 doc_type: story
-status: in-progress
+status: done
 title: Self-Hosting Repo Topology Contract
 depends_on: [TL-1]
 implementation_kind: docs-only
@@ -45,3 +45,7 @@ Document the three-repo plus per-domain repo topology that LENS will host itself
 - TL-9 (constitution layering) and TL-10 (bugfix flow) both reference this topology.
 
 ## Dev Agent Record
+
+- Status: done
+- Files produced: `guides/self-hosting-topology.md`, `diagrams/topology.md`.
+- Validation: local content check confirmed required repo roles, approved orchestration boundaries, and mermaid topology are present.

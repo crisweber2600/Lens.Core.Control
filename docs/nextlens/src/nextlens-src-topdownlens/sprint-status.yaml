@@ -38,7 +38,7 @@ stories:
     epic: 2
     spine: true
     implementation_kind: docs-only
-    status: in-progress
+    status: done
     depends_on: [TL-1]
   - story_id: TL-9
     title: Constitution Layering For TopDownLens
