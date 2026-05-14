@@ -14,6 +14,9 @@ key_decisions:
   - The module must support both top-down decomposition from a known system and bottom-up growth from one useful feature.
   - Promotion is optional and evidence-driven; no growth happens without repeated pressure.
   - Salmon is recursive upstream consistency validation, not a notification system.
+open_questions: []
+depends_on: []
+blocks: []
 updated_at: 2026-05-14T01:30:00Z
 ---
 

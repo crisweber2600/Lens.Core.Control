@@ -8,6 +8,10 @@ inputDocuments:
   - docs/nextlens/src/rawNotes/Reimagine.md
   - docs/nextlens/src/rawNotes/TopDown.md
 goal: "Sequence the first buildable TopDownLens module increment from express planning into FinalizePlan."
+key_decisions: []
+open_questions: []
+depends_on: [business-plan, tech-plan]
+blocks: []
 updated_at: 2026-05-14T01:30:00Z
 ---
 

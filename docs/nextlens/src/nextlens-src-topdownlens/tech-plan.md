@@ -14,6 +14,9 @@ key_decisions:
   - Treat Feature Archive, Living Landscape, and Derived Graph as separate topology layers.
   - Make promotion advisory and evidence-driven.
   - Keep BMAD as the artifact and implementation engine; LENS supplies context and validation boundaries.
+open_questions: []
+depends_on: [business-plan]
+blocks: []
 updated_at: 2026-05-14T01:30:00Z
 ---
 
@@ -106,7 +109,7 @@ _bmad-output/lens/
         bmad-packet.yaml
         notes.md
         validation.md
-        salmon-signals.yaml
+        salmon-signal.yaml
   landscape/
     systems/
     outcomes/
@@ -318,7 +321,7 @@ The first Doctor checks should be simple and deterministic:
 - Every feature has includes/excludes and acceptance evidence.
 - Every BMAD packet references exactly one active feature.
 - Relationship statuses use the allowed lifecycle.
-- Salmon signals have source, target, severity, and status.
+- Salmon signals have source, upstream_targets, severity, and status.
 
 ## Testing Strategy
 

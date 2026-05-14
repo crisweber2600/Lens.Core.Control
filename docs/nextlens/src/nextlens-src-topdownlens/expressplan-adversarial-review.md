@@ -1,3 +1,19 @@
+---
+feature: nextlens-src-topdownlens
+doc_type: adversarial-review
+phase: expressplan
+source: manual-rerun
+verdict: pass-with-warnings
+status: responses-recorded
+critical_count: 0
+high_count: 2
+medium_count: 5
+low_count: 0
+carry_forward_blockers: []
+updated_at: '2026-05-14T02:58:59Z'
+review_format: abc-choice-v1
+---
+
 # Adversarial Review: nextlens-src-topdownlens / expressplan
 
 **Reviewed:** 2026-05-14T02:58:59Z  
