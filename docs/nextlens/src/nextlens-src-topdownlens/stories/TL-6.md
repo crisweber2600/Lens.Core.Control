@@ -2,7 +2,7 @@
 feature: nextlens-src-topdownlens
 story_id: TL-6
 doc_type: story
-status: in-progress
+status: done
 title: Salmon Signal Contract
 depends_on: [TL-1]
 implementation_kind: schema
@@ -54,3 +54,7 @@ Define a recursive upstream consistency validation signal that flows from low-le
 - TL-10 and TL-12 both consume this contract.
 
 ## Dev Agent Record
+
+- Status: done
+- Files produced: `schemas/salmon-signal.schema.json`, `examples/salmon-signals/`, `guides/salmon-signals.md`.
+- Validation: `uv run --with jsonschema python` validated the Salmon schema and one example per severity level.

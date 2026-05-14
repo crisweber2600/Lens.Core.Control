@@ -1,0 +1,11 @@
+{
+  "id": "salmon.20260514T045700Z.high_correct_course",
+  "source": { "type": "review", "id": "evidence.tl1_schema_validation" },
+  "signal_type": "boundary_wrong",
+  "severity": "high",
+  "upstream_targets": ["feature", "product_area"],
+  "finding": "A selected feature is crossing from discovery contracts into release automation without an approved topology boundary.",
+  "recommended_action": "bmad_correct_course",
+  "status": "open",
+  "evidence_refs": ["evidence.tl1_schema_validation"]
+}

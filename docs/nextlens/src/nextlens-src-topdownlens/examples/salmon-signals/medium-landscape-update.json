@@ -1,0 +1,11 @@
+{
+  "id": "salmon.20260514T045600Z.medium_landscape_update",
+  "source": { "type": "validation", "id": "test.tl_1.schema_validation" },
+  "signal_type": "impact_discovered",
+  "severity": "medium",
+  "upstream_targets": ["journey", "landscape"],
+  "finding": "The capture-to-packet journey needs an explicit evidence review step before BMAD handoff.",
+  "recommended_action": "landscape_update",
+  "status": "accepted",
+  "evidence_refs": ["evidence.tl1_schema_validation"]
+}

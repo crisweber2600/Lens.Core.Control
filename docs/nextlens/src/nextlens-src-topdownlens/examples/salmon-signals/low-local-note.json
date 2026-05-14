@@ -1,0 +1,11 @@
+{
+  "id": "salmon.20260514T045500Z.low_note",
+  "source": { "type": "story", "id": "story.tl_2" },
+  "signal_type": "missing_context",
+  "severity": "low",
+  "upstream_targets": ["feature"],
+  "finding": "The walkthrough could use a clearer actor label, but the selected feature remains valid.",
+  "recommended_action": "local_note",
+  "status": "open",
+  "evidence_refs": ["evidence.tl1_schema_validation"]
+}
