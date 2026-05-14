@@ -1,0 +1,24 @@
+{
+  "derived": true,
+  "findings": [],
+  "graph_path": "derived/graph.json",
+  "rebuilt_at": "2026-01-02T20:40:46Z",
+  "schema_version": "v1.0",
+  "source_files": [
+    "examples/entities/capability.topdown-discovery.json",
+    "examples/entities/code.tl-1-schemas.json",
+    "examples/entities/evidence.tl1-schema-validation.json",
+    "examples/entities/feature.topdownlens-contract.json",
+    "examples/entities/journey.capture-to-packet.json",
+    "examples/entities/outcome.bmad-ready-feature.json",
+    "examples/entities/product-area.planning-intelligence.json",
+    "examples/entities/story.tl-1.json",
+    "examples/entities/system.nextlens.json",
+    "examples/entities/task.tl-1-define-schemas.json",
+    "examples/entities/test.tl-1-schema-validation.json",
+    "examples/relationship-example.json"
+  ],
+  "source_hash": "a3dcb1ce396c53de7c7ce875e5796e65bfb8562a5a2e2eeaa01a7ec599fb0d84",
+  "status": "fresh",
+  "timestamp_source": "sha256(source_paths_and_contents)"
+}

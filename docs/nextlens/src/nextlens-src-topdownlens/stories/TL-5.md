@@ -42,3 +42,9 @@ Provide a rebuildable graph projection over source files (entities and relations
 
 - **Deferrable** beyond first dev increment if time is tight; TL-12 closure does not require this.
 - If shipped, TL-7 doctor checks should consume the freshness marker.
+
+## Dev Agent Record
+
+- Status: done
+- Files produced: target CLI `TargetProjects/nextlens/src/NextLens/scripts/lens_topdown/rebuild_derived_graph.py`, tests `TargetProjects/nextlens/src/NextLens/tests/test_rebuild_derived_graph.py`, `derived/graph.json`, and `derived/freshness.json`.
+- Validation: `uv run --with pytest python -m pytest tests/test_rebuild_derived_graph.py -q`; generated graph validates against `schemas/derived-graph.schema.json`; a second rebuild returned `changed: false`.

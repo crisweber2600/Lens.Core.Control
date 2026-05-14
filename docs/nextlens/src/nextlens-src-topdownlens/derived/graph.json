@@ -1,0 +1,84 @@
+{
+  "derived": true,
+  "edges": [
+    {
+      "from": "feature.topdownlens_contract",
+      "relationship_id": "rel.feature.topdownlens_contract.depends_on.capability.topdown_discovery",
+      "to": "capability.topdown_discovery",
+      "type": "depends_on"
+    }
+  ],
+  "generated_at": "2026-01-02T20:40:46Z",
+  "id": "graph.topdownlens_derived",
+  "nodes": [
+    {
+      "id": "capability.topdown_discovery",
+      "kind": "capability",
+      "source_path": "examples/entities/capability.topdown-discovery.json"
+    },
+    {
+      "id": "code.tl_1.schemas",
+      "kind": "code",
+      "source_path": "examples/entities/code.tl-1-schemas.json"
+    },
+    {
+      "id": "evidence.tl1_schema_validation",
+      "kind": "evidence",
+      "source_path": "examples/entities/evidence.tl1-schema-validation.json"
+    },
+    {
+      "id": "feature.topdownlens_contract",
+      "kind": "feature",
+      "source_path": "examples/entities/feature.topdownlens-contract.json"
+    },
+    {
+      "id": "journey.capture_to_packet",
+      "kind": "journey",
+      "source_path": "examples/entities/journey.capture-to-packet.json"
+    },
+    {
+      "id": "outcome.bmad_ready_feature",
+      "kind": "outcome",
+      "source_path": "examples/entities/outcome.bmad-ready-feature.json"
+    },
+    {
+      "id": "product_area.planning_intelligence",
+      "kind": "product_area",
+      "source_path": "examples/entities/product-area.planning-intelligence.json"
+    },
+    {
+      "id": "story.tl_1",
+      "kind": "story",
+      "source_path": "examples/entities/story.tl-1.json"
+    },
+    {
+      "id": "system.nextlens",
+      "kind": "system",
+      "source_path": "examples/entities/system.nextlens.json"
+    },
+    {
+      "id": "task.tl_1.define_schemas",
+      "kind": "task",
+      "source_path": "examples/entities/task.tl-1-define-schemas.json"
+    },
+    {
+      "id": "test.tl_1.schema_validation",
+      "kind": "test",
+      "source_path": "examples/entities/test.tl-1-schema-validation.json"
+    }
+  ],
+  "rebuildable_from": [
+    "examples/entities/capability.topdown-discovery.json",
+    "examples/entities/code.tl-1-schemas.json",
+    "examples/entities/evidence.tl1-schema-validation.json",
+    "examples/entities/feature.topdownlens-contract.json",
+    "examples/entities/journey.capture-to-packet.json",
+    "examples/entities/outcome.bmad-ready-feature.json",
+    "examples/entities/product-area.planning-intelligence.json",
+    "examples/entities/story.tl-1.json",
+    "examples/entities/system.nextlens.json",
+    "examples/entities/task.tl-1-define-schemas.json",
+    "examples/entities/test.tl-1-schema-validation.json",
+    "examples/relationship-example.json"
+  ]
+}

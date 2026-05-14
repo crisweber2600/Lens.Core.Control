@@ -87,7 +87,7 @@ stories:
     epic: 3
     spine: false
     implementation_kind: cli
-    status: not-started
+    status: done
     deferrable: true
     depends_on: [TL-1]
   - story_id: TL-7
