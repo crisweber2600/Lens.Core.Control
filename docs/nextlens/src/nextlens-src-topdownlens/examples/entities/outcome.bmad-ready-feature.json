@@ -1,0 +1,21 @@
+{
+  "id": "outcome.bmad_ready_feature",
+  "kind": "outcome",
+  "status": "candidate",
+  "name": "BMAD-ready feature selected",
+  "current_path": "_bmad-output/lens/landscape/outcomes/bmad-ready-feature.json",
+  "summary": "A product idea has been narrowed into one feature that BMAD can plan and build without pulling in unrelated scope.",
+  "hierarchy": {
+    "system": "system.nextlens",
+    "product_area": "product_area.planning_intelligence",
+    "outcome": "outcome.bmad_ready_feature"
+  },
+  "produces": [],
+  "consumes": [],
+  "relationships": [],
+  "promotion_evidence": [],
+  "provenance": {
+    "source_documents": ["docs/nextlens/src/nextlens-src-topdownlens/tech-plan.md"],
+    "confidence": "medium"
+  }
+}

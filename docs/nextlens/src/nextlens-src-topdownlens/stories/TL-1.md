@@ -2,7 +2,7 @@
 feature: nextlens-src-topdownlens
 story_id: TL-1
 doc_type: story
-status: in-progress
+status: done
 title: Module Ontology And Storage Contract
 depends_on: []
 implementation_kind: schema
@@ -50,3 +50,7 @@ Define the core TopDownLens objects and where they live on disk.
 - All other stories depend on this contract. Do not start TL-2 / TL-3 / TL-4 / TL-6 until schemas are checked in.
 
 ## Dev Agent Record
+
+- Status: done
+- Files produced: `schemas/ontology.schema.json`, `schemas/relationship.schema.json`, `schemas/landscape-entity.schema.json`, `schemas/derived-graph.schema.json`, `examples/ontology-example.json`, `examples/relationship-example.json`, `examples/derived-graph-example.json`, and per-entity examples under `examples/entities/`.
+- Validation: `uv run --with jsonschema python` validated all schemas and all examples against their schemas.

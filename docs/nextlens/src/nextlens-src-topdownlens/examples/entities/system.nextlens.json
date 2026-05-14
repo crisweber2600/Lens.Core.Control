@@ -1,0 +1,19 @@
+{
+  "id": "system.nextlens",
+  "kind": "system",
+  "status": "candidate",
+  "name": "NextLens",
+  "current_path": "_bmad-output/lens/landscape/systems/nextlens.json",
+  "summary": "The next-generation Lens operating model for top-down discovery, bottom-up feature growth, and Salmon validation.",
+  "hierarchy": {
+    "system": "system.nextlens"
+  },
+  "produces": [],
+  "consumes": [],
+  "relationships": [],
+  "promotion_evidence": [],
+  "provenance": {
+    "source_documents": ["docs/nextlens/src/rawNotes/Reimagine.md", "docs/nextlens/src/rawNotes/TopDown.md"],
+    "confidence": "medium"
+  }
+}

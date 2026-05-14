@@ -1,0 +1,24 @@
+{
+  "id": "feature.topdownlens_contract",
+  "kind": "feature",
+  "status": "implemented",
+  "name": "TopDownLens contract",
+  "current_path": "docs/nextlens/src/nextlens-src-topdownlens/feature.yaml",
+  "summary": "The first feature increment that defines TopDownLens ontology, storage, graph, and bridge contracts.",
+  "hierarchy": {
+    "system": "system.nextlens",
+    "product_area": "product_area.planning_intelligence",
+    "outcome": "outcome.bmad_ready_feature",
+    "journey": "journey.capture_to_packet",
+    "capability": "capability.topdown_discovery",
+    "feature": "feature.topdownlens_contract"
+  },
+  "produces": ["story.tl_1"],
+  "consumes": [],
+  "relationships": ["rel.feature.topdownlens_contract.depends_on.capability.topdown_discovery"],
+  "promotion_evidence": [],
+  "provenance": {
+    "source_documents": ["docs/nextlens/src/nextlens-src-topdownlens/implementation-readiness.md"],
+    "confidence": "high"
+  }
+}

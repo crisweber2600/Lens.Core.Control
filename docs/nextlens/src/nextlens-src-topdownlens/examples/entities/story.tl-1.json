@@ -1,0 +1,20 @@
+{
+  "id": "story.tl_1",
+  "kind": "story",
+  "status": "implemented",
+  "name": "TL-1 Module Ontology And Storage Contract",
+  "current_path": "docs/nextlens/src/nextlens-src-topdownlens/stories/TL-1.md",
+  "summary": "Story that defines durable entity identity, storage topology, relationship records, and derived graph contract.",
+  "hierarchy": {
+    "feature": "feature.topdownlens_contract",
+    "story": "story.tl_1"
+  },
+  "produces": ["task.tl_1.define_schemas"],
+  "consumes": [],
+  "relationships": [],
+  "promotion_evidence": [],
+  "provenance": {
+    "source_documents": ["docs/nextlens/src/nextlens-src-topdownlens/stories/TL-1.md"],
+    "confidence": "high"
+  }
+}

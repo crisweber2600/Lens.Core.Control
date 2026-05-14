@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lens.local/nextlens/topdownlens/ontology.schema.json",
+  "title": "TopDownLens Ontology Contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "identity", "storage_topology", "hierarchy_levels", "durable_entity_kinds"],
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^v[0-9]+\\.[0-9]+$" },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stable_ids_required", "path_addresses_are_mutable", "references_resolve_by"],
+      "properties": {
+        "stable_ids_required": { "const": true },
+        "path_addresses_are_mutable": { "const": true },
+        "references_resolve_by": { "const": "id" }
+      }
+    },
+    "storage_topology": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["feature_archive", "living_landscape", "derived_graph"],
+      "properties": {
+        "feature_archive": { "$ref": "#/$defs/storageLayer" },
+        "living_landscape": { "$ref": "#/$defs/storageLayer" },
+        "derived_graph": { "$ref": "#/$defs/storageLayer" }
+      }
+    },
+    "hierarchy_levels": {
+      "type": "array",
+      "prefixItems": [
+        { "$ref": "#/$defs/systemLevel" },
+        { "$ref": "#/$defs/productAreaLevel" },
+        { "$ref": "#/$defs/outcomeLevel" },
+        { "$ref": "#/$defs/journeyLevel" },
+        { "$ref": "#/$defs/capabilityLevel" },
+        { "$ref": "#/$defs/featureLevel" },
+        { "$ref": "#/$defs/storyLevel" },
+        { "$ref": "#/$defs/taskLevel" },
+        { "$ref": "#/$defs/codeLevel" },
+        { "$ref": "#/$defs/testLevel" },
+        { "$ref": "#/$defs/evidenceLevel" }
+      ],
+      "items": false,
+      "minItems": 11,
+      "maxItems": 11
+    },
+    "durable_entity_kinds": {
+      "type": "array",
+      "items": { "$ref": "landscape-entity.schema.json#/$defs/entityKind" },
+      "uniqueItems": true,
+      "minItems": 11
+    }
+  },
+  "$defs": {
+    "storageLayer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["root", "purpose"],
+      "properties": {
+        "root": { "type": "string", "minLength": 1 },
+        "purpose": { "type": "string", "minLength": 1 }
+      }
+    },
+    "level": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "label", "parent", "child"],
+      "properties": {
+        "kind": { "$ref": "landscape-entity.schema.json#/$defs/entityKind" },
+        "label": { "type": "string", "minLength": 1 },
+        "parent": { "anyOf": [{ "$ref": "landscape-entity.schema.json#/$defs/entityKind" }, { "type": "null" }] },
+        "child": { "anyOf": [{ "$ref": "landscape-entity.schema.json#/$defs/entityKind" }, { "type": "null" }] }
+      }
+    },
+    "systemLevel": { "allOf": [{ "$ref": "#/$defs/level" }, { "properties": { "kind": { "const": "system" }, "label": { "const": "system" }, "parent": { "type": "null" }, "child": { "const": "product_area" } } }] },
+    "productAreaLevel": { "allOf": [{ "$ref": "#/$defs/level" }, { "properties": { "kind": { "const": "product_area" }, "label": { "const": "product area" }, "parent": { "const": "system" }, "child": { "const": "outcome" } } }] },
+    "outcomeLevel": { "allOf": [{ "$ref": "#/$defs/level" }, { "properties": { "kind": { "const": "outcome" }, "label": { "const": "outcome" }, "parent": { "const": "product_area" }, "child": { "const": "journey" } } }] },
+    "journeyLevel": { "allOf": [{ "$ref": "#/$defs/level" }, { "properties": { "kind": { "const": "journey" }, "label": { "const": "journey" }, "parent": { "const": "outcome" }, "child": { "const": "capability" } } }] },
+    "capabilityLevel": { "allOf": [{ "$ref": "#/$defs/level" }, { "properties": { "kind": { "const": "capability" }, "label": { "const": "capability" }, "parent": { "const": "journey" }, "child": { "const": "feature" } } }] },
+    "featureLevel": { "allOf": [{ "$ref": "#/$defs/level" }, { "properties": { "kind": { "const": "feature" }, "label": { "const": "feature" }, "parent": { "const": "capability" }, "child": { "const": "story" } } }] },
+    "storyLevel": { "allOf": [{ "$ref": "#/$defs/level" }, { "properties": { "kind": { "const": "story" }, "label": { "const": "story" }, "parent": { "const": "feature" }, "child": { "const": "task" } } }] },
+    "taskLevel": { "allOf": [{ "$ref": "#/$defs/level" }, { "properties": { "kind": { "const": "task" }, "label": { "const": "task" }, "parent": { "const": "story" }, "child": { "const": "code" } } }] },
+    "codeLevel": { "allOf": [{ "$ref": "#/$defs/level" }, { "properties": { "kind": { "const": "code" }, "label": { "const": "code" }, "parent": { "const": "task" }, "child": { "const": "test" } } }] },
+    "testLevel": { "allOf": [{ "$ref": "#/$defs/level" }, { "properties": { "kind": { "const": "test" }, "label": { "const": "test" }, "parent": { "const": "code" }, "child": { "const": "evidence" } } }] },
+    "evidenceLevel": { "allOf": [{ "$ref": "#/$defs/level" }, { "properties": { "kind": { "const": "evidence" }, "label": { "const": "evidence" }, "parent": { "const": "test" }, "child": { "type": "null" } } }] }
+  }
+}

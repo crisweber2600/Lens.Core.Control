@@ -1,0 +1,10 @@
+{
+  "id": "rel.feature.topdownlens_contract.depends_on.capability.topdown_discovery",
+  "from": "feature.topdownlens_contract",
+  "to": "capability.topdown_discovery",
+  "type": "depends_on",
+  "status": "reviewed",
+  "confidence": "medium",
+  "evidence": ["evidence.tl1_schema_validation"],
+  "notes": "The selected feature depends on the candidate top-down discovery capability, but the relationship can move without changing either entity ID."
+}

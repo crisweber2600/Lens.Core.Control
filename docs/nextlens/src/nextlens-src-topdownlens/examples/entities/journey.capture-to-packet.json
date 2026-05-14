@@ -1,0 +1,22 @@
+{
+  "id": "journey.capture_to_packet",
+  "kind": "journey",
+  "status": "candidate",
+  "name": "Capture to BMAD packet",
+  "current_path": "_bmad-output/lens/landscape/journeys/capture-to-packet.json",
+  "summary": "The path from raw product context through outcome, journey, capability, and selected feature into a BMAD handoff packet.",
+  "hierarchy": {
+    "system": "system.nextlens",
+    "product_area": "product_area.planning_intelligence",
+    "outcome": "outcome.bmad_ready_feature",
+    "journey": "journey.capture_to_packet"
+  },
+  "produces": [],
+  "consumes": [],
+  "relationships": [],
+  "promotion_evidence": [],
+  "provenance": {
+    "source_documents": ["docs/nextlens/src/nextlens-src-topdownlens/tech-plan.md"],
+    "confidence": "medium"
+  }
+}
