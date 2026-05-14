@@ -95,7 +95,7 @@ sprints:
     status: in-progress
     stories:
       - story_id: "4.1"
-        status: in-progress
+        status: done
         blocked_by: ["2.3", "3.3"]
       - story_id: "4.2"
         status: ready
