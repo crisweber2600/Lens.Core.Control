@@ -2,7 +2,7 @@
 feature: nextlens-src-topdownlens
 story_id: TL-3
 doc_type: story
-status: in-progress
+status: done
 title: Bottom-Up Compatibility Rules
 depends_on: [TL-1]
 implementation_kind: docs-only
@@ -45,3 +45,7 @@ Ensure TopDownLens does not break the existing feature-first mental model. Encod
 - Cross-link to TL-2 walkthrough so the two flows coexist.
 
 ## Dev Agent Record
+
+- Status: done
+- Files produced: `guides/bottom-up-compatibility.md`, `examples/standalone-example.md`, `examples/promotion-example.md`.
+- Validation: local content check confirmed standalone permanence, weak adjacency, evidence-gated promotion, no-growth-without-pressure language, and TL-2 cross-linking.
