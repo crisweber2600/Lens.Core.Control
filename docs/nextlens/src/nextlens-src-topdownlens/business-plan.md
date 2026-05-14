@@ -154,11 +154,11 @@ This express feature should define the module to build, not implement the whole 
 
 ## Open Questions
 
-- Should the first implementation command be named `lens-new-system`, `lens-capture`, or `lens-discover`?
-- Should bottom-up seed creation ship in the first module increment or only be represented in the schema?
-- Where should the future module store outputs: `docs/`, `_bmad-output/lens/`, or both during migration?
-- What minimum relationship lifecycle is needed for useful AI traversal without over-modeling?
-- What Salmon severity threshold should trigger BMAD correct-course versus a landscape-only update?
+- Should the first implementation command be named `lens-new-system`, `lens-capture`, or `lens-discover`? lens-new-system
+- Should bottom-up seed creation ship in the first module increment or only be represented in the schema? yes as it will help with evolution as needed. 
+- Where should the future module store outputs: `docs/`, `_bmad-output/lens/`, or both during migration? docs
+- What minimum relationship lifecycle is needed for useful AI traversal without over-modeling? you decide 
+- What Salmon severity threshold should trigger BMAD correct-course versus a landscape-only update? you decide 
 
 ## Dogfooding And Self-Hosting Strategy
 
