@@ -8,11 +8,16 @@ inputDocuments:
   - docs/nextlens/src/rawNotes/Reimagine.md
   - docs/nextlens/src/rawNotes/TopDown.md
 goal: "Sequence the first buildable TopDownLens module increment from express planning into FinalizePlan, including the self-hosting and dogfooding spine."
-key_decisions: []
+key_decisions:
+  - First dev increment is scoped to the spine: TL-1, TL-4, TL-8, TL-9, TL-12 plus enabling stories from TL-2, TL-3, TL-6, TL-10, TL-11.
+  - Suggested sprint order ends with TL-12 (Dogfooding Acceptance) as the explicit closure gate.
+  - For the first run, TL-12 acceptance is relaxed to skip `nextlens-release` verification because that repo does not yet exist.
+  - TL-12 depends_on at minimum: TL-1, TL-4, TL-8, TL-9.
+  - Target repo for the first dev increment is Lens.Core.Control only; nextlens-control remains a forward-looking concept.
 open_questions: []
 depends_on: [business-plan, tech-plan]
 blocks: []
-updated_at: 2026-05-14T03:10:00Z
+updated_at: 2026-05-14T03:30:00Z
 ---
 
 # Sprint Plan - TopDownLens Module
