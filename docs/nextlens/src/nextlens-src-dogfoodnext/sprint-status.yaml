@@ -1,0 +1,65 @@
+feature: nextlens-src-dogfoodnext
+doc_type: sprint-status
+status: ready
+track: express
+phase: finalizeplan
+updated_at: 2026-05-15T20:00:00Z
+sprint_goal: "Deliver a Lens-owned NextLens bugfix conductor with namespaced bug artifacts, bounded target fixes, validation evidence, and closeout discipline."
+suggested_order:
+  - NLB-1
+  - NLB-2
+  - NLB-3
+  - NLB-4
+  - NLB-5
+  - NLB-6
+  - NLB-7
+  - NLB-8
+stories:
+  - story_id: NLB-1
+    title: Skill Registration And Command Surface
+    epic: 1
+    implementation_kind: skill-registration
+    status: ready-for-dev
+    depends_on: []
+  - story_id: NLB-2
+    title: Intake Schema And Transcript Minimization
+    epic: 1
+    implementation_kind: parser
+    status: ready-for-dev
+    depends_on: [NLB-1]
+  - story_id: NLB-3
+    title: Namespaced Bug Artifact Operations
+    epic: 2
+    implementation_kind: bug-state
+    status: ready-for-dev
+    depends_on: [NLB-2]
+  - story_id: NLB-4
+    title: Design Context And Target Resolver
+    epic: 2
+    implementation_kind: resolver
+    status: ready-for-dev
+    depends_on: [NLB-1]
+  - story_id: NLB-5
+    title: Fix Specification Generation
+    epic: 3
+    implementation_kind: specification
+    status: ready-for-dev
+    depends_on: [NLB-2, NLB-3, NLB-4]
+  - story_id: NLB-6
+    title: Fresh Branch Delegation And Boundary Enforcement
+    epic: 3
+    implementation_kind: conductor
+    status: ready-for-dev
+    depends_on: [NLB-3, NLB-4, NLB-5]
+  - story_id: NLB-7
+    title: Validation, PR Recording, And Closeout
+    epic: 3
+    implementation_kind: closeout
+    status: ready-for-dev
+    depends_on: [NLB-3, NLB-6]
+  - story_id: NLB-8
+    title: End-To-End Tests And Documentation
+    epic: 3
+    implementation_kind: validation-docs
+    status: ready-for-dev
+    depends_on: [NLB-1, NLB-2, NLB-3, NLB-4, NLB-5, NLB-6, NLB-7]
