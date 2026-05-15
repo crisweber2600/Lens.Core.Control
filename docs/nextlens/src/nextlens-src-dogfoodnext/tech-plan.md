@@ -12,17 +12,22 @@ inputDocuments:
 
 ## Planning Boundary
 
-This document defines the implementation contract for a future NextLens bugfix skill. It does not implement code, modify module registration, or write to the target repo.
+This document defines the implementation contract for a future Lens-owned NextLens bugfix skill. It does not implement code, modify registration, or write to the target repo.
 
-The eventual implementation write boundary is strict: code changes for this capability belong only under `TargetProjects/nextlens/src/NextLens`. Governance repositories, governance docs mirrors, release clone surfaces, and unrelated control-root files remain out of scope for implementation writes.
+There are two distinct boundaries:
+
+- Skill source boundary: the new orchestration skill is authored in `lens.core.src`.
+- Runtime fix boundary: when the skill performs or delegates a NextLens fix, implementation edits are allowed only under `TargetProjects/nextlens/src/NextLens`.
+
+Governance repositories, governance docs mirrors, release clone surfaces, and unrelated control-root files remain out of scope for runtime implementation writes.
 
 ## Expected Capability Additions
 
-- Add a dedicated skill such as `bmad-nextlens-bugfix` under the existing NextLens skill surface.
-- Expose an operator-facing capability or alias such as `nextlens-bugfix`, following current NextLens module naming and help conventions.
-- Update `skills/module.yaml` and module help metadata so setup, discovery, and help surfaces can find the new capability.
-- Add shared scripts under `.agents/skills/bmad-nextlens/scripts/` for chat-history intake, design-context loading, fix-spec generation, and boundary validation.
-- Extend doctor or validation checks so missing registration, missing scripts, invalid intake, or inaccessible docs context are reported clearly.
+- Add a dedicated Lens skill such as `lens-nextlens-bugfix` or equivalent under the `lens.core.src` skill surface.
+- Expose an operator-facing prompt or command alias according to Lens skill and prompt conventions.
+- Update Lens skill registry, help, and release-sync metadata so the capability can be discovered from the Lens module.
+- Add source-owned helpers in `lens.core.src` for chat-history intake, design-context loading, fix-spec generation, and runtime boundary validation.
+- Extend Lens validation checks so missing registration, missing helpers, invalid intake, inaccessible docs context, or target-boundary misconfiguration are reported clearly.
 
 ## Intake Contract
 
@@ -48,7 +53,8 @@ The fix-spec generator should produce an implementation-ready artifact or in-mem
 - Actual behavior, expected behavior, and summarized evidence.
 - Relevant design-context references.
 - Suspected target files or capability surfaces when known.
-- Explicit allowed write root: `TargetProjects/nextlens/src/NextLens`.
+- Explicit skill source root: `lens.core.src`.
+- Explicit runtime allowed write root: `TargetProjects/nextlens/src/NextLens`.
 - Explicit prohibited write roots: governance repos, governance docs mirrors, release clones, and unrelated control repo paths.
 - Implementation approach, validation commands, and evidence expectations.
 - Salmon linkage and closure notes when an originating signal exists.
@@ -67,6 +73,7 @@ The bugfix skill should prepare implementation delegation, not perform broad dis
 - The proposed files are inside the allowed target root.
 - The fix spec includes validation and evidence requirements.
 - Dev work has an implementation story when lifecycle gates require one.
+- The Lens skill source root is not treated as the NextLens fix target except while implementing this feature's own skill code.
 
 Any attempt to write outside the target root should stop the workflow with a boundary violation.
 
@@ -76,11 +83,11 @@ Any attempt to write outside the target root should stop the workflow with a bou
 - Unit tests for fix-spec generation and required field enforcement.
 - Boundary tests proving prohibited paths are rejected.
 - Integration-style fixture covering chat history plus docs context producing a deterministic fix spec.
-- Doctor validation that checks skill registration, module help, script availability, docs context access, and schema health.
+- Lens validation that checks skill registration, prompt/help metadata, helper availability, docs context access, target repo resolution, and schema health.
 
 ## Technical Risks
 
 - Input transcripts can be large; scripts should summarize or reference durable evidence without storing excessive raw chat.
 - Context loading can become too broad; selection should prefer explicit feature docs and known NextLens guidance.
 - Boundary enforcement must be tested at path-normalization edges, especially on Windows paths.
-- Help and module metadata must stay synchronized with the skill entrypoint.
+- Lens prompt, skill, and help metadata must stay synchronized with the skill entrypoint.

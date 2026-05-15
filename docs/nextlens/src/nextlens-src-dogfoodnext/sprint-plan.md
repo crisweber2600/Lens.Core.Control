@@ -12,19 +12,19 @@ inputDocuments:
 
 ## Sprint Goal
 
-Prepare implementation-ready stories for a NextLens-specific bugfix skill that converts observed chat failures into bounded, evidence-backed corrections under `TargetProjects/nextlens/src/NextLens`.
+Prepare implementation-ready stories for a Lens-owned NextLens bugfix skill in `lens.core.src` that converts observed chat failures into bounded, evidence-backed corrections under `TargetProjects/nextlens/src/NextLens`.
 
 ## Slice 1 - Skill Registration And Entrypoint
 
-Create the `bmad-nextlens-bugfix` skill surface and expose the `nextlens-bugfix` capability according to existing NextLens module conventions.
+Create the Lens-owned `nextlens` bugfix skill surface in `lens.core.src` and expose the operator command or prompt according to Lens module conventions.
 
 Acceptance criteria:
 
-- The skill is discoverable from NextLens module metadata.
+- The skill is discoverable from Lens skill and prompt metadata.
 - Module help describes required inputs: what happened, what should have happened, and chat history.
-- The entrypoint states the NextLens implementation write boundary.
+- The entrypoint states both boundaries: skill source in `lens.core.src`, runtime fixes in `TargetProjects/nextlens/src/NextLens`.
 
-Validation notes: run the existing module discovery/help checks and confirm the new capability appears once with consistent naming.
+Validation notes: run the Lens module discovery/help checks and confirm the new capability appears once with consistent naming.
 
 ## Slice 2 - Intake Schema And Parser
 
@@ -76,6 +76,7 @@ Acceptance criteria:
 - Proposed edits outside the allowed target root are rejected before mutation.
 - The handoff includes validation and evidence requirements.
 - Lifecycle requirements for story-backed dev work are surfaced before implementation begins.
+- Tests distinguish the `lens.core.src` skill source root from the runtime target repo root.
 
 Validation notes: add Windows and POSIX path-normalization tests for allowed and prohibited write roots.
 
@@ -98,11 +99,11 @@ Round out operational checks and concise usage guidance.
 
 Acceptance criteria:
 
-- Doctor checks verify skill registration, module help, script availability, schema validity, docs path access, and boundary configuration.
+- Lens validation checks verify skill registration, prompt/help metadata, helper availability, schema validity, docs path access, and boundary configuration.
 - Tests cover parser, context loader, fix-spec generation, boundary enforcement, and Salmon metadata preservation.
 - Usage docs show the three required inputs and the expected bounded output without duplicating lifecycle conductor responsibilities.
 
-Validation notes: run the targeted NextLens test suite plus doctor or module validation commands available in the target repo.
+Validation notes: run targeted Lens skill tests plus any NextLens target-repo validation required by the generated fix specification.
 
 ## FinalizePlan Notes
 

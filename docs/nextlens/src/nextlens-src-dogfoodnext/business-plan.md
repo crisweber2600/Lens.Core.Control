@@ -16,6 +16,8 @@ NextLens development needs a purpose-built bugfix skill that behaves like the Le
 
 The product intent is a NextLens-specific bugfix skill that accepts three operator inputs: what happened, what should have happened, and the supporting chat history. It should turn those inputs into a governed, evidence-backed correction path for NextLens.
 
+Important boundary clarification: the new skill is authored in `lens.core.src` as a Lens-owned orchestration skill. When that skill runs, its implementation fixes are constrained to `TargetProjects/nextlens/src/NextLens`.
+
 ## Operator And User
 
 - Primary operator: a Lens or NextLens conductor initiating a targeted fix from observed chat behavior.
@@ -26,12 +28,12 @@ The product intent is a NextLens-specific bugfix skill that accepts three operat
 
 - Reduces rediscovery by converting chat history into a compact fix specification.
 - Reuses the proven Lens-core-bugfix pattern for branch discipline, evidence, verification, and closure.
-- Keeps NextLens corrections inside `TargetProjects/nextlens/src/NextLens` during implementation.
+- Keeps the bugfix skill source in `lens.core.src` while keeping runtime NextLens corrections inside `TargetProjects/nextlens/src/NextLens`.
 - Improves review quality by preserving the gap between actual behavior and expected behavior as explicit evidence.
 
 ## Scope
 
-- Add a NextLens bugfix skill capability, exposed as `bmad-nextlens-bugfix` and/or `nextlens-bugfix` according to the existing module conventions.
+- Add a Lens-owned NextLens bugfix skill in `lens.core.src`, exposed through the Lens skill and prompt conventions.
 - Intake the three required inputs: what happened, what should have happened, and chat history evidence.
 - Read design context from `docs/nextlens/src` so fixes can be framed against current NextLens guidance.
 - Generate a bounded fix specification that identifies affected surfaces, expected correction, evidence references, validation requirements, and write boundaries.
@@ -42,15 +44,15 @@ The product intent is a NextLens-specific bugfix skill that accepts three operat
 
 - Do not implement the skill or target repo code in this ExpressPlan package.
 - Do not create a generic Lens-wide bugfix skill.
+- Do not author the new skill inside `TargetProjects/nextlens/src/NextLens`; that repository is the fix target, not the skill source.
 - Do not write directly to governance feature folders, governance docs mirrors, release clones, or unrelated control-root files.
 - Do not bypass FinalizePlan story generation, dev story gates, peer review, or target repo verification.
 - Do not automatically close Salmon signals without evidence and the approved closure path.
 
 ## Dependencies
 
-- Existing NextLens module capability registration in `TargetProjects/nextlens/src/NextLens/skills/module.yaml`.
-- Existing NextLens skill surface under `TargetProjects/nextlens/src/NextLens/.agents/skills/`.
-- Shared NextLens skill scripts under `.agents/skills/bmad-nextlens/scripts/`.
+- Lens source skill, prompt, registry, and release-sync surfaces in `lens.core.src`.
+- Target repo clone at `TargetProjects/nextlens/src/NextLens`, including the NextLens module assets and tests that future bugfixes may modify.
 - Current design context under `docs/nextlens/src`.
 - TopDownLens bugfix guidance for evidence capture, branch discipline, target-only implementation, verification, PR recording, and Salmon closure.
 - ExpressPlan constitution result: planning requires business and technical plans; dev requires stories; review is enforced.
@@ -67,6 +69,6 @@ The product intent is a NextLens-specific bugfix skill that accepts three operat
 
 - FinalizePlan can generate implementation stories without rediscovering the problem or expected capability boundaries.
 - The future skill has a clear intake contract for actual behavior, expected behavior, and chat history evidence.
-- The future workflow reads NextLens design context from `docs/nextlens/src` and writes implementation changes only to `TargetProjects/nextlens/src/NextLens`.
+- The future skill is implemented in `lens.core.src`, reads NextLens design context from `docs/nextlens/src`, and writes runtime implementation fixes only to `TargetProjects/nextlens/src/NextLens`.
 - The future workflow can generate a fix specification suitable for implementation delegation and review.
 - Registration, validation, evidence recording, and Salmon linkage are covered by implementation slices and acceptance criteria.
