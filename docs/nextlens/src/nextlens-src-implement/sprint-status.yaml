@@ -319,7 +319,7 @@ sprints:
     target_date: "2026-11-12"
     estimated_points: 5
     priority: "high"
-    status: in-progress
+    status: complete
     stories:
       - story_id: "11.4"
         status: done
