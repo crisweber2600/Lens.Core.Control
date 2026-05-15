@@ -150,7 +150,7 @@ sprints:
         status: done
         blocked_by: ["3.3", "6.1"]
       - story_id: "6.3"
-        status: ready
+        status: in-progress
         blocked_by: ["6.2"]
     dependencies:
       before: ["EP3"]
