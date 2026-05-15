@@ -71,11 +71,15 @@ Optional fields may include severity, originating Salmon signal ID, evidence ref
 
 The normalized intake should map cleanly to the bug-reporting model: title, description, repro or observed transcript summary, expected behavior, actual behavior, chat evidence reference, source `nextlens-bugfix`, queue `QuickDev`, and namespace `nextlens`.
 
+Before durable artifact creation, the intake layer must minimize transcript persistence: summarize noisy chat history, preserve approved evidence references, and reject or redact obvious secrets or credentials when feasible. Raw chat should not be copied into bug artifacts unless the operator supplied an approved evidence artifact intended for durable retention.
+
 ## Design Context Loader
 
 The context loader should read from `docs/nextlens/src` and select relevant NextLens design guidance, with the TopDownLens bugfix flow as the initial pattern reference. It should treat governance and release surfaces as read-only unless an approved Lens operation handles publication or promotion outside this skill.
 
 The loader should return a compact context bundle with source paths, extracted constraints, known workflow patterns, and any conflicts or missing context that require operator resolution.
+
+Path resolution must be explicit and portable. The skill should resolve the control repo root, `docs/nextlens/src`, and `TargetProjects/nextlens/src/NextLens` from Lens configuration or feature metadata, support operator overrides only when validated inside the approved roots, and fail with actionable diagnostics when invoked from an unexpected current working directory.
 
 ## Fix Specification Contract
 
@@ -97,6 +101,8 @@ The fix-spec generator should produce an implementation-ready artifact or in-mem
 If a Salmon signal is present, the skill should preserve signal ID, severity, recommended action, and evidence references in the fix specification. High or blocking signals should follow the bugfix pattern: capture evidence, prepare a dedicated correction path, verify the target repo change, record PR evidence, and close or supersede the originating signal only through the approved route.
 
 If no Salmon signal is present, the skill should still produce evidence fields that can later be attached to a signal or review artifact.
+
+Doctor owns validation health checks. The bugfix flow should invoke or reference NextLens Doctor validation outputs rather than reimplementing Doctor logic, and closure evidence should identify whether Doctor validation passed, was not applicable, or is intentionally deferred with rationale.
 
 ## Delegation And Write Boundary
 
@@ -126,5 +132,6 @@ Any attempt to write outside the target root should stop the workflow with a bou
 - Input transcripts can be large; scripts should summarize or reference durable evidence without storing excessive raw chat.
 - Context loading can become too broad; selection should prefer explicit feature docs and known NextLens guidance.
 - Boundary enforcement must be tested at path-normalization edges, especially on Windows paths.
+- Boundary enforcement must cover traversal segments, path casing, resolved symlink or junction escapes where supported, and both Windows and POSIX separators.
 - Lens prompt, skill, and help metadata must stay synchronized with the skill entrypoint.
 - The namespace addition changes the existing one-level `bugs/{status}` lookup assumption; FinalizePlan must call this out so implementation does not accidentally close or duplicate the wrong bug artifact.

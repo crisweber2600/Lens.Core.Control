@@ -37,10 +37,12 @@ Acceptance criteria:
 - Required fields are `what_happened`, `what_should_have_happened`, and `chat_history`.
 - Optional fields support severity, Salmon signal ID, evidence references, suspected surface, validation request, and operator notes.
 - The normalized intake maps to title, description, repro or observed evidence summary, expected behavior, actual behavior, and chat evidence reference.
+- Durable bug artifacts summarize chat history and store evidence references instead of raw transcripts by default.
+- Obvious secrets or credentials in chat input are rejected or redacted when feasible before durable artifact writing.
 - Missing required fields produce actionable errors.
 - Noisy chat history is accepted and summarized or referenced without losing the behavior gap.
 
-Validation notes: add parser tests for complete input, missing required fields, large transcript input, optional Salmon metadata, and expected/actual mapping.
+Validation notes: add parser tests for complete input, missing required fields, large transcript input, optional Salmon metadata, expected/actual mapping, transcript minimization, and secret-like input handling.
 
 ## Slice 3 - Namespaced Bug Report Creation
 
@@ -63,11 +65,13 @@ Load relevant read-only planning and design context from `docs/nextlens/src` for
 Acceptance criteria:
 
 - The loader can include the TopDownLens bugfix flow and related examples as pattern references.
+- The loader resolves the control repo root and `docs/nextlens/src` from Lens configuration or feature metadata rather than assuming the current working directory.
+- Operator overrides are accepted only when they resolve inside approved roots.
 - Returned context includes source paths and extracted constraints.
 - Missing or conflicting context is reported without guessing.
 - Governance and release surfaces are not treated as implementation write locations.
 
-Validation notes: add fixture tests that load a small docs set and produce stable context references.
+Validation notes: add fixture tests that load a small docs set, run from a non-root working directory, reject an escaped override, and produce stable context references.
 
 ## Slice 5 - Bugfix Specification Generation
 
@@ -98,7 +102,7 @@ Acceptance criteria:
 - Tests distinguish the `lens.core.src` skill source root from the runtime target repo root.
 - No-op completion, branch reuse for a different bug, or missing implementation commit blocks success.
 
-Validation notes: add Windows and POSIX path-normalization tests for allowed and prohibited write roots.
+Validation notes: add Windows and POSIX path-normalization tests for allowed and prohibited write roots, including traversal segments, path casing, relative segments, and resolved symlink or junction escapes where supported.
 
 ## Slice 7 - Validation, Evidence, PR Recording, And Salmon Routing
 
@@ -107,6 +111,8 @@ Add validation and evidence handling for completed bugfix work.
 Acceptance criteria:
 
 - The workflow records validation output references expected by reviewers.
+- The workflow invokes or references NextLens Doctor validation output instead of reimplementing Doctor checks.
+- Closure evidence records whether Doctor validation passed, was not applicable, or was intentionally deferred with rationale.
 - The conductor pushes the target branch and creates or reuses a PR before reporting success.
 - The PR URL is recorded on the namespaced bug artifact before closeout.
 - The bug artifact moves to `bugs/nextlens/Fixed/` only after validation and PR evidence exist.
