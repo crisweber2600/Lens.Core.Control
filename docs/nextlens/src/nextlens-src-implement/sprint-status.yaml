@@ -201,7 +201,7 @@ sprints:
         status: done
         blocked_by: ["4.1", "4.3", "3.3", "6.2", "7.2"]
       - story_id: "8.3"
-        status: ready
+        status: in-progress
         blocked_by: ["8.2", "7.4", "1.3"]
       - story_id: "8.4"
         status: ready
