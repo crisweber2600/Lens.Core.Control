@@ -6,6 +6,10 @@ updated_at: 2026-05-15
 inputDocuments:
   - docs/nextlens/src/nextlens-src-topdownlens/guides/bugfix-flow.md
   - docs/nextlens/src/nextlens-src-topdownlens/examples/bugfix-example.md
+  - lens.core/_bmad/lens-work/skills/bmad-lens-core-bugfix/SKILL.md
+  - lens.core/_bmad/lens-work/scripts/bug-reporter-ops.py
+  - lens.core/_bmad/lens-work/scripts/bugbash_schema.py
+  - lens.core/_bmad/lens-work/scripts/bugbash_scope_guard.py
 ---
 
 # Tech Plan
@@ -21,13 +25,39 @@ There are two distinct boundaries:
 
 Governance repositories, governance docs mirrors, release clone surfaces, and unrelated control-root files remain out of scope for runtime implementation writes.
 
+## Lens Core Bugfix Flow Analysis
+
+The NextLens design should reuse the mechanics of `/lens-core-bugfix`, not only its name:
+
+1. **Structured intake first.** The core flow requires title, description, repro steps, expected behavior, and actual behavior. It calls `bug-reporter-ops.py create-bug` with `--source lens-core-bugfix`, `--queue QuickDev`, and a chat-log marker so the bug artifact has durable provenance.
+2. **Stable bug identity.** `bug-reporter-ops.py` derives `slug = {title-slug}-{sha256(title+description)[:8]}` and checks all status folders for duplicates. The slug becomes the source of branch identity.
+3. **Fresh branch rule.** The conductor derives `feature_id = lens-core-bugfix-{bug_slug}` and creates a fresh target branch from the base branch through `git-orchestration-ops.py prepare-dev-branch`. It blocks branch reuse, branch scope mismatches, dirty target worktrees, and no-op completion.
+4. **Delegation is bounded.** The conductor delegates implementation to `bmad-quick-dev`, but the delegate stops after implementation and local commit. The conductor owns push, PR creation or reuse, PR recording, bug closeout, and final output verification.
+5. **Closeout is stateful.** The conductor records the PR URL through `record-quickdev-pr`, then closes the artifact through `close-quickdev-bug`. A successful run requires a non-empty working branch, commit hash, PR URL, and final bug artifact path under `bugs/Fixed/`.
+6. **Operational bug artifacts are special.** Existing bugbash docs treat `bugs/` as operational state written by approved bug scripts, while feature docs mirrors under `features/` still require publication boundaries.
+
+For NextLens, the adapted flow should preserve these mechanics with different configuration: source skill in `lens.core.src`, bug namespace `nextlens`, target repo `TargetProjects/nextlens/src/NextLens`, branch prefix such as `feature/nextlens-bugfix-{bug_slug}`, and design context from `docs/nextlens/src`.
+
+## NextLens Bug Report Namespace
+
+The bug report created by this skill must be stored in a NextLens-specific folder. The planned artifact layout is:
+
+```text
+bugs/nextlens/New/{slug}.md
+bugs/nextlens/QuickDev/{slug}.md
+bugs/nextlens/Inprogress/{slug}.md
+bugs/nextlens/Fixed/{slug}.md
+```
+
+The status folders should mirror the existing bugbash state model (`New`, `QuickDev`, `Inprogress`, `Fixed`), but the `nextlens` namespace prevents NextLens defects from mixing with Lens core bug reports. The implementation may extend the existing bug reporter operation with a namespace argument or introduce a NextLens-specific wrapper, but it must retain slug idempotency, schema validation, scope guarding, PR recording, and closeout behavior.
+
 ## Expected Capability Additions
 
 - Add a dedicated Lens skill such as `lens-nextlens-bugfix` or equivalent under the `lens.core.src` skill surface.
 - Expose an operator-facing prompt or command alias according to Lens skill and prompt conventions.
 - Update Lens skill registry, help, and release-sync metadata so the capability can be discovered from the Lens module.
-- Add source-owned helpers in `lens.core.src` for chat-history intake, design-context loading, fix-spec generation, and runtime boundary validation.
-- Extend Lens validation checks so missing registration, missing helpers, invalid intake, inaccessible docs context, or target-boundary misconfiguration are reported clearly.
+- Add source-owned helpers in `lens.core.src` for chat-history intake, namespaced bug report creation, design-context loading, fix-spec generation, runtime boundary validation, PR recording, and closeout.
+- Extend Lens validation checks so missing registration, missing helpers, invalid intake, inaccessible docs context, namespaced bug folder misconfiguration, or target-boundary misconfiguration are reported clearly.
 
 ## Intake Contract
 
@@ -38,6 +68,8 @@ The bugfix skill should require these inputs:
 - `chat_history`: evidence text, transcript excerpt, or path to an approved evidence artifact.
 
 Optional fields may include severity, originating Salmon signal ID, evidence references, suspected surface, requested validation, and operator notes. The parser should normalize these inputs into a structured intake object before any implementation handoff.
+
+The normalized intake should map cleanly to the bug-reporting model: title, description, repro or observed transcript summary, expected behavior, actual behavior, chat evidence reference, source `nextlens-bugfix`, queue `QuickDev`, and namespace `nextlens`.
 
 ## Design Context Loader
 
@@ -50,6 +82,7 @@ The loader should return a compact context bundle with source paths, extracted c
 The fix-spec generator should produce an implementation-ready artifact or in-memory handoff containing:
 
 - Feature ID and bugfix title.
+- Namespaced bug artifact path under `bugs/nextlens/{status}/{slug}.md`.
 - Actual behavior, expected behavior, and summarized evidence.
 - Relevant design-context references.
 - Suspected target files or capability surfaces when known.
@@ -75,14 +108,17 @@ The bugfix skill should prepare implementation delegation, not perform broad dis
 - Dev work has an implementation story when lifecycle gates require one.
 - The Lens skill source root is not treated as the NextLens fix target except while implementing this feature's own skill code.
 
+The conductor should then mirror the core bugfix completion gate: prepare a fresh target branch from the configured base branch, delegate implementation, require a real implementation commit, push the branch, create or reuse a PR, record the PR URL on the namespaced bug artifact, close the bug artifact only after validation evidence exists, and block success if any required output is missing.
+
 Any attempt to write outside the target root should stop the workflow with a boundary violation.
 
 ## Validation Strategy
 
 - Unit tests for the intake parser with complete, missing, and noisy chat-history inputs.
 - Unit tests for fix-spec generation and required field enforcement.
+- Unit tests for namespaced bug artifact creation, duplicate detection, PR recording, and closeout transitions.
 - Boundary tests proving prohibited paths are rejected.
-- Integration-style fixture covering chat history plus docs context producing a deterministic fix spec.
+- Integration-style fixture covering chat history plus docs context producing a deterministic bug artifact, fresh branch identity, and fix spec.
 - Lens validation that checks skill registration, prompt/help metadata, helper availability, docs context access, target repo resolution, and schema health.
 
 ## Technical Risks
@@ -91,3 +127,4 @@ Any attempt to write outside the target root should stop the workflow with a bou
 - Context loading can become too broad; selection should prefer explicit feature docs and known NextLens guidance.
 - Boundary enforcement must be tested at path-normalization edges, especially on Windows paths.
 - Lens prompt, skill, and help metadata must stay synchronized with the skill entrypoint.
+- The namespace addition changes the existing one-level `bugs/{status}` lookup assumption; FinalizePlan must call this out so implementation does not accidentally close or duplicate the wrong bug artifact.

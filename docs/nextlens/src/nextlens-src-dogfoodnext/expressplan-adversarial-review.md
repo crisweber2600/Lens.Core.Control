@@ -10,6 +10,8 @@ The required ExpressPlan artifacts are present, and the packet is coherent enoug
 
 Clarification captured after review: the new skill source belongs in `lens.core.src`. The skill's runtime fix target is `TargetProjects/nextlens/src/NextLens`.
 
+Additional clarification captured after review: when the skill creates a bug report, it should store the artifact under a `nextlens` bug namespace such as `bugs/nextlens/QuickDev/{slug}.md`. FinalizePlan should preserve the deeper `/lens-core-bugfix` mechanics in this design: stable content-hash slug, fresh branch derived from the slug, mandatory target implementation commit, push and PR creation by the conductor, PR recording on the bug artifact, and closeout into the namespaced `Fixed` folder only after validation evidence exists.
+
 ## Findings
 
 ### Critical
@@ -33,6 +35,7 @@ Clarification captured after review: the new skill source belongs in `lens.core.
 | M2 | Medium | Complexity and Risk | The TopDownLens bugfix guidance includes branch discipline, PR evidence, verification, and Salmon closure, while this plan focuses mainly on fix-spec generation and delegation. The handoff from fix spec to branch/PR/evidence capture remains under-specified. | Add a dedicated implementation slice or story criteria for correction branch preparation, validation evidence references, PR URL recording, and approved Salmon closure or supersession routing. |
 | M3 | Medium | Coverage Gaps | Registration is called out, but the packet does not yet identify the Lens-generated surfaces that must stay synchronized or how aliases for the `lens.core.src` skill are validated. | FinalizePlan should require a registration matrix covering Lens skill folder, prompt stub or command alias, help output, release-sync metadata, setup refresh, and validation checks. |
 | M4 | Medium | Assumptions and Blind Spots | The design-context loader is expected to select relevant guidance from a broad docs tree, but the selection rules are not testable yet. A noisy loader could overfit stale TopDownLens docs or miss the bugfix-flow constraints that justify the feature. | Require deterministic context selection rules, source-path reporting, conflict reporting, and fixture tests that prove the loader selects the bugfix guide and example without treating governance or release mirrors as write targets. |
+| M5 | Medium | Coverage Gaps | The original packet did not specify where the generated bug report lives. Reusing the generic Lens core queue would blur ownership and make closeout ambiguous. | Store NextLens bug reports under a `nextlens` namespace below the bug store, mirror the existing status folders, and update create/record/close operations to resolve namespaced artifacts. |
 | L1 | Low | Complexity and Risk | Windows and POSIX path-normalization tests are mentioned, but path casing and symlink or relative-path escape cases are not named explicitly. | Include path traversal, case variation, relative segment, and symlink or resolved-path cases in boundary enforcement tests where the platform supports them. |
 
 ## Accepted Risks
@@ -53,12 +56,13 @@ Sally (Release Engineer): The bugfix flow inherits branch, PR, and closure expec
 2. Should bugfix routing create Salmon signals, consume existing Salmon signals, or support both with separate evidence rules?
 3. Which exact artifact stores the fix specification, and is it durable by default or only passed in memory to an implementation delegate?
 4. What transcript content is forbidden from durable artifacts, and what evidence reference is sufficient when raw chat cannot be copied?
-5. Which command or validator proves the command alias, module metadata, help text, shared scripts, and doctor checks are synchronized?
+5. Which namespaced bug artifact operation creates, records the PR, and closes `bugs/nextlens/...` without regressing existing Lens core bug reports?
 
 ## Open Questions Surfaced
 
 - FinalizePlan should decide whether the bugfix skill's design-context path and target repo path are configured, discovered from Lens feature metadata, or supplied explicitly by the operator.
 - FinalizePlan should define the ownership boundary between `nextlens-bugfix`, `nextlens-salmon`, and `nextlens-doctor`.
+- FinalizePlan should include the `bugs/nextlens/{status}/{slug}.md` namespace and specify whether it is implemented by extending existing bug reporter operations or by a NextLens-specific wrapper.
 - FinalizePlan should specify whether high and blocking Salmon inputs automatically require a dedicated correction branch or only require the generated fix specification to recommend one.
 - FinalizePlan should define durable evidence storage rules for summarized chat history and validation output references.
 - FinalizePlan should require registration and discovery validation before any implementation delegation behavior is added.

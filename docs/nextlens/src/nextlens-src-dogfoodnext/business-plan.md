@@ -6,6 +6,8 @@ updated_at: 2026-05-15
 inputDocuments:
   - docs/nextlens/src/nextlens-src-topdownlens/guides/bugfix-flow.md
   - docs/nextlens/src/nextlens-src-topdownlens/examples/bugfix-example.md
+  - lens.core/_bmad/lens-work/skills/bmad-lens-core-bugfix/SKILL.md
+  - lens.core/_bmad/lens-work/scripts/bug-reporter-ops.py
 ---
 
 # Business Plan
@@ -35,6 +37,7 @@ Important boundary clarification: the new skill is authored in `lens.core.src` a
 
 - Add a Lens-owned NextLens bugfix skill in `lens.core.src`, exposed through the Lens skill and prompt conventions.
 - Intake the three required inputs: what happened, what should have happened, and chat history evidence.
+- Create the bug report under a NextLens namespace, e.g. `bugs/nextlens/QuickDev/{slug}.md`, rather than mixing NextLens defects into the generic Lens core bug queue.
 - Read design context from `docs/nextlens/src` so fixes can be framed against current NextLens guidance.
 - Generate a bounded fix specification that identifies affected surfaces, expected correction, evidence references, validation requirements, and write boundaries.
 - Integrate with existing Salmon routing where a signal ID, severity, or recommended action is present.
@@ -52,6 +55,8 @@ Important boundary clarification: the new skill is authored in `lens.core.src` a
 ## Dependencies
 
 - Lens source skill, prompt, registry, and release-sync surfaces in `lens.core.src`.
+- Existing `/lens-core-bugfix` conductor behavior, especially its bug artifact creation, fresh branch rule, PR recording, and closeout gate.
+- Existing bug reporter operations for slug generation, duplicate detection, frontmatter schema, QuickDev provenance, PR recording, and closeout.
 - Target repo clone at `TargetProjects/nextlens/src/NextLens`, including the NextLens module assets and tests that future bugfixes may modify.
 - Current design context under `docs/nextlens/src`.
 - TopDownLens bugfix guidance for evidence capture, branch discipline, target-only implementation, verification, PR recording, and Salmon closure.
@@ -69,6 +74,7 @@ Important boundary clarification: the new skill is authored in `lens.core.src` a
 
 - FinalizePlan can generate implementation stories without rediscovering the problem or expected capability boundaries.
 - The future skill has a clear intake contract for actual behavior, expected behavior, and chat history evidence.
+- Bug report artifacts are written through an approved operation into a `nextlens` folder under the bug store, with status transitions and closeout evidence kept separate from Lens core bug reports.
 - The future skill is implemented in `lens.core.src`, reads NextLens design context from `docs/nextlens/src`, and writes runtime implementation fixes only to `TargetProjects/nextlens/src/NextLens`.
 - The future workflow can generate a fix specification suitable for implementation delegation and review.
-- Registration, validation, evidence recording, and Salmon linkage are covered by implementation slices and acceptance criteria.
+- Registration, validation, branch preparation, PR recording, bug closeout, evidence recording, and Salmon linkage are covered by implementation slices and acceptance criteria.
