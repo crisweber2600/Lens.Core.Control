@@ -127,7 +127,7 @@ sprints:
         status: done
         blocked_by: ["5.1"]
       - story_id: "5.3"
-        status: ready
+        status: in-progress
         blocked_by: ["5.2", "5.1"]
     dependencies:
       before: []
