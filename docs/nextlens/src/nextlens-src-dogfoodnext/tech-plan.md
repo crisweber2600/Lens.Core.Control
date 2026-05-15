@@ -1,8 +1,9 @@
 ---
 feature: nextlens-src-dogfoodnext
 doc_type: tech-plan
+status: draft
 track: express
-updated_at: 2026-05-15
+phase: expressplan
 inputDocuments:
   - docs/nextlens/src/nextlens-src-topdownlens/guides/bugfix-flow.md
   - docs/nextlens/src/nextlens-src-topdownlens/examples/bugfix-example.md
@@ -10,6 +11,15 @@ inputDocuments:
   - lens.core/_bmad/lens-work/scripts/bug-reporter-ops.py
   - lens.core/_bmad/lens-work/scripts/bugbash_schema.py
   - lens.core/_bmad/lens-work/scripts/bugbash_scope_guard.py
+goal: "Define the technical contract for a Lens-owned NextLens bugfix skill, including namespaced bug operations, design-context loading, and runtime write-boundary enforcement."
+key_decisions:
+  - Reuse the existing `/lens-core-bugfix` mechanics for intake, slug identity, branch preparation, PR recording, and closeout.
+  - Store operational bug artifacts under `bugs/nextlens/{New|QuickDev|Inprogress|Fixed}/{slug}.md` to isolate NextLens defects from Lens core bugs.
+  - Resolve control-repo docs context from `docs/nextlens/src` while constraining runtime implementation edits to `TargetProjects/nextlens/src/NextLens`.
+open_questions: []
+depends_on: [business-plan]
+blocks: []
+updated_at: '2026-05-15T19:51:52Z'
 ---
 
 # Tech Plan

@@ -1,3 +1,18 @@
+---
+feature: nextlens-src-dogfoodnext
+doc_type: adversarial-review
+phase: expressplan
+source: phase-complete
+verdict: pass-with-warnings
+status: responses-recorded
+critical_count: 0
+high_count: 2
+medium_count: 5
+low_count: 1
+carry_forward_blockers: []
+updated_at: '2026-05-15T19:51:52Z'
+---
+
 # Adversarial Review: nextlens-src-dogfoodnext / expressplan
 
 **Reviewed:** 2026-05-15T00:00:00Z  
@@ -65,4 +80,4 @@ Sally (Release Engineer): The bugfix flow inherits branch, PR, and closure expec
 - FinalizePlan should include the `bugs/nextlens/{status}/{slug}.md` namespace and specify whether it is implemented by extending existing bug reporter operations or by a NextLens-specific wrapper. nextlens specific
 - FinalizePlan should specify whether high and blocking Salmon inputs automatically require a dedicated correction branch or only require the generated fix specification to recommend one. not in scope
 - FinalizePlan should define durable evidence storage rules for summarized chat history and validation output references. not a concern
-- FinalizePlan should require registration and discovery validation before any implementation delegation behavior is added. 
+- FinalizePlan should require registration and discovery validation before any implementation delegation behavior is added.

@@ -1,13 +1,23 @@
 ---
 feature: nextlens-src-dogfoodnext
 doc_type: business-plan
+status: draft
 track: express
-updated_at: 2026-05-15
+phase: expressplan
 inputDocuments:
   - docs/nextlens/src/nextlens-src-topdownlens/guides/bugfix-flow.md
   - docs/nextlens/src/nextlens-src-topdownlens/examples/bugfix-example.md
   - lens.core/_bmad/lens-work/skills/bmad-lens-core-bugfix/SKILL.md
   - lens.core/_bmad/lens-work/scripts/bug-reporter-ops.py
+goal: "Define the business scope for a Lens-owned NextLens bugfix skill that creates namespaced bug artifacts and constrains runtime fixes to the approved NextLens target repo."
+key_decisions:
+  - The bugfix skill is authored in `lens.core.src` as a Lens-owned orchestration capability, not inside the NextLens target repo.
+  - Runtime implementation fixes produced by the skill are constrained to `TargetProjects/nextlens/src/NextLens`.
+  - NextLens bug artifacts must use a dedicated namespace such as `bugs/nextlens/QuickDev/{slug}.md`.
+open_questions: []
+depends_on: []
+blocks: []
+updated_at: '2026-05-15T19:51:52Z'
 ---
 
 # Business Plan

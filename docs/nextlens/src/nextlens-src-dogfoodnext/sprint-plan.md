@@ -1,13 +1,23 @@
 ---
 feature: nextlens-src-dogfoodnext
 doc_type: sprint-plan
+status: approved
 track: express
-updated_at: 2026-05-15
+phase: expressplan
 inputDocuments:
   - docs/nextlens/src/nextlens-src-topdownlens/guides/bugfix-flow.md
   - docs/nextlens/src/nextlens-src-topdownlens/examples/bugfix-example.md
   - lens.core/_bmad/lens-work/skills/bmad-lens-core-bugfix/SKILL.md
   - lens.core/_bmad/lens-work/scripts/bug-reporter-ops.py
+goal: "Sequence implementation-ready slices for a Lens-owned NextLens bugfix skill that turns chat-history failures into namespaced bug reports and bounded NextLens fixes."
+key_decisions:
+  - The implementation work starts with Lens skill registration, intake normalization, namespaced bug creation, and bounded handoff mechanics.
+  - Validation must cover transcript minimization, namespace-aware bug operations, context loading, boundary enforcement, and conductor-owned PR evidence.
+  - The future implementation remains source-owned in `lens.core.src` while runtime fixes stay limited to `TargetProjects/nextlens/src/NextLens`.
+open_questions: []
+depends_on: [business-plan, tech-plan]
+blocks: []
+updated_at: '2026-05-15T19:51:52Z'
 ---
 
 # Sprint Plan
