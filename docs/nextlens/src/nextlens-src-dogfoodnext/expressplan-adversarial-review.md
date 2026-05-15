@@ -52,17 +52,17 @@ Sally (Release Engineer): The bugfix flow inherits branch, PR, and closure expec
 
 ## Gaps You May Not Have Considered
 
-1. What is the canonical way for a `lens.core.src` skill to locate control-repo design context and the NextLens target repo from different execution contexts?
-2. Should bugfix routing create Salmon signals, consume existing Salmon signals, or support both with separate evidence rules?
-3. Which exact artifact stores the fix specification, and is it durable by default or only passed in memory to an implementation delegate?
-4. What transcript content is forbidden from durable artifacts, and what evidence reference is sufficient when raw chat cannot be copied?
-5. Which namespaced bug artifact operation creates, records the PR, and closes `bugs/nextlens/...` without regressing existing Lens core bug reports?
+1. What is the canonical way for a `lens.core.src` skill to locate control-repo design context and the NextLens target repo from different execution contexts? its in nextlens-src
+2. Should bugfix routing create Salmon signals, consume existing Salmon signals, or support both with separate evidence rules? no not yet
+3. Which exact artifact stores the fix specification, and is it durable by default or only passed in memory to an implementation delegate? it works the same as lens-core-bugfix
+4. What transcript content is forbidden from durable artifacts, and what evidence reference is sufficient when raw chat cannot be copied? not a concern
+5. Which namespaced bug artifact operation creates, records the PR, and closes `bugs/nextlens/...` without regressing existing Lens core bug reports? because its a different source code being modified this is not a concern
 
 ## Open Questions Surfaced
 
-- FinalizePlan should decide whether the bugfix skill's design-context path and target repo path are configured, discovered from Lens feature metadata, or supplied explicitly by the operator.
-- FinalizePlan should define the ownership boundary between `nextlens-bugfix`, `nextlens-salmon`, and `nextlens-doctor`.
-- FinalizePlan should include the `bugs/nextlens/{status}/{slug}.md` namespace and specify whether it is implemented by extending existing bug reporter operations or by a NextLens-specific wrapper.
-- FinalizePlan should specify whether high and blocking Salmon inputs automatically require a dedicated correction branch or only require the generated fix specification to recommend one.
-- FinalizePlan should define durable evidence storage rules for summarized chat history and validation output references.
-- FinalizePlan should require registration and discovery validation before any implementation delegation behavior is added.
+- FinalizePlan should decide whether the bugfix skill's design-context path and target repo path are configured, discovered from Lens feature metadata, or supplied explicitly by the operator. it should be explicit. this is a purpose built skill.
+- FinalizePlan should define the ownership boundary between `nextlens-bugfix`, `nextlens-salmon`, and `nextlens-doctor`. nextlens-bugfix is completely separate than other nextlens skills because its truly lens-nextlens-bugfix
+- FinalizePlan should include the `bugs/nextlens/{status}/{slug}.md` namespace and specify whether it is implemented by extending existing bug reporter operations or by a NextLens-specific wrapper. nextlens specific
+- FinalizePlan should specify whether high and blocking Salmon inputs automatically require a dedicated correction branch or only require the generated fix specification to recommend one. not in scope
+- FinalizePlan should define durable evidence storage rules for summarized chat history and validation output references. not a concern
+- FinalizePlan should require registration and discovery validation before any implementation delegation behavior is added. 
