@@ -79,6 +79,14 @@ Sally (Release Engineer): The branch and PR steps must be conductor-owned. Do no
 - Exact skill command naming is deferred to bundle stories, but the bundle must require one canonical name and synchronized registration validation.
 - Exact transcript redaction implementation is deferred to dev, but durable raw transcript persistence is not acceptable by default.
 
+## Post-Bundle Metadata Reconciliation
+
+- Generated `epics.md`, `stories.md`, `implementation-readiness.md`, `sprint-status.yaml`, and eight story files under `stories/`.
+- Verified every story referenced by `sprint-status.yaml` has a corresponding story file with required story frontmatter.
+- Registered `target_repos` in `feature.yaml` for `lens.core.src` and `NextLens` through the approved `lens-feature-yaml` boundary.
+- Updated `implementation-readiness.md` to mark target repo metadata as reconciled.
+- No accepted finding was deferred beyond dev; implementation-specific choices remain captured as story acceptance criteria.
+
 ## Verdict
 
 `pass-with-warnings`. Continue to publish the reviewed ExpressPlan artifacts, create or verify the planning PR, and generate the downstream FinalizePlan bundle after the track-specific input-ready gate passes.
