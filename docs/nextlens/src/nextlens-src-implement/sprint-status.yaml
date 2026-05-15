@@ -319,10 +319,10 @@ sprints:
     target_date: "2026-11-12"
     estimated_points: 5
     priority: "high"
-    status: not-started
+    status: in-progress
     stories:
       - story_id: "11.4"
-        status: ready
+        status: in-progress
         blocked_by: ["11.2", "11.3", "10.3"]
     dependencies:
       before:
