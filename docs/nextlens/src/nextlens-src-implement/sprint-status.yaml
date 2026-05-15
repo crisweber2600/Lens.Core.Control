@@ -164,19 +164,19 @@ sprints:
     target_date: "2026-08-20"
     estimated_points: 18
     priority: "high"
-    status: not-started
+    status: complete
     stories:
       - story_id: "7.1"
         status: done
         blocked_by: ["3.3", "6.1"]
       - story_id: "7.2"
-        status: ready
+        status: done
         blocked_by: ["7.1"]
       - story_id: "7.3"
-        status: ready
+        status: done
         blocked_by: ["7.2", "6.3"]
       - story_id: "7.4"
-        status: ready
+        status: done
         blocked_by: ["7.3", "1.3"]
     dependencies:
       before:
