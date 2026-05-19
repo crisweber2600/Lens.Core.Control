@@ -391,3 +391,86 @@ The BMAD brainstorming workflow setup is complete. The selected technique approa
 | Out-of-scope vs. discovery | Out-of-scope items are excluded from the current packet but can later become separate candidates or Salmon corrections if implementation evidence proves they are necessary. They do not automatically expand the packet. |
 
 **Constraint Mapping Third Breakthrough:** The future design likely needs two gates after candidate selection: a **packet validity gate** that allows safe archive capture, and a later **BMAD handoff readiness gate** that determines whether execution can begin without invented context.
+
+### Morphological Analysis
+
+**Interactive Focus:** Explore design dimensions and coherent option combinations for the future Bottom-Up LENS packet creator.
+
+**Transition Rationale:** Question Storming generated the problem space, and Constraint Mapping identified safety rails. Morphological Analysis now turns those dimensions into possible implementation shapes without prematurely choosing architecture.
+
+#### Design Dimensions Matrix
+
+| Dimension | Option A | Option B | Option C |
+|---|---|---|---|
+| Entry Surface | New bottom-up command | Mode of `new-feature` | Track within NextLens planning |
+| Candidate Handling | Single selected candidate only | Multiple candidates with one selected | Candidate backlog notes retained separately |
+| Packet Validity Gate | Strict before write | Draft allowed with blockers | Save only after preview confirmation |
+| BMAD Readiness Gate | Same as packet validity | Separate post-packet validator | Deferred until user invokes BMAD |
+| Storage Location | Active feature docs path | `docs/features/<feature-id>/` archive path | Dedicated bottom-up archive namespace |
+| Deferred Candidate Treatment | Discard after selection | Store as unranked notes | Convert to future feature candidates |
+| Non-Effects Proof | Checklist in preview | Automated validator receipt | Both preview checklist and validator receipt |
+| Evidence Handling | No evidence until implementation | Archive evidence only | Archive plus later adjacency proposal job |
+| Salmon Handling | No Salmon at packet creation | Salmon only after BMAD execution | Salmon on sufficiency failures too |
+| Promotion Handling | Not available in MVP | Advisory candidates after repeated pressure | Human-gated promotion workflow |
+
+#### Coherent Combination Candidates
+
+**Combination 1: Minimal Packet Creator**
+
+- Entry Surface: New bottom-up command
+- Candidate Handling: Single selected candidate only
+- Packet Validity Gate: Save only after preview confirmation
+- BMAD Readiness Gate: Separate post-packet validator
+- Storage Location: Active feature docs path for this top-down delivery; future Work Archive path for real bottom-up runs
+- Deferred Candidate Treatment: Store as unranked notes
+- Non-Effects Proof: Both preview checklist and validator receipt
+- Evidence Handling: No evidence until implementation
+- Salmon Handling: No Salmon at packet creation
+- Promotion Handling: Not available in MVP
+
+**Combination 2: Track-Centric Bottom-Up Lane**
+
+- Entry Surface: Track within NextLens planning
+- Candidate Handling: Multiple candidates with one selected
+- Packet Validity Gate: Strict before write
+- BMAD Readiness Gate: Same as packet validity
+- Storage Location: Dedicated bottom-up archive namespace
+- Deferred Candidate Treatment: Convert to future feature candidates
+- Non-Effects Proof: Automated validator receipt
+- Evidence Handling: Archive plus later adjacency proposal job
+- Salmon Handling: Salmon only after BMAD execution
+- Promotion Handling: Advisory candidates after repeated pressure
+
+**Combination 3: Discovery-Heavy Intake**
+
+- Entry Surface: Mode of `new-feature`
+- Candidate Handling: Candidate backlog notes retained separately
+- Packet Validity Gate: Draft allowed with blockers
+- BMAD Readiness Gate: Deferred until user invokes BMAD
+- Storage Location: `docs/features/<feature-id>/` archive path
+- Deferred Candidate Treatment: Store as unranked notes
+- Non-Effects Proof: Checklist in preview
+- Evidence Handling: Archive evidence only
+- Salmon Handling: Salmon on sufficiency failures too
+- Promotion Handling: Human-gated promotion workflow
+
+**Morphological Insight:** Combination 1 best matches the current top-down feature’s likely MVP because it implements the first safe slice: packet creation with hard anti-expansion gates, no runtime evidence systems, and no promotion machinery.
+
+#### Selected Hybrid MVP Shape
+
+The selected direction is a hybrid: bottom-up should be visible as a future NextLens track/lane, but the current MVP slice should implement only safe packet creation.
+
+**Selected Components:**
+
+- **New bottom-up command:** A dedicated entry surface makes the mode obvious and avoids overloading top-down feature creation semantics.
+- **Track within NextLens planning:** The command belongs to a future bottom-up lane/track in the product model, even if this top-down feature only designs the first mechanism.
+- **Single selected candidate only:** Each packet run creates one feature packet for one independently useful feature.
+- **Deferred candidates as unranked notes:** Other possible slices may be preserved as notes, but not as roadmap, priority, adjacency, dependency, or capability structure.
+- **Preview confirmation before write:** The user sees selected feature, scope, out-of-scope, assumptions, acceptance criteria, and non-effects proof before file creation.
+- **Separate BMAD readiness gate:** Packet validity and BMAD handoff readiness are separate. A packet can be valid for archive capture before it is ready for BMAD execution.
+- **Non-effects checklist and validator receipt:** The command should provide both a human-readable checklist and a machine-verifiable receipt showing no adjacency, pressure, promotion, Salmon, Landscape, or Graph updates occurred.
+- **No Salmon or promotion in MVP:** Correction and promotion machinery are intentionally deferred until post-implementation evidence exists.
+
+**Selected Hybrid Rationale:** This shape preserves the strategic truth that bottom-up is a future NextLens lane while keeping this feature from trying to build the entire lane. It creates the first safe mechanism: one confirmed, locally valid feature packet with proof that no larger structure was created.
+
+**Morphological Breakthrough:** The product concept is “bottom-up track support,” but the implementation slice should be “create a bottom-up feature packet with fail-closed restraint gates.”
