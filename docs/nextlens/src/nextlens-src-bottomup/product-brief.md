@@ -2,6 +2,15 @@
 feature: nextlens-src-bottomup
 doc_type: product-brief
 status: complete
+phase: preplan
+track: full
+goal: "Define the MVP product scope for bottom-up feature packet creation."
+key_decisions: []
+open_questions: []
+depends_on:
+  - docs/nextlens/src/nextlens-src-bottomup/brainstorm.md
+  - docs/nextlens/src/nextlens-src-bottomup/research.md
+blocks: []
 title: "Bottom-Up LENS Feature Packet Creator"
 inputDocuments:
   - docs/nextlens/src/nextlens-src-bottomup/brainstorm.md

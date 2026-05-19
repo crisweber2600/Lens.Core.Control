@@ -1,10 +1,15 @@
 ---
 feature: nextlens-src-bottomup
 doc_type: adversarial-review
-status: approved
+status: responses-recorded
 phase: businessplan
 source: phase-complete
 verdict: pass-with-warnings
+critical_count: 0
+high_count: 0
+medium_count: 3
+low_count: 1
+carry_forward_blockers: []
 reviewed_artifacts:
   - docs/nextlens/src/nextlens-src-bottomup/prd.md
   - docs/nextlens/src/nextlens-src-bottomup/ux-design.md

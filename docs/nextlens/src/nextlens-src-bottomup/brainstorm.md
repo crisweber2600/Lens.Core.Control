@@ -2,6 +2,13 @@
 feature: nextlens-src-bottomup
 doc_type: brainstorm
 status: complete
+phase: preplan
+track: full
+goal: "Explore constraints and MVP boundaries for future Bottom-Up LENS packet creation."
+key_decisions: []
+open_questions: []
+depends_on: []
+blocks: []
 stepsCompleted: [1, 2, 3, 4]
 inputDocuments:
   - user-provided Bottom-Up LENS description

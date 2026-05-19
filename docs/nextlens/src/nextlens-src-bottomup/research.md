@@ -2,6 +2,14 @@
 feature: nextlens-src-bottomup
 doc_type: research
 status: complete
+phase: preplan
+track: full
+goal: "Ground the bottom-up packet creator in schema, provenance, and non-effects validation patterns."
+key_decisions: []
+open_questions: []
+depends_on:
+  - docs/nextlens/src/nextlens-src-bottomup/brainstorm.md
+blocks: []
 workflowType: research
 research_type: technical
 research_topic: "Bottom-Up LENS feature packet architecture and evidence topology"
@@ -134,8 +142,8 @@ A packet can be valid archive evidence before it is ready for BMAD execution. Pa
 
 **Implication:** Implement two gates:
 
-1. `packet_validity`: can this packet be saved?
-2. `bmad_readiness`: can BMAD execute from this packet?
+1. `packet_valid`: can this packet be saved?
+2. `bmad_ready`: can BMAD execute from this packet?
 
 ### Finding 3: Feature Archive Is The Correct Future Home
 

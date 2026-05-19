@@ -10,6 +10,7 @@ depends_on:
   - docs/nextlens/src/nextlens-src-bottomup/product-brief.md
   - docs/nextlens/src/nextlens-src-bottomup/research.md
   - docs/nextlens/src/nextlens-src-bottomup/brainstorm.md
+blocks: []
 inputDocuments:
   - docs/nextlens/src/nextlens-src-bottomup/prd.md
   - docs/nextlens/src/nextlens-src-bottomup/product-brief.md
@@ -76,7 +77,7 @@ The target emotional state is relief: users should feel the product is protectin
 - Make the receipt a reassuring proof artifact, not an implementation detail.
 - Use read-only status language that reinforces Archive evidence vs promoted Landscape truth.
 
-## Core User Experience
+## Experience Overview
 
 ### Defining Experience
 

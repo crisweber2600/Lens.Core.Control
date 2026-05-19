@@ -1,10 +1,15 @@
 ---
 feature: nextlens-src-bottomup
-doc_type: preplan-adversarial-review
-status: complete
+doc_type: adversarial-review
+status: responses-recorded
 phase: preplan
 source: phase-complete
 verdict: pass-with-warnings
+critical_count: 0
+high_count: 3
+medium_count: 5
+low_count: 2
+carry_forward_blockers: []
 reviewed_artifacts:
   - brainstorm.md
   - research.md

@@ -9,6 +9,7 @@ depends_on:
   - docs/nextlens/src/nextlens-src-bottomup/product-brief.md
   - docs/nextlens/src/nextlens-src-bottomup/research.md
   - docs/nextlens/src/nextlens-src-bottomup/brainstorm.md
+blocks: []
 inputDocuments:
   - docs/nextlens/src/nextlens-src-bottomup/product-brief.md
   - docs/nextlens/src/nextlens-src-bottomup/research.md
@@ -424,46 +425,46 @@ The Bottom-Up LENS Feature Packet Creator is a developer/product-operator workfl
 - FR28: The system can write the packet only to the approved archive/staging path.
 - FR29: The system can prevent packet creation from writing to governance mirror, Landscape, Graph, or other forbidden paths in the MVP.
 - FR30: The system can fail closed and write nothing when hard validation constraints fail.
-- FR54: Operators can run preview or dry-run validation without writing a packet.
-- FR55: The system can detect duplicate packet attempts for the same candidate and require explicit operator resolution.
+- FR31: Operators can run preview or dry-run validation without writing a packet.
+- FR32: The system can detect duplicate packet attempts for the same candidate and require explicit operator resolution.
 
 ### Packet Schema and Validation
 
-- FR31: The system can validate a packet without mutating state.
-- FR32: The system can enforce packet schema version and source mode.
-- FR33: The system can enforce required packet fields for identity, selected feature, scope, constraints, assumptions, provenance, receipt, and topology.
-- FR34: The system can keep topology fields null or unpromoted during MVP packet creation.
-- FR35: The system can report `packet_valid` status with validation reasons.
-- FR36: The system can report minimal `bmad_ready` status with reasons independently from packet validity.
-- FR37: Operators can see when a packet is valid but not BMAD-ready.
-- FR56: The system can preserve raw user wording alongside normalized packet fields for auditability.
-- FR57: The system can distinguish intentionally unknown values from missing or empty required values during validation.
-- FR58: The system can expose packet lifecycle metadata states without treating them as Living Landscape truth.
+- FR33: The system can validate a packet without mutating state.
+- FR34: The system can enforce packet schema version and source mode.
+- FR35: The system can enforce required packet fields for identity, selected feature, scope, constraints, assumptions, provenance, receipt, and topology.
+- FR36: The system can keep topology fields null or unpromoted during MVP packet creation.
+- FR37: The system can report `packet_valid` status with validation reasons.
+- FR38: The system can report minimal `bmad_ready` status with reasons independently from packet validity.
+- FR39: Operators can see when a packet is valid but not BMAD-ready.
+- FR40: The system can preserve raw user wording alongside normalized packet fields for auditability.
+- FR41: The system can distinguish intentionally unknown values from missing or empty required values during validation.
+- FR42: The system can expose packet lifecycle metadata states without treating them as Living Landscape truth.
 
 ### Non-Effects Receipt and Verification
 
-- FR38: The system can emit a machine-readable non-effects receipt for each packet creation run.
-- FR39: The receipt can state whether adjacency records, pressure detection, promotion candidates, Salmon signals, Landscape updates, and Graph updates were emitted.
-- FR40: The system can record reproducible run metadata for receipt verification.
-- FR41: Operators or support users can verify a receipt against run metadata and changed files.
-- FR42: The system can mark a run invalid when receipt claims conflict with observed changes.
-- FR43: The system can block or fail runs that attempt forbidden side-effect writes.
+- FR43: The system can emit a machine-readable non-effects receipt for each packet creation run.
+- FR44: The receipt can state whether adjacency records, pressure detection, promotion candidates, Salmon signals, Landscape updates, and Graph updates were emitted.
+- FR45: The system can record reproducible run metadata for receipt verification.
+- FR46: Operators or support users can verify a receipt against run metadata and changed files.
+- FR47: The system can mark a run invalid when receipt claims conflict with observed changes.
+- FR48: The system can block or fail runs that attempt forbidden side-effect writes.
 
 ### Documentation and Examples
 
-- FR44: Operators can access documentation that explains Bottom-Up LENS as “Start from one feature.”
-- FR45: Operators can access a valid packet example.
-- FR46: Operators can access invalid packet examples for multi-candidate input and missing explicit out-of-scope.
-- FR47: Operators can access an example showing `packet_valid=true` and `bmad_ready=false`.
-- FR48: Downstream planning users can trace packet requirements to source inputs, provenance, selected-candidate rationale, and decision rationale.
-- FR49: Maintainers can preserve golden valid and invalid packet fixtures for schema and validator behavior.
+- FR49: Operators can access documentation that explains Bottom-Up LENS as “Start from one feature.”
+- FR50: Operators can access a valid packet example.
+- FR51: Operators can access invalid packet examples for multi-candidate input and missing explicit out-of-scope.
+- FR52: Operators can access an example showing `packet_valid=true` and `bmad_ready=false`.
+- FR53: Downstream planning users can trace packet requirements to source inputs, provenance, selected-candidate rationale, and decision rationale.
+- FR54: Maintainers can preserve golden valid and invalid packet fixtures for schema and validator behavior.
 
 ### Read-Only Reporting and Future Handoff Support
 
-- FR50: Reporting consumers can read packet status, provenance, validity, and BMAD readiness.
-- FR51: Reporting consumers cannot mutate packet state or promote topology.
-- FR52: Future BMAD handoff can consume packet validity and BMAD readiness states.
-- FR53: Future promotion, adjacency, pressure, Salmon, Landscape, and Graph workflows can distinguish archive evidence from promoted truth.
+- FR55: Reporting consumers can read packet status, provenance, validity, and BMAD readiness.
+- FR56: Reporting consumers cannot mutate packet state or promote topology.
+- FR57: Future BMAD handoff can consume packet validity and BMAD readiness states.
+- FR58: Future promotion, adjacency, pressure, Salmon, Landscape, and Graph workflows can distinguish archive evidence from promoted truth.
 
 ## Non-Functional Requirements
 
