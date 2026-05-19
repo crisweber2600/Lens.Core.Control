@@ -7,7 +7,7 @@ inputDocuments:
   - user-provided Bottom-Up LENS description
 session_topic: "Bottom-Up LENS feature-first track support for NextLens"
 session_goals: "Clarify the future bottom-up lane, including feature packet creation, BMAD handoff, archive capture, adjacency detection, pressure detection, Salmon correction routing, human-gated promotion, and separation of Archive, Landscape, and Graph."
-selected_approach: ""
+selected_approach: "ai-recommended"
 techniques_used: []
 ideas_generated: []
 context_file: ""
@@ -98,4 +98,4 @@ The session should keep these areas visible during ideation:
 
 ### Next Required Selection
 
-The BMAD brainstorming workflow setup is complete. The next step is selecting the technique approach for ideation.
+The BMAD brainstorming workflow setup is complete. The selected technique approach is AI-recommended techniques.
