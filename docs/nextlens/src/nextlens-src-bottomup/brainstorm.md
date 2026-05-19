@@ -349,3 +349,45 @@ The BMAD brainstorming workflow setup is complete. The selected technique approa
 **Rejected Response:** Do not create a draft anyway when hard constraints fail. Draft-with-warnings would weaken bottom-up’s anti-expansion promise and invite invented structure.
 
 **Constraint Mapping Breakthrough:** The future command should fail closed. It is better to create no packet than to create a packet that smuggles in hierarchy, hides adjacent scope, or triggers downstream evidence mechanisms too early.
+
+#### Soft Constraint Map
+
+| Soft Constraint | Why It Matters | Possible Handling |
+|---|---|---|
+| BMAD handoff sufficiency | BMAD needs enough context to avoid inventing missing hierarchy. | Warn or route to additional sufficiency questions before handoff; may become hard at BMAD handoff time rather than packet creation time. |
+| Packet schema minimalism | Over-large packet schemas can recreate top-down planning under a different name. | Keep only fields needed for local value, scope, acceptance, constraints, assumptions, and provenance. |
+| Candidate preservation | Users may identify multiple valuable candidates but execute only one. | Store deferred candidates as session notes, not packets, roadmap, or adjacency. |
+| Language neutrality | Labels can accidentally imply structure. | Prefer “selected feature,” “candidate,” “artifact evidence,” and “unpromoted assumption” over “capability,” “domain,” or “system.” |
+| Resume safety | Multi-step intake may be interrupted. | Resume at the last unanswered gate without writing partial downstream artifacts. |
+| Reviewability | Human operators need to trust the packet. | Provide compact preview with selected feature, included scope, out-of-scope, assumptions, acceptance criteria, constraints, and non-effects checklist. |
+
+#### Validator Ideas
+
+1. **Single Candidate Validator:** Fails if more than one candidate is marked selected.
+2. **Local Value Validator:** Fails if goal/problem/success fields are absent or only describe future architecture.
+3. **Explicit Out-of-Scope Validator:** Fails if out-of-scope is empty or generic, such as “everything else.”
+4. **No Structure Validator:** Flags system/domain/capability/roadmap/architecture claims unless explicitly stored as unpromoted assumptions.
+5. **Non-Effects Validator:** Confirms no adjacency, pressure, promotion, Salmon, Landscape, or Graph outputs are created by the packet command.
+6. **Confirmation Validator:** Fails if packet write is attempted without a recorded preview approval.
+7. **Provenance Validator:** Ensures source mode, raw input summary, selected candidate rationale, and deferred candidate notes are recorded.
+
+#### Design Tensions
+
+- **Enough context vs. invented structure:** BMAD needs actionable input, but bottom-up must not fabricate a larger model.
+- **Candidate slicing vs. roadmap creation:** The command may discover multiple candidates, but it must not turn them into a prioritized roadmap.
+- **Evidence preservation vs. premature graphing:** Artifacts should be available later, but initial packet creation cannot create graph truth.
+- **Human confirmation vs. flow speed:** Confirmation protects safety but can make quick feature capture feel heavy.
+- **Strict out-of-scope vs. useful discovery:** Out-of-scope protects focus, but some excluded items may later become Salmon corrections or separate candidates.
+
+**Constraint Mapping Second Breakthrough:** BMAD handoff sufficiency is likely a boundary validator at the transition from packet creation to BMAD execution, not necessarily a blocker to saving a confirmed packet. This keeps packet capture small while still preventing BMAD from inventing missing context.
+
+#### Working Tension Resolutions
+
+| Tension | Working Resolution |
+|---|---|
+| BMAD context vs. invented structure | Split packet validity from BMAD handoff readiness. A packet can be saved with local feature truth and assumptions, but BMAD execution requires a handoff validator that confirms sufficient goal, scope, acceptance, constraints, and non-inference instructions. |
+| Candidate slicing vs. roadmap creation | Candidate discovery can list deferred candidates only as unranked notes. It must not assign priority, sequence, roadmap position, dependency order, capability grouping, or ownership. |
+| Evidence preservation vs. graphing | Packet creation records no graph edges. Later implementation artifacts may be archived as evidence, and separate post-run analysis may propose adjacency candidates without making them authoritative. |
+| Out-of-scope vs. discovery | Out-of-scope items are excluded from the current packet but can later become separate candidates or Salmon corrections if implementation evidence proves they are necessary. They do not automatically expand the packet. |
+
+**Constraint Mapping Third Breakthrough:** The future design likely needs two gates after candidate selection: a **packet validity gate** that allows safe archive capture, and a later **BMAD handoff readiness gate** that determines whether execution can begin without invented context.
