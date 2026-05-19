@@ -13,7 +13,7 @@ techniques_used:
   - Constraint Mapping
   - Morphological Analysis
 ideas_generated: []
-question_storm_count: 72
+question_storm_count: 108
 context_file: ""
 lens_context:
   domain: nextlens
@@ -257,3 +257,59 @@ The BMAD brainstorming workflow setup is complete. The selected technique approa
 72. How does the system preserve optionality after each bottom-up run?
 
 **Second-Wave Pattern:** The bottom-up packet creator needs two trust surfaces: a user-facing restraint surface that proves it will not overgrow the idea, and a machine-facing evidence surface that preserves artifacts for later analysis without promoting them.
+
+#### Domain Pivot: Packet Schema And Validation
+
+73. What is the minimum packet schema that can express source mode, selected feature, goal, included scope, explicit out-of-scope, acceptance criteria, constraints, and assumptions?
+74. Which packet fields are required at creation time, and which are allowed to remain unknown?
+75. What packet fields must explicitly prohibit system/domain/capability/roadmap inference?
+76. How should schema validation distinguish an empty field from an intentionally unknown field?
+77. Should the packet store raw user wording alongside normalized fields for auditability?
+78. How should packet versioning work if bottom-up evolves after early features exist?
+
+#### Domain Pivot: Storage Topology
+
+79. Where should the packet live in the Work Archive before BMAD execution begins?
+80. What files should exist after packet creation and before BMAD execution?
+81. What files should not exist until after implementation creates evidence?
+82. How should the archive path avoid implying a promoted domain or system?
+83. Should archived bottom-up features live under `docs/features/`, active Lens feature docs, or a dedicated bottom-up namespace?
+84. How does the storage model make history durable without turning history into current truth?
+
+#### Domain Pivot: Command Behavior
+
+85. What command name or mode should signal bottom-up packet creation?
+86. Should bottom-up packet creation be a new command, a mode of `new-feature`, or a future NextLens track?
+87. What happens if the command is run twice for the same candidate?
+88. How should the command resume an incomplete candidate-selection or sufficiency gate?
+89. What should dry-run output show without writing any packet?
+90. What automated tests prove the command has no accidental downstream side effects?
+
+#### Domain Pivot: Human Control
+
+91. What exact confirmation phrase should be required before writing the packet?
+92. What does the user need to reject or edit before packet creation?
+93. How can the user say, “this is too big,” and return to candidate slicing?
+94. How can the user say, “this is too vague,” and return to sufficiency questions?
+95. What should the UI do when the user wants to preserve multiple candidate slices but execute only one?
+96. What is the simplest review screen that shows selected feature, included scope, out-of-scope, assumptions, and non-effects?
+
+#### Domain Pivot: Salmon And Corrections
+
+97. What packet assumptions should be monitored during BMAD execution?
+98. What implementation discoveries become Salmon signals instead of simple implementation notes?
+99. How does Salmon route a correction when it affects only the local feature packet?
+100. How does Salmon route a correction when it affects multiple bottom-up features through shared artifacts?
+101. What is the difference between a scope correction, an adjacency signal, and a promotion signal?
+102. How should Salmon avoid turning every local implementation surprise into a landscape change?
+
+#### Domain Pivot: Metrics And Success
+
+103. What counts as successful packet creation before any code is written?
+104. What counts as successful BMAD handoff from a bottom-up packet?
+105. What count or quality of explicit out-of-scope items indicates the packet is safely bounded?
+106. What signal shows that bottom-up preserved optionality rather than creating hidden architecture?
+107. What post-run evidence should be inspected before allowing adjacency detection?
+108. What later evidence would prove the feature-first approach was better than forcing a top-down model first?
+
+**Third-Wave Pattern:** Bottom-up needs a “minimum viable restraint loop”: slice one candidate, prove sufficient local value, require explicit human confirmation, write only the packet, and preserve evidence for later without creating present-tense structure.
