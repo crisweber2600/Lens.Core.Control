@@ -1,7 +1,7 @@
 ---
 feature: nextlens-src-bottomup
 doc_type: prd
-status: complete
+status: in-review
 goal: "Define the Bottom-Up LENS feature packet creator MVP."
 key_decisions: []
 open_questions: []

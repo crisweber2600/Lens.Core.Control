@@ -1,7 +1,7 @@
 ---
 feature: nextlens-src-bottomup
 doc_type: ux-design
-status: complete
+status: in-review
 goal: "Define the operator experience for Bottom-Up LENS feature packet creation."
 key_decisions: []
 open_questions: []
