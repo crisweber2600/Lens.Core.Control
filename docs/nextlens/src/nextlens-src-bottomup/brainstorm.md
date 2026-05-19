@@ -5,6 +5,7 @@ status: complete
 stepsCompleted: [1, 2, 3, 4]
 inputDocuments:
   - user-provided Bottom-Up LENS description
+  - user-provided Lens/BMAD topology and Auspex transcription from 2026-05-12
 session_topic: "Bottom-Up LENS feature-first track support for NextLens"
 session_goals: "Clarify the future bottom-up lane, including feature packet creation, BMAD handoff, archive capture, adjacency detection, pressure detection, Salmon correction routing, human-gated promotion, and separation of Archive, Landscape, and Graph."
 selected_approach: "ai-recommended"
@@ -649,3 +650,151 @@ This PrePlan should carry forward the following recommendation:
 ### Session Reflection
 
 The strongest creative discovery was that bottom-up’s first mechanism is not growth; it is restraint. The packet creator earns trust by proving what it did not do.
+
+## Integrated Prior Context — Lens/BMAD Topology and Auspex
+
+### Source Context
+
+The user supplied a consolidated transcription from an earlier brainstorming and architecture session titled:
+
+> Re-examining Lens/BMAD project artifact topology for organic, multi-feature, team-scale work
+
+That session examined the knowledge-scatter and feature-pocket-universe problem in Lens/BMAD project artifacts. It used a progressive flow with First Principles Thinking, Morphological Analysis, Concept Blending, and Solution Matrix.
+
+The supplied material also included Auspex context: a read-only reporting UI for making project delivery artifacts and status visible to stakeholders without requiring direct GitHub access.
+
+### Key Findings To Carry Forward
+
+#### 1. Feature Folders Are Work Archives, Not Durable Truth Homes
+
+The prior session concluded that features are units of work, not the right long-term owners of service, domain, or program knowledge. Feature artifacts record what happened during a feature, but they do not provide a stable current-state view once work becomes cumulative.
+
+**Bottom-Up LENS implication:** A bottom-up feature packet should be treated as historical work evidence in the Feature Archive. It should not automatically become Living Landscape truth.
+
+#### 2. Humans Need Places, Not Search Queries
+
+The prior session identified a human usability failure: machines can index scattered artifacts, but humans need stable homes for current truth. The current feature-pocket model makes related knowledge hard to find when projects become organic, iterative, or team-scale.
+
+**Bottom-Up LENS implication:** Bottom-up can start from one feature, but promoted truth must eventually land in a stable human-facing landscape home. Until promotion happens, the packet remains archive evidence.
+
+#### 3. Two Failure Modes Must Stay Separate
+
+- **Knowledge Consolidation:** Durable design truth is scattered across feature folders and branches.
+- **Cross-feature Dependency at Authoring Time:** New work needs sibling or predecessor feature context that may be inaccessible, incomplete, stale, or branch-isolated.
+
+**Bottom-Up LENS implication:** The packet creator MVP should not try to solve both. Its job is safe packet capture. Later bottom-up capabilities may use archive evidence, derived maps, and landscape ledgers to solve consolidation and authoring-time dependency loading.
+
+#### 4. Two-Tree Model With Derived Map
+
+The prior session’s strongest topology recommendation was a Two-Tree Model with Derived Map:
+
+- **Feature Archive:** Permanent, flat/stable, never reorganized; contains feature scratchpads, WIP notes, closed artifacts, and feature-level evidence.
+- **Landscape:** Reorganizable service/domain/program ledgers; contains current human-readable truth.
+- **Governance Map:** Derived projection rebuilt from frontmatter; machine-readable cache, never hand-authored source truth.
+- **Salmon Workflow:** Upstream-impact signal that triggers recursive consistency checks across the topology.
+
+Core prior statement:
+
+> Features are immutable facts. The landscape is an interpretation. The map is a cache.
+
+**Bottom-Up LENS implication:** This maps directly onto bottom-up safety:
+
+- A bottom-up packet is an immutable archived fact about a selected feature attempt.
+- Adjacency and promotion are interpretations made later from repeated evidence.
+- The Graph/Map is a derived projection, not authoritative truth.
+
+#### 5. Stable IDs Must Decouple Identity From Path
+
+The prior session concluded Lens must stop treating path as identity. Features, services, domains, and programs need stable IDs, while landscape paths may reorganize as topology grows.
+
+**Bottom-Up LENS implication:** Bottom-up packets should carry stable IDs and provenance early. Archive paths should be stable enough for historical traceability, while future landscape placement remains a promoted interpretation rather than packet-time identity.
+
+#### 6. Planning Branch Dependence Is A Future Design Concern
+
+The prior session argued that planning docs should no longer depend on branch isolation for legitimacy, and that draft/published state should be explicit metadata rather than implicit branch location.
+
+**Bottom-Up LENS implication:** Future bottom-up packet state should be explicit: for example `draft`, `confirmed`, `valid`, `bmad-ready`, `executed`, or `archived`. This is a future topology design consideration; the current Lens control-repo branch model still governs this PrePlan session.
+
+#### 7. Salmon Is Active Consistency Maintenance
+
+The prior session defined Salmon as more than a notification. A feature-level upstream-impact signal is non-blocking by default, but it triggers recursive checks upward and downward. Blocks come from discovered material inconsistency, not from merely raising the signal.
+
+**Bottom-Up LENS implication:** The current bottom-up MVP should still defer Salmon. However, packet assumptions and implementation discoveries should be designed so a later Salmon workflow can distinguish:
+
+- local packet correction
+- cross-feature adjacency signal
+- repeated-pressure promotion signal
+- landscape consistency issue
+
+### Refined Brainstorm Recommendation
+
+Original brainstorm recommendation:
+
+> Build the first Bottom-Up LENS support slice as a dedicated bottom-up feature packet creator for a future NextLens bottom-up lane. The packet creator must select exactly one independently useful feature, validate local sufficiency and scope boundaries, require human preview confirmation, emit a non-effects receipt, and defer BMAD execution readiness, adjacency, pressure, Salmon, promotion, Landscape, and Graph behavior until later evidence-bearing phases.
+
+Refined with topology context:
+
+> Build the first Bottom-Up LENS support slice as a dedicated bottom-up feature packet creator for a future NextLens bottom-up lane. The packet creator should write one stable, archived feature packet as historical work evidence, not as Living Landscape truth. It must select exactly one independently useful feature, validate local sufficiency and scope boundaries, require human preview confirmation, emit a non-effects receipt, preserve stable identity and provenance for future derived-map reconstruction, and defer BMAD readiness, adjacency, pressure, Salmon, promotion, Landscape, and Graph behavior until later evidence-bearing phases.
+
+### New Design Implications
+
+#### Packet Location and Topology
+
+The bottom-up packet should be designed with the Two-Tree Model in mind:
+
+- **Short term for this feature:** write within the active Lens feature docs path, because this work is still a top-down planning feature.
+- **Future bottom-up lane:** write bottom-up packets into the permanent Feature Archive, such as `docs/features/<feature-id>/feature-packet.json`, not directly into a service/domain/program landscape.
+
+#### Packet Metadata
+
+Packet metadata should include reconstructible identity and relationship hints without creating promoted structure:
+
+```yaml
+featureId: <stable-feature-id>
+kind: feature_packet
+sourceMode: bottom_up
+status: confirmed
+docs_path: <stable archive path>
+belongs_to:
+  service: null
+  domain: null
+  program: null
+assumptions_promoted: false
+landscape_promoted: false
+graph_edges_emitted: false
+```
+
+#### Deferred Candidate Treatment
+
+Deferred candidates may be retained as unranked notes in the feature archive, but they should not become roadmap, dependency, service, domain, program, or graph truth.
+
+#### Derived Map Compatibility
+
+The packet should be parseable by a future projection rebuild command. The derived map must remain a cache rebuilt from source files, not a hand-authored authority.
+
+#### Future Auspex Reporting Fit
+
+Auspex reinforces the need for read-only stakeholder views over Lens artifacts. Bottom-up packet metadata should be reportable without giving stakeholders direct repository access.
+
+Potential Auspex reporting fields:
+
+- bottom-up packet count
+- packet status distribution
+- packets awaiting BMAD readiness
+- packets executed but not promoted
+- promotion candidates awaiting human decision
+- stale packets with no evidence update
+
+These reporting views must remain read-only and must not mutate governance or landscape artifacts.
+
+### Updated Breakthrough Statement
+
+> Bottom-Up LENS should create feature-first historical evidence in the Feature Archive, not current topology in the Landscape. The Landscape may later interpret repeated evidence, and the derived map may later index relationships, but packet creation itself must remain a restrained archival act.
+
+### Updated Action Additions For Downstream Work
+
+1. Evaluate how bottom-up packet storage should align with the Two-Tree Model.
+2. Define which packet metadata must be sufficient for future projection-map rebuilds.
+3. Distinguish archive evidence from Living Landscape truth in all product language.
+4. Treat Salmon as a deferred consistency workflow, not part of MVP packet creation.
+5. Consider Auspex read-only reporting needs when choosing packet status fields.
