@@ -313,3 +313,39 @@ The BMAD brainstorming workflow setup is complete. The selected technique approa
 108. What later evidence would prove the feature-first approach was better than forcing a top-down model first?
 
 **Third-Wave Pattern:** Bottom-up needs a “minimum viable restraint loop”: slice one candidate, prove sufficient local value, require explicit human confirmation, write only the packet, and preserve evidence for later without creating present-tense structure.
+
+**Question Storming Completion:** The first technique reached 108 questions and surfaced the main candidate MVP: a gated packet creator with a minimum viable restraint loop. This is sufficient to move into constraint mapping without prematurely organizing the entire session.
+
+### Constraint Mapping
+
+**Interactive Focus:** Identify the guardrails, blockers, and non-effects that must constrain future Bottom-Up LENS packet creation.
+
+**Transition Rationale:** Question Storming revealed that safety is the product. The next step is to map the constraints that preserve bottom-up’s core promise: a feature can be valid locally without forcing premature structure.
+
+#### Hard Constraint Map
+
+| Constraint | Meaning | Packet-Creation Consequence |
+|---|---|---|
+| One candidate only | Packet creation must select exactly one bottom-up feature candidate. | If multiple candidates remain unresolved, stop at candidate selection and ask the user to choose or split. |
+| Local value required | The candidate must solve a real problem independently. | If the feature is only a setup task, dependency stub, or abstract system idea, do not write a packet. |
+| Explicit out-of-scope required | Tempting adjacent work must be named as out of scope. | If adjacent work is not bounded, stop and require out-of-scope clarification. |
+| No structure inference | Do not infer system, domain, capability, roadmap, or architecture. | Any implied hierarchy must be removed or recorded as an unpromoted assumption. |
+| No downstream side effects | Packet creation must not emit adjacency, pressure, promotion, Salmon, Landscape, or Graph updates. | The command must fail closed if it cannot prove only the packet was written. |
+| Human confirmation required | The user must see and approve a final preview before writing. | No packet file is created before explicit confirmation. |
+| Assumptions unpromoted | Assumptions must be labeled and must not become accepted truth. | Packet assumptions remain local packet metadata until evidence and promotion justify elevation. |
+
+**Not Yet Hard-Selected:** BMAD handoff sufficiency is important, but the current selection treats it as a readiness quality rather than a hard packet-creation blocker. This may become a separate handoff validator after packet creation.
+
+#### Failure Response Map
+
+| Failure Response | Applies When | Result |
+|---|---|---|
+| Stop with blocker reason | Any hard constraint fails. | Name the violated constraint, explain what would satisfy it, and do not write the packet. |
+| Return to candidate slicing | Multiple candidates remain, the candidate is oversized, or the user describes a system rather than one feature. | Re-enter candidate selection instead of creating a vague packet. |
+| Ask sufficiency questions | Local value, user need, success criteria, constraints, or acceptance criteria are weak. | Continue discovery until the packet is locally useful or explicitly blocked. |
+| Require out-of-scope edit | Adjacent or tempting work is not bounded. | Force explicit out-of-scope statements before preview. |
+| Show non-effects checklist | Before final confirmation. | Prove the command will not emit adjacency, pressure, promotion, Salmon, Landscape, or Graph updates. |
+
+**Rejected Response:** Do not create a draft anyway when hard constraints fail. Draft-with-warnings would weaken bottom-up’s anti-expansion promise and invite invented structure.
+
+**Constraint Mapping Breakthrough:** The future command should fail closed. It is better to create no packet than to create a packet that smuggles in hierarchy, hides adjacent scope, or triggers downstream evidence mechanisms too early.
