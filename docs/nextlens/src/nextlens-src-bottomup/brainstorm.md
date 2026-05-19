@@ -1,8 +1,8 @@
 ---
 feature: nextlens-src-bottomup
 doc_type: brainstorm
-status: in-progress
-stepsCompleted: [1, 2]
+status: complete
+stepsCompleted: [1, 2, 3, 4]
 inputDocuments:
   - user-provided Bottom-Up LENS description
 session_topic: "Bottom-Up LENS feature-first track support for NextLens"
@@ -14,6 +14,9 @@ techniques_used:
   - Morphological Analysis
 ideas_generated: []
 question_storm_count: 108
+technique_execution_complete: true
+session_active: false
+workflow_completed: true
 context_file: ""
 lens_context:
   domain: nextlens
@@ -474,3 +477,175 @@ The selected direction is a hybrid: bottom-up should be visible as a future Next
 **Selected Hybrid Rationale:** This shape preserves the strategic truth that bottom-up is a future NextLens lane while keeping this feature from trying to build the entire lane. It creates the first safe mechanism: one confirmed, locally valid feature packet with proof that no larger structure was created.
 
 **Morphological Breakthrough:** The product concept is “bottom-up track support,” but the implementation slice should be “create a bottom-up feature packet with fail-closed restraint gates.”
+
+## Idea Organization and Prioritization
+
+### Session Achievement Summary
+
+- **Total divergent prompts generated:** 108 Question Storming questions
+- **Creative techniques used:** Question Storming, Constraint Mapping, Morphological Analysis
+- **Primary breakthrough:** Bottom-Up LENS should be represented as a future NextLens lane, but this feature should focus on the first safe slice: a bottom-up feature packet creator with fail-closed gates.
+
+### Thematic Organization
+
+#### Theme 1: Minimum Viable Restraint Loop
+
+_Focus: The smallest safe mechanism that creates one packet without creating larger structure._
+
+**Ideas in this cluster:**
+
+- Slice one candidate from raw context.
+- Prove local value before writing anything.
+- Require explicit included scope and out-of-scope.
+- Show preview before write.
+- Emit non-effects proof.
+
+**Pattern Insight:** The MVP is not “build bottom-up.” The MVP is “make one bottom-up feature packet safely.”
+
+#### Theme 2: Two-Gate Model
+
+_Focus: Separating safe packet capture from readiness for BMAD execution._
+
+**Ideas in this cluster:**
+
+- Packet validity gate confirms the packet can be written and archived.
+- BMAD handoff readiness gate confirms BMAD has enough context to proceed.
+- A packet can be valid before it is executable.
+- Handoff sufficiency should prevent BMAD from inventing hierarchy.
+
+**Pattern Insight:** Separating these gates keeps capture lightweight while preserving downstream execution quality.
+
+#### Theme 3: Anti-Expansion Governance
+
+_Focus: Constraints that stop bottom-up from becoming premature top-down architecture._
+
+**Ideas in this cluster:**
+
+- No system, domain, capability, roadmap, or architecture inference.
+- Deferred candidates remain unranked notes.
+- Assumptions remain unpromoted.
+- No adjacency, pressure, promotion, Salmon, Landscape, or Graph outputs during packet creation.
+
+**Pattern Insight:** Bottom-up’s defining value is restraint. The command should fail closed when restraint cannot be proven.
+
+#### Theme 4: Human Confirmation and Trust
+
+_Focus: Making restraint visible and reviewable to the operator._
+
+**Ideas in this cluster:**
+
+- Preview selected feature, included scope, out-of-scope, assumptions, acceptance criteria, and constraints.
+- Require confirmation before writing packet.
+- Show non-effects checklist.
+- Provide machine-verifiable validator receipt.
+
+**Pattern Insight:** Users must be able to see that the command did not silently grow the idea.
+
+#### Theme 5: Evidence Deferred Until Reality Exists
+
+_Focus: Preserving future evidence paths without creating them too early._
+
+**Ideas in this cluster:**
+
+- No implementation evidence exists at packet creation time.
+- No graph edges are created by packet creation.
+- Later BMAD/Dev outputs can be archived as evidence.
+- Post-run analysis may later propose adjacency candidates.
+- Salmon and promotion are deferred until implementation reveals truth.
+
+**Pattern Insight:** Packet creation prepares for learning but does not pretend learning has already happened.
+
+### Breakthrough Concepts
+
+1. **Fail-Closed Packet Creation:** If the command cannot prove a hard constraint, it writes nothing.
+2. **Unranked Deferred Candidates:** Raw context can produce multiple possible features, but only one is selected; the rest are notes, not roadmap.
+3. **Non-Effects Receipt:** Packet creation should produce proof that it did not create adjacency, pressure, promotion, Salmon, Landscape, or Graph updates.
+4. **Packet Validity vs. BMAD Readiness:** Saving a locally valid packet and executing through BMAD are separate transitions.
+5. **Future Lane, Present Slice:** The product concept is a future bottom-up lane, but the current feature slice is only the packet creator.
+
+### Prioritization Results
+
+#### Top Priority Ideas
+
+1. **Hybrid MVP: Dedicated bottom-up command plus future track/lane semantics**
+  - Highest strategic alignment: makes bottom-up explicit while preserving MVP boundaries.
+2. **Minimum viable restraint loop**
+  - Highest safety value: captures one useful feature without premature architecture.
+3. **Two-gate model**
+  - Highest downstream quality value: avoids conflating packet creation with BMAD execution readiness.
+
+#### Quick Win Opportunities
+
+- Define the packet preview fields.
+- Define the non-effects checklist.
+- Define the hard constraints and failure responses.
+- Define deferred candidate note semantics.
+
+#### Longer-Term Deferred Opportunities
+
+- Post-implementation adjacency proposal jobs.
+- Repeated pressure detection.
+- Salmon routing for bottom-up assumptions.
+- Human-gated promotion workflows.
+- Work Archive, Living Landscape, and Derived Graph implementation details.
+
+### Action Planning
+
+#### Action 1: Define the Bottom-Up Feature Packet Contract
+
+**Why This Matters:** The packet is the handoff object that lets BMAD execute one feature without requiring pre-existing structure.
+
+**Next Steps:**
+
+1. Specify required fields: `sourceMode`, `selectedFeature`, `goal`, `includedScope`, `explicitOutOfScope`, `acceptanceCriteria`, `knownConstraints`, `assumptions`, `nonInferenceRules`, and `provenance`.
+2. Define which fields are required for packet validity.
+3. Define which fields are required for BMAD handoff readiness.
+
+**Success Indicators:** A future validator can distinguish valid packet, invalid packet, and valid-but-not-BMAD-ready packet.
+
+#### Action 2: Define the Fail-Closed Gate Sequence
+
+**Why This Matters:** The gate sequence preserves bottom-up’s anti-expansion promise.
+
+**Next Steps:**
+
+1. Candidate-selection gate: exactly one selected feature candidate.
+2. Context-sufficiency gate: local value, problem, success, acceptance, and constraints are known enough.
+3. Scope-safety gate: included and out-of-scope boundaries are explicit.
+4. Non-inference gate: no implied system/domain/capability/roadmap/architecture.
+5. Confirmation gate: final preview accepted before write.
+6. Non-effects gate: no adjacency, pressure, promotion, Salmon, Landscape, or Graph outputs.
+
+**Success Indicators:** Any hard failure returns a blocker and writes no packet.
+
+#### Action 3: Define the MVP Boundary
+
+**Why This Matters:** The current top-down feature must not accidentally plan the entire bottom-up ecosystem.
+
+**Next Steps:**
+
+1. Include packet creation, candidate selection, sufficiency questions, preview, and validator receipt.
+2. Exclude adjacency detection, repeated pressure detection, Salmon routing, promotion, Landscape updates, and Graph updates.
+3. Record deferred concepts as future capability candidates, not current acceptance criteria.
+
+**Success Indicators:** The feature can be implemented as one coherent packet-creation mechanism.
+
+## Session Summary and Insights
+
+### Key Achievements
+
+- Confirmed that Bottom-Up LENS should be framed as a future NextLens lane, not current bottom-up execution.
+- Generated 108 questions across candidate selection, sufficiency, scope safety, BMAD handoff, non-effects, evidence, promotion, command behavior, Salmon, and success metrics.
+- Identified hard constraints and fail-closed responses.
+- Resolved key tensions around BMAD context, deferred candidates, evidence preservation, and out-of-scope discovery.
+- Selected a hybrid MVP direction: dedicated future bottom-up entry surface, track/lane semantics, one feature packet, two gates, non-effects proof, and no Salmon/promotion in MVP.
+
+### Final Brainstorm Recommendation
+
+This PrePlan should carry forward the following recommendation:
+
+> Build the first Bottom-Up LENS support slice as a dedicated bottom-up feature packet creator for a future NextLens bottom-up lane. The packet creator must select exactly one independently useful feature, validate local sufficiency and scope boundaries, require human preview confirmation, emit a non-effects receipt, and defer BMAD execution readiness, adjacency, pressure, Salmon, promotion, Landscape, and Graph behavior until later evidence-bearing phases.
+
+### Session Reflection
+
+The strongest creative discovery was that bottom-up’s first mechanism is not growth; it is restraint. The packet creator earns trust by proving what it did not do.
